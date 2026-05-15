@@ -15,27 +15,16 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="w-full bg-linen" style={{ height: "175px", position: "relative" }}>
+    <header className="w-full" style={{ height: "175px", position: "relative", backgroundColor: "#F5F2EE" }}>
 
-      {/* Logo — absolutely positioned top-left with exact negative margins from original */}
-      <a href="#home" style={{
-        position: "absolute",
-        top: "-7px",
-        left: "-3px",
-        display: "block",
-        width: "182px",
-        height: "182px",
-        zIndex: 10,
-      }}>
+      {/* Logo — 182x182, exact position from original */}
+      <a href="#home" style={{ position: "absolute", top: "-7px", left: "-3px", display: "block", width: "182px", height: "182px", zIndex: 10 }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={LOGO_URL}
-          alt="Sama Wellness Therapy"
-          style={{ width: "182px", height: "182px", objectFit: "contain", objectPosition: "center center", display: "block" }}
-        />
+        <img src={LOGO_URL} alt="Sama Wellness Therapy"
+          style={{ width: "182px", height: "182px", objectFit: "contain", objectPosition: "center center", display: "block" }} />
       </a>
 
-      {/* Nav — starts at left:242px (measured from original), vertically centered */}
+      {/* Nav — exact font size 23px, vertically centered */}
       <nav className="hidden md:flex items-center" style={{
         position: "absolute",
         left: "242px",
@@ -46,9 +35,9 @@ export default function Navbar() {
         {links.map((l, i) => (
           <a key={l.href} href={l.href} style={{
             fontFamily: "'Josefin Sans', sans-serif",
-            fontSize: "22px",
+            fontSize: "23px",
             fontWeight: 300,
-            letterSpacing: "0.06em",
+            letterSpacing: "normal",
             color: "rgb(45, 74, 70)",
             textTransform: "uppercase",
             textDecoration: i === 0 ? "underline" : "none",
@@ -73,7 +62,7 @@ export default function Navbar() {
         <div className="md:hidden absolute top-full left-0 right-0 bg-linen px-8 py-6 flex flex-col gap-5 border-t border-burgundy-100 z-50">
           {links.map((l) => (
             <a key={l.href} href={l.href} onClick={() => setOpen(false)}
-              style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: "22px", fontWeight: 300, color: "rgb(45, 74, 70)", textTransform: "uppercase" }}>
+              style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: "23px", fontWeight: 300, color: "rgb(45, 74, 70)", textTransform: "uppercase" }}>
               {l.label}
             </a>
           ))}
