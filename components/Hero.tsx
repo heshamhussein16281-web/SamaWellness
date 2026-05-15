@@ -2,18 +2,18 @@ import Image from "next/image";
 
 export default function Hero() {
   return (
-    <section id="home" className="min-h-screen bg-linen flex flex-col">
-      <div className="flex-1 max-w-7xl mx-auto w-full px-8 grid md:grid-cols-2 gap-0 items-stretch pt-20">
+    <section id="home" className="bg-linen">
+      <div className="max-w-7xl mx-auto grid md:grid-cols-2">
         {/* Left: large logo + tagline */}
-        <div className="flex flex-col justify-center items-center py-20 pr-8">
+        <div className="flex flex-col justify-center items-center py-20 px-12">
           <p className="font-nav text-xs tracking-[0.3em] uppercase text-charcoal/50 mb-10 self-start">
             ELEVATE YOUR MENTAL WELLNESS
           </p>
           <Image
             src="/logo.png"
             alt="Sama Wellness Therapy"
-            width={380}
-            height={380}
+            width={340}
+            height={340}
             className="object-contain"
             priority
           />
@@ -22,12 +22,13 @@ export default function Hero() {
           </p>
         </div>
 
-        {/* Right: therapy room image — full height */}
-        <div className="hidden md:block relative min-h-[600px]">
+        {/* Right: therapy room image — full height of section */}
+        <div className="hidden md:block">
           <img
             src="/room.jpg"
             alt="Sama Wellness Therapy room"
-            className="absolute inset-0 w-full h-full object-cover"
+            className="w-full h-full object-cover"
+            style={{ minHeight: "600px" }}
           />
         </div>
       </div>
