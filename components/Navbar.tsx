@@ -46,7 +46,7 @@ export default function Navbar() {
         {links.map((l, i) => (
           <a key={l.href} href={l.href} style={{
             fontFamily: "'Josefin Sans', sans-serif",
-            fontSize: "15px",
+            fontSize: "22px",
             fontWeight: 300,
             letterSpacing: "0.06em",
             color: "rgb(45, 74, 70)",
@@ -73,7 +73,7 @@ export default function Navbar() {
         <div className="md:hidden absolute top-full left-0 right-0 bg-linen px-8 py-6 flex flex-col gap-5 border-t border-burgundy-100 z-50">
           {links.map((l) => (
             <a key={l.href} href={l.href} onClick={() => setOpen(false)}
-              style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: "15px", fontWeight: 300, color: "rgb(45, 74, 70)", textTransform: "uppercase" }}>
+              style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: "22px", fontWeight: 300, color: "rgb(45, 74, 70)", textTransform: "uppercase" }}>
               {l.label}
             </a>
           ))}
