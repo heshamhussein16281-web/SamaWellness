@@ -1,39 +1,33 @@
 const steps = [
   {
-    num: "01",
     icon: (
-      <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-        <rect x="8" y="12" width="40" height="32" rx="2" stroke="#7b2d3e" strokeWidth="1.5" fill="none"/>
-        <line x1="8" y1="20" x2="48" y2="20" stroke="#7b2d3e" strokeWidth="1.5"/>
-        <line x1="16" y1="28" x2="32" y2="28" stroke="#7b2d3e" strokeWidth="1.5" strokeLinecap="round"/>
-        <line x1="16" y1="34" x2="28" y2="34" stroke="#7b2d3e" strokeWidth="1.5" strokeLinecap="round"/>
+      <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+        <rect x="10" y="14" width="44" height="36" rx="2" stroke="#7b2d3e" strokeWidth="1.5" fill="none"/>
+        <line x1="10" y1="24" x2="54" y2="24" stroke="#7b2d3e" strokeWidth="1.5"/>
+        <line x1="18" y1="34" x2="36" y2="34" stroke="#7b2d3e" strokeWidth="1.5" strokeLinecap="round"/>
+        <line x1="18" y1="40" x2="30" y2="40" stroke="#7b2d3e" strokeWidth="1.5" strokeLinecap="round"/>
       </svg>
     ),
     title: "Initial Screening Form",
   },
   {
-    num: "02",
     icon: (
-      <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+      <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
         <circle cx="28" cy="24" r="10" stroke="#7b2d3e" strokeWidth="1.5" fill="none"/>
-        <path d="M14 46c0-7.732 6.268-14 14-14s14 6.268 14 14" stroke="#7b2d3e" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
-        <path d="M36 18 L40 14 M40 18 L36 14" stroke="#4a6741" strokeWidth="1.5" strokeLinecap="round"/>
-        <circle cx="40" cy="16" r="6" stroke="#4a6741" strokeWidth="1.5" fill="none"/>
-        <line x1="40" y1="12" x2="40" y2="20" stroke="#4a6741" strokeWidth="1.5" strokeLinecap="round"/>
-        <line x1="36" y1="16" x2="44" y2="16" stroke="#4a6741" strokeWidth="1.5" strokeLinecap="round"/>
+        <path d="M12 52c0-8.837 7.163-16 16-16s16 7.163 16 16" stroke="#7b2d3e" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+        <circle cx="46" cy="18" r="8" stroke="#4a6741" strokeWidth="1.5" fill="none"/>
+        <line x1="46" y1="14" x2="46" y2="22" stroke="#4a6741" strokeWidth="1.5" strokeLinecap="round"/>
+        <line x1="42" y1="18" x2="50" y2="18" stroke="#4a6741" strokeWidth="1.5" strokeLinecap="round"/>
       </svg>
     ),
     title: "15-Min Assessment with Counsellor Sama",
   },
   {
-    num: "03",
     icon: (
-      <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-        <circle cx="20" cy="22" r="8" stroke="#7b2d3e" strokeWidth="1.5" fill="none"/>
-        <path d="M6 44c0-7.732 6.268-14 14-14" stroke="#7b2d3e" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
-        <path d="M32 44c0-7.732-6.268-14-12-14" stroke="#7b2d3e" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
-        <path d="M36 14 L50 28" stroke="#4a6741" strokeWidth="1.5" strokeLinecap="round"/>
-        <path d="M44 14 L50 20 L38 20Z" fill="#4a6741"/>
+      <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+        <circle cx="22" cy="24" r="10" stroke="#7b2d3e" strokeWidth="1.5" fill="none"/>
+        <path d="M6 52c0-8.837 7.163-16 16-16s16 7.163 16 16" stroke="#7b2d3e" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+        <path d="M38 30 L54 30 M48 24 L54 30 L48 36" stroke="#4a6741" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
       </svg>
     ),
     title: "Matched Therapist",

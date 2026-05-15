@@ -29,7 +29,6 @@ export default function Contact() {
             We'd love to hear from you. Send us a message and we'll respond as soon as possible.
           </p>
 
-          {/* CTA box */}
           <div className="border border-burgundy-200 p-8 mb-8">
             <h3 className="font-display text-2xl font-light text-charcoal mb-3">
               Schedule Your Initial Assessment
@@ -57,45 +56,30 @@ export default function Contact() {
           </a>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block font-nav text-xs tracking-[0.15em] uppercase text-charcoal/50 mb-2">First name</label>
-              <input name="first_name" value={form.first_name} onChange={handleChange}
-                className="w-full border-b border-charcoal/20 bg-transparent py-2 text-sm text-charcoal focus:outline-none focus:border-burgundy-500 transition-colors placeholder:text-charcoal/30"
-                placeholder="Nour" />
-            </div>
-            <div>
-              <label className="block font-nav text-xs tracking-[0.15em] uppercase text-charcoal/50 mb-2">Last name</label>
-              <input name="last_name" value={form.last_name} onChange={handleChange}
-                className="w-full border-b border-charcoal/20 bg-transparent py-2 text-sm text-charcoal focus:outline-none focus:border-burgundy-500 transition-colors placeholder:text-charcoal/30"
-                placeholder="Ahmed" />
-            </div>
+        {/* Form — minimal placeholder style */}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-2 gap-6">
+            <input name="first_name" value={form.first_name} onChange={handleChange}
+              className="w-full border-b border-charcoal/20 bg-transparent py-2 text-sm text-charcoal focus:outline-none focus:border-burgundy-500 transition-colors placeholder:text-charcoal/40"
+              placeholder="First name" />
+            <input name="last_name" value={form.last_name} onChange={handleChange}
+              className="w-full border-b border-charcoal/20 bg-transparent py-2 text-sm text-charcoal focus:outline-none focus:border-burgundy-500 transition-colors placeholder:text-charcoal/40"
+              placeholder="Last name" />
           </div>
 
-          <div>
-            <label className="block font-nav text-xs tracking-[0.15em] uppercase text-charcoal/50 mb-2">Email *</label>
-            <input name="email" type="email" value={form.email} onChange={handleChange} required
-              className="w-full border-b border-charcoal/20 bg-transparent py-2 text-sm text-charcoal focus:outline-none focus:border-burgundy-500 transition-colors placeholder:text-charcoal/30"
-              placeholder="you@example.com" />
-          </div>
+          <input name="email" type="email" value={form.email} onChange={handleChange} required
+            className="w-full border-b border-charcoal/20 bg-transparent py-2 text-sm text-charcoal focus:outline-none focus:border-burgundy-500 transition-colors placeholder:text-charcoal/40"
+            placeholder="Email *" />
 
-          <div>
-            <label className="block font-nav text-xs tracking-[0.15em] uppercase text-charcoal/50 mb-2">How can we help you? *</label>
-            <select name="topic" value={form.topic} onChange={handleChange} required
-              className="w-full border-b border-charcoal/20 bg-transparent py-2 text-sm text-charcoal focus:outline-none focus:border-burgundy-500 transition-colors">
-              <option value="">Select a topic</option>
-              {topics.map((t) => <option key={t} value={t}>{t}</option>)}
-            </select>
-          </div>
+          <select name="topic" value={form.topic} onChange={handleChange} required
+            className="w-full border-b border-charcoal/20 bg-transparent py-2 text-sm text-charcoal focus:outline-none focus:border-burgundy-500 transition-colors">
+            <option value="" disabled>How can we help you? *</option>
+            {topics.map((t) => <option key={t} value={t}>{t}</option>)}
+          </select>
 
-          <div>
-            <label className="block font-nav text-xs tracking-[0.15em] uppercase text-charcoal/50 mb-2">Message *</label>
-            <textarea name="message" value={form.message} onChange={handleChange} required rows={5}
-              className="w-full border-b border-charcoal/20 bg-transparent py-2 text-sm text-charcoal focus:outline-none focus:border-burgundy-500 transition-colors resize-none placeholder:text-charcoal/30"
-              placeholder="Tell us a bit about what you're looking for…" />
-          </div>
+          <textarea name="message" value={form.message} onChange={handleChange} required rows={5}
+            className="w-full border-b border-charcoal/20 bg-transparent py-2 text-sm text-charcoal focus:outline-none focus:border-burgundy-500 transition-colors resize-none placeholder:text-charcoal/40"
+            placeholder="Message *" />
 
           {status === "success" ? (
             <p className="text-olive-500 text-sm font-light">✓ Thank you! We'll be in touch soon.</p>
