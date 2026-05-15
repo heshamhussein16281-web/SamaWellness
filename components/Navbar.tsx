@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
-import Image from "next/image";
+
+const LOGO_URL = "https://static.wixstatic.com/media/c9c2af_737fbe5934df446dbf671e28c6103fd6~mv2.png";
 
 const links = [
   { label: "HOME", href: "#home" },
@@ -14,51 +15,61 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="w-full bg-linen" style={{ minHeight: "175px", position: "relative", overflow: "visible" }}>
-      <div className="flex items-center" style={{ minHeight: "175px", paddingLeft: "24px", paddingRight: "40px" }}>
+    <header className="w-full bg-linen" style={{ height: "175px", position: "relative" }}>
 
-        {/* Logo — 182x182, top-left, slight negative margin matching original */}
-        <a href="#home" className="shrink-0" style={{ marginTop: "-7px", marginLeft: "-3px", marginRight: "80px" }}>
-          <Image
-            src="/logo.png"
-            alt="Sama Wellness Therapy"
-            width={182}
-            height={182}
-            style={{ display: "block", objectFit: "contain", objectPosition: "center" }}
-            priority
-          />
-        </a>
+      {/* Logo — absolutely positioned top-left with exact negative margins from original */}
+      <a href="#home" style={{
+        position: "absolute",
+        top: "-7px",
+        left: "-3px",
+        display: "block",
+        width: "182px",
+        height: "182px",
+        zIndex: 10,
+      }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={LOGO_URL}
+          alt="Sama Wellness Therapy"
+          style={{ width: "182px", height: "182px", objectFit: "contain", objectPosition: "center center", display: "block" }}
+        />
+      </a>
 
-        {/* Nav — fixed 115px gap, vertically centered */}
-        <nav className="hidden md:flex items-center" style={{ gap: "115px" }}>
-          {links.map((l, i) => (
-            <a key={l.href} href={l.href} style={{
-              fontFamily: "'Josefin Sans', sans-serif",
-              fontSize: "15px",
-              fontWeight: 300,
-              letterSpacing: "0.06em",
-              color: "rgb(45, 74, 70)",
-              textTransform: "uppercase",
-              textDecoration: i === 0 ? "underline" : "none",
-              textUnderlineOffset: "5px",
-              whiteSpace: "nowrap",
-            }}>
-              {l.label}
-            </a>
-          ))}
-        </nav>
+      {/* Nav — starts at left:242px (measured from original), vertically centered */}
+      <nav className="hidden md:flex items-center" style={{
+        position: "absolute",
+        left: "242px",
+        top: "42px",
+        gap: "115px",
+      }}>
+        {links.map((l, i) => (
+          <a key={l.href} href={l.href} style={{
+            fontFamily: "'Josefin Sans', sans-serif",
+            fontSize: "15px",
+            fontWeight: 300,
+            letterSpacing: "0.06em",
+            color: "rgb(45, 74, 70)",
+            textTransform: "uppercase",
+            textDecoration: i === 0 ? "underline" : "none",
+            textUnderlineOffset: "5px",
+            whiteSpace: "nowrap",
+          }}>
+            {l.label}
+          </a>
+        ))}
+      </nav>
 
-        <button className="md:hidden ml-auto p-2" onClick={() => setOpen(v => !v)}>
-          <div className="flex flex-col gap-1.5">
-            <span className="block w-6 h-0.5 bg-charcoal" />
-            <span className="block w-4 h-0.5 bg-charcoal" />
-            <span className="block w-6 h-0.5 bg-charcoal" />
-          </div>
-        </button>
-      </div>
+      {/* Mobile toggle */}
+      <button className="md:hidden absolute right-6 top-1/2 -translate-y-1/2 p-2" onClick={() => setOpen(v => !v)}>
+        <div className="flex flex-col gap-1.5">
+          <span className="block w-6 h-0.5 bg-charcoal" />
+          <span className="block w-4 h-0.5 bg-charcoal" />
+          <span className="block w-6 h-0.5 bg-charcoal" />
+        </div>
+      </button>
 
       {open && (
-        <div className="md:hidden bg-linen px-8 py-6 flex flex-col gap-5 border-t border-burgundy-100">
+        <div className="md:hidden absolute top-full left-0 right-0 bg-linen px-8 py-6 flex flex-col gap-5 border-t border-burgundy-100 z-50">
           {links.map((l) => (
             <a key={l.href} href={l.href} onClick={() => setOpen(false)}
               style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: "15px", fontWeight: 300, color: "rgb(45, 74, 70)", textTransform: "uppercase" }}>
