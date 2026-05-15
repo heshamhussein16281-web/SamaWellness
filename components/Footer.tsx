@@ -1,4 +1,4 @@
-import { LogoMark } from "./Navbar";
+
 
 const marqueeText = Array(6).fill("SAMA WELLNESS THERAPY — YOUR JOURNEY TO HEALING —");
 
@@ -21,7 +21,7 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-8 flex flex-col md:flex-row items-center md:items-start justify-between gap-10">
           {/* Logo */}
           <div>
-            <LogoMark />
+            <img src="/logo.png" alt="Sama Wellness Therapy" width={80} height={80} className="object-contain" />
             <p className="text-sm text-charcoal/50 mt-4 font-light leading-relaxed">
               New Giza — B1-C031 Meditown<br />
               info@samawellness.com<br />

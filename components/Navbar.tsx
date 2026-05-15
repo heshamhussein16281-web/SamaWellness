@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import clsx from "clsx";
+import Image from "next/image";
 
 const links = [
   { label: "HOME", href: "#home" },
@@ -22,8 +23,10 @@ export default function Navbar() {
 
   return (
     <header className={clsx("fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-linen", scrolled && "shadow-sm")}>
-      <div className="max-w-7xl mx-auto px-8 py-4 flex items-center justify-between">
-        <a href="#home"><LogoMark /></a>
+      <div className="max-w-7xl mx-auto px-8 py-2 flex items-center justify-between">
+        <a href="#home">
+          <Image src="/logo.png" alt="Sama Wellness Therapy" width={80} height={80} className="object-contain" />
+        </a>
         <nav className="hidden md:flex items-center gap-10">
           {links.map((l) => (
             <a key={l.href} href={l.href}
@@ -51,26 +54,5 @@ export default function Navbar() {
         </div>
       )}
     </header>
-  );
-}
-
-export function LogoMark() {
-  return (
-    <div className="flex items-center gap-2">
-      <svg width="55" height="68" viewBox="0 0 55 68" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="27" cy="22" rx="14" ry="17" stroke="#7b2d3e" strokeWidth="1.8" fill="none"/>
-        <path d="M20 38 Q27 42 34 38" stroke="#7b2d3e" strokeWidth="1.8" fill="none"/>
-        <rect x="22" y="40" width="10" height="5" rx="1" stroke="#7b2d3e" strokeWidth="1.8" fill="none"/>
-        <line x1="27" y1="38" x2="27" y2="20" stroke="#4a6741" strokeWidth="1.5" strokeLinecap="round"/>
-        <path d="M27 32 C27 32 20 30 19 24 C23 24 27 28 27 32Z" fill="#4a6741"/>
-        <path d="M27 29 C27 29 34 27 35 21 C31 21 27 25 27 29Z" fill="#4a6741"/>
-        <path d="M27 24 C27 24 25 18 27 14 C29 18 27 24 27 24Z" fill="#4a6741"/>
-      </svg>
-      <div>
-        <p className="font-display text-burgundy-500 text-lg font-semibold leading-tight">Sama</p>
-        <p className="font-display text-burgundy-500 text-lg font-semibold leading-tight">Wellness</p>
-        <p className="font-display text-burgundy-500 text-lg font-semibold leading-tight">Therapy</p>
-      </div>
-    </div>
   );
 }
