@@ -15,7 +15,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="w-full" style={{ height: "175px", position: "relative", backgroundColor: "#F5F2EE" }}>
+    <header className="w-full" style={{ height: "175px", position: "relative", backgroundColor: "#F5F2EE", borderBottom: "1px solid rgb(234, 228, 221)" }}>
 
       {/* Logo — 182x182, exact position from original */}
       <a href="#home" style={{ position: "absolute", top: "-7px", left: "-3px", display: "block", width: "182px", height: "182px", zIndex: 10 }}>
