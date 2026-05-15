@@ -39,7 +39,8 @@ export default function Navbar() {
       <nav className="hidden md:flex items-center" style={{
         position: "absolute",
         left: "242px",
-        top: "42px",
+        top: "50%",
+        transform: "translateY(-50%)",
         gap: "115px",
       }}>
         {links.map((l, i) => (
