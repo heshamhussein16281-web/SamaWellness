@@ -14,50 +14,40 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="w-full bg-linen" style={{ minHeight: "175px", position: "relative" }}>
-      <div className="flex items-center px-8" style={{ minHeight: "175px" }}>
+    <header className="w-full bg-linen" style={{ minHeight: "175px", position: "relative", overflow: "visible" }}>
+      <div className="flex items-center" style={{ minHeight: "175px", paddingLeft: "24px", paddingRight: "40px" }}>
 
-        {/* Logo — 182x182, slightly overflows top like original */}
-        <a
-          href="#home"
-          className="shrink-0 mr-16"
-          style={{ marginTop: "-7px", marginLeft: "-3px" }}
-        >
+        {/* Logo — 182x182, top-left, slight negative margin matching original */}
+        <a href="#home" className="shrink-0" style={{ marginTop: "-7px", marginLeft: "-3px", marginRight: "80px" }}>
           <Image
             src="/logo.png"
             alt="Sama Wellness Therapy"
             width={182}
             height={182}
-            className="object-contain"
-            style={{ objectPosition: "center center", display: "block" }}
+            style={{ display: "block", objectFit: "contain", objectPosition: "center" }}
             priority
           />
         </a>
 
-        {/* Desktop nav — starts at left:242px from edge, items gap 115px, vertically centered */}
+        {/* Nav — fixed 115px gap, vertically centered */}
         <nav className="hidden md:flex items-center" style={{ gap: "115px" }}>
           {links.map((l, i) => (
-            <a
-              key={l.href}
-              href={l.href}
-              style={{
-                fontFamily: "'Josefin Sans', sans-serif",
-                fontSize: "15px",
-                fontWeight: 300,
-                letterSpacing: "0.06em",
-                color: "rgb(45, 74, 70)",
-                textTransform: "uppercase",
-                textDecoration: i === 0 ? "underline" : "none",
-                textUnderlineOffset: "5px",
-                whiteSpace: "nowrap",
-              }}
-            >
+            <a key={l.href} href={l.href} style={{
+              fontFamily: "'Josefin Sans', sans-serif",
+              fontSize: "15px",
+              fontWeight: 300,
+              letterSpacing: "0.06em",
+              color: "rgb(45, 74, 70)",
+              textTransform: "uppercase",
+              textDecoration: i === 0 ? "underline" : "none",
+              textUnderlineOffset: "5px",
+              whiteSpace: "nowrap",
+            }}>
               {l.label}
             </a>
           ))}
         </nav>
 
-        {/* Mobile toggle */}
         <button className="md:hidden ml-auto p-2" onClick={() => setOpen(v => !v)}>
           <div className="flex flex-col gap-1.5">
             <span className="block w-6 h-0.5 bg-charcoal" />
