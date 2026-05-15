@@ -14,22 +14,27 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="w-full bg-linen">
-      <div className="flex items-center px-8 py-2 min-h-[120px]">
-        {/* Logo — exact 182x182px as inspected */}
-        <a href="#home" className="shrink-0 mr-16">
+    <header className="w-full bg-linen" style={{ minHeight: "175px", position: "relative" }}>
+      <div className="flex items-center px-8" style={{ minHeight: "175px" }}>
+
+        {/* Logo — 182x182, slightly overflows top like original */}
+        <a
+          href="#home"
+          className="shrink-0 mr-16"
+          style={{ marginTop: "-7px", marginLeft: "-3px" }}
+        >
           <Image
             src="/logo.png"
             alt="Sama Wellness Therapy"
             width={182}
             height={182}
             className="object-contain"
-            style={{ objectPosition: "center center" }}
+            style={{ objectPosition: "center center", display: "block" }}
             priority
           />
         </a>
 
-        {/* Desktop nav — fixed 115px gap between items */}
+        {/* Desktop nav — starts at left:242px from edge, items gap 115px, vertically centered */}
         <nav className="hidden md:flex items-center" style={{ gap: "115px" }}>
           {links.map((l, i) => (
             <a
