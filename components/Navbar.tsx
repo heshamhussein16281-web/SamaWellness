@@ -15,15 +15,18 @@ export default function Navbar() {
 
   return (
     <header className="w-full bg-linen">
-      <div className="flex items-center px-8 py-3 min-h-[110px]">
-        {/* Logo */}
-        <a href="#home" className="flex flex-col items-center shrink-0 mr-20">
-          <Image src="/logo.png" alt="Sama Wellness Therapy" width={52} height={52} className="object-contain" priority />
-          <div className="text-center mt-1 leading-tight">
-            <span className="block font-display text-[14px] font-normal text-[#3d3226]">Sama</span>
-            <span className="block font-display text-[14px] font-normal text-[#3d3226]">Wellness</span>
-            <span className="block font-display text-[14px] font-normal text-[#3d3226]">Therapy</span>
-          </div>
+      <div className="flex items-center px-8 py-2 min-h-[120px]">
+        {/* Logo — exact 182x182px as inspected */}
+        <a href="#home" className="shrink-0 mr-16">
+          <Image
+            src="/logo.png"
+            alt="Sama Wellness Therapy"
+            width={182}
+            height={182}
+            className="object-contain"
+            style={{ objectPosition: "center center" }}
+            priority
+          />
         </a>
 
         {/* Desktop nav — fixed 115px gap between items */}
