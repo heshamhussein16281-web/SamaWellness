@@ -1,59 +1,17 @@
 import type { Config } from "tailwindcss";
-
 const config: Config = {
-  content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-  ],
+  content: ["./pages/**/*.{js,ts,jsx,tsx,mdx}","./components/**/*.{js,ts,jsx,tsx,mdx}","./app/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
       colors: {
-        sage: {
-          50:  "#f4f7f4",
-          100: "#e6ede6",
-          200: "#ccdccc",
-          300: "#a3bfa3",
-          400: "#749d74",
-          500: "#547f54",
-          600: "#416341",
-          700: "#354f35",
-          800: "#2c402c",
-          900: "#253625",
-        },
-        clay: {
-          50:  "#fdf6f0",
-          100: "#faeadb",
-          200: "#f4d0b0",
-          300: "#ecae7a",
-          400: "#e38642",
-          500: "#dc6b1e",
-          600: "#c55415",
-          700: "#a34013",
-          800: "#823416",
-          900: "#6a2d15",
-        },
-        cream: "#faf8f3",
-        charcoal: "#1e1e1e",
+        linen: "#f0ebe3",
+        burgundy: { 50:"#f9f0f2",100:"#f0d6db",200:"#e0adb6",300:"#c97b8a",400:"#a84d60",500:"#7b2d3e",600:"#6b2436",700:"#581d2c" },
+        olive: { 400:"#638a59",500:"#4a6741" },
+        charcoal: "#2c2c2c",
       },
-      fontFamily: {
-        display: ["'Cormorant Garamond'", "serif"],
-        body: ["'DM Sans'", "sans-serif"],
-      },
-      animation: {
-        "marquee": "marquee 30s linear infinite",
-        "fade-up": "fadeUp 0.7s ease forwards",
-      },
-      keyframes: {
-        marquee: {
-          "0%": { transform: "translateX(0)" },
-          "100%": { transform: "translateX(-50%)" },
-        },
-        fadeUp: {
-          from: { opacity: "0", transform: "translateY(24px)" },
-          to: { opacity: "1", transform: "translateY(0)" },
-        },
-      },
+      fontFamily: { display:["'Cormorant Garamond'","serif"], body:["'DM Sans'","sans-serif"], nav:["'Montserrat'","sans-serif"] },
+      animation: { marquee:"marquee 35s linear infinite" },
+      keyframes: { marquee:{ "0%":{transform:"translateX(0)"},"100%":{transform:"translateX(-50%)"} } },
     },
   },
   plugins: [],
