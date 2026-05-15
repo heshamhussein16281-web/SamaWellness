@@ -1,109 +1,44 @@
-"use client";
-import { useEffect, useRef } from "react";
-import Link from "next/link";
+import { LogoMark } from "./Navbar";
 
 export default function Hero() {
-  const headlineRef = useRef<HTMLHeadingElement>(null);
-
-  useEffect(() => {
-    const el = headlineRef.current;
-    if (!el) return;
-    el.style.opacity = "0";
-    el.style.transform = "translateY(32px)";
-    const t = setTimeout(() => {
-      el.style.transition = "opacity 0.9s ease, transform 0.9s ease";
-      el.style.opacity = "1";
-      el.style.transform = "translateY(0)";
-    }, 100);
-    return () => clearTimeout(t);
-  }, []);
-
   return (
-    <section
-      id="home"
-      className="relative min-h-screen flex items-center overflow-hidden"
-      style={{
-        background:
-          "linear-gradient(135deg, #f4f7f4 0%, #faf8f3 40%, #faeadb 100%)",
-      }}
-    >
-      {/* Decorative circles */}
-      <div className="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full bg-sage-200/30 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 -left-24 w-[400px] h-[400px] rounded-full bg-clay-200/20 blur-3xl pointer-events-none" />
-
-      <div className="relative max-w-7xl mx-auto px-6 pt-28 pb-20 grid md:grid-cols-2 gap-12 items-center">
-        {/* Text */}
-        <div>
-          <span className="inline-block px-4 py-1.5 mb-6 text-xs font-semibold tracking-[0.2em] uppercase text-sage-600 bg-sage-100 rounded-full">
-            Professional Care Tailored to Your Journey
-          </span>
-          <h1
-            ref={headlineRef}
-            className="font-display text-5xl md:text-6xl lg:text-7xl font-light leading-tight text-charcoal text-balance"
-          >
-            Elevate Your{" "}
-            <em className="text-sage-600 font-normal">Mental Wellness</em>
-          </h1>
-          <p className="mt-6 text-lg text-charcoal/60 font-body font-light leading-relaxed max-w-md">
-            Healing support &amp; specialized care — matched to you through a
-            methodical screening process.
+    <section id="home" className="min-h-screen bg-linen flex flex-col pt-28">
+      {/* Hero content */}
+      <div className="flex-1 max-w-7xl mx-auto w-full px-8 grid md:grid-cols-2 gap-0 items-center">
+        {/* Left: headline + logo */}
+        <div className="flex flex-col items-start justify-center py-16">
+          <p className="font-nav text-xs tracking-[0.25em] uppercase text-charcoal/50 mb-8">
+            ELEVATE YOUR MENTAL WELLNESS
           </p>
-          <div className="mt-10 flex flex-col sm:flex-row gap-4">
-            <a
-              href="#process"
-              className="px-8 py-3.5 bg-sage-600 text-cream font-medium rounded-full hover:bg-sage-700 transition-colors text-sm tracking-wide"
-            >
-              Start Your Journey
-            </a>
-            <a
-              href="#services"
-              className="px-8 py-3.5 border border-charcoal/20 text-charcoal font-medium rounded-full hover:border-sage-600 hover:text-sage-600 transition-colors text-sm tracking-wide"
-            >
-              Explore Services
-            </a>
+          {/* Large logo in center */}
+          <div className="flex flex-col items-center w-full mb-10">
+            <svg width="140" height="170" viewBox="0 0 55 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <ellipse cx="27" cy="22" rx="14" ry="17" stroke="#7b2d3e" strokeWidth="1.5" fill="none"/>
+              <path d="M20 38 Q27 42 34 38" stroke="#7b2d3e" strokeWidth="1.5" fill="none"/>
+              <rect x="22" y="40" width="10" height="5" rx="1" stroke="#7b2d3e" strokeWidth="1.5" fill="none"/>
+              <line x1="27" y1="38" x2="27" y2="20" stroke="#4a6741" strokeWidth="1.5" strokeLinecap="round"/>
+              <path d="M27 32 C27 32 20 30 19 24 C23 24 27 28 27 32Z" fill="#4a6741"/>
+              <path d="M27 29 C27 29 34 27 35 21 C31 21 27 25 27 29Z" fill="#4a6741"/>
+              <path d="M27 24 C27 24 25 18 27 14 C29 18 27 24 27 24Z" fill="#4a6741"/>
+            </svg>
+            <p className="font-display text-burgundy-500 text-5xl font-semibold leading-tight text-center mt-4">Sama</p>
+            <p className="font-display text-burgundy-500 text-5xl font-semibold leading-tight text-center">Wellness</p>
+            <p className="font-display text-burgundy-500 text-5xl font-semibold leading-tight text-center">Therapy</p>
           </div>
+          <p className="font-display text-charcoal/70 text-2xl italic text-center w-full">
+            Professional Care Tailored to Your Journey
+          </p>
         </div>
 
-        {/* Visual card */}
-        <div className="relative hidden md:block">
-          <div className="relative rounded-3xl overflow-hidden aspect-[4/5] bg-sage-100 shadow-2xl">
-            {/* Gradient placeholder — replace with <Image> when you have a real photo */}
-            <div
-              className="w-full h-full"
-              style={{
-                background:
-                  "linear-gradient(160deg, #a3bfa3 0%, #547f54 60%, #354f35 100%)",
-              }}
-            />
-            {/* Overlay text badge */}
-            <div className="absolute bottom-8 left-8 right-8 bg-cream/90 backdrop-blur-sm rounded-2xl p-5">
-              <p className="font-display text-2xl font-light text-charcoal">
-                "A space where healing begins."
-              </p>
-              <p className="mt-1 text-xs text-charcoal/50 tracking-wide uppercase font-semibold">
-                Sama Wellness Therapy · Cairo
-              </p>
-            </div>
-          </div>
-          {/* Floating stat */}
-          <div className="absolute -left-8 top-1/3 bg-white rounded-2xl shadow-lg p-4 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-clay-100 flex items-center justify-center text-clay-500">
-              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0" />
-              </svg>
-            </div>
-            <div>
-              <p className="font-semibold text-sm text-charcoal">8 Therapists</p>
-              <p className="text-xs text-charcoal/50">Specialized team</p>
-            </div>
-          </div>
+        {/* Right: therapy room image */}
+        <div className="hidden md:block h-full min-h-[600px] relative">
+          <img
+            src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80"
+            alt="Therapy room"
+            className="w-full h-full object-cover"
+            style={{ maxHeight: "calc(100vh - 7rem)" }}
+          />
         </div>
-      </div>
-
-      {/* Scroll cue */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
-        <span className="text-xs uppercase tracking-widest font-semibold text-charcoal">Scroll</span>
-        <div className="w-px h-8 bg-charcoal animate-bounce" />
       </div>
     </section>
   );

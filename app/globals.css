@@ -4,20 +4,24 @@
 
 @layer base {
   :root {
-    --cream: #faf8f3;
-    --sage-400: #749d74;
-    --sage-600: #416341;
-    --clay-400: #e38642;
-    --charcoal: #1e1e1e;
+    --linen: #f0ebe3;
+    --burgundy: #7b2d3e;
+    --olive: #4a6741;
+    --charcoal: #2c2c2c;
   }
 
   html {
     scroll-behavior: smooth;
   }
 
+  body {
+    background-color: #f0ebe3;
+    color: #2c2c2c;
+  }
+
   ::selection {
-    background: #a3bfa3;
-    color: #1e1e1e;
+    background: #7b2d3e;
+    color: #f0ebe3;
   }
 }
 
@@ -31,7 +35,7 @@
 .marquee-track {
   display: flex;
   width: max-content;
-  animation: marquee 30s linear infinite;
+  animation: marquee 35s linear infinite;
 }
 
 @keyframes marquee {
