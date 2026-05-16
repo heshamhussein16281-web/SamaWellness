@@ -1,5 +1,12 @@
 "use client";
 
+// Exact measurements from live inspection of samawellnesstherapy.com
+// Card: 445.45 x 687.95px, bg #F5F2EE, no border radius
+// Section bg: rgb(234,228,221), side padding 110px, gap between cards 80px
+// Image: 339x255px, 53px from card edges
+// Title: topOffset 351px, 53px from left, 45px font, lineHeight 54.5px
+// Desc: topOffset 481px, 53px from left, 22.7px font, lineHeight 29.5px
+
 const services = [
   {
     title: "Individual Therapy",
@@ -25,11 +32,12 @@ export default function Services() {
       style={{
         backgroundColor: "rgb(234, 228, 221)",
         width: "100%",
-        padding: "80px 60px",
+        paddingTop: "80px",
+        paddingBottom: "80px",
       }}
     >
       {/* Section heading */}
-      <div style={{ textAlign: "center", marginBottom: "60px" }}>
+      <div style={{ textAlign: "center", marginBottom: "60px", paddingLeft: "110px", paddingRight: "110px" }}>
         <h2 style={{
           fontFamily: "'Cormorant Garamond', serif",
           fontSize: "clamp(32px, 3.75vw, 64px)",
@@ -42,40 +50,44 @@ export default function Services() {
         </h2>
       </div>
 
-      {/* 3 cards with gaps, rounded corners, floating */}
+      {/* Cards container — exactly 110px padding each side, 80px gap */}
       <div style={{
         display: "grid",
-        gridTemplateColumns: "1fr 1fr 1fr",
-        gap: "24px",
-        width: "100%",
+        gridTemplateColumns: "repeat(3, 445.45px)",
+        gap: "80px",
+        paddingLeft: "110px",
+        paddingRight: "104px",
       }}>
         {services.map((s, i) => (
           <div
             key={i}
             style={{
+              width: "445.45px",
+              height: "687.95px",
               backgroundColor: "#F5F2EE",
-              borderRadius: "12px",
+              position: "relative",
+              flexShrink: 0,
               overflow: "hidden",
-              display: "flex",
-              flexDirection: "column",
-              padding: "32px",
-              gap: "24px",
             }}
           >
-            {/* Image with rounded corners, not full width */}
-            <div style={{
-              width: "100%",
-              borderRadius: "8px",
-              overflow: "hidden",
-              flexShrink: 0,
-            }}>
+            {/* Image — 339x255px, 53px from top and left */}
+            <div
+              style={{
+                position: "absolute",
+                top: "53px",
+                left: "53px",
+                width: "339px",
+                height: "255px",
+                overflow: "hidden",
+              }}
+            >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={s.image}
                 alt={s.title}
                 style={{
                   width: "100%",
-                  height: "260px",
+                  height: "100%",
                   objectFit: "cover",
                   display: "block",
                   transition: "transform 0.7s cubic-bezier(0.22,1,0.36,1)",
@@ -85,26 +97,34 @@ export default function Services() {
               />
             </div>
 
-            {/* Title */}
+            {/* Title — 351px from card top, 53px from left */}
             <h3 style={{
+              position: "absolute",
+              top: "351px",
+              left: "53px",
+              right: "53px",
               fontFamily: "'Cormorant Garamond', serif",
-              fontSize: "clamp(28px, 2.65vw, 45px)",
+              fontSize: "45px",
               fontWeight: 300,
               color: "rgb(45, 74, 70)",
+              lineHeight: "54.5px",
               margin: 0,
-              lineHeight: 1.15,
               letterSpacing: "0.01em",
             }}>
               {s.title}
             </h3>
 
-            {/* Description */}
+            {/* Description — 481px from card top, 53px from left */}
             <p style={{
+              position: "absolute",
+              top: "481px",
+              left: "53px",
+              right: "53px",
               fontFamily: "'Josefin Sans', sans-serif",
-              fontSize: "clamp(14px, 1.2vw, 20px)",
+              fontSize: "22.7px",
               fontWeight: 300,
               color: "rgb(45, 74, 70)",
-              lineHeight: 1.75,
+              lineHeight: "29.5px",
               margin: 0,
             }}>
               {s.desc}
