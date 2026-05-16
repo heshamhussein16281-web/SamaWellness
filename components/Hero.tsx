@@ -51,22 +51,21 @@ export default function Hero() {
         Professional Care Tailored to Your Journey
       </p>
 
-      {/* Room image — soft edges via CSS mask gradient */}
+      {/* Room image — no rounding, no fade, exact match to original */}
       <div style={{
         position: "absolute",
         top: "38px",
         left: "54.6%",
-        width: "39.4%",
+        right: 0,
         height: "671px",
-        WebkitMaskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%)",
-        maskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%)",
-        overflow: "hidden",
+        borderRadius: "10.7px",
+        overflow: "clip",
       }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/room.jpg"
           alt="Sama Wellness Therapy room"
-          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", borderRadius: "10.7px" }}
         />
       </div>
 
