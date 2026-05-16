@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 
-const LOGO_URL = "https://static.wixstatic.com/media/c9c2af_737fbe5934df446dbf671e28c6103fd6~mv2.png";
+const LOGO_URL = "/logo.png";
 
 const links = [
   { label: "HOME", href: "#home" },
