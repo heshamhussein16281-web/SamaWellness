@@ -48,17 +48,19 @@ export default function Navbar() {
           <a
             key={l.href}
             href={l.href}
-            className={`nav-link ${i === 0 ? "active" : ""}`}
+            className=""
             style={{
               fontFamily: "'Josefin Sans', sans-serif",
               fontSize: "22.7px",
               fontWeight: 300,
               lineHeight: "29.52px",
-              letterSpacing: "normal",
+              letterSpacing: "-0.02em",
               color: "rgb(45, 74, 70)",
               textTransform: "uppercase",
               whiteSpace: "nowrap",
-              textDecoration: "none",
+              textDecoration: i === 0 ? "underline" : "none",
+              textDecorationColor: "rgb(45, 74, 70)",
+              textUnderlineOffset: "auto",
               WebkitFontSmoothing: "antialiased",
               padding: "4px 13.36px",
             }}>
