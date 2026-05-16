@@ -39,7 +39,7 @@ export default function Services() {
       {/* Section heading */}
       <div style={{ textAlign: "center", marginBottom: "60px", paddingLeft: "110px", paddingRight: "110px" }}>
         <h2 style={{
-          fontFamily: "'Cormorant Garamond', serif",
+          fontFamily: "var(--font-display)",
           fontSize: "clamp(32px, 3.75vw, 64px)",
           fontWeight: 300,
           color: "rgb(45, 74, 70)",
@@ -103,7 +103,7 @@ export default function Services() {
               top: "351px",
               left: "53px",
               right: "53px",
-              fontFamily: "'Cormorant Garamond', serif",
+              fontFamily: "var(--font-display)",
               fontSize: "45px",
               fontWeight: 300,
               color: "rgb(45, 74, 70)",
@@ -120,8 +120,8 @@ export default function Services() {
               top: "481px",
               left: "53px",
               right: "53px",
-              fontFamily: "'Josefin Sans', sans-serif",
-              fontSize: "22.7px",
+              fontFamily: "var(--font-body)",
+              fontSize: "18px",
               fontWeight: 300,
               color: "rgb(45, 74, 70)",
               lineHeight: "29.5px",

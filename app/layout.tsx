@@ -1,30 +1,37 @@
 import type { Metadata } from "next";
+import { Gilda_Display, Nunito_Sans, Josefin_Sans } from "next/font/google";
 import "./globals.css";
 
+const gildaDisplay = Gilda_Display({
+  weight: ["400"],
+  subsets: ["latin"],
+  variable: "--font-gilda",
+  display: "swap",
+});
+
+const nunitoSans = Nunito_Sans({
+  weight: ["300", "400"],
+  subsets: ["latin"],
+  variable: "--font-nunito",
+  display: "swap",
+});
+
+const josefinSans = Josefin_Sans({
+  weight: ["300", "400"],
+  subsets: ["latin"],
+  variable: "--font-josefin",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  title: "Home | Sama Wellness Therapy",
-  description: "Professional mental wellness care tailored to your journey. Individual, Couple & Group Therapy in Cairo.",
-  openGraph: {
-    title: "Sama Wellness Therapy",
-    description: "Elevate Your Mental Wellness",
-    url: "https://www.samawellnesstherapy.com",
-    siteName: "Sama Wellness Therapy",
-    type: "website",
-  },
+  title: "Sama Wellness Therapy",
+  description: "Professional Care Tailored to Your Journey",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="scroll-smooth">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500&family=Josefin+Sans:wght@300;400&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body className="bg-linen font-body text-charcoal antialiased">
+    <html lang="en">
+      <body className={`${gildaDisplay.variable} ${nunitoSans.variable} ${josefinSans.variable}`}>
         {children}
       </body>
     </html>

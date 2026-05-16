@@ -46,7 +46,7 @@ export default function Process() {
 
         <ScrollReveal>
           <h2 className="reveal" style={{
-            fontFamily: "'Cormorant Garamond', serif",
+            fontFamily: "var(--font-display)",
             fontSize: "clamp(32px, 3.5vw, 52px)",
             fontWeight: 300,
             color: "#2c2c2c",
@@ -64,10 +64,10 @@ export default function Process() {
               <div key={i} className="reveal" style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
                 <div style={{ marginBottom: "28px" }}>{s.icon}</div>
                 <div style={{ width: "32px", height: "1px", backgroundColor: "rgb(234,228,221)", marginBottom: "20px" }} />
-                <h3 style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: "11px", fontWeight: 400, letterSpacing: "0.18em", textTransform: "uppercase", color: "#2c2c2c", marginBottom: "12px" }}>
+                <h3 style={{ fontFamily: "var(--font-ui)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.18em", textTransform: "uppercase", color: "#2c2c2c", marginBottom: "12px" }}>
                   {s.title}
                 </h3>
-                <p style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: "13px", fontWeight: 300, color: "rgba(44,44,44,0.6)", lineHeight: 1.8 }}>
+                <p style={{ fontFamily: "var(--font-ui)", fontSize: "13px", fontWeight: 300, color: "rgba(44,44,44,0.6)", lineHeight: 1.8 }}>
                   {s.desc}
                 </p>
               </div>
@@ -81,7 +81,7 @@ export default function Process() {
             target="_blank"
             rel="noopener noreferrer"
             className="btn-outline"
-            style={{ display: "inline-block", padding: "14px 40px", border: "1px solid #7b2d3e", color: "#7b2d3e", fontFamily: "'Josefin Sans', sans-serif", fontSize: "11px", fontWeight: 400, letterSpacing: "0.2em", textTransform: "uppercase", textDecoration: "none" }}
+            style={{ display: "inline-block", padding: "14px 40px", border: "1px solid #7b2d3e", color: "#7b2d3e", fontFamily: "var(--font-ui)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.2em", textTransform: "uppercase", textDecoration: "none" }}
           >
             Open Initial Screening Form
           </a>

@@ -17,7 +17,7 @@ export default function Footer() {
       <div style={{ overflow: "hidden", backgroundColor: "#F5F2EE", borderTop: "1px solid rgb(234,228,221)", borderBottom: "1px solid rgb(234,228,221)", padding: "16px 0", userSelect: "none" }}>
         <div className="marquee-track">
           {marqueeItems.concat(marqueeItems).map((t, i) => (
-            <span key={i} style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: "11px", fontWeight: 300, letterSpacing: "0.25em", textTransform: "uppercase", color: "rgb(45,74,70)", whiteSpace: "nowrap", margin: "0 32px" }}>
+            <span key={i} style={{ fontFamily: "var(--font-ui)", fontSize: "11px", fontWeight: 300, letterSpacing: "0.25em", textTransform: "uppercase", color: "rgb(45,74,70)", whiteSpace: "nowrap", margin: "0 32px" }}>
               {t}
             </span>
           ))}
@@ -30,7 +30,7 @@ export default function Footer() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo.png" alt="Sama Wellness Therapy" style={{ width: "120px", height: "120px", objectFit: "contain" }} />
           </a>
-          <p style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: "12px", fontWeight: 300, letterSpacing: "0.1em", color: "rgba(44,44,44,0.55)", lineHeight: 2, textAlign: "center" }}>
+          <p style={{ fontFamily: "var(--font-ui)", fontSize: "12px", fontWeight: 300, letterSpacing: "0.1em", color: "rgba(44,44,44,0.55)", lineHeight: 2, textAlign: "center" }}>
             New Giza — B1-C031 Meditown, Cairo, Egypt<br />
             info@samawellnesstherapy.com &nbsp;·&nbsp; (+2) 011 309 46556
           </p>
@@ -42,7 +42,7 @@ export default function Footer() {
             ))}
           </div>
           <div style={{ width: "100%", height: "1px", backgroundColor: "rgb(234,228,221)" }} />
-          <p style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: "10px", fontWeight: 300, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(44,44,44,0.35)" }}>
+          <p style={{ fontFamily: "var(--font-ui)", fontSize: "10px", fontWeight: 300, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(44,44,44,0.35)" }}>
             © {new Date().getFullYear()} Sama Wellness Therapy. All rights reserved.
           </p>
         </div>

@@ -98,7 +98,7 @@ export default function Navbar() {
             href={`#${l.href}`}
             onClick={e => handleClick(e, l.href)}
             style={{
-              fontFamily: "'Josefin Sans', sans-serif",
+              fontFamily: "var(--font-ui)",
               fontSize: "22.7px",
               fontWeight: 300,
               lineHeight: "29.52px",
@@ -133,7 +133,7 @@ export default function Navbar() {
         <div style={{ position: "absolute", top: "100%", left: 0, right: 0, backgroundColor: "#F5F2EE", borderBottom: "1px solid rgb(234,228,221)", padding: "32px", display: "flex", flexDirection: "column", gap: "24px", zIndex: 50 }}>
           {links.map((l) => (
             <a key={l.href} href={`#${l.href}`} onClick={e => handleClick(e, l.href)}
-              style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: "18px", fontWeight: 300, color: "rgb(45, 74, 70)", textTransform: "uppercase", borderBottom: active === l.href ? "1px solid rgb(45, 74, 70)" : "none" }}>
+              style={{ fontFamily: "var(--font-ui)", fontSize: "18px", fontWeight: 300, color: "rgb(45, 74, 70)", textTransform: "uppercase", borderBottom: active === l.href ? "1px solid rgb(45, 74, 70)" : "none" }}>
               {l.label}
             </a>
           ))}
