@@ -1,12 +1,5 @@
 "use client";
 
-// Exact measurements from live inspection of samawellnesstherapy.com
-// Card: 445.45 x 687.95px, bg #F5F2EE, no border radius
-// Section bg: rgb(234,228,221), side padding 110px, gap between cards 80px
-// Image: 339x255px, 53px from card edges
-// Title: topOffset 351px, 53px from left, 45px font, lineHeight 54.5px
-// Desc: topOffset 481px, 53px from left, 22.7px font, lineHeight 29.5px
-
 const services = [
   {
     title: "Individual Therapy",
@@ -32,16 +25,16 @@ export default function Services() {
       style={{
         backgroundColor: "rgb(234, 228, 221)",
         width: "100%",
-        paddingTop: "80px",
-        paddingBottom: "80px",
+        paddingTop: "40px",
+        paddingBottom: "32px",
       }}
     >
       {/* Section heading */}
-      <div style={{ textAlign: "center", marginBottom: "60px", paddingLeft: "110px", paddingRight: "110px" }}>
+      <div style={{ textAlign: "center", marginBottom: "32px", paddingLeft: "80px", paddingRight: "80px" }}>
         <h2 style={{
           fontFamily: "var(--font-display)",
-          fontSize: "clamp(32px, 3.75vw, 64px)",
-          fontWeight: 300,
+          fontSize: "clamp(28px, 3.04vw, 52px)",
+          fontWeight: 400,
           color: "rgb(45, 74, 70)",
           margin: 0,
           lineHeight: 1.2,
@@ -50,37 +43,27 @@ export default function Services() {
         </h2>
       </div>
 
-      {/* Cards container — exactly 110px padding each side, 80px gap */}
+      {/* Cards — exact 445.45px wide, 530px tall, 80px side padding, 80px gap */}
       <div style={{
         display: "grid",
         gridTemplateColumns: "repeat(3, 445.45px)",
         gap: "80px",
-        paddingLeft: "110px",
-        paddingRight: "104px",
+        paddingLeft: "80px",
+        paddingRight: "80px",
       }}>
         {services.map((s, i) => (
           <div
             key={i}
             style={{
               width: "445.45px",
-              height: "687.95px",
+              height: "530px",
               backgroundColor: "#F5F2EE",
               position: "relative",
-              flexShrink: 0,
               overflow: "hidden",
             }}
           >
-            {/* Image — 339x255px, 53px from top and left */}
-            <div
-              style={{
-                position: "absolute",
-                top: "53px",
-                left: "53px",
-                width: "339px",
-                height: "255px",
-                overflow: "hidden",
-              }}
-            >
+            {/* Image — scaled proportionally: original 255/688 ratio → 196/530 */}
+            <div style={{ position: "absolute", top: "40px", left: "40px", width: "365px", height: "196px", overflow: "hidden" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={s.image}
@@ -97,34 +80,33 @@ export default function Services() {
               />
             </div>
 
-            {/* Title — 351px from card top, 53px from left */}
+            {/* Title — scaled: original top 351/688 ratio → 270/530 */}
             <h3 style={{
               position: "absolute",
-              top: "351px",
-              left: "53px",
-              right: "53px",
+              top: "270px",
+              left: "40px",
+              right: "40px",
               fontFamily: "var(--font-display)",
-              fontSize: "45px",
-              fontWeight: 300,
+              fontSize: "clamp(22px, 2.2vw, 37px)",
+              fontWeight: 400,
               color: "rgb(45, 74, 70)",
-              lineHeight: "54.5px",
+              lineHeight: 1.2,
               margin: 0,
-              letterSpacing: "0.01em",
             }}>
               {s.title}
             </h3>
 
-            {/* Description — 481px from card top, 53px from left */}
+            {/* Description — scaled: original top 481/688 ratio → 370/530 */}
             <p style={{
               position: "absolute",
-              top: "481px",
-              left: "53px",
-              right: "53px",
+              top: "370px",
+              left: "40px",
+              right: "40px",
               fontFamily: "var(--font-body)",
-              fontSize: "18px",
+              fontSize: "clamp(12px, 1vw, 16px)",
               fontWeight: 300,
               color: "rgb(45, 74, 70)",
-              lineHeight: "29.5px",
+              lineHeight: 1.75,
               margin: 0,
             }}>
               {s.desc}
