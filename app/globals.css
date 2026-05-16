@@ -120,3 +120,17 @@
 @layer utilities {
   .text-balance { text-wrap: balance; }
 }
+
+/* CSS-only hover states — no JS event handlers needed */
+.logo-link { transition: opacity 0.2s ease; }
+.logo-link:hover { opacity: 0.85; }
+
+.nav-link { color: rgb(45, 74, 70) !important; text-decoration: none !important; position: relative; }
+.nav-link::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 1px; background: rgb(45, 74, 70); transition: width 0.3s ease; }
+.nav-link:hover::after, .nav-link.active::after { width: 100%; }
+
+.social-icon { color: rgba(44,44,44,0.4); transition: color 0.2s ease; }
+.social-icon:hover { color: rgb(45,74,70); }
+
+.btn-outline { position: relative; display: inline-block; transition: color 0.3s ease, background-color 0.3s ease; }
+.btn-outline:hover { background-color: #7b2d3e; color: #F5F2EE !important; }

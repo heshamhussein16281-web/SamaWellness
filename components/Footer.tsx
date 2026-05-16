@@ -1,5 +1,4 @@
 "use client";
-const LOGO_URL = "/logo.png";
 
 const marqueeItems = Array(8).fill("SAMA WELLNESS THERAPY — YOUR JOURNEY TO HEALING —");
 
@@ -15,7 +14,6 @@ const socials = [
 export default function Footer() {
   return (
     <>
-      {/* Marquee */}
       <div style={{ overflow: "hidden", backgroundColor: "#F5F2EE", borderTop: "1px solid rgb(234,228,221)", borderBottom: "1px solid rgb(234,228,221)", padding: "16px 0", userSelect: "none" }}>
         <div className="marquee-track">
           {marqueeItems.concat(marqueeItems).map((t, i) => (
@@ -26,44 +24,24 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Footer */}
       <footer style={{ backgroundColor: "#F5F2EE", padding: "64px 0 40px", borderTop: "1px solid rgb(234,228,221)" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 64px", display: "flex", flexDirection: "column", alignItems: "center", gap: "40px" }}>
-
-          {/* Logo */}
-          <a href="#home" style={{ display: "block", opacity: 1, transition: "opacity 0.2s ease" }}
-            onMouseEnter={e => (e.currentTarget.style.opacity = "0.75")}
-            onMouseLeave={e => (e.currentTarget.style.opacity = "1")}>
+          <a href="#home">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={LOGO_URL} alt="Sama Wellness Therapy" style={{ width: "120px", height: "120px", objectFit: "contain" }} />
+            <img src="/logo.png" alt="Sama Wellness Therapy" style={{ width: "120px", height: "120px", objectFit: "contain" }} />
           </a>
-
-          {/* Contact info */}
-          <div style={{ textAlign: "center" }}>
-            <p style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: "12px", fontWeight: 300, letterSpacing: "0.1em", color: "rgba(44,44,44,0.55)", lineHeight: 2 }}>
-              New Giza — B1-C031 Meditown, Cairo, Egypt<br />
-              info@samawellnesstherapy.com &nbsp;·&nbsp; (+2) 011 309 46556
-            </p>
-          </div>
-
-          {/* Social icons */}
+          <p style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: "12px", fontWeight: 300, letterSpacing: "0.1em", color: "rgba(44,44,44,0.55)", lineHeight: 2, textAlign: "center" }}>
+            New Giza — B1-C031 Meditown, Cairo, Egypt<br />
+            info@samawellnesstherapy.com &nbsp;·&nbsp; (+2) 011 309 46556
+          </p>
           <div style={{ display: "flex", alignItems: "center", gap: "28px" }}>
             {socials.map((s) => (
-              <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label}
-                style={{ color: "rgba(44,44,44,0.4)", transition: "color 0.2s ease" }}
-                onMouseEnter={e => (e.currentTarget.style.color = "rgb(45,74,70)")}
-                onMouseLeave={e => (e.currentTarget.style.color = "rgba(44,44,44,0.4)")}>
-                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                  <path d={s.d} />
-                </svg>
+              <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label} className="social-icon">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d={s.d} /></svg>
               </a>
             ))}
           </div>
-
-          {/* Divider */}
           <div style={{ width: "100%", height: "1px", backgroundColor: "rgb(234,228,221)" }} />
-
-          {/* Copyright */}
           <p style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: "10px", fontWeight: 300, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(44,44,44,0.35)" }}>
             © {new Date().getFullYear()} Sama Wellness Therapy. All rights reserved.
           </p>
