@@ -88,9 +88,9 @@ export default function Navbar() {
               color: "rgb(45, 74, 70)",
               textTransform: "uppercase",
               whiteSpace: "nowrap",
-              textDecoration: active === l.href ? "underline" : "none",
-              textDecorationColor: "rgb(45, 74, 70)",
-              textUnderlineOffset: "auto",
+              textDecoration: "none",
+              borderBottom: active === l.href ? "1px solid rgb(45, 74, 70)" : "1px solid transparent",
+              paddingBottom: "2px",
               WebkitFontSmoothing: "antialiased",
               padding: "4px 13.36px",
               cursor: "pointer",
@@ -115,7 +115,7 @@ export default function Navbar() {
         <div style={{ position: "absolute", top: "100%", left: 0, right: 0, backgroundColor: "#F5F2EE", borderBottom: "1px solid rgb(234,228,221)", padding: "32px", display: "flex", flexDirection: "column", gap: "24px", zIndex: 50 }}>
           {links.map((l) => (
             <a key={l.href} href={`#${l.href}`} onClick={e => handleClick(e, l.href)}
-              style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: "18px", fontWeight: 300, color: "rgb(45, 74, 70)", textTransform: "uppercase", textDecoration: active === l.href ? "underline" : "none" }}>
+              style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: "18px", fontWeight: 300, color: "rgb(45, 74, 70)", textTransform: "uppercase", borderBottom: active === l.href ? "1px solid rgb(45, 74, 70)" : "none" }}>
               {l.label}
             </a>
           ))}
