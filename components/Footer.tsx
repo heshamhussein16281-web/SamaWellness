@@ -1,6 +1,6 @@
-import Image from "next/image";
+const LOGO_URL = "https://static.wixstatic.com/media/c9c2af_737fbe5934df446dbf671e28c6103fd6~mv2.png";
 
-const marqueeText = Array(6).fill("SAMA WELLNESS THERAPY — YOUR JOURNEY TO HEALING —");
+const marqueeItems = Array(8).fill("SAMA WELLNESS THERAPY — YOUR JOURNEY TO HEALING —");
 
 const socials = [
   { label: "Facebook", href: "http://www.facebook.com", d: "M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" },
@@ -15,10 +15,10 @@ export default function Footer() {
   return (
     <>
       {/* Marquee */}
-      <div className="overflow-hidden bg-linen border-t border-b border-burgundy-200 py-4 select-none">
+      <div style={{ overflow: "hidden", backgroundColor: "#F5F2EE", borderTop: "1px solid rgb(234,228,221)", borderBottom: "1px solid rgb(234,228,221)", padding: "16px 0", userSelect: "none" }}>
         <div className="marquee-track">
-          {marqueeText.concat(marqueeText).map((t, i) => (
-            <span key={i} className="text-burgundy-400 text-xs font-nav tracking-[0.3em] uppercase whitespace-nowrap mx-8">
+          {marqueeItems.concat(marqueeItems).map((t, i) => (
+            <span key={i} style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: "11px", fontWeight: 300, letterSpacing: "0.25em", textTransform: "uppercase", color: "rgb(45,74,70)", whiteSpace: "nowrap", margin: "0 32px" }}>
               {t}
             </span>
           ))}
@@ -26,35 +26,44 @@ export default function Footer() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-linen py-16 border-t border-burgundy-100">
-        <div className="max-w-7xl mx-auto px-8 flex flex-col md:flex-row items-start justify-between gap-10">
-          {/* Small logo — icon + text side by side */}
-          <div>
-            <a href="#home">
-              <Image src="/logo.png" alt="Sama Wellness Therapy" width={80} height={80} className="object-contain" />
-            </a>
-            <p className="text-sm text-charcoal/50 mt-4 font-light leading-relaxed">
-              New Giza — B1-C031 Meditown<br />
-              info@samawellness.com<br />
-              (+2) 011 309 46556
+      <footer style={{ backgroundColor: "#F5F2EE", padding: "64px 0 40px", borderTop: "1px solid rgb(234,228,221)" }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 64px", display: "flex", flexDirection: "column", alignItems: "center", gap: "40px" }}>
+
+          {/* Logo */}
+          <a href="#home" style={{ display: "block", opacity: 1, transition: "opacity 0.2s ease" }}
+            onMouseEnter={e => (e.currentTarget.style.opacity = "0.75")}
+            onMouseLeave={e => (e.currentTarget.style.opacity = "1")}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={LOGO_URL} alt="Sama Wellness Therapy" style={{ width: "120px", height: "120px", objectFit: "contain" }} />
+          </a>
+
+          {/* Contact info */}
+          <div style={{ textAlign: "center" }}>
+            <p style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: "12px", fontWeight: 300, letterSpacing: "0.1em", color: "rgba(44,44,44,0.55)", lineHeight: 2 }}>
+              New Giza — B1-C031 Meditown, Cairo, Egypt<br />
+              info@samawellnesstherapy.com &nbsp;·&nbsp; (+2) 011 309 46556
             </p>
           </div>
 
           {/* Social icons */}
-          <div className="flex items-center gap-5 mt-4">
+          <div style={{ display: "flex", alignItems: "center", gap: "28px" }}>
             {socials.map((s) => (
               <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label}
-                className="text-charcoal/40 hover:text-burgundy-500 transition-colors">
-                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                style={{ color: "rgba(44,44,44,0.4)", transition: "color 0.2s ease" }}
+                onMouseEnter={e => (e.currentTarget.style.color = "rgb(45,74,70)")}
+                onMouseLeave={e => (e.currentTarget.style.color = "rgba(44,44,44,0.4)")}>
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
                   <path d={s.d} />
                 </svg>
               </a>
             ))}
           </div>
-        </div>
 
-        <div className="max-w-7xl mx-auto px-8 mt-12 pt-8 border-t border-burgundy-100 text-center">
-          <p className="text-xs text-charcoal/30 font-nav tracking-wide">
+          {/* Divider */}
+          <div style={{ width: "100%", height: "1px", backgroundColor: "rgb(234,228,221)" }} />
+
+          {/* Copyright */}
+          <p style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: "10px", fontWeight: 300, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(44,44,44,0.35)" }}>
             © {new Date().getFullYear()} Sama Wellness Therapy. All rights reserved.
           </p>
         </div>
