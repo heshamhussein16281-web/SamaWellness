@@ -14,19 +14,33 @@ export default function Navbar() {
   const [active, setActive] = useState("home");
 
   useEffect(() => {
+    let scrollTimer: ReturnType<typeof setTimeout> | null = null;
+    let isScrollingProgrammatically = false;
+
     const handleScroll = () => {
-      const scrollY = window.scrollY + 200;
-      for (let i = links.length - 1; i >= 0; i--) {
-        const el = document.getElementById(links[i].href);
-        if (el && el.offsetTop <= scrollY) {
-          setActive(links[i].href);
-          break;
+      // Only update active state after scroll stops (not during smooth scroll animation)
+      if (isScrollingProgrammatically) return;
+      if (scrollTimer) clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        const scrollY = window.scrollY + 200;
+        for (let i = links.length - 1; i >= 0; i--) {
+          const el = document.getElementById(links[i].href);
+          if (el && el.offsetTop <= scrollY) {
+            setActive(links[i].href);
+            break;
+          }
         }
-      }
+      }, 150);
     };
+
+    // Expose setter so handleClick can lock scroll updates during animation
+    (window as any).__setNavScrolling = (val: boolean) => { isScrollingProgrammatically = val; };
+
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (scrollTimer) clearTimeout(scrollTimer);
+    };
   }, []);
 
   const handleClick = (e: React.MouseEvent, href: string) => {
@@ -35,8 +49,12 @@ export default function Navbar() {
     if (el) {
       const headerH = 175;
       const top = el.offsetTop - headerH + 1;
-      window.scrollTo({ top, behavior: "smooth" });
+      // Lock scroll listener during animation, set active immediately on click
+      (window as any).__setNavScrolling?.(true);
       setActive(href);
+      window.scrollTo({ top, behavior: "smooth" });
+      // Unlock after animation completes (~800ms)
+      setTimeout(() => { (window as any).__setNavScrolling?.(false); }, 900);
     }
     setOpen(false);
   };
