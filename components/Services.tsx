@@ -45,11 +45,18 @@ export default function Services() {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
     const observer = new IntersectionObserver(
-      entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("animate-fade-up"); (e.target as HTMLElement).style.opacity = "1"; } }),
-      { threshold: 0.15 }
+      entries => entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add("animate-fade-up");
+          (e.target as HTMLElement).style.opacity = "1";
+        }
+      }),
+      { threshold: 0.15, rootMargin: "0px 0px -50px 0px" }
     );
-    ref.current?.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+    const els = ref.current?.querySelectorAll(".reveal") || [];
+    els.forEach(el => observer.observe(el));
     return () => observer.disconnect();
   }, []);
 
