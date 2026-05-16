@@ -172,3 +172,8 @@
 .reveal:nth-child(2) { transition-delay: 0.15s; }
 .reveal:nth-child(3) { transition-delay: 0.25s; }
 .reveal:nth-child(4) { transition-delay: 0.35s; }
+
+/* Sticky header offset — sections scroll into view below the sticky nav */
+section[id] {
+  scroll-margin-top: 175px;
+}
