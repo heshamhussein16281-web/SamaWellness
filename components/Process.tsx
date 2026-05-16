@@ -46,13 +46,13 @@ export default function Process() {
             {steps.map((s, i) => (
               <div key={i} className="reveal" style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
 
-                {/* Icon — 171x171px, no background box */}
-                <div style={{ width: "171px", height: "171px", marginBottom: "32px", flexShrink: 0 }}>
+                {/* Icon box — light background with padding, icon centered inside */}
+                <div style={{ backgroundColor: "#EAE4DD", padding: "40px 55px", marginBottom: "32px", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={s.image}
                     alt={s.title}
-                    style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }}
+                    style={{ width: "171px", height: "171px", objectFit: "contain", display: "block" }}
                   />
                 </div>
 
