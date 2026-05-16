@@ -5,17 +5,14 @@ const steps = [
   {
     image: "/initial-form.jpg",
     title: "Initial Screening Form",
-    showButton: true,
   },
   {
     image: "/assessment.jpg",
     title: "15-Min assessment with counsellor Sama",
-    showButton: false,
   },
   {
     image: "/matched-therapist.jpg",
     title: "Matched Therapist",
-    showButton: false,
   },
 ];
 
@@ -63,39 +60,12 @@ export default function Process() {
                   fontWeight: 400,
                   color: "rgb(45, 74, 70)",
                   lineHeight: 1.25,
-                  marginBottom: s.showButton ? "28px" : "0",
+                  marginBottom: "0",
                 }}>
                   {s.title}
                 </h3>
 
-                {/* Button only under step 1 */}
-                {s.showButton && (
-                  <a
-                    href="https://ec1484c2-75c5-4118-9703-33fa4f397289.filesusr.com/ugd/c9c2af_54b7a2ba71d746f6bc234d84627a18a0.pages?dn=SWT%20Screening%20WD.pages"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      display: "inline-block",
-                      width: "350px",
-                      padding: "16px 32px",
-                      backgroundColor: "rgb(45, 74, 70)",
-                      color: "#F5F2EE",
-                      fontFamily: "var(--font-ui)",
-                      fontSize: "22.7px",
-                      fontWeight: 300,
-                      letterSpacing: "normal",
-                      textTransform: "uppercase",
-                      textDecoration: "none",
-                      textAlign: "center",
-                      borderRadius: 0,
-                      transition: "opacity 0.2s ease",
-                    }}
-                    onMouseEnter={e => (e.currentTarget.style.opacity = "0.85")}
-                    onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
-                  >
-                    Open Initial Screening Form
-                  </a>
-                )}
+
               </div>
             ))}
           </div>
