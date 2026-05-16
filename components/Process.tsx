@@ -1,6 +1,3 @@
-"use client";
-import { useEffect, useRef } from "react";
-
 const steps = [
   {
     icon: (
@@ -41,55 +38,24 @@ const steps = [
 ];
 
 export default function Process() {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const observer = new IntersectionObserver(
-      entries => entries.forEach(e => {
-        if (e.isIntersecting) e.target.classList.add("animate-fade-up");
-      }),
-      { threshold: 0.15, rootMargin: "0px 0px -50px 0px" }
-    );
-    const els = ref.current?.querySelectorAll(".reveal") || [];
-    els.forEach(el => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <section id="process" ref={ref} style={{ backgroundColor: "#F5F2EE", borderTop: "1px solid rgb(234,228,221)", padding: "96px 0" }}>
+    <section id="process" style={{ backgroundColor: "#F5F2EE", borderTop: "1px solid rgb(234,228,221)", padding: "96px 0" }}>
       <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 64px" }}>
-
-        <h2
-          className="reveal"
-          style={{
-            fontFamily: "'Cormorant Garamond', serif",
-            fontSize: "clamp(32px, 3.5vw, 52px)",
-            fontWeight: 300,
-            color: "#2c2c2c",
-            textAlign: "center",
-            marginBottom: "80px",
-            letterSpacing: "0.01em",
-            opacity: 0,
-          }}
-        >
+        <h2 style={{
+          fontFamily: "'Cormorant Garamond', serif",
+          fontSize: "clamp(32px, 3.5vw, 52px)",
+          fontWeight: 300,
+          color: "#2c2c2c",
+          textAlign: "center",
+          marginBottom: "80px",
+          letterSpacing: "0.01em",
+        }}>
           The Matching Process Simplified
         </h2>
-
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "48px", marginBottom: "64px" }}>
           {steps.map((s, i) => (
-            <div
-              key={i}
-              className="reveal"
-              style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", opacity: 0, animationDelay: `${0.1 + i * 0.12}s` }}
-            >
-              <div
-                style={{ marginBottom: "28px", transition: "transform 0.4s cubic-bezier(0.22,1,0.36,1)" }}
-                onMouseEnter={e => (e.currentTarget.style.transform = "translateY(-4px)")}
-                onMouseLeave={e => (e.currentTarget.style.transform = "translateY(0)")}
-              >
-                {s.icon}
-              </div>
+            <div key={i} className="animate-fade-up" style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", animationDelay: `${0.1 + i * 0.15}s` }}>
+              <div style={{ marginBottom: "28px" }}>{s.icon}</div>
               <div style={{ width: "32px", height: "1px", backgroundColor: "rgb(234,228,221)", marginBottom: "20px" }} />
               <h3 style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: "11px", fontWeight: 400, letterSpacing: "0.18em", textTransform: "uppercase", color: "#2c2c2c", marginBottom: "12px" }}>
                 {s.title}
@@ -100,25 +66,13 @@ export default function Process() {
             </div>
           ))}
         </div>
-
         <div style={{ textAlign: "center" }}>
           <a
             href="https://ec1484c2-75c5-4118-9703-33fa4f397289.filesusr.com/ugd/c9c2af_54b7a2ba71d746f6bc234d84627a18a0.pages?dn=SWT%20Screening%20WD.pages"
             target="_blank"
             rel="noopener noreferrer"
             className="btn-outline"
-            style={{
-              display: "inline-block",
-              padding: "14px 40px",
-              border: "1px solid #7b2d3e",
-              color: "#7b2d3e",
-              fontFamily: "'Josefin Sans', sans-serif",
-              fontSize: "11px",
-              fontWeight: 400,
-              letterSpacing: "0.2em",
-              textTransform: "uppercase",
-              textDecoration: "none",
-            }}
+            style={{ display: "inline-block", padding: "14px 40px", border: "1px solid #7b2d3e", color: "#7b2d3e", fontFamily: "'Josefin Sans', sans-serif", fontSize: "11px", fontWeight: 400, letterSpacing: "0.2em", textTransform: "uppercase", textDecoration: "none" }}
           >
             <span>Open Initial Screening Form</span>
           </a>
