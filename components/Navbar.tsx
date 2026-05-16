@@ -32,13 +32,17 @@ export default function Navbar() {
       {/* Original nav: left:242px, width:1159px on 1710px viewport = justify-content:space-between */}
       <nav className="hidden md:flex items-center" style={{
         position: "absolute",
-        left: "242px",
-        right: "40px",
-        top: "0",
-        height: "175px",
+        left: "265px",
+        top: "42px",
+        width: "1159px",
+        height: "84px",
         display: "flex",
+        flexDirection: "row",
+        flexWrap: "nowrap",
         alignItems: "center",
-        justifyContent: "space-between",
+        justifyContent: "normal",
+        columnGap: "44px",
+        rowGap: "12px",
       }}>
         {links.map((l, i) => (
           <a
