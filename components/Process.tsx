@@ -22,7 +22,7 @@ const steps = [
 export default function Process() {
   return (
     <section id="process" style={{ backgroundColor: "#F5F2EE", borderTop: "1px solid rgb(234,228,221)", padding: "96px 0" }}>
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 64px" }}>
+      <div style={{ width: "100%", padding: "0 12.7vw" }}>
 
         {/* Section heading */}
         <ScrollReveal>
@@ -42,7 +42,7 @@ export default function Process() {
 
         {/* Steps grid */}
         <ScrollReveal>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "48px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 25.5%)", justifyContent: "space-between" }}>
             {steps.map((s, i) => (
               <div key={i} className="reveal" style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
 
