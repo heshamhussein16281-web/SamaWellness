@@ -1,4 +1,10 @@
-import ScrollReveal from "./ScrollReveal";
+"use client";
+
+// Section bg: rgb(234, 228, 221) = color(srgb 0.917647 0.894118 0.866667)
+// Card bg: rgb(245, 242, 238) = #F5F2EE (lighter than section)
+// Title: 45px, weight 300, color rgb(45,74,70)
+// Desc: 22.7px, weight 300, color rgb(45,74,70)
+// Layout: 3 full-height vertical strips, no gap, no max-width container
 
 const services = [
   {
@@ -20,43 +26,89 @@ const services = [
 
 export default function Services() {
   return (
-    <section id="services" style={{ backgroundColor: "#F5F2EE", borderTop: "1px solid rgb(234,228,221)", padding: "96px 0" }}>
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 64px" }}>
+    <section
+      id="services"
+      style={{
+        backgroundColor: "rgb(234, 228, 221)",
+        width: "100%",
+      }}
+    >
+      {/* Section heading */}
+      <div style={{ width: "100%", textAlign: "center", paddingTop: "80px", paddingBottom: "60px" }}>
+        <h2 style={{
+          fontFamily: "'Josefin Sans', sans-serif",
+          fontSize: "clamp(36px, 3.75vw, 64px)",
+          fontWeight: 300,
+          color: "rgb(45, 74, 70)",
+          letterSpacing: "normal",
+          margin: 0,
+          lineHeight: 1.2,
+        }}>
+          Healing Support &amp; Specialized Care
+        </h2>
+      </div>
 
-        <ScrollReveal>
-          <h2 className="reveal" style={{
-            fontFamily: "'Cormorant Garamond', serif",
-            fontSize: "clamp(32px, 3.5vw, 52px)",
-            fontWeight: 300,
-            color: "#2c2c2c",
-            textAlign: "center",
-            marginBottom: "80px",
-            letterSpacing: "0.01em",
-          }}>
-            Healing Support &amp; Specialized Care
-          </h2>
-        </ScrollReveal>
+      {/* 3 full-width vertical strip cards, no gap */}
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr 1fr",
+        width: "100%",
+        gap: 0,
+      }}>
+        {services.map((s, i) => (
+          <div
+            key={i}
+            style={{
+              backgroundColor: "#F5F2EE",
+              display: "flex",
+              flexDirection: "column",
+              borderRight: i < 2 ? "1px solid rgb(234, 228, 221)" : "none",
+            }}
+          >
+            {/* Image — fills top of card */}
+            <div style={{ width: "100%", aspectRatio: "4/3", overflow: "hidden", flexShrink: 0 }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={s.image}
+                alt={s.title}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  display: "block",
+                  transition: "transform 0.7s cubic-bezier(0.22,1,0.36,1)",
+                }}
+                onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.04)")}
+                onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")}
+              />
+            </div>
 
-        <ScrollReveal>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "48px" }}>
-            {services.map((s, i) => (
-              <div key={i} className="reveal" style={{ display: "flex", flexDirection: "column" }}>
-                <div className="img-zoom" style={{ overflow: "hidden", marginBottom: "24px" }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={s.image} alt={s.title} style={{ width: "100%", height: "220px", objectFit: "cover", display: "block", transition: "transform 0.7s cubic-bezier(0.22,1,0.36,1)" }} />
-                </div>
-                <div style={{ width: "32px", height: "1px", backgroundColor: "rgb(234,228,221)", marginBottom: "16px" }} />
-                <h3 style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: "11px", fontWeight: 400, letterSpacing: "0.18em", textTransform: "uppercase", color: "#2c2c2c", marginBottom: "12px" }}>
-                  {s.title}
-                </h3>
-                <p style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: "14px", fontWeight: 300, color: "rgba(44,44,44,0.65)", lineHeight: 1.8 }}>
-                  {s.desc}
-                </p>
-              </div>
-            ))}
+            {/* Text content below image */}
+            <div style={{ padding: "40px 40px 60px" }}>
+              <h3 style={{
+                fontFamily: "'Josefin Sans', sans-serif",
+                fontSize: "clamp(28px, 2.65vw, 45px)",
+                fontWeight: 300,
+                color: "rgb(45, 74, 70)",
+                margin: "0 0 24px 0",
+                lineHeight: 1.2,
+                letterSpacing: "normal",
+              }}>
+                {s.title}
+              </h3>
+              <p style={{
+                fontFamily: "'Josefin Sans', sans-serif",
+                fontSize: "clamp(15px, 1.33vw, 22.7px)",
+                fontWeight: 300,
+                color: "rgb(45, 74, 70)",
+                lineHeight: 1.7,
+                margin: 0,
+              }}>
+                {s.desc}
+              </p>
+            </div>
           </div>
-        </ScrollReveal>
-
+        ))}
       </div>
     </section>
   );
