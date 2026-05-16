@@ -8,7 +8,7 @@ export default function Hero() {
         top: "38px",
         left: "131px",
         fontFamily: "'Josefin Sans', sans-serif",
-        fontSize: "clamp(13px, 1.9vw, 32px)",
+        fontSize: "clamp(18px, 1.9vw, 32px)",
         fontWeight: 300,
         letterSpacing: "0.15em",
         color: "rgb(45, 74, 70)",
@@ -27,8 +27,8 @@ export default function Hero() {
           position: "absolute",
           top: "113px",
           left: "194px",
-          width: "clamp(240px, 31.7vw, 543px)",
-          height: "clamp(240px, 31.7vw, 543px)",
+          width: "clamp(320px, 31.7vw, 543px)",
+          height: "clamp(320px, 31.7vw, 543px)",
           objectFit: "contain",
           objectPosition: "center"
         }}
@@ -40,7 +40,7 @@ export default function Hero() {
         top: "606px",
         left: "138px",
         fontFamily: "'Josefin Sans', sans-serif",
-        fontSize: "clamp(18px, 2.6vw, 45px)",
+        fontSize: "clamp(28px, 2.6vw, 45px)",
         fontWeight: 300,
         color: "rgb(75, 99, 95)",
         maxWidth: "684px",
