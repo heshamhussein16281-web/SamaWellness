@@ -60,7 +60,7 @@ export default function Navbar() {
               whiteSpace: "nowrap",
               textDecoration: "none",
               WebkitFontSmoothing: "antialiased",
-              padding: "4px 0",
+              padding: "4px 13.36px",
             }}>
             {l.label}
           </a>
