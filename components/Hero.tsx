@@ -2,15 +2,15 @@ export default function Hero() {
   return (
     <section id="home" style={{ backgroundColor: "#F5F2EE", minHeight: "987px", position: "relative", overflow: "hidden" }}>
 
-      {/* ELEVATE YOUR MENTAL WELLNESS — exactly 38px from hero top, 131px from left */}
+      {/* ELEVATE — exact: 32px, letterSpacing 4.81px, color rgb(45,74,70) */}
       <p style={{
         position: "absolute",
         top: "38px",
         left: "131px",
         fontFamily: "'Josefin Sans', sans-serif",
-        fontSize: "clamp(16px, 1.875vw, 32px)",
+        fontSize: "clamp(18px, 1.875vw, 32px)",
         fontWeight: 300,
-        letterSpacing: "0.15em",
+        letterSpacing: "4.81px",
         color: "rgb(45, 74, 70)",
         textTransform: "uppercase",
         margin: 0,
@@ -19,7 +19,7 @@ export default function Hero() {
         ELEVATE YOUR MENTAL WELLNESS
       </p>
 
-      {/* Hero logo — 543px on 1710px = 31.7vw, top:113px, left:194px */}
+      {/* Hero logo — 543×543px on 1710px = 31.7vw */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/logo-hero.png"
@@ -34,7 +34,7 @@ export default function Hero() {
         }}
       />
 
-      {/* Professional Care — top:606px from hero, left:138px, width:684px, centered, 45px */}
+      {/* Professional Care — 45px, centered, rgb(75,99,95) */}
       <p style={{
         position: "absolute",
         top: "606px",
@@ -51,13 +51,16 @@ export default function Hero() {
         Professional Care Tailored to Your Journey
       </p>
 
-      {/* Room image — top:38px, left:54.6%, width:39.4%, height:671px */}
-      <div className="img-zoom" style={{
+      {/* Room image — soft edges via CSS mask gradient */}
+      <div style={{
         position: "absolute",
         top: "38px",
         left: "54.6%",
         width: "39.4%",
         height: "671px",
+        WebkitMaskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%)",
+        maskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%)",
+        overflow: "hidden",
       }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
