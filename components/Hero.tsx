@@ -56,7 +56,7 @@ export default function Hero() {
         position: "absolute",
         top: "38px",
         left: "54.6%",
-        right: 0,
+        width: "673px",
         height: "671px",
         borderRadius: "10.7px",
         overflow: "clip",
