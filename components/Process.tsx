@@ -54,7 +54,7 @@ export default function Process() {
         </h2>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "48px", marginBottom: "64px" }}>
           {steps.map((s, i) => (
-            <div key={i} className="animate-fade-up" style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", animationDelay: `${0.1 + i * 0.15}s` }}>
+            <div key={i} className="process-card" style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", animationDelay: `${0.1 + i * 0.15}s` }}>
               <div style={{ marginBottom: "28px" }}>{s.icon}</div>
               <div style={{ width: "32px", height: "1px", backgroundColor: "rgb(234,228,221)", marginBottom: "20px" }} />
               <h3 style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: "11px", fontWeight: 400, letterSpacing: "0.18em", textTransform: "uppercase", color: "#2c2c2c", marginBottom: "12px" }}>

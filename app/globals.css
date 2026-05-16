@@ -134,3 +134,23 @@
 
 .btn-outline { position: relative; display: inline-block; transition: color 0.3s ease, background-color 0.3s ease; }
 .btn-outline:hover { background-color: #7b2d3e; color: #F5F2EE !important; }
+
+.whatsapp-btn {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 50;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background-color: #25D366;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(37,211,102,0.35);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.whatsapp-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 28px rgba(37,211,102,0.5);
+}

@@ -6,7 +6,7 @@ export default function Hero() {
 
       {/* ELEVATE text — staggered fade up */}
       <p
-        className="animate-fade-up animate-fade-up-delay-1"
+        
         style={{
           position: "absolute",
           top: "38px",
@@ -28,7 +28,7 @@ export default function Hero() {
       <img
         src={LOGO_URL}
         alt="Sama Wellness Therapy"
-        className="animate-fade-up animate-fade-up-delay-2"
+        
         style={{
           position: "absolute",
           top: "113px",
@@ -41,7 +41,7 @@ export default function Hero() {
 
       {/* Professional Care tagline */}
       <p
-        className="animate-fade-up animate-fade-up-delay-3"
+        
         style={{
           position: "absolute",
           top: "606px",
@@ -60,7 +60,7 @@ export default function Hero() {
 
       {/* Room image — fade in with slight scale */}
       <div
-        className="img-zoom animate-fade-in"
+        className="img-zoom"
         style={{
           position: "absolute",
           top: "38px",

@@ -36,7 +36,7 @@ export default function Services() {
           {services.map((s, i) => (
             <div
               key={i}
-              className="animate-fade-up"
+              className="service-card"
               style={{ display: "flex", flexDirection: "column", animationDelay: `${0.1 + i * 0.15}s` }}
             >
               {/* Image */}
