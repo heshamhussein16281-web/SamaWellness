@@ -19,7 +19,7 @@ export default function Navbar() {
         <img src="/logo.png" alt="Sama Wellness Therapy" style={{ width: "182px", height: "182px", objectFit: "contain", objectPosition: "center center", display: "block" }} />
       </a>
 
-      <nav className="hidden md:flex items-center" style={{ position: "absolute", left: "242px", top: "50%", transform: "translateY(-50%)", gap: "115px" }}>
+      <nav className="hidden md:flex items-center" style={{ position: "absolute", left: "242px", top: "42px", gap: "115px" }}>
         {links.map((l, i) => (
           <a key={l.href} href={l.href} className={`nav-link ${i === 0 ? "active" : ""}`} style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: "23px", fontWeight: 300, color: "rgb(45, 74, 70)", textTransform: "uppercase", whiteSpace: "nowrap" }}>
             {l.label}
