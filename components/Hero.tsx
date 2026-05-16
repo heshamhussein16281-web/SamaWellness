@@ -30,8 +30,7 @@ export default function Hero() {
           width: "clamp(240px, 31.7vw, 543px)",
           height: "clamp(240px, 31.7vw, 543px)",
           objectFit: "contain",
-          objectPosition: "center",
-          mixBlendMode: "multiply" as const,
+          objectPosition: "center"
         }}
       />
 
