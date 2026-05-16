@@ -39,7 +39,7 @@ export default function Hero() {
             width: "clamp(320px, 35vw, 543px)",
             height: "clamp(320px, 35vw, 543px)",
             objectFit: "contain",
-            imageRendering: "high-quality",
+            
           }}
         />
 
