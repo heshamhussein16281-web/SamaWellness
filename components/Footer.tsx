@@ -1,3 +1,4 @@
+"use client";
 const LOGO_URL = "/logo.png";
 
 const marqueeItems = Array(8).fill("SAMA WELLNESS THERAPY — YOUR JOURNEY TO HEALING —");

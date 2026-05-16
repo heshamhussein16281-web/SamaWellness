@@ -1,3 +1,4 @@
+"use client";
 const services = [
   {
     title: "Individual Therapy",
