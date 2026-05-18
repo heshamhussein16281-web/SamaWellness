@@ -42,7 +42,7 @@ export default function Services() {
         Healing Support &amp; Specialized Care
       </h2>
 
-      {/* Cards grid — equal padding, white cards */}
+      {/* Cards grid — equal padding, squared images */}
       <div style={{
         display: "grid",
         gridTemplateColumns: "repeat(3, 1fr)",
@@ -61,15 +61,15 @@ export default function Services() {
               boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
             }}
           >
-            {/* Image — with padding inside card */}
-            <div style={{ overflow: "hidden", marginBottom: "20px", flexShrink: 0, borderRadius: "6px" }}>
+            {/* Image — squared with padding inside card */}
+            <div style={{ overflow: "hidden", marginBottom: "20px", flexShrink: 0, borderRadius: "6px", aspectRatio: "1/1" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={s.image}
                 alt={s.title}
                 style={{
                   width: "100%",
-                  height: "200px",
+                  height: "100%",
                   objectFit: "cover",
                   display: "block",
                   transition: "transform 0.7s cubic-bezier(0.22,1,0.36,1)",
