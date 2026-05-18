@@ -37,9 +37,9 @@ export default function Process() {
           </h2>
         </ScrollReveal>
 
-        {/* Steps grid */}
+        {/* Steps grid — equal width columns with equal gaps */}
         <ScrollReveal>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 25.5%)", justifyContent: "space-between" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "32px" }}>
             {steps.map((s, i) => (
               <div key={i} className="reveal" style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
 
