@@ -25,7 +25,8 @@ export default function Services() {
       style={{
         backgroundColor: "rgb(234, 228, 221)",
         width: "100%",
-        padding: "40px 5% 40px",
+        padding: "60px 12.7vw",
+        minHeight: "800px",
       }}
     >
       {/* Heading */}
@@ -35,7 +36,7 @@ export default function Services() {
         fontWeight: 400,
         color: "rgb(45, 74, 70)",
         textAlign: "center",
-        marginBottom: "32px",
+        marginBottom: "48px",
         lineHeight: 1.15,
       }}>
         Healing Support &amp; Specialized Care
