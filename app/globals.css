@@ -47,6 +47,10 @@
   --transition-base: 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   --transition-hover: 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 
+  /* ─── Nav underline transition ─── */
+  --nav-underline-duration: 0.35s;
+  --nav-underline-easing: cubic-bezier(0.22, 1, 0.36, 1);
+
   /* ─── Services Section Tokens ─── */
   --services-gap: 1.75rem;
   --services-card-pad: 1.75rem;
@@ -253,37 +257,44 @@ textarea.form-input {
 
 /* ═══════════════════════════════════════════════════════════════
    COMPONENT: .nav-link
+   
+   Active underline drawn via ::after pseudo-element.
+   - No inline borderBottom on the <a> tag — avoids double underline
+   - scaleX(0→1) transition runs in both directions (activate & deactivate)
+   - left/right inset matches the padding (13.36px) so underline
+     sits under the text only, not under the full padding area
    ═══════════════════════════════════════════════════════════════ */
 .nav-link {
   color: var(--color-nav-text) !important;
   text-decoration: none !important;
   position: relative;
-  font-family: var(--font-ui);
-  font-weight: 300;
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  padding: 4px 13.36px;
-  cursor: pointer;
+  display: inline-block;
 }
 
+/* Underline drawn as pseudo-element — single source of truth */
 .nav-link::after {
   content: '';
   position: absolute;
-  bottom: -3px;
+  bottom: 0;
   left: 13.36px;
   right: 13.36px;
-  width: auto;
   height: 1px;
-  background: var(--color-nav-text);
+  background-color: var(--color-nav-text);
   transform: scaleX(0);
   transform-origin: left center;
-  transition: transform 0.3s var(--transition-base);
+  transition:
+    transform var(--nav-underline-duration) var(--nav-underline-easing);
 }
 
-.nav-link:hover::after,
+/* Active state: underline visible */
 .nav-link.active::after {
   transform: scaleX(1);
+}
+
+/* Hover state (non-active): subtle preview underline */
+.nav-link:not(.active):hover::after {
+  transform: scaleX(1);
+  opacity: 0.4;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -473,16 +484,12 @@ textarea.form-input {
 
 /* ─────────────────────────────────────
    COMPONENT: .team-card
-   
-   Fixed photo frame (250×355px) with rounded corners.
-   Image zooms on hover. Self-contained with photo, name, title, bio, tags.
    ───────────────────────────────────── */
 .team-card {
   display: flex;
   flex-direction: column;
 }
 
-/* Photo Frame: Fixed size, rounded corners, zoom on hover */
 .team-card__photo-wrap {
   width: var(--team-photo-width);
   height: var(--team-photo-height);
@@ -503,7 +510,6 @@ textarea.form-input {
   transform: scale(1.05);
 }
 
-/* Name */
 .team-card__name {
   font-family: var(--font-display);
   font-size: 16px;
@@ -513,7 +519,6 @@ textarea.form-input {
   line-height: 1.2;
 }
 
-/* Title (profession) */
 .team-card__title {
   font-family: var(--font-body);
   font-size: 12px;
@@ -523,7 +528,6 @@ textarea.form-input {
   line-height: 1.4;
 }
 
-/* Bio (collapsible) */
 .team-card__bio {
   font-family: var(--font-body);
   font-size: 13px;
@@ -533,7 +537,6 @@ textarea.form-input {
   margin: 0 0 var(--space-xs) 0;
 }
 
-/* Read More / Read Less Toggle */
 .team-card__read-more {
   background: none;
   border: none;
@@ -556,7 +559,6 @@ textarea.form-input {
   opacity: 0.65;
 }
 
-/* Specializations Section */
 .team-card__specializations {
   margin-top: auto;
 }
