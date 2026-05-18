@@ -56,20 +56,20 @@ export default function Services() {
               backgroundColor: "#FFFFFF",
               display: "flex",
               flexDirection: "column",
+              padding: "24px",
               borderRadius: "8px",
-              overflow: "hidden",
               boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
             }}
           >
-            {/* Image — rounded corners at top */}
-            <div style={{ overflow: "hidden", flexShrink: 0 }}>
+            {/* Image — with padding inside card */}
+            <div style={{ overflow: "hidden", marginBottom: "20px", flexShrink: 0, borderRadius: "6px" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={s.image}
                 alt={s.title}
                 style={{
                   width: "100%",
-                  height: "240px",
+                  height: "200px",
                   objectFit: "cover",
                   display: "block",
                   transition: "transform 0.7s cubic-bezier(0.22,1,0.36,1)",
@@ -79,8 +79,8 @@ export default function Services() {
               />
             </div>
 
-            {/* Text content with padding */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "16px", flex: 1, padding: "28px 24px" }}>
+            {/* Text content — same white background */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px", flex: 1 }}>
               <h3 style={{
                 fontFamily: "var(--font-display)",
                 fontSize: "clamp(20px, 1.76vw, 30px)",
