@@ -25,7 +25,7 @@ export default function Services() {
       style={{
         backgroundColor: "rgb(234, 228, 221)",
         width: "100%",
-        padding: "60px 12.7vw",
+        padding: "60px 32px",
         minHeight: "800px",
       }}
     >
