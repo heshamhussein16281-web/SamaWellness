@@ -25,7 +25,8 @@ export default function Services() {
       style={{
         backgroundColor: "rgb(234, 228, 221)",
         width: "100%",
-        padding: "40px 6.4%",
+        padding: "60px 40px",
+        minHeight: "800px",
       }}
     >
       {/* Heading */}
@@ -35,37 +36,40 @@ export default function Services() {
         fontWeight: 400,
         color: "rgb(45, 74, 70)",
         textAlign: "center",
-        marginBottom: "20px",
+        marginBottom: "48px",
         lineHeight: 1.15,
       }}>
         Healing Support &amp; Specialized Care
       </h2>
 
-      {/* Cards grid — equal height, gap between cards */}
+      {/* Cards grid — equal padding, white cards */}
       <div style={{
         display: "grid",
         gridTemplateColumns: "repeat(3, 1fr)",
-        gap: "14px",
-        alignItems: "start",
+        gap: "40px",
+        alignItems: "stretch",
       }}>
         {services.map((s, i) => (
           <div
             key={i}
             style={{
-              backgroundColor: "#F5F2EE",
+              backgroundColor: "#FFFFFF",
               display: "flex",
               flexDirection: "column",
+              borderRadius: "8px",
+              overflow: "hidden",
+              boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
             }}
           >
-            {/* Image — edge-to-edge */}
-            <div style={{ overflow: "hidden", marginBottom: 0, flexShrink: 0 }}>
+            {/* Image — rounded corners at top */}
+            <div style={{ overflow: "hidden", flexShrink: 0 }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={s.image}
                 alt={s.title}
                 style={{
                   width: "100%",
-                  height: "155px",
+                  height: "240px",
                   objectFit: "cover",
                   display: "block",
                   transition: "transform 0.7s cubic-bezier(0.22,1,0.36,1)",
@@ -75,24 +79,24 @@ export default function Services() {
               />
             </div>
 
-            {/* Text body */}
-            <div style={{ padding: "16px 20px 20px", display: "flex", flexDirection: "column", gap: "10px" }}>
+            {/* Text content with padding */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px", flex: 1, padding: "28px 24px" }}>
               <h3 style={{
                 fontFamily: "var(--font-display)",
-                fontSize: "clamp(16px, 1.76vw, 30px)",
+                fontSize: "clamp(20px, 1.76vw, 30px)",
                 fontWeight: 400,
                 color: "rgb(45, 74, 70)",
-                lineHeight: 1.2,
+                lineHeight: 1.3,
                 margin: 0,
               }}>
                 {s.title}
               </h3>
               <p style={{
                 fontFamily: "var(--font-body)",
-                fontSize: "clamp(12px, 1vw, 16px)",
+                fontSize: "clamp(14px, 1vw, 16px)",
                 fontWeight: 300,
                 color: "rgb(45, 74, 70)",
-                lineHeight: 1.75,
+                lineHeight: 1.6,
                 margin: 0,
               }}>
                 {s.desc}
