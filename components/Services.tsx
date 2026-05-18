@@ -57,8 +57,13 @@ export default function Services() {
               flexDirection: "column",
             }}
           >
-            {/* Image — 339x255 with white padding inside card */}
-            <div style={{ padding: "16px 20px", backgroundColor: "#FFFFFF", display: "flex", justifyContent: "center" }}>
+            {/* Image wrapper — white padding + image at 339x255 */}
+            <div style={{ 
+              padding: "16px 20px", 
+              backgroundColor: "#FFFFFF",
+              display: "flex",
+              justifyContent: "flex-start"
+            }}>
               <div style={{ overflow: "hidden", borderRadius: "4px" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -77,8 +82,16 @@ export default function Services() {
               </div>
             </div>
 
-            {/* Text content */}
-            <div style={{ padding: "16px 20px 20px", backgroundColor: "#F5F2EE", display: "flex", flexDirection: "column", gap: "10px" }}>
+            {/* Text content — aligned with image width */}
+            <div style={{ 
+              padding: "16px 20px 20px",
+              backgroundColor: "#F5F2EE", 
+              display: "flex", 
+              flexDirection: "column", 
+              gap: "10px",
+              width: "fit-content",
+              maxWidth: "339px"
+            }}>
               <h3 style={{
                 fontFamily: "var(--font-display)",
                 fontSize: "clamp(16px, 1.76vw, 30px)",
