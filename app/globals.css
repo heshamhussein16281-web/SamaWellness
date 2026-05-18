@@ -1,36 +1,35 @@
 /* ========================================
    SAMA WELLNESS — GLOBAL STYLES
-   
+
    Architecture: 3-Layer CSS System
-   Layer 1: Design Tokens (variables in :root)
-   Layer 2: Layout Containers (display, grid, flex, gap, padding)
-   Layer 3: Components (visual styling, colors, typography)
-   
+   Layer 1: Design Tokens     — :root variables. Change once, updates everywhere.
+   Layer 2: Layout Containers — display, grid, flex, gap, padding, margin, position.
+                                NEVER colors, fonts, borders, shadows here.
+   Layer 3: Components        — self-contained visual units. Portable.
+
    Every edit is isolated. No cascading breakage.
    ======================================== */
 
-/* ================================
+
+/* ════════════════════════════════════════════════════════════════
    LAYER 1: DESIGN TOKENS
-   
-   All values live here. Change once, updates everywhere.
-   Typography, colors, spacing, effects, and radii.
-   ================================ */
+   ════════════════════════════════════════════════════════════════ */
 :root {
   /* ─── Typography ─── */
   --font-display: "Gilda Display", Georgia, serif;
-  --font-body: "Nunito Sans", system-ui, sans-serif;
-  --font-ui: "Josefin Sans", system-ui, sans-serif;
+  --font-body:    "Nunito Sans", system-ui, sans-serif;
+  --font-ui:      "Josefin Sans", system-ui, sans-serif;
 
   /* ─── Color Palette ─── */
-  --color-linen: #F5F2EE;
-  --color-sand: rgb(234, 228, 221);
+  --color-linen:    #F5F2EE;
+  --color-sand:     rgb(234, 228, 221);
   --color-nav-text: rgb(45, 74, 70);
-  --color-tagline: rgb(75, 99, 95);
+  --color-tagline:  rgb(75, 99, 95);
   --color-burgundy: #7b2d3e;
-  --color-olive: #4a6741;
+  --color-olive:    #4a6741;
   --color-charcoal: #2c2c2c;
 
-  /* ─── Spacing Scale (rem-based) ─── */
+  /* ─── Spacing Scale ─── */
   --space-xs:  0.5rem;   /*  8px */
   --space-sm:  1rem;     /* 16px */
   --space-md:  1.5rem;   /* 24px */
@@ -43,38 +42,39 @@
   --radius-md: 8px;
   --radius-lg: 20px;
 
-  /* ─── Transitions & Animation ─── */
-  --transition-base: 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  /* ─── Transitions ─── */
+  --transition-base:  0.3s cubic-bezier(0.22, 1, 0.36, 1);
   --transition-hover: 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 
-  /* ─── Nav underline transition ─── */
-  --nav-underline-duration: 0.35s;
-  --nav-underline-easing: cubic-bezier(0.22, 1, 0.36, 1);
+  /* ─── Navbar tokens ─── */
+  --navbar-height:             175px;
+  --navbar-breakpoint:         768px;   /* desktop ≥769px | mobile ≤768px */
+  --nav-underline-duration:    0.35s;
+  --nav-underline-easing:      cubic-bezier(0.22, 1, 0.36, 1);
 
-  /* ─── Services Section Tokens ─── */
-  --services-gap: 1.75rem;
-  --services-card-pad: 1.75rem;
+  /* ─── Services tokens ─── */
+  --services-gap:        1.75rem;
+  --services-card-pad:   1.75rem;
   --services-img-height: 220px;
   --services-img-radius: var(--radius-sm);
 
-  /* ─── Team Section Tokens ─── */
-  --team-photo-width: 250px;
+  /* ─── Team tokens ─── */
+  --team-photo-width:  250px;
   --team-photo-height: 355px;
   --team-photo-radius: var(--radius-lg);
-  --team-col-gap: 2.5rem;
-  --team-row-gap: 4rem;
-  --team-pad-x: 4rem;
-  --team-pad-y: 5rem;
+  --team-col-gap:      2.5rem;
+  --team-row-gap:      4rem;
+  --team-pad-x:        4rem;
+  --team-pad-y:        5rem;
 }
 
-/* ================================
-   GLOBAL RESETS & FUNDAMENTALS
-   ================================ */
+
+/* ════════════════════════════════════════════════════════════════
+   GLOBAL RESETS
+   ════════════════════════════════════════════════════════════════ */
 * { box-sizing: border-box; }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 body {
   margin: 0;
@@ -90,32 +90,31 @@ body {
   color: var(--color-burgundy);
 }
 
-/* ================================
-   KEYFRAME ANIMATIONS
-   ================================ */
+
+/* ════════════════════════════════════════════════════════════════
+   KEYFRAMES
+   ════════════════════════════════════════════════════════════════ */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(28px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes fadeIn {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
-
 @keyframes marquee {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
 
-/* ================================
-   ANIMATION & TRANSITION UTILITIES
-   ================================ */
+
+/* ════════════════════════════════════════════════════════════════
+   ANIMATION UTILITIES
+   ════════════════════════════════════════════════════════════════ */
 .animate-fade-up {
   opacity: 0;
   animation: fadeUp 0.85s var(--transition-base) forwards;
 }
-
 .animate-fade-up-delay-1 { animation-delay: 0.1s; }
 .animate-fade-up-delay-2 { animation-delay: 0.2s; }
 .animate-fade-up-delay-3 { animation-delay: 0.3s; }
@@ -132,42 +131,66 @@ body {
   animation: marquee 40s linear infinite;
 }
 
-/* ================================
-   SCROLL REVEAL & REVEAL UTILITIES
-   ================================ */
+
+/* ════════════════════════════════════════════════════════════════
+   SCROLL REVEAL
+   ════════════════════════════════════════════════════════════════ */
 section[id] {
-  scroll-margin-top: 175px;
+  scroll-margin-top: var(--navbar-height);
 }
 
 .reveal {
   opacity: 0;
   transform: translateY(24px);
-  transition: opacity 0.8s var(--transition-base), transform 0.8s var(--transition-base);
+  transition: opacity 0.8s var(--transition-base),
+              transform 0.8s var(--transition-base);
 }
+.reveal.revealed       { opacity: 1; transform: translateY(0); }
+.reveal:nth-child(1)   { transition-delay: 0.05s; }
+.reveal:nth-child(2)   { transition-delay: 0.15s; }
+.reveal:nth-child(3)   { transition-delay: 0.25s; }
+.reveal:nth-child(4)   { transition-delay: 0.35s; }
 
-.reveal.revealed {
-  opacity: 1;
-  transform: translateY(0);
-}
 
-.reveal:nth-child(1) { transition-delay: 0.05s; }
-.reveal:nth-child(2) { transition-delay: 0.15s; }
-.reveal:nth-child(3) { transition-delay: 0.25s; }
-.reveal:nth-child(4) { transition-delay: 0.35s; }
-
-/* ================================
+/* ════════════════════════════════════════════════════════════════
    LAYER 2: LAYOUT CONTAINERS
-   
-   Only: display, grid, flex, gap, padding, margin, width, position
-   NEVER: colors, fonts, borders, shadows, backgrounds
-   ================================ */
 
-/* ─── Services Section Layout ─── */
+   Rule: only display / grid / flex / gap / padding / margin /
+         width / position. NEVER colors, fonts, borders, shadows.
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Navbar layout ──────────────────────────────────────────────
+   .navbar__desktop-nav  shown on desktop (≥769px), hidden on mobile
+   .navbar__mobile-toggle hidden on desktop, shown on mobile (≤768px)
+
+   Why CSS instead of Tailwind responsive classes?
+   The desktop nav also has inline style={{display:"flex"}} for its
+   layout properties. Tailwind's `hidden` class (display:none) has
+   lower specificity than an inline style, so it never fires.
+   Putting the display rule here (same specificity, no !important
+   needed) ensures a single, reliable source of truth.
+   ─────────────────────────────────────────────────────────────── */
+.navbar__desktop-nav {
+  /* Shown by default on desktop */
+  display: flex;
+}
+
+.navbar__mobile-toggle {
+  /* Hidden by default on desktop */
+  display: none;
+}
+
+.navbar__mobile-menu {
+  /* Mobile dropdown — always stacked */
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Services layout ── */
 .services-section {
   width: 100%;
   padding: var(--space-lg);
 }
-
 .services-section__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -175,28 +198,25 @@ section[id] {
   align-items: stretch;
 }
 
-/* ─── Team Section Layout ─── */
+/* ── Team layout ── */
 .team-section__inner {
   max-width: 1400px;
   margin: 0 auto;
   padding: var(--team-pad-y) var(--team-pad-x);
 }
-
 .team-section__row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--team-col-gap);
   margin-bottom: var(--team-row-gap);
 }
-
-/* ─── Team Section Divider (Layout) ─── */
 .team-section__divider {
   width: 100%;
   height: 1px;
   margin-bottom: var(--team-row-gap);
 }
 
-/* ─── Form Input Layout ─── */
+/* ── Form layout ── */
 .form-input {
   width: 100%;
   border: none;
@@ -210,18 +230,9 @@ section[id] {
   outline: none;
   transition: border-color 0.2s ease;
 }
-
-.form-input::placeholder {
-  color: rgba(44, 44, 44, 0.4);
-}
-
-.form-input:focus {
-  border-bottom-color: var(--color-burgundy);
-}
-
-.form-input:invalid {
-  box-shadow: none;
-}
+.form-input::placeholder { color: rgba(44, 44, 44, 0.4); }
+.form-input:focus         { border-bottom-color: var(--color-burgundy); }
+.form-input:invalid       { box-shadow: none; }
 
 select.form-input {
   appearance: none;
@@ -231,39 +242,33 @@ select.form-input {
   background-position: right center;
   padding-right: 24px;
 }
-
 textarea.form-input {
   resize: none;
   min-height: 100px;
 }
 
-/* ================================
-   LAYER 3: COMPONENTS
-   
-   Self-contained visual units. Colors, fonts, effects, transitions.
-   Each component can be moved/edited independently without breaking others.
-   ================================ */
 
-/* ═══════════════════════════════════════════════════════════════
+/* ════════════════════════════════════════════════════════════════
+   LAYER 3: COMPONENTS
+   Self-contained visual units. Portable — copy HTML + CSS block
+   to a blank page and it renders correctly in isolation.
+   ════════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════
    COMPONENT: .logo-link
-   ═══════════════════════════════════════════════════════════════ */
+   ═══════════════════════════════════════ */
 .logo-link {
   transition: opacity 0.2s ease;
 }
+.logo-link:hover { opacity: 0.85; }
 
-.logo-link:hover {
-  opacity: 0.85;
-}
 
-/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════
    COMPONENT: .nav-link
-   
-   Active underline drawn via ::after pseudo-element.
-   - No inline borderBottom on the <a> tag — avoids double underline
-   - scaleX(0→1) transition runs in both directions (activate & deactivate)
-   - left/right inset matches the padding (13.36px) so underline
-     sits under the text only, not under the full padding area
-   ═══════════════════════════════════════════════════════════════ */
+   Underline via ::after pseudo-element.
+   Single source of truth — no inline
+   borderBottom anywhere in the JSX.
+   ═══════════════════════════════════════ */
 .nav-link {
   color: var(--color-nav-text) !important;
   text-decoration: none !important;
@@ -271,7 +276,7 @@ textarea.form-input {
   display: inline-block;
 }
 
-/* Underline drawn as pseudo-element — single source of truth */
+/* Underline bar */
 .nav-link::after {
   content: '';
   position: absolute;
@@ -282,39 +287,104 @@ textarea.form-input {
   background-color: var(--color-nav-text);
   transform: scaleX(0);
   transform-origin: left center;
-  transition:
-    transform var(--nav-underline-duration) var(--nav-underline-easing);
+  transition: transform var(--nav-underline-duration) var(--nav-underline-easing),
+              opacity   0.2s ease;
 }
 
-/* Active state: underline visible */
+/* Active: full underline */
 .nav-link.active::after {
   transform: scaleX(1);
+  opacity: 1;
 }
 
-/* Hover state (non-active): subtle preview underline */
+/* Hover (non-active): ghost underline */
 .nav-link:not(.active):hover::after {
   transform: scaleX(1);
   opacity: 0.4;
 }
 
-/* ═══════════════════════════════════════════════════════════════
+/* Mobile link variant — underline inset resets to 0 because
+   mobile links have no horizontal padding */
+.navbar__mobile-link::after {
+  left: 0;
+  right: 0;
+}
+
+
+/* ═══════════════════════════════════════
+   COMPONENT: .navbar__mobile-toggle
+   Burger button visual (bars + animation)
+   ═══════════════════════════════════════ */
+.navbar__mobile-toggle {
+  position: absolute;
+  right: var(--space-md);
+  top: 50%;
+  transform: translateY(-50%);
+  padding: var(--space-xs);
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  /* display controlled by Layer 2 + @media below */
+}
+
+.navbar__burger-bar {
+  display: block;
+  width: 24px;
+  height: 1px;
+  background-color: var(--color-nav-text);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.navbar__burger-bar--mid {
+  width: 16px; /* shorter middle bar for refinement */
+}
+
+
+/* ═══════════════════════════════════════
+   COMPONENT: .navbar__mobile-menu
+   Dropdown panel visual
+   ═══════════════════════════════════════ */
+.navbar__mobile-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: var(--color-linen);
+  border-bottom: 1px solid var(--color-sand);
+  padding: var(--space-lg) var(--space-md);
+  gap: var(--space-md);
+  z-index: 50;
+}
+
+.navbar__mobile-link {
+  font-family: var(--font-ui);
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--color-nav-text);
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 4px 0;
+}
+
+
+/* ═══════════════════════════════════════
    COMPONENT: .social-icon
-   ═══════════════════════════════════════════════════════════════ */
+   ═══════════════════════════════════════ */
 .social-icon {
   color: rgba(44, 44, 44, 0.4);
   transition: color 0.2s ease;
   display: inline-flex;
 }
+.social-icon:hover { color: var(--color-nav-text); }
 
-.social-icon:hover {
-  color: var(--color-nav-text);
-}
 
-/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════
    COMPONENT: .btn-outline
-   ═══════════════════════════════════════════════════════════════ */
+   ═══════════════════════════════════════ */
 .btn-outline {
-  position: relative;
   display: inline-block;
   border: 1px solid var(--color-burgundy);
   color: var(--color-burgundy);
@@ -327,20 +397,13 @@ textarea.form-input {
   cursor: pointer;
   transition: color 0.3s ease, background-color 0.3s ease;
 }
+.btn-outline:hover    { background-color: var(--color-burgundy); color: var(--color-linen); }
+.btn-outline:disabled { opacity: 0.5; cursor: default; }
 
-.btn-outline:hover {
-  background-color: var(--color-burgundy);
-  color: var(--color-linen);
-}
 
-.btn-outline:disabled {
-  opacity: 0.5;
-  cursor: default;
-}
-
-/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════
    COMPONENT: .whatsapp-btn
-   ═══════════════════════════════════════════════════════════════ */
+   ═══════════════════════════════════════ */
 .whatsapp-btn {
   position: fixed;
   bottom: 28px;
@@ -357,38 +420,27 @@ textarea.form-input {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-decoration: none;
 }
-
 .whatsapp-btn:hover {
   transform: scale(1.1);
   box-shadow: 0 6px 28px rgba(37, 211, 102, 0.5);
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   COMPONENT: .img-zoom
-   ═══════════════════════════════════════════════════════════════ */
-.img-zoom {
-  overflow: hidden;
-}
 
+/* ═══════════════════════════════════════
+   COMPONENT: .img-zoom
+   ═══════════════════════════════════════ */
+.img-zoom { overflow: hidden; }
 .img-zoom img {
   transition: transform 0.7s var(--transition-base);
   display: block;
 }
+.img-zoom:hover img { transform: scale(1.04); }
 
-.img-zoom:hover img {
-  transform: scale(1.04);
-}
 
 /* ═════════════════════════════════════════════════════════════════════
-   SECTION: SERVICES COMPONENT
-   
-   Purpose: Three-column card layout with equal-height images
-   Structure: LAYER 2 (section layout) + LAYER 3 (card visual)
+   SECTION: SERVICES
    ═════════════════════════════════════════════════════════════════════ */
-
-.services-section {
-  background-color: var(--color-sand);
-}
+.services-section { background-color: var(--color-sand); }
 
 .services-section__heading {
   text-align: center;
@@ -400,23 +452,18 @@ textarea.form-input {
   line-height: 1.15;
 }
 
-/* ─────────────────────────────────────
-   COMPONENT: .service-card
-   ───────────────────────────────────── */
 .service-card {
   background-color: var(--color-linen);
   display: flex;
   flex-direction: column;
   height: 100%;
 }
-
 .service-card__image-wrap {
   margin: var(--services-card-pad) var(--services-card-pad) 0;
   overflow: hidden;
   border-radius: var(--services-img-radius);
   flex-shrink: 0;
 }
-
 .service-card__image {
   width: 100%;
   height: var(--services-img-height);
@@ -424,11 +471,7 @@ textarea.form-input {
   display: block;
   transition: transform 0.7s var(--transition-base);
 }
-
-.service-card__image-wrap:hover .service-card__image {
-  transform: scale(1.04);
-}
-
+.service-card__image-wrap:hover .service-card__image { transform: scale(1.04); }
 .service-card__body {
   padding: var(--space-md) var(--services-card-pad) var(--services-card-pad);
   display: flex;
@@ -436,7 +479,6 @@ textarea.form-input {
   gap: var(--space-xs);
   flex: 1;
 }
-
 .service-card__title {
   font-family: var(--font-display);
   font-size: clamp(16px, 1.76vw, 30px);
@@ -445,7 +487,6 @@ textarea.form-input {
   line-height: 1.2;
   margin: 0;
 }
-
 .service-card__desc {
   font-family: var(--font-body);
   font-size: clamp(12px, 1vw, 16px);
@@ -455,18 +496,14 @@ textarea.form-input {
   margin: 0;
 }
 
-/* ═════════════════════════════════════════════════════════════════════
-   SECTION: TEAM COMPONENT
-   
-   Purpose: 4-column grid with photo frame (250×355) and biography
-   Structure: LAYER 2 (section/row layout) + LAYER 3 (card visual)
-   ═════════════════════════════════════════════════════════════════════ */
 
+/* ═════════════════════════════════════════════════════════════════════
+   SECTION: TEAM
+   ═════════════════════════════════════════════════════════════════════ */
 .team-section {
   background-color: var(--color-linen);
   border-top: 1px solid var(--color-sand);
 }
-
 .team-section__heading {
   font-family: var(--font-display);
   font-size: clamp(28px, 3vw, 52px);
@@ -476,19 +513,9 @@ textarea.form-input {
   margin: 0 0 var(--team-row-gap) 0;
   line-height: 1.2;
 }
+.team-section__divider { background-color: var(--color-sand); }
 
-/* ─── Team Section Divider (Visual) ─── */
-.team-section__divider {
-  background-color: var(--color-sand);
-}
-
-/* ─────────────────────────────────────
-   COMPONENT: .team-card
-   ───────────────────────────────────── */
-.team-card {
-  display: flex;
-  flex-direction: column;
-}
+.team-card { display: flex; flex-direction: column; }
 
 .team-card__photo-wrap {
   width: var(--team-photo-width);
@@ -497,7 +524,6 @@ textarea.form-input {
   border-radius: var(--team-photo-radius);
   margin-bottom: var(--space-sm);
 }
-
 .team-card__photo {
   width: 100%;
   height: 100%;
@@ -505,10 +531,7 @@ textarea.form-input {
   display: block;
   transition: transform var(--transition-hover);
 }
-
-.team-card__photo-wrap:hover .team-card__photo {
-  transform: scale(1.05);
-}
+.team-card__photo-wrap:hover .team-card__photo { transform: scale(1.05); }
 
 .team-card__name {
   font-family: var(--font-display);
@@ -518,7 +541,6 @@ textarea.form-input {
   margin: 0 0 2px 0;
   line-height: 1.2;
 }
-
 .team-card__title {
   font-family: var(--font-body);
   font-size: 12px;
@@ -527,7 +549,6 @@ textarea.form-input {
   margin: 0 0 var(--space-sm) 0;
   line-height: 1.4;
 }
-
 .team-card__bio {
   font-family: var(--font-body);
   font-size: 13px;
@@ -536,7 +557,6 @@ textarea.form-input {
   line-height: 1.75;
   margin: 0 0 var(--space-xs) 0;
 }
-
 .team-card__read-more {
   background: none;
   border: none;
@@ -554,15 +574,8 @@ textarea.form-input {
   margin-bottom: var(--space-sm);
   transition: opacity 0.2s ease;
 }
-
-.team-card__read-more:hover {
-  opacity: 0.65;
-}
-
-.team-card__specializations {
-  margin-top: auto;
-}
-
+.team-card__read-more:hover  { opacity: 0.65; }
+.team-card__specializations  { margin-top: auto; }
 .team-card__tags-label {
   font-family: var(--font-ui);
   font-size: 10px;
@@ -572,13 +585,7 @@ textarea.form-input {
   color: rgba(44, 44, 44, 0.4);
   margin: 0 0 var(--space-xs) 0;
 }
-
-.team-card__tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
+.team-card__tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .team-card__tag {
   font-family: var(--font-body);
   font-size: 11px;
@@ -589,32 +596,42 @@ textarea.form-input {
   line-height: 1.5;
 }
 
-/* ═════════════════════════════════════════════════════════════════════
-   RESPONSIVE BEHAVIOR
-   ═════════════════════════════════════════════════════════════════════ */
 
-.mobile-toggle {
-  display: none;
+/* ════════════════════════════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Navbar breakpoint (var(--navbar-breakpoint) = 768px) ──────
+   At ≤768px:
+   • .navbar__desktop-nav  → hidden  (display:none overrides the
+     default display:flex set in Layer 2 above)
+   • .navbar__mobile-toggle → visible (display:flex)
+   ─────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .navbar__desktop-nav    { display: none; }
+  .navbar__mobile-toggle  { display: flex; }
 }
 
+/* ── Content breakpoints ── */
 @media (max-width: 980px) {
-  .desktop-nav { display: none !important; }
-  .mobile-toggle { display: block; }
-  .hero-room { display: none !important; }
-  .hero-text-elevate { left: 24px !important; font-size: 14px !important; letter-spacing: 0.3em !important; }
-  .hero-logo { left: 50% !important; transform: translateX(-50%); top: 130px !important; width: 280px !important; height: 280px !important; }
-  .hero-tagline { left: 50% !important; transform: translateX(-50%); width: 90vw !important; top: 430px !important; font-size: 24px !important; }
-  .hero-section { min-height: 640px !important; }
+  .hero-room          { display: none !important; }
+  .hero-text-elevate  { left: 24px !important; font-size: 14px !important; letter-spacing: 0.3em !important; }
+  .hero-logo          { left: 50% !important; transform: translateX(-50%); top: 130px !important; width: 280px !important; height: 280px !important; }
+  .hero-tagline       { left: 50% !important; transform: translateX(-50%); width: 90vw !important; top: 430px !important; font-size: 24px !important; }
+  .hero-section       { min-height: 640px !important; }
+
   .services-section__grid { grid-template-columns: 1fr !important; }
-  .services-grid { grid-template-columns: 1fr !important; }
-  .process-grid { grid-template-columns: 1fr !important; }
-  .team-section__row { grid-template-columns: repeat(2, 1fr) !important; gap: 28px !important; }
-  .team-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 28px !important; }
+  .services-grid          { grid-template-columns: 1fr !important; }
+  .process-grid           { grid-template-columns: 1fr !important; }
+
+  .team-section__row  { grid-template-columns: repeat(2, 1fr) !important; gap: 28px !important; }
+  .team-grid          { grid-template-columns: repeat(2, 1fr) !important; gap: 28px !important; }
   .team-section__inner { padding: var(--space-2xl) var(--space-lg) !important; }
-  .contact-grid { grid-template-columns: 1fr !important; gap: 48px !important; }
+
+  .contact-grid       { grid-template-columns: 1fr !important; gap: 48px !important; }
 }
 
 @media (max-width: 560px) {
-  .team-section__row { grid-template-columns: 1fr !important; }
-  .team-grid { grid-template-columns: 1fr !important; }
+  .team-section__row  { grid-template-columns: 1fr !important; }
+  .team-grid          { grid-template-columns: 1fr !important; }
 }
