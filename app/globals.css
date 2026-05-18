@@ -160,19 +160,15 @@ section[id] {
    ════════════════════════════════════════════════════════════════ */
 
 /* ── Navbar layout ──────────────────────────────────────────────
-   .navbar__desktop-nav  shown on desktop (≥769px), hidden on mobile
-   .navbar__mobile-toggle hidden on desktop, shown on mobile (≤768px)
+   .navbar__desktop-nav   — hidden by default, shown ≥769px
+   .navbar__mobile-toggle — hidden by default, shown ≤768px
 
-   Why CSS instead of Tailwind responsive classes?
-   The desktop nav also has inline style={{display:"flex"}} for its
-   layout properties. Tailwind's `hidden` class (display:none) has
-   lower specificity than an inline style, so it never fires.
-   Putting the display rule here (same specificity, no !important
-   needed) ensures a single, reliable source of truth.
+   Mobile-first: both hidden by default. @media shows each at its
+   appropriate breakpoint. This avoids conflicts and is crystal clear.
    ─────────────────────────────────────────────────────────────── */
 .navbar__desktop-nav {
-  /* Shown by default on desktop */
-  display: flex;
+  /* Hidden by default on mobile */
+  display: none;
 }
 
 .navbar__mobile-toggle {
@@ -181,7 +177,7 @@ section[id] {
 }
 
 .navbar__mobile-menu {
-  /* Mobile dropdown — always stacked */
+  /* Mobile dropdown — always stacked when rendered */
   display: flex;
   flex-direction: column;
 }
@@ -266,8 +262,6 @@ textarea.form-input {
 /* ═══════════════════════════════════════
    COMPONENT: .nav-link
    Underline via ::after pseudo-element.
-   Single source of truth — no inline
-   borderBottom anywhere in the JSX.
    ═══════════════════════════════════════ */
 .nav-link {
   color: var(--color-nav-text) !important;
@@ -276,7 +270,6 @@ textarea.form-input {
   display: inline-block;
 }
 
-/* Underline bar */
 .nav-link::after {
   content: '';
   position: absolute;
@@ -291,20 +284,16 @@ textarea.form-input {
               opacity   0.2s ease;
 }
 
-/* Active: full underline */
 .nav-link.active::after {
   transform: scaleX(1);
   opacity: 1;
 }
 
-/* Hover (non-active): ghost underline */
 .nav-link:not(.active):hover::after {
   transform: scaleX(1);
   opacity: 0.4;
 }
 
-/* Mobile link variant — underline inset resets to 0 because
-   mobile links have no horizontal padding */
 .navbar__mobile-link::after {
   left: 0;
   right: 0;
@@ -313,7 +302,6 @@ textarea.form-input {
 
 /* ═══════════════════════════════════════
    COMPONENT: .navbar__mobile-toggle
-   Burger button visual (bars + animation)
    ═══════════════════════════════════════ */
 .navbar__mobile-toggle {
   position: absolute;
@@ -324,10 +312,9 @@ textarea.form-input {
   background: none;
   border: none;
   cursor: pointer;
-  display: flex;
   flex-direction: column;
   gap: 6px;
-  /* display controlled by Layer 2 + @media below */
+  /* display controlled by @media below */
 }
 
 .navbar__burger-bar {
@@ -339,13 +326,12 @@ textarea.form-input {
 }
 
 .navbar__burger-bar--mid {
-  width: 16px; /* shorter middle bar for refinement */
+  width: 16px;
 }
 
 
 /* ═══════════════════════════════════════
    COMPONENT: .navbar__mobile-menu
-   Dropdown panel visual
    ═══════════════════════════════════════ */
 .navbar__mobile-menu {
   position: absolute;
@@ -601,18 +587,19 @@ textarea.form-input {
    RESPONSIVE BREAKPOINTS
    ════════════════════════════════════════════════════════════════ */
 
-/* ── Navbar breakpoint (var(--navbar-breakpoint) = 768px) ──────
-   At ≤768px:
-   • .navbar__desktop-nav  → hidden  (display:none overrides the
-     default display:flex set in Layer 2 above)
-   • .navbar__mobile-toggle → visible (display:flex)
-   ─────────────────────────────────────────────────────────────── */
+/* Desktop: ≥769px */
+@media (min-width: 769px) {
+  .navbar__desktop-nav    { display: flex; }
+  .navbar__mobile-toggle  { display: none; }
+}
+
+/* Mobile: ≤768px */
 @media (max-width: 768px) {
   .navbar__desktop-nav    { display: none; }
   .navbar__mobile-toggle  { display: flex; }
 }
 
-/* ── Content breakpoints ── */
+/* Content breakpoints */
 @media (max-width: 980px) {
   .hero-room          { display: none !important; }
   .hero-text-elevate  { left: 24px !important; font-size: 14px !important; letter-spacing: 0.3em !important; }
