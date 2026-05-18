@@ -22,117 +22,32 @@ export default function Services() {
   return (
     <section
       id="services"
-      style={{
-        backgroundColor: "rgb(234, 228, 221)",
-        width: "100%",
-        minHeight: "768px",
-        padding: "28px 0",
-      }}
+      className="services-section"
+      style={{ backgroundColor: "rgb(234, 228, 221)" }}
     >
-      {/* Heading */}
-      <h2
-        style={{
-          fontFamily: "var(--font-display)",
-          fontSize: "clamp(26px, 2.57vw, 44px)",
-          fontWeight: 400,
-          color: "rgb(45, 74, 70)",
-          textAlign: "center",
-          marginBottom: "20px",
-          marginTop: 0,
-          lineHeight: 1.15,
-        }}
-      >
+      <h2 className="services-section__heading">
         Healing Support &amp; Specialized Care
       </h2>
 
-      {/* Pillars — space-evenly so outer padding = gap between cards */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-evenly",
-          alignItems: "stretch",
-          flexWrap: "wrap",
-          rowGap: "28px",
-        }}
-      >
+      <div className="services-section__grid services-grid">
         {services.map((s, i) => (
-          <div
-            key={i}
-            style={{
-              backgroundColor: "#F5F2EE",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              width: "445.94px",
-              flexShrink: 0,
-              padding: "53px",
-            }}
-          >
-            {/* Image — 339×255, centered */}
-            <div
-              style={{
-                width: "339px",
-                height: "255px",
-                marginBottom: "28px",
-                overflow: "hidden",
-                borderRadius: "4px",
-              }}
-            >
+          <article key={i} className="service-card">
+
+            <div className="service-card__image-wrap">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={s.image}
                 alt={s.title}
-                style={{
-                  width: "339px",
-                  height: "255px",
-                  objectFit: "cover",
-                  display: "block",
-                  transition: "transform 0.7s cubic-bezier(0.22,1,0.36,1)",
-                }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.transform = "scale(1.04)")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.transform = "scale(1)")
-                }
+                className="service-card__image"
               />
             </div>
 
-            {/* Text block — same 339px width as image so left/right line up */}
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "10px",
-                width: "339px",
-              }}
-            >
-              <h3
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "clamp(16px, 1.76vw, 30px)",
-                  fontWeight: 400,
-                  color: "rgb(45, 74, 70)",
-                  lineHeight: 1.2,
-                  margin: 0,
-                }}
-              >
-                {s.title}
-              </h3>
-              <p
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: "clamp(12px, 1vw, 16px)",
-                  fontWeight: 300,
-                  color: "rgb(45, 74, 70)",
-                  lineHeight: 1.75,
-                  margin: 0,
-                }}
-              >
-                {s.desc}
-              </p>
+            <div className="service-card__body">
+              <h3 className="service-card__title">{s.title}</h3>
+              <p className="service-card__desc">{s.desc}</p>
             </div>
-          </div>
+
+          </article>
         ))}
       </div>
     </section>

@@ -3,13 +3,30 @@
   --font-display: "Gilda Display", Georgia, serif;
   --font-body: "Nunito Sans", system-ui, sans-serif;
   --font-ui: "Josefin Sans", system-ui, sans-serif;
+
+  /* Colors */
   --linen: #F5F2EE;
+  --sand: rgb(234, 228, 221);
   --burgundy: #7b2d3e;
   --olive: #4a6741;
   --nav-color: rgb(45, 74, 70);
   --tagline-color: rgb(75, 99, 95);
   --border: rgb(234, 228, 221);
   --charcoal: #2c2c2c;
+
+  /* Spacing scale */
+  --space-xs:  0.5rem;   /*  8px */
+  --space-sm:  1rem;     /* 16px */
+  --space-md:  1.5rem;   /* 24px */
+  --space-lg:  2rem;     /* 32px */
+  --space-xl:  3.5rem;   /* 56px */
+  --space-2xl: 6rem;     /* 96px */
+
+  /* Services component tokens */
+  --services-gap:        1.75rem;
+  --services-card-pad:   1.75rem;
+  --services-img-h:      220px;
+  --services-img-radius: 4px;
 }
 
 * { box-sizing: border-box; }
@@ -155,6 +172,91 @@ section[id] { scroll-margin-top: 175px; }
 select.form-input { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%232c2c2c' stroke-width='1.5'><path d='M6 9l6 6 6-6'/></svg>"); background-repeat: no-repeat; background-position: right center; padding-right: 24px; }
 textarea.form-input { resize: none; min-height: 100px; }
 
+/* ================================
+   LAYER 2 — Services section layout
+   Only: display, grid, gap, padding, width.
+   No colors, fonts, or visual styling here.
+   ================================ */
+.services-section {
+  width: 100%;
+  padding: var(--space-lg) var(--space-lg);
+}
+
+.services-section__heading {
+  text-align: center;
+  margin: 0 0 var(--space-lg) 0;
+  font-family: var(--font-display);
+  font-size: clamp(26px, 2.57vw, 44px);
+  font-weight: 400;
+  color: var(--nav-color);
+  line-height: 1.15;
+}
+
+.services-section__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--services-gap);
+  align-items: stretch;
+}
+
+/* ================================
+   LAYER 3 — Service card component
+   Self-contained visual unit.
+   Must work if moved to any other part of the page.
+   ================================ */
+.service-card {
+  background-color: var(--linen);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Image wrapper — inset on 3 sides, flush bottom into body */
+.service-card__image-wrap {
+  margin: var(--services-card-pad) var(--services-card-pad) 0;
+  overflow: hidden;
+  border-radius: var(--services-img-radius);
+  flex-shrink: 0;
+}
+
+.service-card__image {
+  width: 100%;
+  height: var(--services-img-h);
+  object-fit: cover;
+  display: block;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.service-card__image-wrap:hover .service-card__image {
+  transform: scale(1.04);
+}
+
+.service-card__body {
+  padding: var(--space-md) var(--services-card-pad) var(--services-card-pad);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  flex: 1;
+}
+
+.service-card__title {
+  font-family: var(--font-display);
+  font-size: clamp(16px, 1.76vw, 30px);
+  font-weight: 400;
+  color: var(--nav-color);
+  line-height: 1.2;
+  margin: 0;
+}
+
+.service-card__desc {
+  font-family: var(--font-body);
+  font-size: clamp(12px, 1vw, 16px);
+  font-weight: 300;
+  color: var(--nav-color);
+  line-height: 1.75;
+  margin: 0;
+}
+
 /* Mobile nav toggle */
 .mobile-toggle { display: none; }
 @media (max-width: 980px) {
@@ -165,6 +267,7 @@ textarea.form-input { resize: none; min-height: 100px; }
   .hero-logo { left: 50% !important; transform: translateX(-50%); top: 130px !important; width: 280px !important; height: 280px !important; }
   .hero-tagline { left: 50% !important; transform: translateX(-50%); width: 90vw !important; top: 430px !important; font-size: 24px !important; }
   .hero-section { min-height: 640px !important; }
+  .services-section__grid { grid-template-columns: 1fr !important; }
   .services-grid { grid-template-columns: 1fr !important; }
   .process-grid { grid-template-columns: 1fr !important; }
   .team-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 28px !important; }
