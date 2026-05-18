@@ -52,13 +52,18 @@ export default function Services() {
           <div
             key={i}
             style={{
-              backgroundColor: "#F5F2EE",
+              backgroundColor: "#FFFFFF",
               display: "flex",
               flexDirection: "column",
+              padding: "20px",
             }}
           >
-            {/* Image — 339x255 with white padding inside card */}
-            <div style={{ padding: "16px 20px", backgroundColor: "#FFFFFF" }}>
+            {/* Image — 339x255 centered with equal padding */}
+            <div style={{ 
+              display: "flex", 
+              justifyContent: "center", 
+              marginBottom: "20px" 
+            }}>
               <div style={{ overflow: "hidden", borderRadius: "4px" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -78,7 +83,7 @@ export default function Services() {
             </div>
 
             {/* Text content */}
-            <div style={{ padding: "16px 20px 20px", backgroundColor: "#F5F2EE", display: "flex", flexDirection: "column", gap: "10px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
               <h3 style={{
                 fontFamily: "var(--font-display)",
                 fontSize: "clamp(16px, 1.76vw, 30px)",
