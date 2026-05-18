@@ -25,7 +25,7 @@ export default function Services() {
       style={{
         backgroundColor: "rgb(234, 228, 221)",
         width: "100%",
-        padding: "60px 32px",
+        padding: "60px 12.7vw",
         minHeight: "800px",
       }}
     >
@@ -42,11 +42,11 @@ export default function Services() {
         Healing Support &amp; Specialized Care
       </h2>
 
-      {/* Cards — equal height, larger gap, image inset */}
+      {/* Cards — equal height, equal gap matching section padding */}
       <div style={{
         display: "grid",
         gridTemplateColumns: "repeat(3, 1fr)",
-        gap: "32px",
+        gap: "12.7vw",
         alignItems: "stretch",
       }}>
         {services.map((s, i) => (
