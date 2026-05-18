@@ -11,12 +11,10 @@
    - Responsive: desktop nav visible ≥769px, burger + dropdown <769px
 
    Design System Integration:
-   - All show/hide logic lives in globals.css Layer 2 — NO Tailwind
-     responsive classes on navbar elements (they conflict with inline styles)
+   - Show/hide logic split: inline display + @media in CSS (equal specificity)
    - Colors: var(--color-linen), var(--color-nav-text), var(--color-sand)
    - Typography: var(--font-ui)
    - Spacing: var(--space-*)
-   - Breakpoint token: --navbar-breakpoint (768px), defined in :root
 
    Active State:
    - Underline drawn via .nav-link::after pseudo-element (CSS only)
@@ -28,19 +26,18 @@
    - Locks updates during programmatic scroll (click navigation)
 
    Structure (BEM):
-   .navbar                        — sticky header shell (Layer 2)
-     ├─ .navbar__logo-link        — logo anchor (Layer 3)
-     ├─ .navbar__desktop-nav      — horizontal link list, desktop only (Layer 2)
-     │    └─ .nav-link[.active]   — individual link (Layer 3)
-     ├─ .navbar__mobile-toggle    — hamburger button, mobile only (Layer 2+3)
-     └─ .navbar__mobile-menu      — dropdown, mobile only (Layer 3)
-          └─ .nav-link[.active]   — individual link (Layer 3)
+   .navbar                        — sticky header shell
+     ├─ .navbar__logo-link        — logo anchor
+     ├─ .navbar__desktop-nav      — horizontal link list, desktop only
+     │    └─ .nav-link[.active]   — individual link
+     ├─ .navbar__mobile-toggle    — hamburger button, mobile only
+     └─ .navbar__mobile-menu      — dropdown, mobile only
+          └─ .nav-link[.active]   — individual link
    ======================================== */
 
 "use client";
 import { useState, useEffect } from "react";
 
-/* ─── Navigation link definitions ─── */
 const links = [
   { label: "HOME",        href: "home"     },
   { label: "OUR SERVICES",href: "services" },
@@ -53,7 +50,6 @@ export default function Navbar() {
   const [open,   setOpen]   = useState(false);
   const [active, setActive] = useState("home");
 
-  /* ─── Scroll detection ─── */
   useEffect(() => {
     let scrollTimer: ReturnType<typeof setTimeout> | null = null;
     let isScrollingProgrammatically = false;
@@ -74,7 +70,6 @@ export default function Navbar() {
       }, 150);
     };
 
-    /* Expose lock so handleClick can pause scroll detection */
     (window as any).__setNavScrolling = (val: boolean) => {
       isScrollingProgrammatically = val;
     };
@@ -86,7 +81,6 @@ export default function Navbar() {
     };
   }, []);
 
-  /* ─── Click: smooth scroll + active lock ─── */
   const handleClick = (e: React.MouseEvent, href: string) => {
     e.preventDefault();
     const el = document.getElementById(href);
@@ -101,13 +95,6 @@ export default function Navbar() {
   };
 
   return (
-    /* ════════════════════════════════════════
-       LAYER 2 — navbar shell
-       Height, position, z-index only.
-       Visual (bg, border) kept minimal inline
-       because they are fixed pixel values from
-       the original site inspection.
-       ════════════════════════════════════════ */
     <header
       className="navbar"
       style={{
@@ -122,7 +109,7 @@ export default function Navbar() {
       }}
     >
 
-      {/* ── Logo ── */}
+      {/* Logo */}
       <a
         href="#home"
         onClick={(e) => handleClick(e, "home")}
@@ -151,15 +138,11 @@ export default function Navbar() {
         />
       </a>
 
-      {/* ════════════════════════════════════════
-          LAYER 2 — desktop nav container
-          Shown ≥769px via .navbar__desktop-nav in
-          globals.css. No Tailwind classes — they
-          conflict with inline display:flex.
-          ════════════════════════════════════════ */}
+      {/* Desktop nav — inline display:flex with @media hide on mobile */}
       <nav
         className="navbar__desktop-nav"
         style={{
+          display: "flex",
           position: "absolute",
           left: "265px",
           top: "42px",
@@ -198,18 +181,13 @@ export default function Navbar() {
         ))}
       </nav>
 
-      {/* ════════════════════════════════════════
-          LAYER 2 — mobile toggle (burger)
-          Hidden ≥769px via .navbar__mobile-toggle
-          in globals.css. No Tailwind classes.
-          ════════════════════════════════════════ */}
+      {/* Mobile toggle — inline display:flex with @media hide on desktop */}
       <button
         className="navbar__mobile-toggle"
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? "Close menu" : "Open menu"}
         aria-expanded={open}
       >
-        {/* ── LAYER 3: burger icon bars ── */}
         <span
           className="navbar__burger-bar"
           style={{ transform: open ? "rotate(45deg) translateY(7px)" : "none" }}
@@ -224,13 +202,7 @@ export default function Navbar() {
         />
       </button>
 
-      {/* ════════════════════════════════════════
-          LAYER 3 — mobile dropdown menu
-          Rendered only when open=true.
-          Visible only on mobile (≤768px) because
-          the toggle that controls it is hidden on
-          desktop, so `open` can never be true there.
-          ════════════════════════════════════════ */}
+      {/* Mobile menu dropdown */}
       {open && (
         <div className="navbar__mobile-menu">
           {links.map((l) => (
