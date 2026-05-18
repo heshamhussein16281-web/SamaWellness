@@ -25,8 +25,7 @@ export default function Services() {
       style={{
         backgroundColor: "rgb(234, 228, 221)",
         width: "100%",
-        padding: "60px 12.7vw",
-        minHeight: "800px",
+        padding: "40px 6.4%",
       }}
     >
       {/* Heading */}
@@ -36,18 +35,18 @@ export default function Services() {
         fontWeight: 400,
         color: "rgb(45, 74, 70)",
         textAlign: "center",
-        marginBottom: "48px",
+        marginBottom: "20px",
         lineHeight: 1.15,
       }}>
         Healing Support &amp; Specialized Care
       </h2>
 
-      {/* Cards — equal height, equal gap matching section padding */}
+      {/* Cards grid — equal height, gap between cards */}
       <div style={{
         display: "grid",
         gridTemplateColumns: "repeat(3, 1fr)",
-        gap: "12.7vw",
-        alignItems: "stretch",
+        gap: "14px",
+        alignItems: "start",
       }}>
         {services.map((s, i) => (
           <div
@@ -56,18 +55,17 @@ export default function Services() {
               backgroundColor: "#F5F2EE",
               display: "flex",
               flexDirection: "column",
-              padding: "32px",
             }}
           >
-            {/* Image — inset with padding around it */}
-            <div style={{ overflow: "hidden", marginBottom: "24px", flexShrink: 0 }}>
+            {/* Image — edge-to-edge */}
+            <div style={{ overflow: "hidden", marginBottom: 0, flexShrink: 0 }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={s.image}
                 alt={s.title}
                 style={{
                   width: "100%",
-                  height: "200px",
+                  height: "155px",
                   objectFit: "cover",
                   display: "block",
                   transition: "transform 0.7s cubic-bezier(0.22,1,0.36,1)",
@@ -77,11 +75,11 @@ export default function Services() {
               />
             </div>
 
-            {/* Text — flex-grow so all cards stretch to same height */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px", flex: 1 }}>
+            {/* Text body */}
+            <div style={{ padding: "16px 20px 20px", display: "flex", flexDirection: "column", gap: "10px" }}>
               <h3 style={{
                 fontFamily: "var(--font-display)",
-                fontSize: "clamp(18px, 1.76vw, 30px)",
+                fontSize: "clamp(16px, 1.76vw, 30px)",
                 fontWeight: 400,
                 color: "rgb(45, 74, 70)",
                 lineHeight: 1.2,
@@ -91,7 +89,7 @@ export default function Services() {
               </h3>
               <p style={{
                 fontFamily: "var(--font-body)",
-                fontSize: "clamp(13px, 1vw, 17px)",
+                fontSize: "clamp(12px, 1vw, 16px)",
                 fontWeight: 300,
                 color: "rgb(45, 74, 70)",
                 lineHeight: 1.75,
