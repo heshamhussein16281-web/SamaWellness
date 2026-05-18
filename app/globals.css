@@ -1,20 +1,36 @@
-/* Sama Wellness — globals */
+/* ========================================
+   SAMA WELLNESS — GLOBAL STYLES
+   
+   Architecture: 3-Layer CSS System
+   Layer 1: Design Tokens (variables in :root)
+   Layer 2: Layout Containers (display, grid, flex, gap, padding)
+   Layer 3: Components (visual styling, colors, typography)
+   
+   Every edit is isolated. No cascading breakage.
+   ======================================== */
+
+/* ================================
+   LAYER 1: DESIGN TOKENS
+   
+   All values live here. Change once, updates everywhere.
+   Typography, colors, spacing, effects, and radii.
+   ================================ */
 :root {
+  /* ─── Typography ─── */
   --font-display: "Gilda Display", Georgia, serif;
   --font-body: "Nunito Sans", system-ui, sans-serif;
   --font-ui: "Josefin Sans", system-ui, sans-serif;
 
-  /* Colors */
-  --linen: #F5F2EE;
-  --sand: rgb(234, 228, 221);
-  --burgundy: #7b2d3e;
-  --olive: #4a6741;
-  --nav-color: rgb(45, 74, 70);
-  --tagline-color: rgb(75, 99, 95);
-  --border: rgb(234, 228, 221);
-  --charcoal: #2c2c2c;
+  /* ─── Color Palette ─── */
+  --color-linen: #F5F2EE;
+  --color-sand: rgb(234, 228, 221);
+  --color-nav-text: rgb(45, 74, 70);
+  --color-tagline: rgb(75, 99, 95);
+  --color-burgundy: #7b2d3e;
+  --color-olive: #4a6741;
+  --color-charcoal: #2c2c2c;
 
-  /* Spacing scale */
+  /* ─── Spacing Scale (rem-based) ─── */
   --space-xs:  0.5rem;   /*  8px */
   --space-sm:  1rem;     /* 16px */
   --space-md:  1.5rem;   /* 24px */
@@ -22,62 +38,224 @@
   --space-xl:  3.5rem;   /* 56px */
   --space-2xl: 6rem;     /* 96px */
 
-  /* Services component tokens */
-  --services-gap:        1.75rem;
-  --services-card-pad:   1.75rem;
-  --services-img-h:      220px;
-  --services-img-radius: 4px;
+  /* ─── Border Radius ─── */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 20px;
 
-  /* Team component tokens */
-  --team-col-gap:  2.5rem;
-  --team-row-gap:  4rem;
-  --team-pad-x:    4rem;
-  --team-pad-y:    5rem;
+  /* ─── Transitions & Animation ─── */
+  --transition-base: 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-hover: 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* ─── Services Section Tokens ─── */
+  --services-gap: 1.75rem;
+  --services-card-pad: 1.75rem;
+  --services-img-height: 220px;
+  --services-img-radius: var(--radius-sm);
+
+  /* ─── Team Section Tokens ─── */
+  --team-photo-width: 250px;
+  --team-photo-height: 355px;
+  --team-photo-radius: var(--radius-lg);
+  --team-col-gap: 2.5rem;
+  --team-row-gap: 4rem;
+  --team-pad-x: 4rem;
+  --team-pad-y: 5rem;
 }
 
+/* ================================
+   GLOBAL RESETS & FUNDAMENTALS
+   ================================ */
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
-  background-color: var(--linen);
-  color: var(--charcoal);
+  background-color: var(--color-linen);
+  color: var(--color-charcoal);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-::selection { background: rgba(123, 45, 62, 0.15); color: var(--burgundy); }
 
-/* Animations */
+::selection {
+  background: rgba(123, 45, 62, 0.15);
+  color: var(--color-burgundy);
+}
+
+/* ================================
+   KEYFRAME ANIMATIONS
+   ================================ */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(28px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 @keyframes marquee {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
 
-.animate-fade-up { opacity: 0; animation: fadeUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+/* ================================
+   ANIMATION & TRANSITION UTILITIES
+   ================================ */
+.animate-fade-up {
+  opacity: 0;
+  animation: fadeUp 0.85s var(--transition-base) forwards;
+}
+
 .animate-fade-up-delay-1 { animation-delay: 0.1s; }
 .animate-fade-up-delay-2 { animation-delay: 0.2s; }
 .animate-fade-up-delay-3 { animation-delay: 0.3s; }
 .animate-fade-up-delay-4 { animation-delay: 0.45s; }
-.animate-fade-in { opacity: 0; animation: fadeIn 1.2s ease forwards; }
 
-.marquee-track { display: flex; width: max-content; animation: marquee 40s linear infinite; }
+.animate-fade-in {
+  opacity: 0;
+  animation: fadeIn 1.2s ease forwards;
+}
 
-/* Image zoom */
-.img-zoom { overflow: hidden; }
-.img-zoom img { transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1); display: block; }
-.img-zoom:hover img { transform: scale(1.04); }
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
 
-/* CSS-only hover states */
-.logo-link { transition: opacity 0.2s ease; }
-.logo-link:hover { opacity: 0.85; }
+/* ================================
+   SCROLL REVEAL & REVEAL UTILITIES
+   ================================ */
+section[id] {
+  scroll-margin-top: 175px;
+}
 
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s var(--transition-base), transform 0.8s var(--transition-base);
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal:nth-child(1) { transition-delay: 0.05s; }
+.reveal:nth-child(2) { transition-delay: 0.15s; }
+.reveal:nth-child(3) { transition-delay: 0.25s; }
+.reveal:nth-child(4) { transition-delay: 0.35s; }
+
+/* ================================
+   LAYER 2: LAYOUT CONTAINERS
+   
+   Only: display, grid, flex, gap, padding, margin, width, position
+   NEVER: colors, fonts, borders, shadows, backgrounds
+   ================================ */
+
+/* ─── Services Section Layout ─── */
+.services-section {
+  width: 100%;
+  padding: var(--space-lg);
+}
+
+.services-section__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--services-gap);
+  align-items: stretch;
+}
+
+/* ─── Team Section Layout ─── */
+.team-section__inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--team-pad-y) var(--team-pad-x);
+}
+
+.team-section__row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--team-col-gap);
+  margin-bottom: var(--team-row-gap);
+}
+
+/* ─── Team Section Divider (Layout) ─── */
+.team-section__divider {
+  width: 100%;
+  height: 1px;
+  margin-bottom: var(--team-row-gap);
+}
+
+/* ─── Form Input Layout ─── */
+.form-input {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid rgba(44, 44, 44, 0.2);
+  background: transparent;
+  padding: 8px 0;
+  font-size: 14px;
+  font-family: var(--font-body);
+  font-weight: 300;
+  color: var(--color-charcoal);
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.form-input::placeholder {
+  color: rgba(44, 44, 44, 0.4);
+}
+
+.form-input:focus {
+  border-bottom-color: var(--color-burgundy);
+}
+
+.form-input:invalid {
+  box-shadow: none;
+}
+
+select.form-input {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%232c2c2c' stroke-width='1.5'><path d='M6 9l6 6 6-6'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right center;
+  padding-right: 24px;
+}
+
+textarea.form-input {
+  resize: none;
+  min-height: 100px;
+}
+
+/* ================================
+   LAYER 3: COMPONENTS
+   
+   Self-contained visual units. Colors, fonts, effects, transitions.
+   Each component can be moved/edited independently without breaking others.
+   ================================ */
+
+/* ═══════════════════════════════════════════════════════════════
+   COMPONENT: .logo-link
+   ═══════════════════════════════════════════════════════════════ */
+.logo-link {
+  transition: opacity 0.2s ease;
+}
+
+.logo-link:hover {
+  opacity: 0.85;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   COMPONENT: .nav-link
+   ═══════════════════════════════════════════════════════════════ */
 .nav-link {
-  color: rgb(45, 74, 70) !important;
+  color: var(--color-nav-text) !important;
   text-decoration: none !important;
   position: relative;
   font-family: var(--font-ui);
@@ -88,6 +266,7 @@ body {
   padding: 4px 13.36px;
   cursor: pointer;
 }
+
 .nav-link::after {
   content: '';
   position: absolute;
@@ -96,21 +275,38 @@ body {
   right: 13.36px;
   width: auto;
   height: 1px;
-  background: rgb(45, 74, 70);
+  background: var(--color-nav-text);
   transform: scaleX(0);
   transform-origin: left center;
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.3s var(--transition-base);
 }
-.nav-link:hover::after, .nav-link.active::after { transform: scaleX(1); }
 
-.social-icon { color: rgba(44,44,44,0.4); transition: color 0.2s ease; display: inline-flex; }
-.social-icon:hover { color: rgb(45,74,70); }
+.nav-link:hover::after,
+.nav-link.active::after {
+  transform: scaleX(1);
+}
 
+/* ═══════════════════════════════════════════════════════════════
+   COMPONENT: .social-icon
+   ═══════════════════════════════════════════════════════════════ */
+.social-icon {
+  color: rgba(44, 44, 44, 0.4);
+  transition: color 0.2s ease;
+  display: inline-flex;
+}
+
+.social-icon:hover {
+  color: var(--color-nav-text);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   COMPONENT: .btn-outline
+   ═══════════════════════════════════════════════════════════════ */
 .btn-outline {
   position: relative;
   display: inline-block;
-  border: 1px solid var(--burgundy);
-  color: var(--burgundy);
+  border: 1px solid var(--color-burgundy);
+  color: var(--color-burgundy);
   font-family: var(--font-ui);
   font-size: 12px;
   letter-spacing: 0.2em;
@@ -120,9 +316,20 @@ body {
   cursor: pointer;
   transition: color 0.3s ease, background-color 0.3s ease;
 }
-.btn-outline:hover { background-color: var(--burgundy); color: var(--linen); }
-.btn-outline:disabled { opacity: 0.5; cursor: default; }
 
+.btn-outline:hover {
+  background-color: var(--color-burgundy);
+  color: var(--color-linen);
+}
+
+.btn-outline:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   COMPONENT: .whatsapp-btn
+   ═══════════════════════════════════════════════════════════════ */
 .whatsapp-btn {
   position: fixed;
   bottom: 28px;
@@ -135,57 +342,41 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 20px rgba(37,211,102,0.35);
+  box-shadow: 0 4px 20px rgba(37, 211, 102, 0.35);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-decoration: none;
 }
+
 .whatsapp-btn:hover {
   transform: scale(1.1);
-  box-shadow: 0 6px 28px rgba(37,211,102,0.5);
+  box-shadow: 0 6px 28px rgba(37, 211, 102, 0.5);
 }
 
-/* Scroll reveal */
-.reveal {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+/* ═══════════════════════════════════════════════════════════════
+   COMPONENT: .img-zoom
+   ═══════════════════════════════════════════════════════════════ */
+.img-zoom {
+  overflow: hidden;
 }
-.reveal.revealed { opacity: 1; transform: translateY(0); }
-.reveal:nth-child(1) { transition-delay: 0.05s; }
-.reveal:nth-child(2) { transition-delay: 0.15s; }
-.reveal:nth-child(3) { transition-delay: 0.25s; }
-.reveal:nth-child(4) { transition-delay: 0.35s; }
 
-section[id] { scroll-margin-top: 175px; }
-
-/* Form input styles */
-.form-input {
-  width: 100%;
-  border: none;
-  border-bottom: 1px solid rgba(44,44,44,0.2);
-  background: transparent;
-  padding: 8px 0;
-  font-size: 14px;
-  font-family: var(--font-body);
-  font-weight: 300;
-  color: var(--charcoal);
-  outline: none;
-  transition: border-color 0.2s ease;
+.img-zoom img {
+  transition: transform 0.7s var(--transition-base);
+  display: block;
 }
-.form-input::placeholder { color: rgba(44,44,44,0.4); }
-.form-input:focus { border-bottom-color: var(--burgundy); }
-.form-input:invalid { box-shadow: none; }
-select.form-input { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%232c2c2c' stroke-width='1.5'><path d='M6 9l6 6 6-6'/></svg>"); background-repeat: no-repeat; background-position: right center; padding-right: 24px; }
-textarea.form-input { resize: none; min-height: 100px; }
 
-/* ================================
-   LAYER 2 — Services section layout
-   Only: display, grid, gap, padding, width.
-   No colors, fonts, or visual styling here.
-   ================================ */
+.img-zoom:hover img {
+  transform: scale(1.04);
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   SECTION: SERVICES COMPONENT
+   
+   Purpose: Three-column card layout with equal-height images
+   Structure: LAYER 2 (section layout) + LAYER 3 (card visual)
+   ═════════════════════════════════════════════════════════════════════ */
+
 .services-section {
-  width: 100%;
-  padding: var(--space-lg) var(--space-lg);
+  background-color: var(--color-sand);
 }
 
 .services-section__heading {
@@ -194,30 +385,20 @@ textarea.form-input { resize: none; min-height: 100px; }
   font-family: var(--font-display);
   font-size: clamp(26px, 2.57vw, 44px);
   font-weight: 400;
-  color: var(--nav-color);
+  color: var(--color-nav-text);
   line-height: 1.15;
 }
 
-.services-section__grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--services-gap);
-  align-items: stretch;
-}
-
-/* ================================
-   LAYER 3 — Service card component
-   Self-contained visual unit.
-   Must work if moved to any other part of the page.
-   ================================ */
+/* ─────────────────────────────────────
+   COMPONENT: .service-card
+   ───────────────────────────────────── */
 .service-card {
-  background-color: var(--linen);
+  background-color: var(--color-linen);
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
-/* Image wrapper — inset on 3 sides, flush bottom into body */
 .service-card__image-wrap {
   margin: var(--services-card-pad) var(--services-card-pad) 0;
   overflow: hidden;
@@ -227,10 +408,10 @@ textarea.form-input { resize: none; min-height: 100px; }
 
 .service-card__image {
   width: 100%;
-  height: var(--services-img-h);
+  height: var(--services-img-height);
   object-fit: cover;
   display: block;
-  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.7s var(--transition-base);
 }
 
 .service-card__image-wrap:hover .service-card__image {
@@ -249,7 +430,7 @@ textarea.form-input { resize: none; min-height: 100px; }
   font-family: var(--font-display);
   font-size: clamp(16px, 1.76vw, 30px);
   font-weight: 400;
-  color: var(--nav-color);
+  color: var(--color-nav-text);
   line-height: 1.2;
   margin: 0;
 }
@@ -258,64 +439,55 @@ textarea.form-input { resize: none; min-height: 100px; }
   font-family: var(--font-body);
   font-size: clamp(12px, 1vw, 16px);
   font-weight: 300;
-  color: var(--nav-color);
+  color: var(--color-nav-text);
   line-height: 1.75;
   margin: 0;
 }
 
-/* ================================
-   LAYER 2 — Team section layout
-   Only: display, grid, gap, padding, width.
-   No colors, fonts, or visual styling here.
-   ================================ */
-.team-section {
-  background-color: var(--linen);
-  border-top: 1px solid var(--border);
-}
+/* ═════════════════════════════════════════════════════════════════════
+   SECTION: TEAM COMPONENT
+   
+   Purpose: 4-column grid with photo frame (250×355) and biography
+   Structure: LAYER 2 (section/row layout) + LAYER 3 (card visual)
+   ═════════════════════════════════════════════════════════════════════ */
 
-.team-section__inner {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: var(--team-pad-y) var(--team-pad-x);
+.team-section {
+  background-color: var(--color-linen);
+  border-top: 1px solid var(--color-sand);
 }
 
 .team-section__heading {
   font-family: var(--font-display);
   font-size: clamp(28px, 3vw, 52px);
   font-weight: 400;
-  color: var(--nav-color);
+  color: var(--color-nav-text);
   text-align: center;
   margin: 0 0 var(--team-row-gap) 0;
   line-height: 1.2;
 }
 
-.team-section__row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--team-col-gap);
-  margin-bottom: var(--team-row-gap);
-}
-
+/* ─── Team Section Divider (Visual) ─── */
 .team-section__divider {
-  width: 100%;
-  height: 1px;
-  background-color: var(--border);
-  margin-bottom: var(--team-row-gap);
+  background-color: var(--color-sand);
 }
 
-/* ================================
-   LAYER 3 — Team card component
-   Self-contained visual unit.
-   Must work if moved to any other part of the page.
-   ================================ */
+/* ─────────────────────────────────────
+   COMPONENT: .team-card
+   
+   Fixed photo frame (250×355px) with rounded corners.
+   Image zooms on hover. Self-contained with photo, name, title, bio, tags.
+   ───────────────────────────────────── */
 .team-card {
   display: flex;
   flex-direction: column;
 }
 
+/* Photo Frame: Fixed size, rounded corners, zoom on hover */
 .team-card__photo-wrap {
-  aspect-ratio: 3 / 4;
+  width: var(--team-photo-width);
+  height: var(--team-photo-height);
   overflow: hidden;
+  border-radius: var(--team-photo-radius);
   margin-bottom: var(--space-sm);
 }
 
@@ -324,22 +496,24 @@ textarea.form-input { resize: none; min-height: 100px; }
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform var(--transition-hover);
 }
 
 .team-card__photo-wrap:hover .team-card__photo {
   transform: scale(1.05);
 }
 
+/* Name */
 .team-card__name {
   font-family: var(--font-display);
   font-size: 16px;
   font-weight: 400;
-  color: var(--nav-color);
+  color: var(--color-nav-text);
   margin: 0 0 2px 0;
   line-height: 1.2;
 }
 
+/* Title (profession) */
 .team-card__title {
   font-family: var(--font-body);
   font-size: 12px;
@@ -349,6 +523,7 @@ textarea.form-input { resize: none; min-height: 100px; }
   line-height: 1.4;
 }
 
+/* Bio (collapsible) */
 .team-card__bio {
   font-family: var(--font-body);
   font-size: 13px;
@@ -358,6 +533,7 @@ textarea.form-input { resize: none; min-height: 100px; }
   margin: 0 0 var(--space-xs) 0;
 }
 
+/* Read More / Read Less Toggle */
 .team-card__read-more {
   background: none;
   border: none;
@@ -367,7 +543,7 @@ textarea.form-input { resize: none; min-height: 100px; }
   font-weight: 300;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--nav-color);
+  color: var(--color-nav-text);
   cursor: pointer;
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -380,6 +556,7 @@ textarea.form-input { resize: none; min-height: 100px; }
   opacity: 0.65;
 }
 
+/* Specializations Section */
 .team-card__specializations {
   margin-top: auto;
 }
@@ -404,14 +581,20 @@ textarea.form-input { resize: none; min-height: 100px; }
   font-family: var(--font-body);
   font-size: 11px;
   font-weight: 300;
-  color: var(--burgundy);
+  color: var(--color-burgundy);
   border: 1px solid rgba(123, 45, 62, 0.3);
   padding: 2px 8px;
   line-height: 1.5;
 }
 
-/* Mobile nav toggle */
-.mobile-toggle { display: none; }
+/* ═════════════════════════════════════════════════════════════════════
+   RESPONSIVE BEHAVIOR
+   ═════════════════════════════════════════════════════════════════════ */
+
+.mobile-toggle {
+  display: none;
+}
+
 @media (max-width: 980px) {
   .desktop-nav { display: none !important; }
   .mobile-toggle { display: block; }
@@ -428,6 +611,7 @@ textarea.form-input { resize: none; min-height: 100px; }
   .team-section__inner { padding: var(--space-2xl) var(--space-lg) !important; }
   .contact-grid { grid-template-columns: 1fr !important; gap: 48px !important; }
 }
+
 @media (max-width: 560px) {
   .team-section__row { grid-template-columns: 1fr !important; }
   .team-grid { grid-template-columns: 1fr !important; }
