@@ -25,8 +25,7 @@ export default function Services() {
       style={{
         backgroundColor: "rgb(234, 228, 221)",
         width: "100%",
-        padding: "60px 40px",
-        minHeight: "800px",
+        padding: "28px 6.4%",
       }}
     >
       {/* Heading */}
@@ -36,67 +35,66 @@ export default function Services() {
         fontWeight: 400,
         color: "rgb(45, 74, 70)",
         textAlign: "center",
-        marginBottom: "48px",
+        marginBottom: "20px",
         lineHeight: 1.15,
       }}>
         Healing Support &amp; Specialized Care
       </h2>
 
-      {/* Cards grid — equal padding, sized images */}
+      {/* Cards grid */}
       <div style={{
         display: "grid",
         gridTemplateColumns: "repeat(3, 1fr)",
-        gap: "40px",
-        alignItems: "stretch",
+        gap: "14px",
+        alignItems: "start",
       }}>
         {services.map((s, i) => (
           <div
             key={i}
             style={{
-              backgroundColor: "#FFFFFF",
+              backgroundColor: "#F5F2EE",
               display: "flex",
               flexDirection: "column",
-              padding: "24px",
-              borderRadius: "8px",
-              boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
             }}
           >
-            {/* Image — 339x255 with padding inside card */}
-            <div style={{ overflow: "hidden", marginBottom: "20px", flexShrink: 0, borderRadius: "6px", width: "339px", height: "255px" }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={s.image}
-                alt={s.title}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  display: "block",
-                  transition: "transform 0.7s cubic-bezier(0.22,1,0.36,1)",
-                }}
-                onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.04)")}
-                onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")}
-              />
+            {/* Image — 339x255 with white padding inside card */}
+            <div style={{ padding: "16px 20px", backgroundColor: "#FFFFFF" }}>
+              <div style={{ overflow: "hidden", borderRadius: "4px" }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={s.image}
+                  alt={s.title}
+                  style={{
+                    width: "339px",
+                    height: "255px",
+                    objectFit: "cover",
+                    display: "block",
+                    transition: "transform 0.7s cubic-bezier(0.22,1,0.36,1)",
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.04)")}
+                  onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")}
+                />
+              </div>
             </div>
 
-            {/* Text content — same white background */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px", flex: 1 }}>
+            {/* Text content */}
+            <div style={{ padding: "16px 20px 20px", backgroundColor: "#F5F2EE", display: "flex", flexDirection: "column", gap: "10px" }}>
               <h3 style={{
                 fontFamily: "var(--font-display)",
-                fontSize: "clamp(20px, 1.76vw, 30px)",
+                fontSize: "clamp(16px, 1.76vw, 30px)",
                 fontWeight: 400,
                 color: "rgb(45, 74, 70)",
-                lineHeight: 1.3,
+                lineHeight: 1.2,
                 margin: 0,
               }}>
                 {s.title}
               </h3>
               <p style={{
                 fontFamily: "var(--font-body)",
-                fontSize: "clamp(14px, 1vw, 16px)",
+                fontSize: "clamp(12px, 1vw, 16px)",
                 fontWeight: 300,
                 color: "rgb(45, 74, 70)",
-                lineHeight: 1.6,
+                lineHeight: 1.75,
                 margin: 0,
               }}>
                 {s.desc}
