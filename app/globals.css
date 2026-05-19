@@ -189,6 +189,10 @@ section[id] {
   min-height: calc(100vh - var(--navbar-height));
   box-sizing: border-box;
 }
+.services-section__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
 .services-section__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

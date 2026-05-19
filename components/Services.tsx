@@ -96,6 +96,7 @@ export default function Services() {
       {/* ───────────────────────────────────
           Section Heading
           ─────────────────────────────────── */}
+      <div className="services-section__inner">
       <h2 className="services-section__heading">
         Healing Support &amp; Specialized Care
       </h2>
@@ -129,6 +130,7 @@ export default function Services() {
 
           </article>
         ))}
+      </div>
       </div>
     </section>
   );
