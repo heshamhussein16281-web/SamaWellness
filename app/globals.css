@@ -55,7 +55,7 @@
   /* ─── Services tokens ─── */
   --services-gap:        1.75rem;
   --services-card-pad:   1.75rem;
-  --services-img-height: 220px;
+  --services-img-height: 255px;
   --services-img-radius: var(--radius-sm);
 
   /* ─── Team tokens ─── */
@@ -185,7 +185,9 @@ section[id] {
 /* ── Services layout ── */
 .services-section {
   width: 100%;
-  padding: var(--space-lg);
+  padding: var(--space-2xl) var(--space-lg);
+  min-height: calc(100vh - var(--navbar-height));
+  box-sizing: border-box;
 }
 .services-section__grid {
   display: grid;
@@ -785,6 +787,8 @@ textarea.form-input {
 .team-section {
   background-color: var(--color-linen);
   border-top: 1px solid var(--color-sand);
+  min-height: calc(100vh - var(--navbar-height));
+  box-sizing: border-box;
 }
 .team-section__heading {
   font-family: var(--font-display);
@@ -913,6 +917,9 @@ textarea.form-input {
 
   /* Process: reduce side padding */
   .process-inner { padding: 0 var(--space-md) !important; }
+
+  /* Services: reduce top padding on mobile */
+  .services-section { padding: var(--space-lg) var(--space-md) var(--space-2xl) !important; }
 }
 
 /* Content breakpoints */
