@@ -25,7 +25,7 @@ export default function Process() {
         <ScrollReveal>
           <h2 className="reveal" style={{
             fontFamily: "var(--font-display)",
-            fontSize: "clamp(32px, 3.75vw, 64px)",
+            fontSize: "clamp(30px, 3.2vw, 52px)",
             fontWeight: 400,
             color: "rgb(45, 74, 70)",
             textAlign: "center",
