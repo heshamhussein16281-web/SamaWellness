@@ -58,7 +58,7 @@ export default function Contact() {
 
         {/* Form — minimal placeholder style */}
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <input name="first_name" value={form.first_name} onChange={handleChange}
               className="w-full border-b border-charcoal/20 bg-transparent py-2 text-sm text-charcoal focus:outline-none focus:border-burgundy-500 transition-colors placeholder:text-charcoal/40"
               placeholder="First name" />

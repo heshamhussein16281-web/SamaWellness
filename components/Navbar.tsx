@@ -85,7 +85,9 @@ export default function Navbar() {
     e.preventDefault();
     const el = document.getElementById(href);
     if (el) {
-      const top = el.offsetTop - 175 + 1;
+      const navbarEl = document.querySelector(".navbar") as HTMLElement | null;
+      const navbarHeight = navbarEl ? navbarEl.offsetHeight : 175;
+      const top = el.offsetTop - navbarHeight + 1;
       (window as any).__setNavScrolling?.(true);
       setActive(href);
       window.scrollTo({ top, behavior: "smooth" });

@@ -25,7 +25,7 @@ export default function Footer() {
       </div>
 
       <footer style={{ backgroundColor: "#F5F2EE", padding: "64px 0 40px", borderTop: "1px solid rgb(234,228,221)" }}>
-        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 64px", display: "flex", flexDirection: "column", alignItems: "center", gap: "40px" }}>
+        <div className="footer-inner" style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 64px", display: "flex", flexDirection: "column", alignItems: "center", gap: "40px" }}>
           <a href="#home">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo.png" alt="Sama Wellness Therapy" style={{ width: "120px", height: "120px", objectFit: "contain" }} />

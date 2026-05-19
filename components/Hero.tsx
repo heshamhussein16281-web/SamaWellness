@@ -1,9 +1,9 @@
 export default function Hero() {
   return (
-    <section id="home" style={{ backgroundColor: "#F5F2EE", minHeight: "987px", position: "relative", overflow: "hidden" }}>
+    <section id="home" className="hero-section" style={{ backgroundColor: "#F5F2EE", minHeight: "987px", position: "relative", overflow: "hidden" }}>
 
       {/* ELEVATE — exact: 32px, letterSpacing 4.81px, color rgb(45,74,70) */}
-      <p style={{
+      <p className="hero-text-elevate" style={{
         position: "absolute",
         top: "38px",
         left: "131px",
@@ -24,6 +24,7 @@ export default function Hero() {
       <img
         src="/logo-hero.png"
         alt="Sama Wellness Therapy"
+        className="hero-logo"
         style={{
           position: "absolute",
           top: "113px",
@@ -35,7 +36,7 @@ export default function Hero() {
       />
 
       {/* Professional Care — 45px, centered, rgb(75,99,95) */}
-      <p style={{
+      <p className="hero-tagline" style={{
         position: "absolute",
         top: "606px",
         left: "138px",
@@ -52,7 +53,7 @@ export default function Hero() {
       </p>
 
       {/* Room image — no rounding, no fade, exact match to original */}
-      <div style={{
+      <div className="hero-room" style={{
         position: "absolute",
         top: "38px",
         left: "54.6%",
