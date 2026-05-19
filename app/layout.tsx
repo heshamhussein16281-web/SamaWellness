@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Gilda_Display, Nunito_Sans, Josefin_Sans } from "next/font/google";
 import "./globals.css";
 
@@ -26,6 +26,12 @@ const josefinSans = Josefin_Sans({
 export const metadata: Metadata = {
   title: "Sama Wellness Therapy",
   description: "Professional Care Tailored to Your Journey",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -21,16 +21,16 @@ export default function Contact() {
 
   return (
     <section id="contact" className="bg-linen py-24 border-t border-burgundy-100">
-      <div className="max-w-7xl mx-auto px-8 grid md:grid-cols-2 gap-16">
+      <div className="max-w-7xl mx-auto px-8 grid md:grid-cols-2 gap-8 md:gap-16">
         {/* Left */}
         <div>
-          <h2 className="font-display text-4xl md:text-5xl font-light text-charcoal mb-6">Contact Us</h2>
+          <h2 className="text-4xl md:text-5xl font-light text-charcoal mb-6" style={{ fontFamily: "var(--font-display)" }}>Contact Us</h2>
           <p className="text-charcoal/65 font-light leading-relaxed mb-10 text-sm">
             We'd love to hear from you. Send us a message and we'll respond as soon as possible.
           </p>
 
           <div className="border border-burgundy-200 p-8 mb-8">
-            <h3 className="font-display text-2xl font-light text-charcoal mb-3">
+            <h3 className="text-2xl font-light text-charcoal mb-3" style={{ fontFamily: "var(--font-display)" }}>
               Schedule Your Initial Assessment
             </h3>
             <p className="text-charcoal/60 text-sm font-light leading-relaxed">
@@ -72,7 +72,7 @@ export default function Contact() {
             placeholder="Email *" />
 
           <select name="topic" value={form.topic} onChange={handleChange} required
-            className="w-full border-b border-charcoal/20 bg-transparent py-2 text-sm text-charcoal focus:outline-none focus:border-burgundy-500 transition-colors">
+            className="form-input">
             <option value="" disabled>How can we help you? *</option>
             {topics.map((t) => <option key={t} value={t}>{t}</option>)}
           </select>
@@ -85,7 +85,8 @@ export default function Contact() {
             <p className="text-olive-500 text-sm font-light">✓ Thank you! We'll be in touch soon.</p>
           ) : (
             <button type="submit" disabled={status === "loading"}
-              className="px-10 py-3 border border-burgundy-500 text-burgundy-500 font-nav text-xs tracking-[0.2em] uppercase hover:bg-burgundy-500 hover:text-linen transition-all duration-200 disabled:opacity-50">
+              className="px-10 py-3 border border-burgundy-500 text-burgundy-500 text-xs tracking-[0.2em] uppercase hover:bg-burgundy-500 hover:text-linen transition-all duration-200 disabled:opacity-50"
+              style={{ fontFamily: "var(--font-ui)" }}>
               {status === "loading" ? "Submitting…" : "Submit"}
             </button>
           )}

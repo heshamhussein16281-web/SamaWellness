@@ -44,7 +44,7 @@ export default function Process() {
               <div key={i} className="reveal" style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
 
                 {/* Icon box — light background with padding, icon centered inside */}
-                <div style={{ backgroundColor: "#EAE4DD", padding: "40px 55px", marginBottom: "32px", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <div style={{ backgroundColor: "#EAE4DD", padding: "40px clamp(20px, 8vw, 55px)", marginBottom: "32px", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={s.image}
