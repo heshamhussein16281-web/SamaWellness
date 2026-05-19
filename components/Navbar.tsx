@@ -140,11 +140,10 @@ export default function Navbar() {
         />
       </a>
 
-      {/* Desktop nav — inline display:flex with @media hide on mobile */}
+      {/* Desktop nav — display controlled entirely by CSS (@media), no inline display */}
       <nav
         className="navbar__desktop-nav"
         style={{
-          display: "flex",
           position: "absolute",
           left: "265px",
           top: "42px",
