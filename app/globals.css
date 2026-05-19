@@ -212,7 +212,181 @@ section[id] {
   margin-bottom: var(--team-row-gap);
 }
 
-/* ── Form layout ── */
+/* ── Contact section ── */
+.contact-section {
+  background: var(--color-linen);
+  padding: 72px 24px;
+  border-top: 1px solid rgba(123, 45, 62, 0.1);
+}
+
+.contact-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 56px;
+}
+
+@media (min-width: 769px) {
+  .contact-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+  }
+}
+
+.contact-heading {
+  font-family: var(--font-display);
+  font-size: clamp(1.875rem, 4vw, 2.75rem);
+  font-weight: 300;
+  color: var(--color-charcoal);
+  margin-bottom: 12px;
+}
+
+.contact-subtext {
+  font-size: 14px;
+  color: rgba(44, 44, 44, 0.65);
+  font-weight: 300;
+  line-height: 1.65;
+  margin-bottom: 28px;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.contact-name-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 480px) {
+  .contact-name-row { grid-template-columns: 1fr; }
+}
+
+.contact-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.contact-label {
+  font-size: 12px;
+  font-family: var(--font-body);
+  color: var(--color-charcoal);
+  font-weight: 400;
+}
+
+.contact-input,
+.contact-select,
+.contact-textarea {
+  width: 100%;
+  border: 1px solid rgba(44, 44, 44, 0.22);
+  background: transparent;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: var(--font-body);
+  font-weight: 300;
+  color: var(--color-charcoal);
+  outline: none;
+  transition: border-color 0.2s ease;
+  border-radius: 0;
+}
+
+.contact-input::placeholder,
+.contact-textarea::placeholder { color: rgba(44, 44, 44, 0.35); }
+
+.contact-input:focus,
+.contact-select:focus,
+.contact-textarea:focus { border-color: var(--color-nav-text); }
+
+.contact-input:invalid,
+.contact-select:invalid,
+.contact-textarea:invalid { box-shadow: none; }
+
+.contact-select-wrap { position: relative; }
+
+.contact-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%232c2c2c' stroke-width='1.5'><path d='M6 9l6 6 6-6'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+.contact-textarea {
+  resize: none;
+  min-height: 120px;
+}
+
+.contact-submit {
+  width: 100%;
+  padding: 14px;
+  background: var(--color-nav-text);
+  color: #fff;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  border-radius: 0;
+}
+
+.contact-submit:hover:not(:disabled) { opacity: 0.85; }
+.contact-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.contact-success {
+  color: var(--color-olive);
+  font-size: 14px;
+  font-weight: 300;
+}
+
+.contact-error {
+  color: #c0392b;
+  font-size: 12px;
+}
+
+.contact-info-col {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-top: 4px;
+}
+
+.contact-info-heading {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+  font-weight: 300;
+  color: var(--color-nav-text);
+  line-height: 1.08;
+}
+
+.contact-info-body {
+  font-size: 15px;
+  color: rgba(44, 44, 44, 0.68);
+  font-weight: 300;
+  line-height: 1.75;
+}
+
+.contact-info-link {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--color-nav-text);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.contact-info-link:hover { opacity: 0.65; }
+
+/* ── Legacy form-input (keep for any other uses) ── */
 .form-input {
   width: 100%;
   border: none;
@@ -659,7 +833,6 @@ textarea.form-input {
   .team-section__inner { padding: var(--space-2xl) var(--space-lg) !important; }
   .team-card__photo-wrap { width: 100%; }
 
-  .contact-grid       { grid-template-columns: 1fr !important; gap: 48px !important; }
 }
 
 @media (max-width: 480px) {
