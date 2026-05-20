@@ -221,7 +221,7 @@ section[id] {
 /* ── Contact section ── */
 .contact-section {
   background: var(--color-linen);
-  padding: 72px 24px;
+  padding: 48px 24px 32px;
   border-top: 1px solid rgba(123, 45, 62, 0.1);
 }
 
