@@ -29,7 +29,7 @@ export default function Process() {
             fontWeight: 400,
             color: "rgb(45, 74, 70)",
             textAlign: "center",
-            marginBottom: "72px",
+            margin: "0 0 72px 0",
             letterSpacing: "0.01em",
             lineHeight: 1.2,
           }}>

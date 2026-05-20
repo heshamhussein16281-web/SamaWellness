@@ -922,8 +922,8 @@ textarea.form-input {
   /* Process: reduce side padding */
   .process-inner { padding: 0 var(--space-md) !important; }
 
-  /* Services: reduce top padding on mobile */
-  .services-section { padding: var(--space-lg) var(--space-md) var(--space-2xl) !important; }
+  /* Services: reduce side padding on mobile, keep vertical consistent */
+  .services-section { padding: var(--space-2xl) var(--space-md) !important; }
 }
 
 /* Content breakpoints */
