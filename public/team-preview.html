@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team Cards Redesign Preview</title>
+  <link href="https://fonts.googleapis.com/css2?family=Gilda+Display:wght@400&family=Nunito+Sans:wght@300;400&family=Josefin+Sans:wght@300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-display: "Gilda Display", Georgia, serif;
+      --font-body: "Nunito Sans", system-ui, sans-serif;
+      --font-ui: "Josefin Sans", system-ui, sans-serif;
+      --color-linen: #F5F2EE;
+      --color-sand: rgb(234, 228, 221);
+      --color-nav-text: rgb(45, 74, 70);
+      --color-burgundy: #7b2d3e;
+      --color-charcoal: #2c2c2c;
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 1.5rem;
+      --radius-lg: 20px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background-color: var(--color-linen);
+      color: var(--color-charcoal);
+      font-family: var(--font-body);
+      padding: 3rem 1rem;
+    }
+
+    .preview-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .preview-title {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      color: var(--color-nav-text);
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    .preview-subtitle {
+      text-align: center;
+      color: rgba(44, 44, 44, 0.65);
+      margin-bottom: 3rem;
+      font-size: 1rem;
+      font-weight: 300;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 4rem;
+    }
+
+    .comparison-label {
+      grid-column: 1 / -1;
+      text-align: center;
+      font-family: var(--font-ui);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: rgba(45, 74, 70, 0.5);
+      margin-bottom: 2rem;
+      margin-top: 1rem;
+    }
+
+    .current-design, .new-design {
+      text-align: center;
+    }
+
+    .current-label {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      color: var(--color-charcoal);
+      margin-bottom: 1.5rem;
+    }
+
+    .new-label {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      color: var(--color-nav-text);
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+
+    .team-card-preview {
+      display: flex;
+      flex-direction: column;
+      width: 200px;
+      margin: 0 auto;
+    }
+
+    .team-card__photo {
+      width: 163px;
+      height: 218px;
+      background: linear-gradient(135deg, #ddd 0%, #f0f0f0 100%);
+      border-radius: 20px;
+      margin-bottom: 1rem;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .team-card__name {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--color-nav-text);
+      margin: 0 0 2px 0;
+      line-height: 1.2;
+    }
+
+    .team-card__title {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 300;
+      color: rgba(44, 44, 44, 0.55);
+      margin: 0 0 0.75rem 0;
+      line-height: 1.4;
+    }
+
+    .team-card__divider {
+      width: 100%;
+      height: 1px;
+      background-color: var(--color-sand);
+      margin: 0.75rem 0;
+    }
+
+    .team-card__bio-section-current {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 300;
+      color: rgba(44, 44, 44, 0.7);
+      line-height: 1.6;
+      margin: 0 0 0.75rem 0;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 4;
+      overflow: hidden;
+      min-height: 60px;
+      background: rgba(255, 255, 255, 0.5);
+      padding: 0.5rem;
+      border-radius: 4px;
+    }
+
+    .team-card__approach {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--color-nav-text);
+      line-height: 1.6;
+      margin: 0 0 0.75rem 0;
+      font-style: italic;
+      background: rgba(45, 74, 70, 0.08);
+      padding: 0.65rem;
+      border-radius: 6px;
+      border-left: 3px solid var(--color-nav-text);
+    }
+
+    .team-card__specializations {
+      margin: 0.75rem 0;
+    }
+
+    .team-card__tags-label {
+      font-family: var(--font-ui);
+      font-size: 10px;
+      font-weight: 300;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(44, 44, 44, 0.4);
+      margin: 0 0 0.5rem 0;
+    }
+
+    .team-card__tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+    }
+
+    .team-card__tag {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 300;
+      color: var(--color-burgundy);
+      border: 1.5px solid var(--color-burgundy);
+      padding: 4px 10px;
+      line-height: 1.4;
+      border-radius: 4px;
+      background: rgba(123, 45, 62, 0.05);
+    }
+
+    .team-card__read-more {
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-nav-text);
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      margin-top: 0.5rem;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+    }
+
+    .team-card__read-more:hover {
+      opacity: 1;
+    }
+
+    .team-card__bio-current, .team-card__bio-new {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 300;
+      color: rgba(44, 44, 44, 0.7);
+      line-height: 1.6;
+      margin-top: 0.75rem;
+      display: none;
+    }
+
+    .team-card__bio-new {
+      max-height: 120px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.5);
+      padding: 0.5rem;
+      border-radius: 4px;
+    }
+
+    .team-card__bio-current.shown, .team-card__bio-new.shown {
+      display: block;
+    }
+
+    .comparison-note {
+      font-size: 0.85rem;
+      color: rgba(44, 44, 44, 0.6);
+      margin-top: 1rem;
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    .note-highlight {
+      color: var(--color-burgundy);
+      font-weight: 400;
+    }
+
+    .benefits-section {
+      margin-top: 4rem;
+      padding: 2rem;
+      background: rgba(45, 74, 70, 0.08);
+      border-radius: 12px;
+    }
+
+    .benefits-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: var(--color-nav-text);
+      margin-top: 0;
+    }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .benefit-item h3 {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      color: var(--color-burgundy);
+      margin-bottom: 0.5rem;
+    }
+
+    .benefit-item p {
+      color: rgba(44, 44, 44, 0.7);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    @media (max-width: 768px) {
+      .comparison-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="preview-container">
+  <h1 class="preview-title">Team Card Redesign Preview</h1>
+  <p class="preview-subtitle">New Information Hierarchy: Approach-First Matching</p>
+
+  <!-- SAMA EISSA COMPARISON -->
+  <div class="comparison-grid">
+    <div class="current-design">
+      <div class="current-label">Current Design</div>
+      <div class="team-card-preview">
+        <div class="team-card__photo"></div>
+        <p class="team-card__name">Sama Eissa</p>
+        <p class="team-card__title">Founder and Clinical Director</p>
+        <div class="team-card__divider"></div>
+        <p class="team-card__bio-section-current">Sama is an Individual and Couple Therapist. She attained her Master's degree in Counseling Psychology from the American University in Cairo (AUC)...</p>
+        <button class="team-card__read-more" onclick="this.nextElementSibling.classList.toggle('shown');">Read More</button>
+        <p class="team-card__bio-current">She believes that humans are layered, complex, and unique. Hence, she utilizes an eclectic approach tailored to the client's individual needs.</p>
+        <div class="team-card__divider"></div>
+        <div class="team-card__specializations">
+          <p class="team-card__tags-label">Specialized In</p>
+          <div class="team-card__tags">
+            <span class="team-card__tag">Anxiety</span>
+            <span class="team-card__tag">Depression</span>
+            <span class="team-card__tag">Couple Therapy</span>
+            <span class="team-card__tag">Low Self-Esteem</span>
+          </div>
+        </div>
+      </div>
+      <p class="comparison-note"><span class="note-highlight">Problem:</span> Full bio hidden; requires click to see approach</p>
+    </div>
+
+    <div class="new-design">
+      <div class="new-label">✨ New Design</div>
+      <div class="team-card-preview">
+        <div class="team-card__photo"></div>
+        <p class="team-card__name">Sama Eissa</p>
+        <p class="team-card__title">Founder and Clinical Director</p>
+        <div class="team-card__divider"></div>
+        <p class="team-card__approach">Eclectic, client-centered approach emphasizing individual autonomy, humanistic values, and person-tailored techniques.</p>
+        <div class="team-card__divider"></div>
+        <div class="team-card__specializations">
+          <p class="team-card__tags-label">Specialized In</p>
+          <div class="team-card__tags">
+            <span class="team-card__tag">Anxiety</span>
+            <span class="team-card__tag">Depression</span>
+            <span class="team-card__tag">Couple Therapy</span>
+            <span class="team-card__tag">Low Self-Esteem</span>
+          </div>
+        </div>
+        <button class="team-card__read-more" onclick="this.nextElementSibling.classList.toggle('shown');">Read Full Bio</button>
+        <p class="team-card__bio-new">Sama is an Individual and Couple Therapist with a Master's degree in Counseling Psychology from AUC. She has extensive experience with various age groups and is an Enneagram practitioner. She conducted workshops on anxiety, self-esteem, and stress management.</p>
+      </div>
+      <p class="comparison-note"><span class="note-highlight">Improved:</span> Approach visible at a glance; specializations prominent; bio optional</p>
+    </div>
+  </div>
+
+  <!-- MARINA ROWES COMPARISON -->
+  <div class="comparison-grid">
+    <div class="current-design">
+      <div class="current-label">Current Design</div>
+      <div class="team-card-preview">
+        <div class="team-card__photo"></div>
+        <p class="team-card__name">Marina Rowes</p>
+        <p class="team-card__title">Counseling Psychologist</p>
+        <div class="team-card__divider"></div>
+        <p class="team-card__bio-section-current">Marina is a Trauma-focused Counseling Psychologist, holding her Bachelor's and Master's degree in Counseling Psychology from Mesrpac Denmark school in Denmark...</p>
+        <button class="team-card__read-more" onclick="this.nextElementSibling.classList.toggle('shown');">Read More</button>
+        <p class="team-card__bio-current">Her philosophy centers on empowering individuals to reconnect with their authentic selves and embrace their truth.</p>
+        <div class="team-card__divider"></div>
+        <div class="team-card__specializations">
+          <p class="team-card__tags-label">Specialized In</p>
+          <div class="team-card__tags">
+            <span class="team-card__tag">PTSD</span>
+            <span class="team-card__tag">Anxiety</span>
+            <span class="team-card__tag">Sexual Abuse</span>
+            <span class="team-card__tag">Eating Disorders</span>
+          </div>
+        </div>
+      </div>
+      <p class="comparison-note"><span class="note-highlight">Truncated:</span> Her trauma focus buried in bio text</p>
+    </div>
+
+    <div class="new-design">
+      <div class="new-label">✨ New Design</div>
+      <div class="team-card-preview">
+        <div class="team-card__photo"></div>
+        <p class="team-card__name">Marina Rowes</p>
+        <p class="team-card__title">Counseling Psychologist</p>
+        <div class="team-card__divider"></div>
+        <p class="team-card__approach">Trauma-focused approach using somatic techniques and internal family systems to help clients reconnect with their authentic selves.</p>
+        <div class="team-card__divider"></div>
+        <div class="team-card__specializations">
+          <p class="team-card__tags-label">Specialized In</p>
+          <div class="team-card__tags">
+            <span class="team-card__tag">PTSD</span>
+            <span class="team-card__tag">Trauma</span>
+            <span class="team-card__tag">Sexual Abuse</span>
+            <span class="team-card__tag">Anxiety</span>
+          </div>
+        </div>
+        <button class="team-card__read-more" onclick="this.nextElementSibling.classList.toggle('shown');">Read Full Bio</button>
+        <p class="team-card__bio-new">Marina is a Trauma-focused Counseling Psychologist with degrees from Mesrpac Denmark. She has expertise with abuse survivors and uses CBT, IFS, DBT, and somatic techniques to help clients release emotions safely.</p>
+      </div>
+      <p class="comparison-note"><span class="note-highlight">Clear:</span> Trauma specialty immediately visible and prominent</p>
+    </div>
+  </div>
+
+  <!-- KEY BENEFITS -->
+  <div class="benefits-section">
+    <h2 class="benefits-title">Key Benefits of This Restructuring</h2>
+    <div class="benefits-grid">
+      <div class="benefit-item">
+        <h3>⚡ Matchmaking Speed</h3>
+        <p>Visitors instantly see therapeutic approach + specializations without clicking. They can decide in 2 seconds if this therapist is a match.</p>
+      </div>
+      <div class="benefit-item">
+        <h3>🎯 Professional Context</h3>
+        <p>The approach statement captures their style/philosophy—this is what people actually want to know about a therapist's work.</p>
+      </div>
+      <div class="benefit-item">
+        <h3>📊 Visual Hierarchy</h3>
+        <p>Clear sections: photo → identity → approach → specialties → optional depth. No cramming. No truncation of important info.</p>
+      </div>
+      <div class="benefit-item">
+        <h3>📱 All Breakpoints</h3>
+        <p>Stacked information sections work perfectly on mobile, tablet, and desktop. No layout shifts.</p>
+      </div>
+      <div class="benefit-item">
+        <h3>✨ Elegant Design</h3>
+        <p>Subtle dividers, larger specialization tags, and italicized approach text create visual interest without clutter.</p>
+      </div>
+      <div class="benefit-item">
+        <h3>🏥 Maintained Aesthetics</h3>
+        <p>Stays true to Sama Wellness's calm, professional aesthetic. No aggressive design changes—just better organization.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

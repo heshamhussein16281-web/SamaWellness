@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aligned Approach Preview</title>
+  <link href="https://fonts.googleapis.com/css2?family=Gilda+Display:wght@400&family=Nunito+Sans:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-display: "Gilda Display", Georgia, serif;
+      --font-body: "Nunito Sans", system-ui, sans-serif;
+      --color-linen: #F5F2EE;
+      --color-sand: rgb(234, 228, 221);
+      --color-nav-text: rgb(45, 74, 70);
+      --color-burgundy: #7b2d3e;
+      --color-charcoal: #2c2c2c;
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 1.5rem;
+      --space-lg: 2.5rem;
+      --radius-lg: 20px;
+      --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.08);
+      --shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background-color: var(--color-linen);
+      color: var(--color-charcoal);
+      font-family: var(--font-body);
+      padding: 3rem 1rem;
+    }
+
+    .preview-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .preview-header {
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+
+    .preview-title {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      color: var(--color-nav-text);
+      margin: 0 0 0.5rem 0;
+    }
+
+    .preview-subtitle {
+      color: rgba(44, 44, 44, 0.65);
+      font-size: 1rem;
+      font-weight: 300;
+      margin: 0;
+    }
+
+    .comparison-section {
+      margin-bottom: 4rem;
+    }
+
+    .comparison-section h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: var(--color-nav-text);
+      margin-bottom: 1.5rem;
+    }
+
+    .therapist-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-lg);
+      margin-bottom: 4rem;
+    }
+
+    /* ═══════════════════════════════════════════
+       CURRENT: Approach lower on right side
+       ═══════════════════════════════════════════ */
+    .therapist-card--current {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      grid-template-rows: auto auto auto auto;
+      gap: var(--space-lg);
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(234, 228, 221, 0.6);
+    }
+
+    .therapist-card--current:hover {
+      box-shadow: var(--shadow-medium);
+      transform: translateY(-2px);
+    }
+
+    .therapist-card--current .therapist-card__photo-wrap {
+      grid-row: 1 / 3;
+      grid-column: 1;
+      position: relative;
+      overflow: hidden;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%);
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .therapist-card--current .therapist-card__photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .therapist-card--current .therapist-card__photo-wrap:hover .therapist-card__photo {
+      transform: scale(1.05);
+      transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .therapist-card--current .therapist-card__header {
+      grid-column: 2;
+      grid-row: 1;
+      margin-bottom: 0;
+    }
+
+    .therapist-card--current .therapist-card__approach {
+      grid-column: 2;
+      grid-row: 2;
+      margin: 0;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--color-nav-text);
+      line-height: 1.7;
+      font-style: italic;
+      padding: var(--space-sm);
+      background: rgba(45, 74, 70, 0.06);
+      border-left: 3px solid var(--color-burgundy);
+      border-radius: 4px;
+    }
+
+    .therapist-card--current .therapist-card__name {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--color-nav-text);
+      margin: 0 0 2px 0;
+      line-height: 1.2;
+    }
+
+    .therapist-card--current .therapist-card__title {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(44, 44, 44, 0.6);
+      margin: 0 0 var(--space-sm) 0;
+      line-height: 1.4;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .therapist-card--current .therapist-card__divider {
+      width: 40px;
+      height: 2px;
+      background: linear-gradient(to right, var(--color-burgundy), rgba(123, 45, 62, 0.2));
+      margin: var(--space-sm) 0;
+    }
+
+    .therapist-card--current .therapist-card__bio-section {
+      grid-column: 1 / -1;
+      grid-row: 3;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .therapist-card--current .therapist-card__bio {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(44, 44, 44, 0.7);
+      line-height: 1.75;
+      margin: 0;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      -webkit-line-clamp: 5;
+    }
+
+    .therapist-card--current .therapist-card__read-more {
+      display: inline-block;
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0;
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-nav-text);
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+    }
+
+    .therapist-card--current .therapist-card__read-more:hover {
+      opacity: 1;
+    }
+
+    .therapist-card--current .therapist-card__specializations {
+      grid-column: 1 / -1;
+      grid-row: 4;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .therapist-card--current .therapist-card__tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .therapist-card--current .therapist-card__tag {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 300;
+      color: var(--color-burgundy);
+      border: 1.5px solid var(--color-burgundy);
+      padding: 5px 12px;
+      line-height: 1.4;
+      border-radius: 20px;
+      background: rgba(123, 45, 62, 0.05);
+      transition: all 0.2s ease;
+    }
+
+    .therapist-card--current .therapist-card__tag:hover {
+      background: rgba(123, 45, 62, 0.12);
+    }
+
+    /* ═══════════════════════════════════════════
+       OPTIMIZED: Approach aligned with photo bottom
+       ═══════════════════════════════════════════ */
+    .therapist-card {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      grid-template-rows: auto auto auto auto;
+      gap: var(--space-lg);
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(234, 228, 221, 0.6);
+      transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .therapist-card:hover {
+      box-shadow: var(--shadow-medium);
+      transform: translateY(-2px);
+    }
+
+    .therapist-card__photo-wrap {
+      grid-row: 1 / 3;
+      grid-column: 1;
+      position: relative;
+      overflow: hidden;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%);
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .therapist-card__photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .therapist-card__photo-wrap:hover .therapist-card__photo {
+      transform: scale(1.05);
+    }
+
+    .therapist-card__header-and-approach {
+      grid-column: 2;
+      grid-row: 1 / 3;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .therapist-card__header {
+      margin-bottom: 0;
+    }
+
+    .therapist-card__name {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--color-nav-text);
+      margin: 0 0 2px 0;
+      line-height: 1.2;
+    }
+
+    .therapist-card__title {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(44, 44, 44, 0.6);
+      margin: 0 0 var(--space-sm) 0;
+      line-height: 1.4;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .therapist-card__divider {
+      width: 40px;
+      height: 2px;
+      background: linear-gradient(to right, var(--color-burgundy), rgba(123, 45, 62, 0.2));
+      margin: var(--space-sm) 0;
+    }
+
+    .therapist-card__approach {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--color-nav-text);
+      line-height: 1.7;
+      margin: 0;
+      font-style: italic;
+      padding: var(--space-sm);
+      background: rgba(45, 74, 70, 0.06);
+      border-left: 3px solid var(--color-burgundy);
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .therapist-card__bio-section {
+      grid-column: 1 / -1;
+      grid-row: 3;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .therapist-card__bio {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(44, 44, 44, 0.7);
+      line-height: 1.75;
+      margin: 0;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      -webkit-line-clamp: 5;
+    }
+
+    .therapist-card__bio.expanded {
+      -webkit-line-clamp: unset;
+      overflow: visible;
+    }
+
+    .therapist-card__read-more {
+      display: inline-block;
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0;
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-nav-text);
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+    }
+
+    .therapist-card__read-more:hover {
+      opacity: 1;
+    }
+
+    .therapist-card__specializations {
+      grid-column: 1 / -1;
+      grid-row: 4;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .therapist-card__tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .therapist-card__tag {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 300;
+      color: var(--color-burgundy);
+      border: 1.5px solid var(--color-burgundy);
+      padding: 5px 12px;
+      line-height: 1.4;
+      border-radius: 20px;
+      background: rgba(123, 45, 62, 0.05);
+      transition: all 0.2s ease;
+    }
+
+    .therapist-card__tag:hover {
+      background: rgba(123, 45, 62, 0.12);
+    }
+
+    .highlight {
+      background: rgba(123, 45, 62, 0.1);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      border-left: 4px solid var(--color-burgundy);
+    }
+
+    .highlight h3 {
+      margin: 0 0 0.5rem 0;
+      color: var(--color-burgundy);
+      font-family: var(--font-display);
+    }
+
+    .highlight p {
+      margin: 0.3rem 0;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .note {
+      font-style: italic;
+      color: rgba(44, 44, 44, 0.6);
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .diagram {
+      background: rgba(45, 74, 70, 0.06);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+      font-family: monospace;
+      font-size: 12px;
+      line-height: 1.8;
+      color: var(--color-nav-text);
+      overflow-x: auto;
+    }
+
+    @media (max-width: 1200px) {
+      .therapist-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .therapist-card,
+      .therapist-card--current {
+        grid-template-columns: 1fr;
+        padding: var(--space-md);
+        gap: var(--space-md);
+      }
+
+      .therapist-card__photo-wrap,
+      .therapist-card--current .therapist-card__photo-wrap {
+        aspect-ratio: 16 / 9;
+        grid-row: auto;
+        grid-column: 1;
+      }
+
+      .therapist-card__header-and-approach,
+      .therapist-card__header {
+        grid-column: 1;
+        grid-row: auto;
+      }
+
+      .therapist-card__approach {
+        grid-column: 1;
+      }
+
+      .therapist-card__bio-section {
+        grid-column: 1;
+      }
+
+      .therapist-card__specializations {
+        grid-column: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="preview-container">
+  <div class="preview-header">
+    <h1 class="preview-title">Approach Aligned with Photo</h1>
+    <p class="preview-subtitle">Summary (approach) moves up to align with photo bottom</p>
+  </div>
+
+  <div class="highlight">
+    <h3>✨ Grid Layout Change</h3>
+    <p><strong>Current:</strong> Photo (rows 1-2), Header (row 1), Approach (row 2) — extra gap below approach</p>
+    <p><strong>New:</strong> Photo (rows 1-2), Header+Approach (rows 1-2, in flex column) — approach bottom aligns with photo bottom</p>
+    <p><strong>Benefit:</strong> Bio immediately starts below, cleaner visual alignment, maximum readability</p>
+    <div class="diagram">
+Grid structure:
+┌─────────────────────────────────────┐
+│ Photo (200×200)  │ Header          │ Row 1-2
+│                  │ —divider        │
+│                  │ Approach ◄──────┼─── ALIGNED at bottom
+├─────────────────────────────────────┤ Row 3
+│ Bio (full width, 5 lines)           │
+├─────────────────────────────────────┤ Row 4
+│ Specializations (full width)        │
+└─────────────────────────────────────┘
+    </div>
+  </div>
+
+  <!-- CURRENT VERSION -->
+  <div class="comparison-section">
+    <h2>Current (Approach in row 2 only)</h2>
+    <div class="therapist-grid">
+      <article class="therapist-card--current">
+        <div class="therapist-card__photo-wrap">
+          <!-- Photo placeholder -->
+        </div>
+        <div class="therapist-card__header">
+          <h2 class="therapist-card__name">Sama Eissa</h2>
+          <p class="therapist-card__title">Founder & Clinical Director</p>
+          <div class="therapist-card__divider"></div>
+        </div>
+        <p class="therapist-card__approach">Eclectic, client-centered approach emphasizing individual autonomy, humanistic values, and person-tailored techniques.</p>
+        <div class="therapist-card__bio-section">
+          <p class="therapist-card__bio">Sama is an Individual and Couple Therapist. She attained her Master's degree in Counseling Psychology from the American University in Cairo (AUC). She has a wide experience in working with various age groups from adolescence to young adults, adults, and partners. Sama practiced and trained at the Psychological Counseling Services and Training Center at AUC.</p>
+          <button class="therapist-card__read-more">Read Full Bio →</button>
+        </div>
+        <div class="therapist-card__specializations">
+          <div class="therapist-card__tags">
+            <span class="therapist-card__tag">Anxiety</span>
+            <span class="therapist-card__tag">Depression</span>
+            <span class="therapist-card__tag">Couple Therapy</span>
+            <span class="therapist-card__tag">Low Self-Esteem</span>
+          </div>
+        </div>
+      </article>
+    </div>
+    <p class="note">Approach ends before photo ends — gap below approach wastes space.</p>
+  </div>
+
+  <!-- OPTIMIZED VERSION -->
+  <div class="comparison-section">
+    <h2>Optimized (Header+Approach aligned with photo)</h2>
+    <div class="therapist-grid">
+      <article class="therapist-card">
+        <div class="therapist-card__photo-wrap">
+          <!-- Photo placeholder -->
+        </div>
+        <div class="therapist-card__header-and-approach">
+          <div class="therapist-card__header">
+            <h3 class="therapist-card__name">Sama Eissa</h3>
+            <p class="therapist-card__title">Founder & Clinical Director</p>
+            <div class="therapist-card__divider"></div>
+          </div>
+          <p class="therapist-card__approach">Eclectic, client-centered approach emphasizing individual autonomy, humanistic values, and person-tailored techniques.</p>
+        </div>
+        <div class="therapist-card__bio-section">
+          <p class="therapist-card__bio">Sama is an Individual and Couple Therapist. She attained her Master's degree in Counseling Psychology from the American University in Cairo (AUC). She has a wide experience in working with various age groups from adolescence to young adults, adults, and partners. Sama practiced and trained at the Psychological Counseling Services and Training Center at AUC.</p>
+          <button class="therapist-card__read-more">Read Full Bio →</button>
+        </div>
+        <div class="therapist-card__specializations">
+          <div class="therapist-card__tags">
+            <span class="therapist-card__tag">Anxiety</span>
+            <span class="therapist-card__tag">Depression</span>
+            <span class="therapist-card__tag">Couple Therapy</span>
+            <span class="therapist-card__tag">Low Self-Esteem</span>
+          </div>
+        </div>
+      </article>
+    </div>
+    <p class="note">Approach bottom aligns perfectly with photo bottom. Bio immediately starts below. Clean visual hierarchy.</p>
+  </div>
+
+  <!-- KEY IMPROVEMENTS -->
+  <div class="highlight" style="background: rgba(75, 103, 65, 0.1); border-left-color: var(--color-olive);">
+    <h3 style="color: var(--color-olive);">🎯 Implementation</h3>
+    <p>✓ Wrap header + approach in `.therapist-card__header-and-approach` div</p>
+    <p>✓ Set grid-row: 1 / 3 and grid-column: 2 on wrapper</p>
+    <p>✓ Use flex-direction: column with gap: var(--space-sm) inside wrapper</p>
+    <p>✓ Set approach flex-shrink: 0 (prevents squishing)</p>
+    <p>✓ Photo still spans rows 1-2, now perfectly aligned with header+approach</p>
+    <p>✓ Bio section and specializations remain full-width below</p>
+    <p style="margin-top: 1rem;"><strong>Result:</strong> Professional alignment, no wasted vertical space, maximum visual harmony.</p>
+  </div>
+
+</div>
+
+</body>
+</html>
