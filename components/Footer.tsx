@@ -10,7 +10,13 @@ const navLinks = [
   { label: "Contact",     href: "#contact" },
 ];
 
-const socials = [];
+interface SocialLink {
+  label: string;
+  href: string;
+  d: string;
+}
+
+const socials: SocialLink[] = [];
 
 export default function Footer() {
   return (
