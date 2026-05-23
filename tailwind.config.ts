@@ -37,9 +37,9 @@ const config: Config = {
         charcoal: "#2c2c2c",
       },
       fontFamily: {
-        display: ["'Cormorant Garamond'", "Georgia", "serif"],
-        body: ["'DM Sans'", "sans-serif"],
-        nav: ["'Montserrat'", "sans-serif"],
+        display: ["var(--font-gilda)", "Georgia", "serif"],
+        body: ["var(--font-nunito)", "system-ui", "sans-serif"],
+        nav: ["var(--font-josefin)", "system-ui", "sans-serif"],
       },
       animation: {
         "marquee": "marquee 35s linear infinite",
