@@ -87,12 +87,7 @@ export default function Navbar() {
     if (el) {
       const navbarEl = document.querySelector(".navbar") as HTMLElement | null;
       const navbarHeight = navbarEl ? navbarEl.offsetHeight : 175;
-      // Contact scrolls to page bottom so the footer is visible alongside the form.
-      // On 1080p+ screens the heading is also fully in view.
-      const top =
-        href === "contact"
-          ? document.body.scrollHeight - window.innerHeight
-          : el.offsetTop - navbarHeight + 1;
+      const top = el.offsetTop - navbarHeight + 1;
       (window as any).__setNavScrolling?.(true);
       setActive(href);
       window.scrollTo({ top, behavior: "smooth" });
