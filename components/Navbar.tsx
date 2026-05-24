@@ -87,7 +87,13 @@ export default function Navbar() {
     if (el) {
       const navbarEl = document.querySelector(".navbar") as HTMLElement | null;
       const navbarHeight = navbarEl ? navbarEl.offsetHeight : 175;
-      const top = el.offsetTop - navbarHeight + 1;
+      // For contact, scroll to show header and form with submit button in view
+      let top: number;
+      if (href === "contact") {
+        top = el.offsetTop - navbarHeight + 100;
+      } else {
+        top = el.offsetTop - navbarHeight + 1;
+      }
       (window as any).__setNavScrolling?.(true);
       setActive(href);
       window.scrollTo({ top, behavior: "smooth" });
