@@ -227,8 +227,14 @@ section[id] {
 /* ── Contact section ── */
 .contact-section {
   background: var(--color-linen);
-  padding: 200px 24px 32px;
+  padding: 175px 24px 32px;
   border-top: 1px solid rgba(123, 45, 62, 0.1);
+}
+
+@media (max-width: 768px) {
+  .contact-section {
+    padding: 100px 24px 32px;
+  }
 }
 
 .contact-grid {
