@@ -90,7 +90,7 @@ export default function Navbar() {
       // For contact, scroll to show header and form with submit button in view
       let top: number;
       if (href === "contact") {
-        top = el.offsetTop - navbarHeight + 100;
+        top = el.offsetTop - navbarHeight + 140;
       } else {
         top = el.offsetTop - navbarHeight + 1;
       }
