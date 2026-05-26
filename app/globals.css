@@ -1046,17 +1046,17 @@ textarea.form-input {
   .navbar__desktop-nav    { display: none; }
   .navbar__mobile-toggle  { display: flex; }
 
-  /* Navbar: shrink to 110px on mobile */
-  .navbar { height: 110px !important; }
+  /* Navbar: shrink to 130px on mobile */
+  .navbar { height: 130px !important; }
   .navbar__logo-link {
     top: 0 !important;
     left: var(--space-xs) !important;
     transform: none !important;
-    width: 110px !important;
-    height: 110px !important;
+    width: 130px !important;
+    height: 130px !important;
   }
-  .navbar__logo-link img { width: 110px !important; height: 110px !important; }
-  section[id] { scroll-margin-top: 110px; }
+  .navbar__logo-link img { width: 130px !important; height: 130px !important; }
+  section[id] { scroll-margin-top: 130px; }
 
   /* Footer */
   .footer__band { height: auto; flex-direction: column; align-items: flex-start; padding: 32px var(--space-md) 24px; gap: 20px; }
