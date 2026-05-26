@@ -90,7 +90,9 @@ export default function Navbar() {
       // For contact, scroll to show header and form with submit button in view
       let top: number;
       if (href === "contact") {
-        top = el.offsetTop - navbarHeight + 140;
+        // Use smaller offset on mobile (navbar is 72px), larger on desktop (navbar is 175px)
+        const offset = navbarHeight <= 100 ? 100 : 140; // 100 for mobile, 140 for desktop
+        top = el.offsetTop - navbarHeight + offset;
       } else {
         top = el.offsetTop - navbarHeight + 1;
       }
