@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { supabase } from "@/lib/supabase";
 
 const topics = ["Individual Therapy", "Couple Therapy", "Group Therapy", "General Inquiry"];
 
@@ -14,9 +13,24 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("loading");
-    const { error } = await supabase.from("contact_submissions").insert([form]);
-    setStatus(error ? "error" : "success");
-    if (!error) setForm({ first_name: "", last_name: "", email: "", topic: "", message: "" });
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      if (response.ok) {
+        setStatus("success");
+        setForm({ first_name: "", last_name: "", email: "", topic: "", message: "" });
+      } else {
+        setStatus("error");
+      }
+    } catch (error) {
+      console.error("Form submission error:", error);
+      setStatus("error");
+    }
   };
 
   return (
