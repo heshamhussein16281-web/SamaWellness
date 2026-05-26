@@ -1140,21 +1140,44 @@ textarea.form-input {
 
 /* Mobile-only hero overrides — must come after 980px block to win cascade */
 @media (max-width: 768px) {
+  .hero-section {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 20px !important;
+    min-height: calc(100vh - 131px) !important;
+    padding: 16px 0 !important;
+    overflow: hidden !important;
+  }
   .hero-text-elevate {
-    top: 42px !important;
+    position: relative !important;
+    top: auto !important; left: auto !important;
+    transform: none !important;
     font-size: 14px !important;
     letter-spacing: 0.18em !important;
+    text-align: center !important;
+    width: 85vw !important;
+    white-space: normal !important;
+    order: 1 !important;
   }
-  .hero-room { top: 78px !important; }
+  .hero-room {
+    position: relative !important;
+    top: auto !important; left: auto !important;
+    transform: none !important;
+    width: 88vw !important;
+    height: 88vw !important;
+    order: 2 !important;
+  }
   .hero-tagline {
-    top: calc(min(82vw, 480px) + 102px) !important;
+    position: relative !important;
+    top: auto !important; left: auto !important;
+    transform: none !important;
+    width: 82vw !important;
+    text-align: center !important;
     font-size: clamp(22px, 6vw, 28px) !important;
+    order: 3 !important;
   }
-  .hero-section { min-height: calc(100vh - 105px) !important; }
-}
-@media (max-width: 480px) {
-  .hero-room { top: 72px !important; }
-  .hero-tagline { top: calc(88vw + 96px) !important; }
 }
 
 @media (max-width: 560px) {
