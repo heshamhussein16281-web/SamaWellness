@@ -1052,10 +1052,10 @@ textarea.form-input {
     top: 50% !important;
     left: var(--space-xs) !important;
     transform: translateY(-50%) !important;
-    width: 80px !important;
-    height: 80px !important;
+    width: 110px !important;
+    height: 110px !important;
   }
-  .navbar__logo-link img { width: 80px !important; height: 80px !important; }
+  .navbar__logo-link img { width: 110px !important; height: 110px !important; }
   section[id] { scroll-margin-top: 72px; }
 
   /* Footer */
