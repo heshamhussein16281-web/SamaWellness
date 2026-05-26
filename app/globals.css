@@ -1049,9 +1049,9 @@ textarea.form-input {
   /* Navbar: shrink to 72px on mobile */
   .navbar { height: 72px !important; }
   .navbar__logo-link {
-    top: 50% !important;
+    top: -4px !important;
     left: var(--space-xs) !important;
-    transform: translateY(-50%) !important;
+    transform: none !important;
     width: 110px !important;
     height: 110px !important;
   }
