@@ -1154,11 +1154,10 @@ textarea.form-input {
     position: relative !important;
     top: auto !important; left: auto !important;
     transform: none !important;
-    font-size: 14px !important;
-    letter-spacing: 0.18em !important;
+    font-size: 16px !important;
+    letter-spacing: 0.12em !important;
     text-align: center !important;
-    width: 85vw !important;
-    white-space: normal !important;
+    white-space: nowrap !important;
     order: 1 !important;
   }
   .hero-room {
