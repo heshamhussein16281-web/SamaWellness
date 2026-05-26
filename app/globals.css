@@ -1133,9 +1133,21 @@ textarea.form-input {
 }
 
 @media (max-width: 480px) {
-  .hero-room { width: 88vw !important; height: 88vw !important; top: 46px !important; }
-  .hero-tagline { top: calc(88vw + 70px) !important; }
-  .hero-section { min-height: calc(88vw + 150px) !important; }
+  .hero-room { width: 88vw !important; height: 88vw !important; top: 72px !important; }
+  .hero-tagline { top: calc(88vw + 96px) !important; }
+  .hero-section { min-height: calc(100vh - 105px) !important; }
+}
+
+/* Mobile-only hero overrides — must come after 980px block to win cascade */
+@media (max-width: 768px) {
+  .hero-text-elevate { top: 42px !important; }
+  .hero-room { top: 78px !important; }
+  .hero-tagline { top: calc(min(82vw, 480px) + 102px) !important; }
+  .hero-section { min-height: calc(100vh - 105px) !important; }
+}
+@media (max-width: 480px) {
+  .hero-room { top: 72px !important; }
+  .hero-tagline { top: calc(88vw + 96px) !important; }
 }
 
 @media (max-width: 560px) {
