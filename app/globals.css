@@ -1046,16 +1046,28 @@ textarea.form-input {
   .navbar__desktop-nav    { display: none; }
   .navbar__mobile-toggle  { display: flex; }
 
-  /* Navbar: shrink to 105px on mobile */
-  .navbar { height: 105px !important; }
+  /* Navbar: 105px height, logo 130px overflows — border pushed below logo */
+  .navbar { height: 105px !important; border-bottom: none !important; }
+  .navbar::after {
+    content: '';
+    position: absolute;
+    top: 105px;
+    left: 0;
+    right: 0;
+    height: 26px;
+    background-color: var(--color-linen);
+    border-bottom: 1px solid var(--color-sand);
+    z-index: 1;
+  }
   .navbar__logo-link {
     top: 0 !important;
     left: var(--space-xs) !important;
     transform: none !important;
-    width: 105px !important;
-    height: 105px !important;
+    width: 130px !important;
+    height: 130px !important;
   }
-  .navbar__logo-link img { width: 105px !important; height: 105px !important; }
+  .navbar__logo-link img { width: 130px !important; height: 130px !important; }
+  .navbar__mobile-menu { top: 130px !important; }
   section[id] { scroll-margin-top: 105px; }
 
   /* Footer */
