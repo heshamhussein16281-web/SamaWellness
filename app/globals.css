@@ -1154,8 +1154,8 @@ textarea.form-input {
     position: relative !important;
     top: auto !important; left: auto !important;
     transform: none !important;
-    font-size: 16px !important;
-    letter-spacing: 0.12em !important;
+    font-size: 18px !important;
+    letter-spacing: 0.1em !important;
     text-align: center !important;
     white-space: nowrap !important;
     order: 1 !important;
