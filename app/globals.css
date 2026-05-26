@@ -1067,6 +1067,7 @@ textarea.form-input {
     height: 130px !important;
   }
   .navbar__logo-link img { width: 130px !important; height: 130px !important; }
+  .navbar__mobile-toggle { top: 65px !important; transform: translateY(-50%) !important; }
   .navbar__mobile-menu { top: 130px !important; }
   section[id] { scroll-margin-top: 105px; }
 
