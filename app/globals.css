@@ -1140,9 +1140,16 @@ textarea.form-input {
 
 /* Mobile-only hero overrides — must come after 980px block to win cascade */
 @media (max-width: 768px) {
-  .hero-text-elevate { top: 42px !important; }
+  .hero-text-elevate {
+    top: 42px !important;
+    font-size: 14px !important;
+    letter-spacing: 0.18em !important;
+  }
   .hero-room { top: 78px !important; }
-  .hero-tagline { top: calc(min(82vw, 480px) + 102px) !important; }
+  .hero-tagline {
+    top: calc(min(82vw, 480px) + 102px) !important;
+    font-size: clamp(22px, 6vw, 28px) !important;
+  }
   .hero-section { min-height: calc(100vh - 105px) !important; }
 }
 @media (max-width: 480px) {
