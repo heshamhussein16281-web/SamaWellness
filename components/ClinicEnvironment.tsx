@@ -7,9 +7,10 @@ const spaces = [
     name: "Serenity",
     description: "A peaceful sanctuary for individual therapy, designed for comfort and reflection.",
     photos: [
-      "public/clinic-serenity-1.jpg",
-      "public/clinic-serenity-2.jpg",
-      "public/clinic-serenity-3.jpg",
+      "clinic-serenity-1.jpg",
+      "clinic-serenity-2.jpg",
+      "clinic-serenity-3.jpg",
+      "clinic-serenity-4.jpg",
     ],
   },
   {
@@ -17,9 +18,9 @@ const spaces = [
     name: "Horizon",
     description: "Our warm consultation space where therapy begins—a welcoming room for connection.",
     photos: [
-      "public/clinic-horizon-1.jpg",
-      "public/clinic-horizon-2.jpg",
-      "public/clinic-horizon-3.jpg",
+      "clinic-horizon-1.jpg",
+      "clinic-horizon-2.jpg",
+      "clinic-horizon-3.jpg",
     ],
   },
   {
@@ -27,9 +28,8 @@ const spaces = [
     name: "Welcoming Reception",
     description: "Step into a calm, professional environment where your healing journey starts.",
     photos: [
-      "public/clinic-reception-1.jpg",
-      "public/clinic-reception-2.jpg",
-      "public/clinic-reception-3.jpg",
+      "clinic-reception-1.jpg",
+      "clinic-reception-2.jpg",
     ],
   },
 ];
