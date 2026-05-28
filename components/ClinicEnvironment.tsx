@@ -75,7 +75,7 @@ export default function ClinicEnvironment() {
                 <div className="clinic-carousel-container">
                   <div className="clinic-image-container">
                     <img
-                      src={space.photos[currentPhotoIndex]}
+                      src={`${space.photos[currentPhotoIndex]}?v=${Date.now()}`}
                       alt={`${space.name} - View ${currentPhotoIndex + 1}`}
                       className="clinic-image"
                     />
