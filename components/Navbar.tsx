@@ -43,7 +43,7 @@ const links = [
   { label: "OUR SERVICES",href: "services" },
   { label: "THE PROCESS", href: "process"  },
   { label: "THE TEAM",    href: "team"     },
-  { label: "OUR SPACES",  href: "rooms"    },
+  { label: "ROOMS",       href: "rooms"    },
   { label: "CONTACT US",  href: "contact"  },
 ];
 
@@ -96,6 +96,9 @@ export default function Navbar() {
         // For home: scroll to show hero content below navbar
         // Position at around the tagline area so user sees logo, tagline, and room photo
         top = 120;
+      } else if (href === "rooms") {
+        // For rooms: scroll to show full section with heading and cards visible
+        top = Math.max(0, elementOffset - navbarHeight - 80);
       } else {
         // For other sections: scroll to position that accounts for navbar
         // Subtract navbar height so content appears below it
