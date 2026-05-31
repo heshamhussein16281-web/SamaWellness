@@ -9,7 +9,6 @@ import RoomsEnvironment from "@/components/RoomsEnvironment";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
-import InstagramButton from "@/components/InstagramButton";
 
 export default function Home() {
   useEffect(() => {
@@ -37,7 +36,6 @@ export default function Home() {
       </main>
       <Footer />
       <WhatsAppButton />
-      <InstagramButton />
     </>
   );
 }
