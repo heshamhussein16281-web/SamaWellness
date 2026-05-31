@@ -43,6 +43,7 @@ const links = [
   { label: "OUR SERVICES",href: "services" },
   { label: "THE PROCESS", href: "process"  },
   { label: "THE TEAM",    href: "team"     },
+  { label: "OUR SPACES",  href: "rooms"    },
   { label: "CONTACT US",  href: "contact"  },
 ];
 
