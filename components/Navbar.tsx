@@ -91,7 +91,7 @@ export default function Navbar() {
       let top: number;
       if (href === "contact") {
         // Use smaller offset on mobile (navbar is 72px), larger on desktop (navbar is 175px)
-        const offset = navbarHeight <= 100 ? 100 : 140; // 100 for mobile, 140 for desktop
+        const offset = navbarHeight <= 150 ? 40 : 60;
         top = el.offsetTop - navbarHeight + offset;
       } else {
         top = el.offsetTop - navbarHeight + 1;
