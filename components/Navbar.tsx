@@ -87,15 +87,20 @@ export default function Navbar() {
     if (el) {
       const navbarEl = document.querySelector(".navbar") as HTMLElement | null;
       const navbarHeight = navbarEl ? navbarEl.offsetHeight : 175;
-      // For contact, scroll to show header and form with submit button in view
+
       let top: number;
-      if (href === "contact") {
-        // Use smaller offset on mobile (navbar is 72px), larger on desktop (navbar is 175px)
-        const offset = navbarHeight <= 150 ? 40 : 60;
-        top = el.offsetTop - navbarHeight + offset;
+      const elementOffset = el.getBoundingClientRect().top + window.scrollY;
+
+      if (href === "home") {
+        // For home: scroll to show hero content below navbar
+        // Position at around the tagline area so user sees logo, tagline, and room photo
+        top = 120;
       } else {
-        top = el.offsetTop - navbarHeight + 1;
+        // For other sections: scroll to position that accounts for navbar
+        // Subtract navbar height so content appears below it
+        top = Math.max(0, elementOffset - navbarHeight - 20);
       }
+
       (window as any).__setNavScrolling?.(true);
       setActive(href);
       window.scrollTo({ top, behavior: "smooth" });
