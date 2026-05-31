@@ -1,3 +1,5 @@
+"use client";
+import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Services from "@/components/Services";
@@ -9,6 +11,16 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import InstagramButton from "@/components/InstagramButton";
 
 export default function Home() {
+  useEffect(() => {
+    // On page load, scroll to show full hero section
+    // Use setTimeout to ensure DOM is fully rendered
+    const scrollTimer = setTimeout(() => {
+      window.scrollTo({ top: 120, behavior: "auto" });
+    }, 100);
+
+    return () => clearTimeout(scrollTimer);
+  }, []);
+
   return (
     <>
       <Navbar />
