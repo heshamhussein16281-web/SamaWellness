@@ -58,9 +58,18 @@ export default function Footer() {
           <div className="footer__socials">
             {socials.map((s) => (
               <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
-                aria-label={s.label} className="footer__social-link">
-                <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                  <path d={s.d} />
+                aria-label={s.label} className="footer__social-link footer__social-link--instagram">
+                <svg width="24" height="24" viewBox="0 0 24 24">
+                  <defs>
+                    <linearGradient id="ig-gradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#fdf497" />
+                      <stop offset="5%" stopColor="#fdf497" />
+                      <stop offset="45%" stopColor="#fd5949" />
+                      <stop offset="60%" stopColor="#d6249f" />
+                      <stop offset="90%" stopColor="#285AEB" />
+                    </linearGradient>
+                  </defs>
+                  <path d={s.d} fill="url(#ig-gradient)" />
                 </svg>
               </a>
             ))}
