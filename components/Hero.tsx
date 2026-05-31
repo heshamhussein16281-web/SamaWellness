@@ -19,7 +19,7 @@ export default function Hero() {
         ELEVATE YOUR MENTAL WELLNESS
       </p>
 
-      {/* Hero logo — 543×543px on 1710px = 31.7vw */}
+      {/* Hero logo — centered in left space next to photo (0% to 52%) */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/logo-hero.png"
@@ -28,18 +28,20 @@ export default function Hero() {
         style={{
           position: "absolute",
           top: "113px",
-          left: "194px",
+          left: "26%",
+          transform: "translateX(-50%)",
           width: "clamp(380px, 31.7vw, 543px)",
           height: "clamp(380px, 31.7vw, 543px)",
           objectFit: "contain",
         }}
       />
 
-      {/* Professional Care — 45px, centered, rgb(75,99,95) */}
+      {/* Professional Care — centered in left space next to photo */}
       <p className="hero-tagline" style={{
         position: "absolute",
         top: "606px",
-        left: "138px",
+        left: "26%",
+        transform: "translateX(-50%)",
         width: "clamp(400px, 40vw, 684px)",
         fontFamily: "var(--font-ui)",
         fontSize: "clamp(28px, 2.65vw, 45px)",
