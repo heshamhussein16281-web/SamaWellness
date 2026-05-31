@@ -94,8 +94,8 @@ export default function Navbar() {
 
       if (href === "home") {
         // For home: scroll to show hero content below navbar
-        // Position at around the tagline area so user sees logo, tagline, and room photo
-        top = 120;
+        // Desktop: 120px, Mobile: 60px (adjusted for mobile navbar height)
+        top = window.innerWidth > 768 ? 120 : 60;
       } else if (href === "rooms") {
         // For rooms: scroll to show header, photos, and brief descriptions in one view
         top = Math.max(0, elementOffset - navbarHeight);

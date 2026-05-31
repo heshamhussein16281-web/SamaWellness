@@ -16,7 +16,9 @@ export default function Home() {
     // On page load, scroll to show full hero section
     // Use setTimeout to ensure DOM is fully rendered
     const scrollTimer = setTimeout(() => {
-      window.scrollTo({ top: 120, behavior: "auto" });
+      // Adjust scroll position based on viewport: desktop 120px, mobile 60px
+      const scrollTop = window.innerWidth > 768 ? 120 : 60;
+      window.scrollTo({ top: scrollTop, behavior: "auto" });
     }, 100);
 
     return () => clearTimeout(scrollTimer);
