@@ -97,8 +97,8 @@ export default function Navbar() {
         // Position at around the tagline area so user sees logo, tagline, and room photo
         top = 120;
       } else if (href === "rooms") {
-        // For rooms: scroll to show header, photos, and descriptions in one view
-        top = Math.max(0, elementOffset - navbarHeight - 150);
+        // For rooms: scroll to show header, photos, and brief descriptions in one view
+        top = Math.max(0, elementOffset - navbarHeight - 50);
       } else {
         // For other sections: scroll to position that accounts for navbar
         // Subtract navbar height so content appears below it
