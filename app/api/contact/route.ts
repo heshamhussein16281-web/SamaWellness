@@ -1,8 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
-import { Resend } from "resend";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+import nodemailer from "nodemailer";
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -28,8 +26,18 @@ export async function POST(req: Request) {
 
   // Send email notification
   try {
-    await resend.emails.send({
-      from: "Contact Form <onboarding@resend.dev>",
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: parseInt(process.env.SMTP_PORT || "587"),
+      secure: process.env.SMTP_SECURE === "true",
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+
+    await transporter.sendMail({
+      from: process.env.SMTP_FROM || "noreply@samawellnesstherapy.com",
       to: "info@samawellnesstherapy.com",
       subject: `New Contact Form Submission - ${topic}`,
       html: `
