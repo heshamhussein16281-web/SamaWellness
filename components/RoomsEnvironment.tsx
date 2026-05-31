@@ -20,7 +20,7 @@ export default function RoomsEnvironment() {
       className="rooms-section"
       style={{
         backgroundColor: "var(--color-linen)",
-        padding: "var(--space-lg) var(--space-lg) var(--space-2xl) var(--space-lg)",
+        padding: "var(--space-md) var(--space-lg) var(--space-2xl) var(--space-lg)",
         position: "relative",
       }}
     >
