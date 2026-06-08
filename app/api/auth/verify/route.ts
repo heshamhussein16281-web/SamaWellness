@@ -5,7 +5,7 @@ export async function GET(request: NextRequest) {
   try {
     // Get token from cookies
     const cookieHeader = request.headers.get('cookie');
-    const token = getJWTFromCookie(cookieHeader);
+    const token = getJWTFromCookie(cookieHeader || undefined);
 
     if (!token) {
       return NextResponse.json(

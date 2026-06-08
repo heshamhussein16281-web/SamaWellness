@@ -9,13 +9,14 @@ export interface JWTPayload {
   role: 'reception' | 'admin';
   iat?: number;
   exp?: number;
+  [key: string]: string | number | undefined;
 }
 
 /**
  * Sign a JWT token with user credentials
  */
 export async function signJWT(payload: JWTPayload): Promise<string> {
-  const token = await new SignJWT(payload)
+  const token = await new SignJWT(payload as Record<string, unknown>)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime('8h')
@@ -30,7 +31,7 @@ export async function signJWT(payload: JWTPayload): Promise<string> {
 export async function verifyJWT(token: string): Promise<JWTPayload | null> {
   try {
     const verified = await jwtVerify(token, jwtSecret);
-    return verified.payload as JWTPayload;
+    return verified.payload as unknown as JWTPayload;
   } catch (error) {
     console.error('JWT verification failed:', error);
     return null;

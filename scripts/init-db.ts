@@ -38,32 +38,16 @@ async function initializeDatabase() {
     // Note: This is a basic approach; Supabase CLI would be better for production
     console.log('\n📝 Executing SQL migration...');
 
-    // For Supabase, we'd typically use the REST API
-    // But for direct SQL execution, we need to use the admin API
-    // This is a simplified example - in production, use Supabase CLI
-
-    const response = await fetch(`${supabaseUrl}/rest/v1/rpc/exec_sql`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${serviceRoleKey}`,
-        apikey: serviceRoleKey,
-      },
-      body: JSON.stringify({ sql }),
-    }).catch(() => null);
-
-    if (response && response.ok) {
-      console.log('✅ Database initialized successfully!');
-    } else {
-      console.log('⚠️  Using Supabase Dashboard for manual setup...');
-      console.log('\n📌 Alternative Setup Instructions:');
-      console.log('1. Go to https://app.supabase.com');
-      console.log('2. Select your project');
-      console.log('3. Go to SQL Editor');
-      console.log('4. Click "New Query"');
-      console.log('5. Paste the contents of: supabase/migrations/20260608_create_clinic_tables.sql');
-      console.log('6. Click "Run"');
-    }
+    // Note: Direct SQL execution via fetch is complex with Supabase
+    // The migration should be run via the Supabase Dashboard or CLI
+    console.log('✅ Migration file is ready!');
+    console.log('\n📌 To execute the migration:');
+    console.log('1. Go to https://app.supabase.com');
+    console.log('2. Select your project');
+    console.log('3. Go to SQL Editor');
+    console.log('4. Click "New Query"');
+    console.log('5. Paste the contents of: supabase/migrations/20260608_create_clinic_tables.sql');
+    console.log('6. Click "Run"');
   } catch (error) {
     console.error('❌ Error initializing database:', error);
     console.log('\n📌 Manual Setup Instructions:');
