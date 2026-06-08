@@ -1,23 +1,6 @@
--- ============================================
--- SWT Psychology Clinic Management System
--- Database Schema - 12 Core Tables
--- ============================================
+-- SWT Psychology Clinic Management System - Database Schema
 
--- 1. CLIENTS TABLE
--- Stores client information and therapy stage
-CREATE TABLE IF NOT EXISTS clients (
-  id BIGSERIAL PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  email VARCHAR(255),
-  phone VARCHAR(20),
-  date_of_birth DATE,
-  stage VARCHAR(50) DEFAULT 'intake', -- intake, active, paused, discharged
-  therapist_id BIGINT REFERENCES therapists(id) ON DELETE SET NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- 2. THERAPISTS TABLE (referenced by clients and other tables)
+-- Create therapists table first (referenced by other tables)
 CREATE TABLE IF NOT EXISTS therapists (
   id BIGSERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
@@ -27,48 +10,57 @@ CREATE TABLE IF NOT EXISTS therapists (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 3. BOOKINGS TABLE
--- Session bookings and appointments
+-- Clients table
+CREATE TABLE IF NOT EXISTS clients (
+  id BIGSERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255),
+  phone VARCHAR(20),
+  date_of_birth DATE,
+  stage VARCHAR(50) DEFAULT 'intake',
+  therapist_id BIGINT REFERENCES therapists(id) ON DELETE SET NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Bookings table
 CREATE TABLE IF NOT EXISTS bookings (
   id BIGSERIAL PRIMARY KEY,
   client_id BIGINT NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
   therapist_id BIGINT NOT NULL REFERENCES therapists(id) ON DELETE RESTRICT,
   session_date TIMESTAMP NOT NULL,
   duration_minutes INT DEFAULT 50,
-  status VARCHAR(50) DEFAULT 'scheduled', -- scheduled, completed, cancelled, no-show
+  status VARCHAR(50) DEFAULT 'scheduled',
   notes TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 4. PAYMENTS TABLE
--- Client payment records
+-- Payments table
 CREATE TABLE IF NOT EXISTS payments (
   id BIGSERIAL PRIMARY KEY,
   client_id BIGINT NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
   amount DECIMAL(10, 2) NOT NULL,
-  payment_type VARCHAR(50), -- session, package, deposit, refund
-  payment_method VARCHAR(50), -- cash, card, bank_transfer, check
-  status VARCHAR(50) DEFAULT 'completed', -- pending, completed, failed, refunded
+  payment_type VARCHAR(50),
+  payment_method VARCHAR(50),
+  status VARCHAR(50) DEFAULT 'completed',
   description TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 5. ASSESSMENTS TABLE
--- Client assessment records
+-- Assessments table
 CREATE TABLE IF NOT EXISTS assessments (
   id BIGSERIAL PRIMARY KEY,
   client_id BIGINT NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
-  assessment_type VARCHAR(100), -- intake, follow-up, discharge, etc
+  assessment_type VARCHAR(100),
   results TEXT,
   therapist_notes TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 6. SAT_LOG TABLE
--- Client satisfaction survey logs
+-- Satisfaction log table
 CREATE TABLE IF NOT EXISTS sat_log (
   id BIGSERIAL PRIMARY KEY,
   client_id BIGINT NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
@@ -78,8 +70,7 @@ CREATE TABLE IF NOT EXISTS sat_log (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 7. REASSIGN_LOG TABLE
--- Track therapist reassignments for clients
+-- Therapist reassignment log
 CREATE TABLE IF NOT EXISTS reassign_log (
   id BIGSERIAL PRIMARY KEY,
   client_id BIGINT NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
@@ -89,20 +80,18 @@ CREATE TABLE IF NOT EXISTS reassign_log (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 8. CHANGE_LOG TABLE
--- System-wide change tracking
+-- Change log table
 CREATE TABLE IF NOT EXISTS change_log (
   id BIGSERIAL PRIMARY KEY,
-  entity_type VARCHAR(100), -- clients, bookings, payments, etc
+  entity_type VARCHAR(100),
   entity_id BIGINT,
-  action VARCHAR(50), -- create, update, delete
+  action VARCHAR(50),
   changed_by VARCHAR(100),
   details JSONB,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 9. ENDED_CALLS TABLE
--- Historical call/session records
+-- Ended calls table
 CREATE TABLE IF NOT EXISTS ended_calls (
   id BIGSERIAL PRIMARY KEY,
   booking_id BIGINT REFERENCES bookings(id) ON DELETE CASCADE,
@@ -114,8 +103,7 @@ CREATE TABLE IF NOT EXISTS ended_calls (
   archived_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 10. CREDIT_BALANCE TABLE
--- Track client credit balances
+-- Credit balance table
 CREATE TABLE IF NOT EXISTS credit_balance (
   id BIGSERIAL PRIMARY KEY,
   client_id BIGINT NOT NULL UNIQUE REFERENCES clients(id) ON DELETE CASCADE,
@@ -124,35 +112,32 @@ CREATE TABLE IF NOT EXISTS credit_balance (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 11. PAYOUT_CONFIRMATIONS TABLE
--- Therapist payout records
+-- Payout confirmations table
 CREATE TABLE IF NOT EXISTS payout_confirmations (
   id BIGSERIAL PRIMARY KEY,
   therapist_id BIGINT NOT NULL REFERENCES therapists(id) ON DELETE RESTRICT,
   amount DECIMAL(10, 2) NOT NULL,
   period_start DATE NOT NULL,
   period_end DATE NOT NULL,
-  status VARCHAR(50) DEFAULT 'pending', -- pending, confirmed, paid
+  status VARCHAR(50) DEFAULT 'pending',
   notes TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 12. EXPENSES TABLE
--- Clinic operational expenses
+-- Expenses table
 CREATE TABLE IF NOT EXISTS expenses (
   id BIGSERIAL PRIMARY KEY,
-  category VARCHAR(100), -- rent, utilities, supplies, etc
+  category VARCHAR(100),
   amount DECIMAL(10, 2) NOT NULL,
   description TEXT,
   paid_date DATE,
-  status VARCHAR(50) DEFAULT 'pending', -- pending, paid
+  status VARCHAR(50) DEFAULT 'pending',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 13. DISCHARGED_CLIENTS TABLE
--- Archive of completed clients
+-- Discharged clients table
 CREATE TABLE IF NOT EXISTS discharged_clients (
   id BIGSERIAL PRIMARY KEY,
   client_id BIGINT NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
@@ -162,10 +147,7 @@ CREATE TABLE IF NOT EXISTS discharged_clients (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- ============================================
--- INDEXES FOR PERFORMANCE
--- ============================================
-
+-- Create indexes for performance
 CREATE INDEX IF NOT EXISTS idx_clients_therapist_id ON clients(therapist_id);
 CREATE INDEX IF NOT EXISTS idx_clients_stage ON clients(stage);
 CREATE INDEX IF NOT EXISTS idx_clients_created_at ON clients(created_at);
@@ -195,10 +177,7 @@ CREATE INDEX IF NOT EXISTS idx_payout_confirmations_therapist_id ON payout_confi
 
 CREATE INDEX IF NOT EXISTS idx_discharged_clients_client_id ON discharged_clients(client_id);
 
--- ============================================
--- SEED DATA: Therapists
--- ============================================
-
+-- Insert therapist seed data
 INSERT INTO therapists (name, specializations) VALUES
   ('Sama Eissa', ARRAY['Anxiety', 'Personality Disorders', 'Couple Therapy']),
   ('Sara El Shakankiri', ARRAY['Adolescent Psychiatry', 'Family Counseling']),
@@ -209,12 +188,9 @@ INSERT INTO therapists (name, specializations) VALUES
   ('Sandy Magdy', ARRAY['Complex PTSD', 'Eating Disorders'])
 ON CONFLICT DO NOTHING;
 
--- ============================================
--- ROW-LEVEL SECURITY (RLS) POLICIES
--- ============================================
-
--- Enable RLS on all tables
+-- Enable Row Level Security on all tables
 ALTER TABLE clients ENABLE ROW LEVEL SECURITY;
+ALTER TABLE therapists ENABLE ROW LEVEL SECURITY;
 ALTER TABLE bookings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE payments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE assessments ENABLE ROW LEVEL SECURITY;
@@ -226,10 +202,3 @@ ALTER TABLE credit_balance ENABLE ROW LEVEL SECURITY;
 ALTER TABLE payout_confirmations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE expenses ENABLE ROW LEVEL SECURITY;
 ALTER TABLE discharged_clients ENABLE ROW LEVEL SECURITY;
-ALTER TABLE therapists ENABLE ROW LEVEL SECURITY;
-
--- RLS policies will be configured via application auth (JWT verification)
-
--- ============================================
--- Schema created successfully!
--- ============================================
