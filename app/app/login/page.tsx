@@ -114,8 +114,8 @@ const styles = {
     marginBottom: '20px',
   },
   logo: {
-    width: '35px',
-    height: '35px',
+    width: '175px',
+    height: '175px',
     objectFit: 'contain' as const,
   },
   title: {
