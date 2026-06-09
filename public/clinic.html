@@ -3554,16 +3554,16 @@ async function applyPermissionFiltering() {
     });
 
     // Special handling for "Admin only" section
-    const adminSection = document.querySelector(
-      '.nav-section:contains("Admin only")'
-    );
-    if (adminSection) {
-      const nextItem = adminSection.nextElementSibling;
-      if (nextItem && nextItem.id === 'nav-admin') {
-        const isAdminVisible = nextItem.style.display !== 'none';
-        adminSection.style.display = isAdminVisible ? 'block' : 'none';
+    const navSections = document.querySelectorAll('.nav-section');
+    navSections.forEach(section => {
+      if (section.textContent.includes('Admin only')) {
+        const adminNavItem = section.nextElementSibling;
+        if (adminNavItem && adminNavItem.id === 'nav-admin') {
+          const isAdminVisible = adminNavItem.style.display !== 'none';
+          section.style.display = isAdminVisible ? 'block' : 'none';
+        }
       }
-    }
+    });
   } catch (error) {
     console.error('Error applying permission filtering:', error);
   }
