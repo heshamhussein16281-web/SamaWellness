@@ -558,6 +558,178 @@ button:active { transform: scale(0.98); }
   justify-content: space-between;
   flex-shrink: 0;
 }
+
+/* LOGOUT BUTTON */
+.logout-btn {
+  width: 100%;
+  padding: 10px 12px;
+  margin-top: 12px;
+  background: linear-gradient(135deg, #7b2d3e 0%, #5a1f2e 100%);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(123, 45, 62, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.logout-btn:hover {
+  background: linear-gradient(135deg, #8a3548 0%, #662435 100%);
+  box-shadow: 0 4px 16px rgba(123, 45, 62, 0.4);
+  transform: translateY(-2px);
+}
+
+.logout-btn:active {
+  transform: translateY(0);
+}
+
+/* LOGOUT DIALOG */
+.logout-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 998;
+  display: none;
+  animation: fadeIn 0.2s ease;
+}
+
+.logout-dialog-overlay.show {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.logout-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  max-width: 420px;
+  width: 90%;
+  display: none;
+  animation: slideIn 0.3s ease;
+}
+
+.logout-dialog.show {
+  display: block;
+}
+
+.logout-dialog__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.logout-dialog__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+}
+
+.logout-dialog__close {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #666;
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.logout-dialog__close:hover {
+  background: #eee;
+  color: var(--text);
+}
+
+.logout-dialog__content {
+  padding: 16px 20px;
+}
+
+.logout-dialog__message {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.logout-dialog__actions {
+  display: flex;
+  gap: 10px;
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+}
+
+.logout-dialog__button {
+  flex: 1;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.logout-dialog__button--cancel {
+  background: #f5f5f5;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.logout-dialog__button--cancel:hover {
+  background: #eee;
+  border-color: #ccc;
+}
+
+.logout-dialog__button--confirm {
+  background: linear-gradient(135deg, #7b2d3e 0%, #5a1f2e 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(123, 45, 62, 0.2);
+}
+
+.logout-dialog__button--confirm:hover {
+  background: linear-gradient(135deg, #8a3548 0%, #662435 100%);
+  box-shadow: 0 4px 12px rgba(123, 45, 62, 0.3);
+}
+
+.logout-dialog__button:active {
+  transform: scale(0.98);
+}
 </style>
 </head>
 <body>
@@ -599,6 +771,10 @@ button:active { transform: scale(0.98); }
       <option value="2026">2026 · from 15 May</option>
       <option value="2027">2027 · Full year</option>
     </select>
+    <button class="logout-btn" onclick="showLogoutDialog()">
+      <span>🚪</span>
+      <span>Logout</span>
+    </button>
   </div>
 </div>
 
@@ -3582,6 +3758,77 @@ if (document.readyState === 'loading') {
   applyPermissionFiltering();
 }
 
+// Logout dialog functions
+function showLogoutDialog() {
+  const overlay = document.getElementById('logout-dialog-overlay');
+  const dialog = document.getElementById('logout-dialog');
+  if (overlay && dialog) {
+    overlay.classList.add('show');
+    dialog.classList.add('show');
+  }
+}
+
+function hideLogoutDialog() {
+  const overlay = document.getElementById('logout-dialog-overlay');
+  const dialog = document.getElementById('logout-dialog');
+  if (overlay && dialog) {
+    overlay.classList.remove('show');
+    dialog.classList.remove('show');
+  }
+}
+
+function confirmLogout() {
+  hideLogoutDialog();
+  // Call the logout API endpoint
+  fetch('/api/auth/logout', { method: 'POST' })
+    .then(() => {
+      // Redirect to login
+      window.location.href = '/app/login';
+    })
+    .catch(err => {
+      console.error('Logout failed:', err);
+      window.location.href = '/app/login';
+    });
+}
+
+// Add event listeners when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+  const overlay = document.getElementById('logout-dialog-overlay');
+  const cancelBtn = document.getElementById('logout-cancel-btn');
+  const closeBtn = document.getElementById('logout-close-btn');
+  const confirmBtn = document.getElementById('logout-confirm-btn');
+
+  if (overlay) {
+    overlay.addEventListener('click', hideLogoutDialog);
+  }
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', hideLogoutDialog);
+  }
+  if (closeBtn) {
+    closeBtn.addEventListener('click', hideLogoutDialog);
+  }
+  if (confirmBtn) {
+    confirmBtn.addEventListener('click', confirmLogout);
+  }
+});
+
 </script>
+
+<!-- LOGOUT CONFIRMATION DIALOG -->
+<div class="logout-dialog-overlay" id="logout-dialog-overlay"></div>
+<div class="logout-dialog" id="logout-dialog">
+  <div class="logout-dialog__header">
+    <h3 class="logout-dialog__title">Confirm Logout</h3>
+    <button class="logout-dialog__close" id="logout-close-btn" aria-label="Close">✕</button>
+  </div>
+  <div class="logout-dialog__content">
+    <p class="logout-dialog__message">Are you sure you want to logout? You will need to log in again to access the system.</p>
+  </div>
+  <div class="logout-dialog__actions">
+    <button class="logout-dialog__button logout-dialog__button--cancel" id="logout-cancel-btn">Cancel</button>
+    <button class="logout-dialog__button logout-dialog__button--confirm" id="logout-confirm-btn">Logout</button>
+  </div>
+</div>
+
 </body>
 </html>
