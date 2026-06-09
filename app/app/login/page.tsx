@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -31,7 +30,6 @@ export default function LoginPage() {
         return;
       }
 
-      // Redirect to app dashboard on success
       router.push('/app');
     } catch (err) {
       setError('An error occurred. Please try again.');
@@ -40,259 +38,199 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="login-page">
-      <div className="login-container">
-        {/* Logo */}
-        <div className="login-logo">
-          <img src="/logo.png" alt="Sama Wellness Therapy" />
+    <div className="login-wrapper">
+      <div className="login-box">
+        <div className="logo-section">
+          <img src="/logo.png" alt="Sama Wellness" className="logo" />
         </div>
 
-        {/* Heading */}
-        <h1 className="login-heading">Sama Wellness Therapy</h1>
-        <p className="login-subheading">Clinic Management System</p>
+        <h1 className="title">Sama Wellness Therapy</h1>
+        <p className="subtitle">Clinic Management</p>
 
-        {/* Login Form */}
-        <form onSubmit={handleSubmit} className="login-form">
-          {/* Error Message */}
-          {error && <div className="login-error">{error}</div>}
+        <form onSubmit={handleSubmit} className="form">
+          {error && <div className="error-message">{error}</div>}
 
-          {/* Username Field */}
-          <div className="login-field">
-            <label htmlFor="username" className="login-label">
-              Username
-            </label>
+          <div className="form-group">
+            <label htmlFor="username">Username</label>
             <input
               id="username"
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter your username"
-              className="login-input"
+              placeholder="reception"
               disabled={isLoading}
-              autoComplete="username"
               required
             />
           </div>
 
-          {/* Password Field */}
-          <div className="login-field">
-            <label htmlFor="password" className="login-label">
-              Password
-            </label>
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
             <input
               id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              className="login-input"
+              placeholder="••••••••"
               disabled={isLoading}
-              autoComplete="current-password"
               required
             />
           </div>
 
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="login-button"
-            disabled={isLoading}
-          >
+          <button type="submit" disabled={isLoading}>
             {isLoading ? 'Logging in...' : 'Login'}
           </button>
         </form>
 
-        {/* Help Text */}
-        <p className="login-help">
-          For support, contact the clinic administration.
-        </p>
-
-        {/* Demo Credentials (for development only) */}
-        <details className="login-demo">
-          <summary>Demo Credentials (Development)</summary>
-          <div className="login-demo-content">
-            <p>
-              <strong>Reception:</strong> reception / 1234
-            </p>
-            <p>
-              <strong>Admin:</strong> admin / Sama202#
-            </p>
-          </div>
-        </details>
+        <div className="help-text">
+          <p>Demo: reception / 1234</p>
+        </div>
       </div>
 
       <style jsx>{`
-        .login-page {
-          min-height: 100vh;
+        .login-wrapper {
+          width: 100%;
+          height: 100vh;
           display: flex;
           align-items: center;
           justify-content: center;
           background: linear-gradient(135deg, var(--color-linen) 0%, #f0ebe4 100%);
-          padding: var(--space-lg);
+          padding: 20px;
         }
 
-        .login-container {
+        .login-box {
           background: white;
-          border-radius: 12px;
-          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-          padding: var(--space-xl);
           width: 100%;
-          max-width: 380px;
+          max-width: 360px;
+          padding: 40px 30px;
+          border-radius: 10px;
+          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
           border: 1px solid var(--color-sand);
         }
 
-        .login-logo {
+        .logo-section {
           text-align: center;
-          margin-bottom: var(--space-md);
+          margin-bottom: 20px;
         }
 
-        .login-logo img {
-          width: 50px;
-          height: 50px;
+        .logo {
+          width: 40px;
+          height: 40px;
           object-fit: contain;
         }
 
-        .login-heading {
+        .title {
           font-family: var(--font-display);
-          font-size: 28px;
+          font-size: 22px;
           color: var(--color-nav-text);
+          margin: 0 0 5px 0;
           text-align: center;
-          margin: 0 0 var(--space-xs) 0;
           font-weight: 600;
         }
 
-        .login-subheading {
+        .subtitle {
           font-family: var(--font-body);
-          font-size: 14px;
-          color: #888;
+          font-size: 13px;
+          color: #999;
           text-align: center;
-          margin: 0 0 var(--space-lg) 0;
+          margin: 0 0 25px 0;
         }
 
-        .login-form {
+        .form {
           display: flex;
           flex-direction: column;
-          gap: var(--space-md);
+          gap: 15px;
         }
 
-        .login-error {
-          background: #fee;
-          border: 1px solid #fcc;
-          color: #c33;
-          padding: var(--space-sm);
-          border-radius: 6px;
-          font-size: 14px;
-          font-family: var(--font-body);
-        }
-
-        .login-field {
+        .form-group {
           display: flex;
           flex-direction: column;
           gap: 6px;
         }
 
-        .login-label {
+        .form-group label {
           font-family: var(--font-body);
-          font-size: 14px;
+          font-size: 13px;
           font-weight: 500;
           color: var(--color-nav-text);
         }
 
-        .login-input {
+        .form-group input {
           font-family: var(--font-body);
-          font-size: 16px;
+          font-size: 15px;
           padding: 10px 12px;
           border: 1px solid var(--color-sand);
           border-radius: 6px;
-          color: var(--color-charcoal);
-          transition: all 0.2s ease;
+          color: #333;
         }
 
-        .login-input:focus {
+        .form-group input:focus {
           outline: none;
           border-color: var(--color-burgundy);
-          box-shadow: 0 0 0 3px rgba(123, 45, 62, 0.1);
         }
 
-        .login-input:disabled {
+        .form-group input:disabled {
           background: #f5f5f5;
           color: #999;
-          cursor: not-allowed;
         }
 
-        .login-button {
+        .form button {
           font-family: var(--font-ui);
-          font-size: 16px;
+          font-size: 15px;
           font-weight: 600;
-          padding: 12px 20px;
+          padding: 11px 20px;
           background: var(--color-burgundy);
           color: white;
           border: none;
           border-radius: 6px;
           cursor: pointer;
-          transition: all 0.2s ease;
           text-transform: uppercase;
           letter-spacing: 0.5px;
+          transition: all 0.2s ease;
+          margin-top: 10px;
         }
 
-        .login-button:hover:not(:disabled) {
+        .form button:hover:not(:disabled) {
           background: #6a2538;
           transform: translateY(-2px);
           box-shadow: 0 4px 12px rgba(123, 45, 62, 0.3);
         }
 
-        .login-button:active:not(:disabled) {
-          transform: translateY(0);
-        }
-
-        .login-button:disabled {
+        .form button:disabled {
           opacity: 0.6;
           cursor: not-allowed;
         }
 
-        .login-help {
+        .error-message {
+          background: #fee;
+          border: 1px solid #fcc;
+          color: #c33;
+          padding: 10px 12px;
+          border-radius: 6px;
+          font-size: 13px;
           font-family: var(--font-body);
-          font-size: 12px;
-          color: #999;
-          text-align: center;
-          margin-top: var(--space-md);
         }
 
-        .login-demo {
-          margin-top: var(--space-lg);
-          padding-top: var(--space-lg);
+        .help-text {
+          text-align: center;
+          margin-top: 20px;
+          padding-top: 15px;
           border-top: 1px solid var(--color-sand);
         }
 
-        .login-demo summary {
+        .help-text p {
           font-family: var(--font-body);
-          font-size: 13px;
-          color: #666;
-          cursor: pointer;
-          user-select: none;
-        }
-
-        .login-demo-content {
-          margin-top: var(--space-sm);
-          padding: var(--space-sm);
-          background: #f9f9f9;
-          border-radius: 4px;
-          font-family: monospace;
           font-size: 12px;
-          color: #333;
-        }
-
-        .login-demo-content p {
-          margin: 4px 0;
+          color: #999;
+          margin: 0;
         }
 
         @media (max-width: 480px) {
-          .login-container {
-            padding: var(--space-lg);
+          .login-box {
+            padding: 30px 20px;
           }
 
-          .login-heading {
-            font-size: 24px;
+          .title {
+            font-size: 20px;
           }
         }
       `}</style>
