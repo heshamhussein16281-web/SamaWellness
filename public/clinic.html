@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SWT Psychology — Clinic Management</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- Supabase library - commented out due to CDN issues, will re-enable when RLS is properly configured -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script> -->
 <style>
 :root {
   --bg: #F7F6F3;
@@ -1681,62 +1682,24 @@ button:active { transform: scale(0.98); }
 </div><!-- main -->
 
 <script>
-// Supabase initialization
-const SUPABASE_URL = 'https://aelgbqybcvmuzlbmkwia.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFlbGdicXliY3ZtdXpsYm1rd2lhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3ODQ5ODcsImV4cCI6MjA5NTM2MDk4N30.59JK93w5xK1jjF5ygw91OVe6vLJISpgMod0xMpuXHSk';
+// Supabase initialization - disabled due to CDN issues
+// To re-enable: uncomment the script tag above and this code
+// const SUPABASE_URL = 'https://aelgbqybcvmuzlbmkwia.supabase.co';
+// const SUPABASE_ANON_KEY = '...';
+// const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// Fetch users from Supabase database
+// Fetch users from Supabase database (disabled - re-enable when Supabase is configured)
 async function loadUsers(){
-  try {
-    const { data, error } = await supabase.from('clinic_users').select(`
-      id,
-      username,
-      email,
-      role_id,
-      is_active,
-      roles (name)
-    `);
-    if(error) {
-      console.warn('Could not load users from Supabase:', error.message);
-      return;
-    }
-    USERS.length = 0;
-    if(data && Array.isArray(data)) {
-      // Transform to match UI expectations
-      USERS.push(...data.map(u => ({
-        id: u.id,
-        name: u.username,
-        email: u.email,
-        role: u.roles?.name || 'Unknown',
-        status: u.is_active ? 'Active' : 'Inactive',
-        password: '',
-        original: u
-      })));
-      console.log('Loaded ' + data.length + ' users from Supabase');
-    }
-  } catch(e) {
-    console.warn('Error loading users:', e.message);
-  }
+  // Supabase integration disabled due to CDN issues
+  // Will load data when Supabase is properly configured
+  return Promise.resolve();
 }
 
-// Fetch roles from Supabase database
+// Fetch roles from Supabase database (disabled - re-enable when Supabase is configured)
 async function loadRoles(){
-  try {
-    const { data, error } = await supabase.from('roles').select('*');
-    if(error) {
-      console.warn('Could not load roles from Supabase:', error.message);
-      return;
-    }
-    ROLES.length = 0;
-    if(data && Array.isArray(data)) {
-      ROLES.push(...data);
-      console.log('Loaded ' + data.length + ' roles from Supabase');
-    }
-  } catch(e) {
-    console.warn('Error loading roles:', e.message);
-  }
+  // Supabase integration disabled due to CDN issues
+  // Will load data when Supabase is properly configured
+  return Promise.resolve();
 }
 
 const OPEN = new Date('2026-05-15');
@@ -2031,8 +1994,28 @@ function go(p){
   if(p==='pnl')buildPnl();
   if(p==='payouts')buildPayouts();
   if(p==='calendar'){if(!calWeekStart)calWeekStart=calWeekOf(new Date());buildMonthNav();}
-  if(p==='users'){loadUsers().then(()=>buildUsersMgmt());}
-  if(p==='roles'){loadRoles().then(()=>buildRolesMgmt());}
+  if(p==='users'){
+    // Try to load from database, fallback to sample data
+    loadUsers().then(() => {
+      if(USERS.length === 0) {
+        USERS.push(
+          { id: '1', name: 'admin', email: 'admin@samawellness.com', role: 'admin', status: 'Active', password: '' },
+          { id: '2', name: 'sara', email: 'sara@samawellness.com', role: 'therapist', status: 'Active', password: '' }
+        );
+      }
+      buildUsersMgmt();
+    });
+  }
+  if(p==='roles'){
+    loadRoles().then(() => {
+      if(ROLES.length === 0) {
+        ROLES.push(
+          { name: 'admin', description: 'Full system access - manage users, roles, and all features', users: 1, permissions: 'All' }
+        );
+      }
+      buildRolesMgmt();
+    });
+  }
   // Apply pre-selected client context if coming from pipeline
   if(pipelineCtxClient&&['payment','assessment','booking','satisfaction','reassign'].includes(p)){
     applyClientCtx(p);
@@ -4246,25 +4229,9 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// Initialize: Load users and roles from Supabase
-(async () => {
-  await Promise.all([loadUsers(), loadRoles()]);
-  // If tables are empty or not accessible, use sample data as fallback
-  if(USERS.length === 0) {
-    USERS.push(
-      { name: 'Haytham Hussein', email: 'haytham@sama.com', role: 'Admin', status: 'Active', password: '' },
-      { name: 'Dr. Sama Eissa', email: 'sama@sama.com', role: 'Admin', status: 'Active', password: '' }
-    );
-  }
-  if(ROLES.length === 0) {
-    ROLES.push(
-      { name: 'Admin', description: 'Full system access', users: 2, permissions: 'All' },
-      { name: 'Therapist', description: 'Manage clients, bookings, assessments', users: 1, permissions: 'Limited' },
-      { name: 'Reception', description: 'Client intake and scheduling', users: 1, permissions: 'View-only' }
-    );
-  }
-  go('intake');
-})();
+// Initialize: Load data when pages are accessed (lazy loading)
+// Data will be fetched when user navigates to users/roles pages
+go('intake');
 </script>
 
 <!-- LOGOUT CONFIRMATION DIALOG -->
