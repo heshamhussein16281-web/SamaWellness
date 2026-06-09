@@ -19,20 +19,25 @@ export default function LoginPage() {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ username, password }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
+        console.error('Login failed:', data);
         setError(data.error || 'Login failed');
         setLoading(false);
         return;
       }
 
+      console.log('Login successful, redirecting...');
+      setLoading(false);
       router.push('/app');
     } catch (err: any) {
-      setError('Error: ' + err.message);
+      console.error('Login error:', err);
+      setError('Error: ' + (err.message || 'Unknown error'));
       setLoading(false);
     }
   };
