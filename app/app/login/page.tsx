@@ -15,19 +15,14 @@ export default function LoginPage() {
     setError('');
     setLoading(true);
 
-    console.log('Submitting login:', { username, password });
-
     try {
-      console.log('Calling /api/auth/login...');
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
       });
 
-      console.log('Response status:', res.status);
       const data = await res.json();
-      console.log('Response data:', data);
 
       if (!res.ok) {
         setError(data.error || 'Login failed');
@@ -35,10 +30,8 @@ export default function LoginPage() {
         return;
       }
 
-      console.log('Login successful, redirecting...');
       router.push('/app');
     } catch (err: any) {
-      console.error('Login error:', err);
       setError('Error: ' + err.message);
       setLoading(false);
     }
@@ -68,7 +61,6 @@ export default function LoginPage() {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="reception"
               style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', boxSizing: 'border-box', fontSize: '14px' }}
             />
           </div>
@@ -79,7 +71,6 @@ export default function LoginPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="1234"
               style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', boxSizing: 'border-box', fontSize: '14px' }}
             />
           </div>
@@ -93,9 +84,11 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p style={{ textAlign: 'center', marginTop: '20px', paddingTop: '15px', borderTop: '1px solid #ddd', fontSize: '12px', color: '#999' }}>
-          Demo credentials: reception / 1234
-        </p>
+        <div style={{ marginTop: '20px', paddingTop: '15px', borderTop: '1px solid #ddd', background: '#f9f9f9', padding: '12px', borderRadius: '4px', fontSize: '12px', color: '#666' }}>
+          <p style={{ margin: '0 0 5px 0', fontWeight: 'bold' }}>Test Credentials:</p>
+          <p style={{ margin: '0 0 3px 0' }}>Username: <code style={{ background: '#eee', padding: '2px 4px', borderRadius: '2px' }}>reception</code></p>
+          <p style={{ margin: 0 }}>Password: <code style={{ background: '#eee', padding: '2px 4px', borderRadius: '2px' }}>1234</code></p>
+        </div>
       </div>
     </div>
   );
