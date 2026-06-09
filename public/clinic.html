@@ -1597,6 +1597,44 @@ button:active { transform: scale(0.98); }
   </div>
 </div>
 
+<!-- EDIT USER PAGE -->
+<div id="page-edit-user" class="hidden">
+  <div class="card" style="margin-bottom: 20px;">
+    <div class="ct" style="display: flex; align-items: center; justify-content: space-between;">
+      <div>
+        <button style="background: none; border: none; color: var(--text2); cursor: pointer; font-size: 18px; margin-right: 8px;" onclick="go('users')">← Back</button>
+        <span style="color: var(--text)">Edit User</span>
+      </div>
+    </div>
+    <div class="fr" style="margin-top: 20px;">
+      <div class="fg"><div class="fl">Full Name</div><input id="eu-name" readonly></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Email</div><input id="eu-email"></div>
+      <div class="fg"><div class="fl">Role</div>
+        <select id="eu-role">
+          <option value="">— select —</option>
+          <option value="Admin">Admin</option>
+          <option value="Therapist">Therapist</option>
+          <option value="Reception">Reception</option>
+        </select>
+      </div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Status</div>
+        <select id="eu-status">
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+      </div>
+    </div>
+    <div style="display: flex; gap: 10px; margin-top: 20px;">
+      <button class="btn-primary" onclick="saveUserChanges()">Save Changes</button>
+      <button onclick="go('users')" style="background: var(--surface2);">Cancel</button>
+    </div>
+  </div>
+</div>
+
   </div><!-- content -->
 
   <div class="status-footer">
@@ -1665,22 +1703,14 @@ function buildUsersMgmt(){
   const tbody = document.getElementById('users-table-body');
   if(!tbody) return;
 
-  const users = [
-    { name: 'Haytham Hussein', email: 'haytham@sama.com', role: 'Admin', status: 'Active' },
-    { name: 'Dr. Sama Eissa', email: 'sama@sama.com', role: 'Admin', status: 'Active' },
-    { name: 'Reception Team', email: 'reception@sama.com', role: 'Reception', status: 'Active' },
-    { name: 'Dr. Sara', email: 'sara@sama.com', role: 'Therapist', status: 'Active' },
-    { name: 'Sandy', email: 'sandy@sama.com', role: 'Therapist', status: 'Active' }
-  ];
-
-  tbody.innerHTML = users.map(u => `
+  tbody.innerHTML = USERS.map(u => `
     <tr style="border-bottom: 1px solid var(--border);">
       <td style="padding: 10px 8px;">${u.name}</td>
       <td style="padding: 10px 8px;">${u.email}</td>
       <td style="padding: 10px 8px;"><strong>${u.role}</strong></td>
       <td style="padding: 10px 8px;"><span style="color: green; font-size: 12px;">● ${u.status}</span></td>
       <td style="padding: 10px 8px;">
-        <button style="background: var(--surface2); border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; margin-right: 4px; font-size: 12px;" onclick="alert('Edit user feature coming soon')">Edit</button>
+        <button style="background: var(--surface2); border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; margin-right: 4px; font-size: 12px;" onclick="editUser('${u.name}')">Edit</button>
         <button style="background: var(--surface2); border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 12px;" onclick="alert('Delete user feature coming soon')">Delete</button>
       </td>
     </tr>
@@ -1713,6 +1743,35 @@ function buildRolesMgmt(){
   `).join('');
 }
 
+// USER EDITING
+const USERS = [
+  { name: 'Haytham Hussein', email: 'haytham@sama.com', role: 'Admin', status: 'Active' },
+  { name: 'Dr. Sama Eissa', email: 'sama@sama.com', role: 'Admin', status: 'Active' },
+  { name: 'Reception Team', email: 'reception@sama.com', role: 'Reception', status: 'Active' },
+  { name: 'Dr. Sara', email: 'sara@sama.com', role: 'Therapist', status: 'Active' },
+  { name: 'Sandy', email: 'sandy@sama.com', role: 'Therapist', status: 'Active' }
+];
+let editingUser = null;
+
+function editUser(userName){
+  editingUser = USERS.find(u => u.name === userName);
+  if(editingUser){
+    document.getElementById('eu-name').value = editingUser.name;
+    document.getElementById('eu-email').value = editingUser.email;
+    document.getElementById('eu-role').value = editingUser.role;
+    document.getElementById('eu-status').value = editingUser.status;
+  }
+  go('edit-user');
+}
+
+function saveUserChanges(){
+  if(!editingUser) return;
+  editingUser.email = document.getElementById('eu-email').value;
+  editingUser.role = document.getElementById('eu-role').value;
+  editingUser.status = document.getElementById('eu-status').value;
+  go('users');
+}
+
 // NAV
 function go(p){
   clearCtxBanners();
@@ -1721,7 +1780,7 @@ function go(p){
   const pg=document.getElementById('page-'+p);if(!pg)return;
   pg.classList.remove('hidden');
   const nav=document.getElementById('nav-'+p);if(nav)nav.classList.add('active');
-  const T={intake:'New intake call',pipeline:'Client pipeline',payment:'Verify Instapay',assessment:'Log assessment',booking:'Book session',reschedule:'Reschedule / cancel',satisfaction:'Satisfaction check',reassign:'Log reassignment',expenses:'Expense tracker',pnl:'Clinic P&L',payouts:'Therapist payouts',calendar:'Calendar',admin:'System settings',users:'User Management',roles:'Role Management'};
+  const T={intake:'New intake call',pipeline:'Client pipeline',payment:'Verify Instapay',assessment:'Log assessment',booking:'Book session',reschedule:'Reschedule / cancel',satisfaction:'Satisfaction check',reassign:'Log reassignment',expenses:'Expense tracker',pnl:'Clinic P&L',payouts:'Therapist payouts',calendar:'Calendar',admin:'System settings',users:'User Management',roles:'Role Management','edit-user':'Edit User'};
   document.getElementById('page-title').textContent=T[p]||p;
   const d=new Date().toISOString().split('T')[0];
   if(p==='payment'){buildPayDropdown();document.getElementById('pv-date').value=d;}
