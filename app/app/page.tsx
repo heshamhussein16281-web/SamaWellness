@@ -74,6 +74,29 @@ export default function AppPage() {
             admNav.style.opacity = '0.5';
           }
         }
+
+        // Lock admin-only menu items for non-admin users
+        if (!isAdminUser) {
+          // Lock P&L (Clinic P&L, Therapist payouts, Expense tracker are admin-only)
+          const adminOnlyItems = document.querySelectorAll('[data-admin-only]');
+          adminOnlyItems.forEach((item: any) => {
+            item.style.pointerEvents = 'none';
+            item.style.opacity = '0.5';
+            item.style.cursor = 'not-allowed';
+          });
+
+          // Alternative: find by text content
+          const menuItems = document.querySelectorAll('a, button');
+          menuItems.forEach((item: any) => {
+            const text = item.textContent?.toLowerCase() || '';
+            if (text.includes('p&l') || text.includes('therapist payouts') ||
+                text.includes('expense tracker') || text.includes('clinic p&l')) {
+              item.style.pointerEvents = 'none';
+              item.style.opacity = '0.5';
+              item.style.cursor = 'not-allowed';
+            }
+          });
+        }
       }, 100);
     }
   }, [isAuthenticated]);
