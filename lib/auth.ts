@@ -45,26 +45,14 @@ export function verifyCredentials(username: string, password: string): JWTPayloa
   const receptionPassword = process.env.RECEPTION_PASSWORD || '1234';
   const adminPassword = process.env.ADMIN_PASSWORD || 'Sama202#';
 
-  console.log('verifyCredentials called with:', {
-    username,
-    password,
-    receptionPassword,
-    adminPassword,
-    hasRecepPassword: !!process.env.RECEPTION_PASSWORD,
-    hasAdminPassword: !!process.env.ADMIN_PASSWORD
-  });
-
   if (username === 'reception' && password === receptionPassword) {
-    console.log('Reception login successful');
     return { username: 'reception', role: 'reception' };
   }
 
   if (username === 'admin' && password === adminPassword) {
-    console.log('Admin login successful');
     return { username: 'admin', role: 'admin' };
   }
 
-  console.log('Credentials verification failed');
   return null;
 }
 

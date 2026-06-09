@@ -16,6 +16,9 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
+      // Clear any existing auth cookie before logging in with new credentials
+      document.cookie = 'auth_token=; Path=/; Max-Age=0';
+
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
