@@ -77,13 +77,16 @@ export default function AppLayout({ children }: { children: ReactNode }) {
         <h2 style={{ fontSize: '18px', color: '#2d4a46', margin: '0 0 30px 0' }}>SWT Clinic</h2>
 
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          {menuItems.map((item) => (
-            <Link key={item.href} href={item.href}>
-              <div style={{ padding: '12px', borderRadius: '6px', cursor: 'pointer', background: pathname === item.href ? '#e8d5cc' : '#f5f5f5', color: '#2d4a46', textDecoration: 'none', display: 'block', fontWeight: pathname === item.href ? 600 : 400 }}>
-                {item.icon} {item.label}
-              </div>
-            </Link>
-          ))}
+          {menuItems.map((item) => {
+            const isActive = pathname === item.href || (item.href === '/app/clinic' && pathname === '/app');
+            return (
+              <Link key={item.href} href={item.href}>
+                <div style={{ padding: '12px', borderRadius: '6px', cursor: 'pointer', background: isActive ? '#e8d5cc' : '#f5f5f5', color: '#2d4a46', textDecoration: 'none', display: 'block', fontWeight: isActive ? 600 : 400 }}>
+                  {item.icon} {item.label}
+                </div>
+              </Link>
+            );
+          })}
         </nav>
 
         <div style={{ marginTop: '40px', paddingTop: '20px', borderTop: '1px solid #ddd' }}>
