@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
         message: 'Login successful',
         user: {
           username: payload.username,
-          role: payload.role,
+          role: payload.roleName,
         },
       },
       { status: 200 }

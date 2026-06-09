@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SWT Psychology — Clinic Management</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<!-- Supabase library - commented out due to CDN issues, will re-enable when RLS is properly configured -->
-<!-- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
   --bg: #F7F6F3;
@@ -89,6 +88,7 @@ body { font-family: var(--font); font-size: 13px; color: var(--text); background
 }
 .role-strip.rec { background: var(--accent-bg); color: var(--accent); }
 .role-strip.adm { background: var(--purple-bg); color: var(--purple); }
+.role-strip.cli { background: var(--blue-bg); color: var(--blue); }
 .role-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: 0.7; }
 
 .nav { flex: 1; overflow-y: auto; padding: 8px 8px; }
@@ -1682,24 +1682,221 @@ button:active { transform: scale(0.98); }
 </div><!-- main -->
 
 <script>
-// Supabase initialization - disabled due to CDN issues
-// To re-enable: uncomment the script tag above and this code
-// const SUPABASE_URL = 'https://aelgbqybcvmuzlbmkwia.supabase.co';
-// const SUPABASE_ANON_KEY = '...';
-// const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Supabase initialization
+const SUPABASE_URL = 'https://aelgbqybcvmuzlbmkwia.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFlbGdicXliY3ZtdXpsYm1rd2lhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3ODQ5ODcsImV4cCI6MjA5NTM2MDk4N30.59JK93w5xK1jjF5ygw91OVe6vLJISpgMod0xMpuXHSk';
 
-// Fetch users from Supabase database (disabled - re-enable when Supabase is configured)
-async function loadUsers(){
-  // Supabase integration disabled due to CDN issues
-  // Will load data when Supabase is properly configured
-  return Promise.resolve();
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Current user and permissions
+let currentUser = null;
+let userPermissions = {};
+
+// Role-based access control definitions
+const ROLE_PERMISSIONS = {
+  'admin': {
+    intake: true, pipeline: true, payment: true, assessment: true, booking: true,
+    reschedule: true, satisfaction: true, reassign: true, expenses: true, pnl: true,
+    payouts: true, calendar: true, users: true, roles: true, admin: true
+  },
+  'reception': {
+    intake: true, pipeline: true, payment: true, assessment: true, booking: true,
+    reschedule: true, satisfaction: true, reassign: true, expenses: false, pnl: false,
+    payouts: false, calendar: true, users: false, roles: false, admin: false
+  },
+  'clinician': {
+    intake: false, pipeline: true, payment: false, assessment: true, booking: false,
+    reschedule: false, satisfaction: true, reassign: true, expenses: false, pnl: false,
+    payouts: false, calendar: false, users: false, roles: false, admin: false
+  }
+};
+
+// Fetch current user from database using cookie/session
+async function loadCurrentUser(){
+  try {
+    // Try to get username from sessionStorage first (set by login page)
+    const username = sessionStorage.getItem('username') || localStorage.getItem('username');
+    if(!username) {
+      console.warn('No username found in storage, redirecting to login');
+      window.location.href = '/app/login';
+      return null;
+    }
+
+    const { data: user, error } = await supabase.from('clinic_users').select(`
+      id,
+      username,
+      email,
+      is_active,
+      roles (id, name, description)
+    `).eq('username', username).single();
+
+    if(error || !user) {
+      console.warn('Could not load current user:', error?.message);
+      window.location.href = '/app/login';
+      return null;
+    }
+
+    if(!user.is_active) {
+      console.warn('User is inactive');
+      window.location.href = '/app/login';
+      return null;
+    }
+
+    currentUser = {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.roles?.name || 'user',
+      roleId: user.roles?.id,
+      roleDescription: user.roles?.description
+    };
+
+    userPermissions = ROLE_PERMISSIONS[currentUser.role] || {};
+
+    console.log('Current user loaded:', currentUser.username, 'Role:', currentUser.role);
+    updateUIForCurrentUser();
+    return currentUser;
+  } catch(e) {
+    console.warn('Error loading current user:', e.message);
+    window.location.href = '/app/login';
+    return null;
+  }
 }
 
-// Fetch roles from Supabase database (disabled - re-enable when Supabase is configured)
+// Update UI to reflect current user and permissions
+function updateUIForCurrentUser(){
+  if(!currentUser) return;
+
+  // Update role strip
+  const roleStripTxt = document.getElementById('role-strip-txt');
+  const roleStripEl = document.getElementById('role-strip');
+  if(roleStripTxt) {
+    roleStripTxt.textContent = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
+  }
+
+  // Update role strip class based on role
+  if(roleStripEl) {
+    roleStripEl.classList.remove('rec', 'adm', 'cli');
+    if(currentUser.role === 'admin') roleStripEl.classList.add('adm');
+    else if(currentUser.role === 'clinician') roleStripEl.classList.add('cli');
+    else roleStripEl.classList.add('rec');
+  }
+
+  // Update role label in topbar
+  const roleLbl = document.getElementById('role-lbl');
+  if(roleLbl) {
+    roleLbl.textContent = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
+  }
+
+  // Update sidebar visibility based on permissions
+  updateSidebarVisibility();
+
+  // Update isAdmin for backward compatibility
+  window.isAdmin = (currentUser.role === 'admin');
+}
+
+// Update sidebar items visibility based on role permissions
+function updateSidebarVisibility(){
+  if(!currentUser) return;
+
+  const permissions = userPermissions;
+
+  // Hide/show sidebar items based on permissions
+  const navItems = {
+    'nav-intake': permissions.intake,
+    'nav-pipeline': permissions.pipeline,
+    'nav-satisfaction': permissions.satisfaction,
+    'nav-reassign': permissions.reassign,
+    'nav-expenses': permissions.expenses,
+    'nav-pnl': permissions.pnl,
+    'nav-payouts': permissions.payouts,
+    'nav-calendar': permissions.calendar,
+    'nav-admin': permissions.admin,
+    'nav-users': permissions.users,
+    'nav-roles': permissions.roles
+  };
+
+  Object.entries(navItems).forEach(([id, hasAccess]) => {
+    const el = document.getElementById(id);
+    if(el) {
+      if(!hasAccess) {
+        el.style.display = 'none';
+      } else {
+        el.style.display = '';
+      }
+    }
+  });
+
+  // Lock/unlock admin section
+  const adminNav = document.getElementById('nav-admin');
+  if(adminNav) {
+    if(permissions.admin) {
+      adminNav.classList.remove('locked');
+    } else {
+      adminNav.classList.add('locked');
+    }
+  }
+}
+
+// Check if user has permission for a section
+function hasPermission(section){
+  return userPermissions[section] === true;
+}
+
+// Fetch users from Supabase database
+async function loadUsers(){
+  try {
+    const { data, error } = await supabase.from('clinic_users').select(`
+      id,
+      username,
+      email,
+      role_id,
+      is_active,
+      roles (name)
+    `);
+    if(error) {
+      console.warn('Could not load users from Supabase:', error.message);
+      return;
+    }
+    USERS.length = 0;
+    if(data && Array.isArray(data)) {
+      USERS.push(...data.map(u => ({
+        id: u.id,
+        name: u.username,
+        email: u.email,
+        role: u.roles?.name || 'Unknown',
+        status: u.is_active ? 'Active' : 'Inactive',
+        password: '',
+        original: u
+      })));
+      console.log('Loaded ' + data.length + ' users from Supabase');
+    }
+  } catch(e) {
+    console.warn('Error loading users:', e.message);
+  }
+}
+
+// Fetch roles from Supabase database
 async function loadRoles(){
-  // Supabase integration disabled due to CDN issues
-  // Will load data when Supabase is properly configured
-  return Promise.resolve();
+  try {
+    const { data, error } = await supabase.from('roles').select('*');
+    if(error) {
+      console.warn('Could not load roles from Supabase:', error.message);
+      return;
+    }
+    ROLES.length = 0;
+    if(data && Array.isArray(data)) {
+      ROLES.push(...data.map(r => ({
+        name: r.name,
+        description: r.description,
+        users: r.users || 0,
+        permissions: r.permissions || 'Limited'
+      })));
+      console.log('Loaded ' + data.length + ' roles from Supabase');
+    }
+  } catch(e) {
+    console.warn('Error loading roles:', e.message);
+  }
 }
 
 const OPEN = new Date('2026-05-15');
@@ -1964,6 +2161,12 @@ async function deleteRole(roleName){
 
 // NAV
 function go(p){
+  // Check permission for this section
+  if(!hasPermission(p)){
+    alert('You do not have permission to access this section.');
+    return;
+  }
+
   clearCtxBanners();
   document.querySelectorAll('[id^="page-"]').forEach(el=>el.classList.add('hidden'));
   document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
@@ -4196,6 +4399,10 @@ function hideLogoutDialog() {
 
 function confirmLogout() {
   hideLogoutDialog();
+  // Clear user data
+  sessionStorage.removeItem('username');
+  localStorage.removeItem('username');
+  localStorage.removeItem('userRole');
   // Call the logout API endpoint
   fetch('/api/auth/logout', { method: 'POST' })
     .then(() => {
@@ -4229,9 +4436,15 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// Initialize: Load data when pages are accessed (lazy loading)
-// Data will be fetched when user navigates to users/roles pages
-go('intake');
+// Initialize: Load current user and permissions, then load app
+(async function(){
+  await loadCurrentUser();
+  // Start with first accessible page based on user role
+  if(hasPermission('intake')) go('intake');
+  else if(hasPermission('pipeline')) go('pipeline');
+  else if(hasPermission('users')) go('users');
+  else if(hasPermission('roles')) go('roles');
+})();
 </script>
 
 <!-- LOGOUT CONFIRMATION DIALOG -->

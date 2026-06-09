@@ -39,10 +39,12 @@ export default function LoginPage() {
       }
 
       console.log('Login successful, redirecting...');
-      // Store user role for clinic app
+      // Store user info for clinic app
       localStorage.setItem('userRole', data.user.role);
+      sessionStorage.setItem('username', username);
+      localStorage.setItem('username', username);
       setLoading(false);
-      router.push('/app');
+      router.push('/clinic.html');
     } catch (err: any) {
       console.error('Login error:', err);
       setError('Error: ' + (err.message || 'Unknown error'));
