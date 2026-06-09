@@ -1890,9 +1890,6 @@ function deleteUser(userName){
   if(!confirm(`Are you sure you want to delete user "${userName}"? This action cannot be undone.`)) {
     return;
   }
-  if(!confirm(`Delete "${userName}"? Click OK again to confirm.`)) {
-    return;
-  }
   const idx = USERS.findIndex(u => u.name === userName);
   if(idx >= 0) USERS.splice(idx, 1);
   go('users');
@@ -1901,13 +1898,10 @@ function deleteUser(userName){
 function deleteRole(roleName){
   const affectedUsers = USERS.filter(u => u.role === roleName).length;
   const message = affectedUsers > 0
-    ? `Are you sure you want to delete the "${roleName}" role?\n\n⚠️ This will affect ${affectedUsers} user(s) assigned to this role.\n\nClick OK to proceed.`
+    ? `Are you sure you want to delete the "${roleName}" role?\n\n⚠️ This will affect ${affectedUsers} user(s) assigned to this role.\n\nThis action cannot be undone.`
     : `Are you sure you want to delete the "${roleName}" role?\n\nThis action cannot be undone.`;
 
   if(!confirm(message)) {
-    return;
-  }
-  if(!confirm(`Delete "${roleName}"? Click OK again to confirm.`)) {
     return;
   }
   const idx = ROLES.findIndex(r => r.name === roleName);
