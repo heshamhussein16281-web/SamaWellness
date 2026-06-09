@@ -128,33 +128,34 @@ export default function AppPage() {
   }
 
   return (
-    <>
-      <button
-        onClick={handleLogout}
+    <div style={{ width: '100%', height: '100vh', position: 'relative' }}>
+      <div
         style={{
           position: 'fixed',
-          top: '20px',
-          right: '20px',
+          top: '15px',
+          right: '15px',
           zIndex: 9999,
-          padding: '12px 24px',
-          backgroundColor: '#7b2d3e',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: 'pointer',
-          fontSize: '16px',
-          fontWeight: '700',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
         }}
       >
-        Logout
-      </button>
+        <button
+          onClick={handleLogout}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: '#ff0000',
+            color: 'white',
+            border: '2px solid black',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            fontSize: '16px',
+            fontWeight: 'bold',
+          }}
+        >
+          LOGOUT
+        </button>
+      </div>
       <iframe
         src="/clinic.html"
         style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
           width: '100%',
           height: '100%',
           border: 'none',
@@ -163,6 +164,6 @@ export default function AppPage() {
         }}
         title="Clinic Management System"
       />
-    </>
+    </div>
   );
 }
