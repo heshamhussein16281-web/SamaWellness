@@ -820,8 +820,8 @@ button:active { transform: scale(0.98); }
     <div class="nav-item" id="nav-calendar" onclick="go('calendar')"><span class="ni-ico">🗓</span> Calendar</div>
     <div class="nav-section">Admin only</div>
     <div class="nav-item locked adm-nav" id="nav-admin" onclick="go('admin')"><span class="ni-ico">⚙️</span> System settings <span class="ni-lock">🔒</span></div>
-    <div class="nav-item adm-nav" id="nav-users" onclick="window.location.href='/app/admin/users'"><span class="ni-ico">👤</span> User management</div>
-    <div class="nav-item adm-nav" id="nav-roles" onclick="window.location.href='/app/admin/roles'"><span class="ni-ico">🔑</span> Role management</div>
+    <div class="nav-item adm-nav" id="nav-users" onclick="go('users')"><span class="ni-ico">👤</span> User management</div>
+    <div class="nav-item adm-nav" id="nav-roles" onclick="go('roles')"><span class="ni-ico">🔑</span> Role management</div>
   </nav>
   <div class="yr-sw">
     <label>Operating year</label>
@@ -1562,6 +1562,41 @@ button:active { transform: scale(0.98); }
   </div>
 </div>
 
+<!-- USER MANAGEMENT PAGE -->
+<div id="page-users" class="hidden">
+  <div class="card" style="margin-bottom: 20px;">
+    <div class="ct" style="color: var(--text)">User Management</div>
+    <p style="font-size: 13px; color: var(--text3); margin-bottom: 14px;">Manage system users and their access permissions.</p>
+    <button class="btn-primary btn-sm" style="margin-bottom: 14px;" onclick="alert('Add new user feature coming soon')">+ Add new user</button>
+    <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+      <thead style="background: var(--surface2);">
+        <tr>
+          <th style="padding: 10px 8px; text-align: left; font-size: 11px; font-weight: 600; color: var(--text3); border-bottom: 1px solid var(--border);">Name</th>
+          <th style="padding: 10px 8px; text-align: left; font-size: 11px; font-weight: 600; color: var(--text3); border-bottom: 1px solid var(--border);">Email</th>
+          <th style="padding: 10px 8px; text-align: left; font-size: 11px; font-weight: 600; color: var(--text3); border-bottom: 1px solid var(--border);">Role</th>
+          <th style="padding: 10px 8px; text-align: left; font-size: 11px; font-weight: 600; color: var(--text3); border-bottom: 1px solid var(--border);">Status</th>
+          <th style="padding: 10px 8px; text-align: left; font-size: 11px; font-weight: 600; color: var(--text3); border-bottom: 1px solid var(--border);">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="users-table-body">
+        <!-- Populated by buildUsersMgmt() -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ROLE MANAGEMENT PAGE -->
+<div id="page-roles" class="hidden">
+  <div class="card" style="margin-bottom: 20px;">
+    <div class="ct" style="color: var(--text)">Role Management</div>
+    <p style="font-size: 13px; color: var(--text3); margin-bottom: 14px;">Configure system roles and their permissions.</p>
+    <button class="btn-primary btn-sm" style="margin-bottom: 14px;" onclick="alert('Add new role feature coming soon')">+ Add new role</button>
+    <div id="roles-list">
+      <!-- Populated by buildRolesMgmt() -->
+    </div>
+  </div>
+</div>
+
   </div><!-- content -->
 
   <div class="status-footer">
@@ -1625,6 +1660,59 @@ function isPreOpen(d){return activeYear===2026&&new Date(d)<OPEN;}
 function getMonths(){return activeYear===2026?M26:M27;}
 function fakeUp(z,s){const el=document.getElementById(z);if(!el)return;el.classList.add('done');el.textContent='✓ Screenshot attached';if(s)document.getElementById(s).value='1';}
 
+// USER & ROLE MANAGEMENT
+function buildUsersMgmt(){
+  const tbody = document.getElementById('users-table-body');
+  if(!tbody) return;
+
+  const users = [
+    { name: 'Haytham Hussein', email: 'haytham@sama.com', role: 'Admin', status: 'Active' },
+    { name: 'Dr. Sama Eissa', email: 'sama@sama.com', role: 'Admin', status: 'Active' },
+    { name: 'Reception Team', email: 'reception@sama.com', role: 'Reception', status: 'Active' },
+    { name: 'Dr. Sara', email: 'sara@sama.com', role: 'Therapist', status: 'Active' },
+    { name: 'Sandy', email: 'sandy@sama.com', role: 'Therapist', status: 'Active' }
+  ];
+
+  tbody.innerHTML = users.map(u => `
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 10px 8px;">${u.name}</td>
+      <td style="padding: 10px 8px;">${u.email}</td>
+      <td style="padding: 10px 8px;"><strong>${u.role}</strong></td>
+      <td style="padding: 10px 8px;"><span style="color: green; font-size: 12px;">● ${u.status}</span></td>
+      <td style="padding: 10px 8px;">
+        <button style="background: var(--surface2); border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; margin-right: 4px; font-size: 12px;" onclick="alert('Edit user feature coming soon')">Edit</button>
+        <button style="background: var(--surface2); border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 12px;" onclick="alert('Delete user feature coming soon')">Delete</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function buildRolesMgmt(){
+  const container = document.getElementById('roles-list');
+  if(!container) return;
+
+  const roles = [
+    { name: 'Admin', description: 'Full system access', users: 2, permissions: 'All' },
+    { name: 'Therapist', description: 'Manage clients, bookings, assessments', users: 7, permissions: 'Limited' },
+    { name: 'Reception', description: 'Client intake and scheduling', users: 1, permissions: 'View-only' }
+  ];
+
+  container.innerHTML = roles.map(r => `
+    <div style="padding: 12px; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s ease;" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='white'">
+      <div style="font-weight: 600; color: var(--text); margin-bottom: 4px;">${r.name}</div>
+      <div style="font-size: 13px; color: var(--text3); margin-bottom: 8px;">${r.description}</div>
+      <div style="font-size: 12px; color: var(--text3);">
+        <span>${r.users} users</span> •
+        <span>${r.permissions} permissions</span>
+      </div>
+      <div style="margin-top: 10px;">
+        <button style="background: var(--surface2); border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; margin-right: 4px; font-size: 12px;" onclick="alert('Edit role feature coming soon')">Edit</button>
+        <button style="background: var(--surface2); border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 12px;" onclick="alert('Delete role feature coming soon')">Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
 // NAV
 function go(p){
   clearCtxBanners();
@@ -1633,7 +1721,7 @@ function go(p){
   const pg=document.getElementById('page-'+p);if(!pg)return;
   pg.classList.remove('hidden');
   const nav=document.getElementById('nav-'+p);if(nav)nav.classList.add('active');
-  const T={intake:'New intake call',pipeline:'Client pipeline',payment:'Verify Instapay',assessment:'Log assessment',booking:'Book session',reschedule:'Reschedule / cancel',satisfaction:'Satisfaction check',reassign:'Log reassignment',expenses:'Expense tracker',pnl:'Clinic P&L',payouts:'Therapist payouts',calendar:'Calendar',admin:'System settings'};
+  const T={intake:'New intake call',pipeline:'Client pipeline',payment:'Verify Instapay',assessment:'Log assessment',booking:'Book session',reschedule:'Reschedule / cancel',satisfaction:'Satisfaction check',reassign:'Log reassignment',expenses:'Expense tracker',pnl:'Clinic P&L',payouts:'Therapist payouts',calendar:'Calendar',admin:'System settings',users:'User Management',roles:'Role Management'};
   document.getElementById('page-title').textContent=T[p]||p;
   const d=new Date().toISOString().split('T')[0];
   if(p==='payment'){buildPayDropdown();document.getElementById('pv-date').value=d;}
@@ -1657,6 +1745,8 @@ function go(p){
   if(p==='pnl')buildPnl();
   if(p==='payouts')buildPayouts();
   if(p==='calendar'){if(!calWeekStart)calWeekStart=calWeekOf(new Date());buildMonthNav();}
+  if(p==='users')buildUsersMgmt();
+  if(p==='roles')buildRolesMgmt();
   // Apply pre-selected client context if coming from pipeline
   if(pipelineCtxClient&&['payment','assessment','booking','satisfaction','reassign'].includes(p)){
     applyClientCtx(p);
