@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('reception');
+  const [password, setPassword] = useState('1234');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -15,14 +15,19 @@ export default function LoginPage() {
     setError('');
     setLoading(true);
 
+    console.log('Submitting login:', { username, password });
+
     try {
+      console.log('Calling /api/auth/login...');
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
       });
 
+      console.log('Response status:', res.status);
       const data = await res.json();
+      console.log('Response data:', data);
 
       if (!res.ok) {
         setError(data.error || 'Login failed');
@@ -30,8 +35,10 @@ export default function LoginPage() {
         return;
       }
 
+      console.log('Login successful, redirecting...');
       router.push('/app');
     } catch (err: any) {
+      console.error('Login error:', err);
       setError('Error: ' + err.message);
       setLoading(false);
     }
@@ -48,7 +55,11 @@ export default function LoginPage() {
         <h1 style={{ fontSize: '24px', textAlign: 'center', margin: '0 0 10px 0', color: '#2d4a46' }}>Sama Wellness</h1>
         <p style={{ textAlign: 'center', color: '#999', margin: '0 0 30px 0', fontSize: '14px' }}>Clinic Management</p>
 
-        {error && <div style={{ background: '#fee', color: '#c33', padding: '10px', borderRadius: '4px', marginBottom: '15px', fontSize: '14px' }}>{error}</div>}
+        {error && (
+          <div style={{ background: '#fee', color: '#c33', padding: '12px', borderRadius: '4px', marginBottom: '15px', fontSize: '14px', border: '1px solid #fcc' }}>
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '15px' }}>
@@ -57,8 +68,7 @@ export default function LoginPage() {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="reception"
-              style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', boxSizing: 'border-box' }}
+              style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', boxSizing: 'border-box', fontSize: '14px' }}
             />
           </div>
 
@@ -68,22 +78,21 @@ export default function LoginPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', boxSizing: 'border-box' }}
+              style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', boxSizing: 'border-box', fontSize: '14px' }}
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            style={{ width: '100%', padding: '12px', background: '#7b2d3e', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '14px', fontWeight: 600, textTransform: 'uppercase' }}
+            style={{ width: '100%', padding: '12px', background: '#7b2d3e', color: 'white', border: 'none', borderRadius: '4px', cursor: loading ? 'not-allowed' : 'pointer', fontSize: '14px', fontWeight: 600, textTransform: 'uppercase', opacity: loading ? 0.6 : 1 }}
           >
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
 
         <p style={{ textAlign: 'center', marginTop: '20px', paddingTop: '15px', borderTop: '1px solid #ddd', fontSize: '12px', color: '#999' }}>
-          Demo: reception / 1234
+          Pre-filled: reception / 1234
         </p>
       </div>
     </div>
