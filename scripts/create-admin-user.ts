@@ -9,16 +9,17 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 async function createAdminUser() {
   try {
     // Get the admin role
-    const { data: adminRole, error: roleError } = await supabase
+    const { data: roles, error: roleError } = await supabase
       .from('roles')
       .select('id')
-      .eq('name', 'admin')
-      .single();
+      .eq('name', 'admin');
 
-    if (roleError) {
+    if (roleError || !roles || roles.length === 0) {
       console.error('Error fetching admin role:', roleError);
       return;
     }
+
+    const adminRole = roles[0];
 
     // Hash password
     const password = process.env.ADMIN_PASSWORD || 'Sama202#';
