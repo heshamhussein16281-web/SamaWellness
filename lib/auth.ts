@@ -89,13 +89,13 @@ export async function verifyCredentials(username: string, password: string): Pro
     }
 
     // Extract permissions from role_permissions
-    const role = user.roles;
+    const role = Array.isArray(user.roles) ? user.roles[0] : user.roles;
     const permissions = role?.role_permissions?.map((rp: any) => rp.permissions.key) || [];
 
     return {
       userId: user.id,
       username: user.username,
-      role: role?.id,
+      role: role?.id || 'user',
       roleName: role?.name || 'user',
       permissions,
     };
