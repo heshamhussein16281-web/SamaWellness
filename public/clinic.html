@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SWT Psychology — Clinic Management</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
   --bg: #F7F6F3;
@@ -1680,8 +1681,63 @@ button:active { transform: scale(0.98); }
 </div><!-- main -->
 
 <script>
-// TODO: Supabase integration requires proper table setup and RLS configuration
-// To enable: Create 'users' and 'roles' tables in Supabase with appropriate RLS policies
+// Supabase initialization
+const SUPABASE_URL = 'https://aelgbqybcvmuzlbmkwia.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFlbGdicXliY3ZtdXpsYm1rd2lhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3ODQ5ODcsImV4cCI6MjA5NTM2MDk4N30.59JK93w5xK1jjF5ygw91OVe6vLJISpgMod0xMpuXHSk';
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Fetch users from Supabase database
+async function loadUsers(){
+  try {
+    const { data, error } = await supabase.from('clinic_users').select(`
+      id,
+      username,
+      email,
+      role_id,
+      is_active,
+      roles (name)
+    `);
+    if(error) {
+      console.warn('Could not load users from Supabase:', error.message);
+      return;
+    }
+    USERS.length = 0;
+    if(data && Array.isArray(data)) {
+      // Transform to match UI expectations
+      USERS.push(...data.map(u => ({
+        id: u.id,
+        name: u.username,
+        email: u.email,
+        role: u.roles?.name || 'Unknown',
+        status: u.is_active ? 'Active' : 'Inactive',
+        password: '',
+        original: u
+      })));
+      console.log('Loaded ' + data.length + ' users from Supabase');
+    }
+  } catch(e) {
+    console.warn('Error loading users:', e.message);
+  }
+}
+
+// Fetch roles from Supabase database
+async function loadRoles(){
+  try {
+    const { data, error } = await supabase.from('roles').select('*');
+    if(error) {
+      console.warn('Could not load roles from Supabase:', error.message);
+      return;
+    }
+    ROLES.length = 0;
+    if(data && Array.isArray(data)) {
+      ROLES.push(...data);
+      console.log('Loaded ' + data.length + ' roles from Supabase');
+    }
+  } catch(e) {
+    console.warn('Error loading roles:', e.message);
+  }
+}
 
 const OPEN = new Date('2026-05-15');
 const MIN = 2000, TAX = 0.15, SHARE = 0.40;
@@ -1806,7 +1862,7 @@ function addUser(){
   go('edit-user');
 }
 
-function saveUserChanges(){
+async function saveUserChanges(){
   const name = document.getElementById('eu-name').value;
   const email = document.getElementById('eu-email').value;
   const password = document.getElementById('eu-password').value;
@@ -1818,15 +1874,36 @@ function saveUserChanges(){
     return;
   }
 
-  if(editingUser){
-    editingUser.email = email;
-    editingUser.password = password;
-    editingUser.role = role;
-    editingUser.status = status;
-  } else {
-    USERS.push({ name, email, password, role, status });
+  try {
+    // Get role_id from role name
+    const { data: roleData } = await supabase.from('roles').select('id').eq('name', role).single();
+    if(!roleData) {
+      alert('Role not found');
+      return;
+    }
+
+    if(editingUser){
+      const { error } = await supabase.from('clinic_users').update({
+        email,
+        role_id: roleData.id,
+        is_active: status === 'Active'
+      }).eq('id', editingUser.id);
+      if(error) throw error;
+    } else {
+      const { error } = await supabase.from('clinic_users').insert([{
+        username: name,
+        email,
+        password_hash: password,
+        role_id: roleData.id,
+        is_active: status === 'Active'
+      }]);
+      if(error) throw error;
+    }
+    await loadUsers();
+    go('users');
+  } catch(e) {
+    alert('Error saving user: ' + e.message);
   }
-  go('users');
 }
 
 // ROLE EDITING
@@ -1857,7 +1934,7 @@ function addRole(){
   go('edit-role');
 }
 
-function saveRoleChanges(){
+async function saveRoleChanges(){
   const name = document.getElementById('er-name').value;
   const description = document.getElementById('er-description').value;
   const users = parseInt(document.getElementById('er-users').value) || 0;
@@ -1868,27 +1945,42 @@ function saveRoleChanges(){
     return;
   }
 
-  if(editingRole){
-    editingRole.description = description;
-    editingRole.users = users;
-    editingRole.permissions = permissions;
-  } else {
-    ROLES.push({ name, description, users, permissions });
+  try {
+    if(editingRole){
+      const { error } = await supabase.from('roles').update({ description, users, permissions }).eq('name', editingRole.name);
+      if(error) throw error;
+    } else {
+      const { error } = await supabase.from('roles').insert([{ name, description, users, permissions }]);
+      if(error) throw error;
+    }
+    await loadRoles();
+    go('roles');
+  } catch(e) {
+    alert('Error saving role: ' + e.message);
   }
-  go('roles');
 }
 
 // USER & ROLE DELETION
-function deleteUser(userName){
+async function deleteUser(userName){
   if(!confirm(`Are you sure you want to delete user "${userName}"? This action cannot be undone.`)) {
     return;
   }
-  const idx = USERS.findIndex(u => u.name === userName);
-  if(idx >= 0) USERS.splice(idx, 1);
-  go('users');
+  try {
+    const user = USERS.find(u => u.name === userName);
+    if(!user) {
+      alert('User not found');
+      return;
+    }
+    const { error } = await supabase.from('clinic_users').delete().eq('id', user.id);
+    if(error) throw error;
+    await loadUsers();
+    go('users');
+  } catch(e) {
+    alert('Error deleting user: ' + e.message);
+  }
 }
 
-function deleteRole(roleName){
+async function deleteRole(roleName){
   const affectedUsers = USERS.filter(u => u.role === roleName).length;
   const message = affectedUsers > 0
     ? `Are you sure you want to delete the "${roleName}" role?\n\n⚠️ This will affect ${affectedUsers} user(s) assigned to this role.\n\nThis action cannot be undone.`
@@ -1897,9 +1989,14 @@ function deleteRole(roleName){
   if(!confirm(message)) {
     return;
   }
-  const idx = ROLES.findIndex(r => r.name === roleName);
-  if(idx >= 0) ROLES.splice(idx, 1);
-  go('roles');
+  try {
+    const { error } = await supabase.from('roles').delete().eq('name', roleName);
+    if(error) throw error;
+    await loadRoles();
+    go('roles');
+  } catch(e) {
+    alert('Error deleting role: ' + e.message);
+  }
 }
 
 // NAV
@@ -1934,8 +2031,8 @@ function go(p){
   if(p==='pnl')buildPnl();
   if(p==='payouts')buildPayouts();
   if(p==='calendar'){if(!calWeekStart)calWeekStart=calWeekOf(new Date());buildMonthNav();}
-  if(p==='users')buildUsersMgmt();
-  if(p==='roles')buildRolesMgmt();
+  if(p==='users'){loadUsers().then(()=>buildUsersMgmt());}
+  if(p==='roles'){loadRoles().then(()=>buildRolesMgmt());}
   // Apply pre-selected client context if coming from pipeline
   if(pipelineCtxClient&&['payment','assessment','booking','satisfaction','reassign'].includes(p)){
     applyClientCtx(p);
@@ -4149,17 +4246,25 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// Initialize: Load sample data (Supabase integration requires proper table setup)
-USERS.push(
-  { name: 'Haytham Hussein', email: 'haytham@sama.com', role: 'Admin', status: 'Active', password: '' },
-  { name: 'Dr. Sama Eissa', email: 'sama@sama.com', role: 'Admin', status: 'Active', password: '' }
-);
-ROLES.push(
-  { name: 'Admin', description: 'Full system access', users: 2, permissions: 'All' },
-  { name: 'Therapist', description: 'Manage clients, bookings, assessments', users: 1, permissions: 'Limited' },
-  { name: 'Reception', description: 'Client intake and scheduling', users: 1, permissions: 'View-only' }
-);
-go('intake');
+// Initialize: Load users and roles from Supabase
+(async () => {
+  await Promise.all([loadUsers(), loadRoles()]);
+  // If tables are empty or not accessible, use sample data as fallback
+  if(USERS.length === 0) {
+    USERS.push(
+      { name: 'Haytham Hussein', email: 'haytham@sama.com', role: 'Admin', status: 'Active', password: '' },
+      { name: 'Dr. Sama Eissa', email: 'sama@sama.com', role: 'Admin', status: 'Active', password: '' }
+    );
+  }
+  if(ROLES.length === 0) {
+    ROLES.push(
+      { name: 'Admin', description: 'Full system access', users: 2, permissions: 'All' },
+      { name: 'Therapist', description: 'Manage clients, bookings, assessments', users: 1, permissions: 'Limited' },
+      { name: 'Reception', description: 'Client intake and scheduling', users: 1, permissions: 'View-only' }
+    );
+  }
+  go('intake');
+})();
 </script>
 
 <!-- LOGOUT CONFIRMATION DIALOG -->
