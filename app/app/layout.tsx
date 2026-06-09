@@ -62,6 +62,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
   }
 
   const menuItems = [
+    { label: 'Clinic App', href: '/app/clinic', icon: '🏥' },
     { label: 'Dashboard', href: '/app', icon: '📊' },
     { label: 'Clients', href: '/app/clients', icon: '👥' },
     { label: 'Bookings', href: '/app/bookings', icon: '📅' },
