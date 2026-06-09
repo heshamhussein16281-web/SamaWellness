@@ -8,18 +8,6 @@ export default function AppPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const handleLogout = async () => {
-    try {
-      await fetch('/api/auth/logout', {
-        method: 'POST',
-        credentials: 'include',
-      });
-      router.push('/app/login');
-    } catch (err) {
-      console.error('Logout failed:', err);
-    }
-  };
-
   useEffect(() => {
     // Verify authentication before loading clinic app
     const checkAuth = async () => {
@@ -128,42 +116,16 @@ export default function AppPage() {
   }
 
   return (
-    <div style={{ width: '100%', height: '100vh', position: 'relative' }}>
-      <div
-        style={{
-          position: 'fixed',
-          top: '15px',
-          right: '15px',
-          zIndex: 9999,
-        }}
-      >
-        <button
-          onClick={handleLogout}
-          style={{
-            padding: '10px 20px',
-            backgroundColor: '#ff0000',
-            color: 'white',
-            border: '2px solid black',
-            borderRadius: '6px',
-            cursor: 'pointer',
-            fontSize: '16px',
-            fontWeight: 'bold',
-          }}
-        >
-          LOGOUT
-        </button>
-      </div>
-      <iframe
-        src="/clinic.html"
-        style={{
-          width: '100%',
-          height: '100%',
-          border: 'none',
-          margin: 0,
-          padding: 0,
-        }}
-        title="Clinic Management System"
-      />
-    </div>
+    <iframe
+      src="/clinic.html"
+      style={{
+        width: '100%',
+        height: '100%',
+        border: 'none',
+        margin: 0,
+        padding: 0,
+      }}
+      title="Clinic Management System"
+    />
   );
 }
