@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 
 export default function ClinicPage() {
   const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -21,11 +22,11 @@ export default function ClinicPage() {
           return;
         }
 
-        // Authenticated - load the clinic HTML
+        // Authenticated - store role and show clinic app
         const userRole = await res.json();
         localStorage.setItem('userRole', userRole.role);
 
-        await loadClinicApp();
+        setIsAuthenticated(true);
         setIsLoading(false);
       } catch (err) {
         console.error('Auth check failed:', err);
@@ -36,65 +37,46 @@ export default function ClinicPage() {
     checkAuth();
   }, [router]);
 
-  const loadClinicApp = async () => {
-    return new Promise((resolve, reject) => {
-      fetch('/clinic.html')
-        .then((res) => res.text())
-        .then((html) => {
-          // Replace entire document with clinic app
-          document.open();
-          document.write(html);
-          document.close();
+  useEffect(() => {
+    if (isAuthenticated) {
+      // Set clinic app role after component mounts
+      const userRole = localStorage.getItem('userRole');
+      const isAdminUser = userRole === 'admin';
 
-          // After document is loaded, set the user role
-          setTimeout(() => {
-            const userRole = localStorage.getItem('userRole');
-            const isAdminUser = userRole === 'admin';
+      // Set isAdmin in the window context for clinic app
+      if (typeof window !== 'undefined') {
+        (window as any).isAdmin = isAdminUser;
+      }
 
-            // Set isAdmin in the window context for clinic app
-            if (typeof window !== 'undefined') {
-              (window as any).isAdmin = isAdminUser;
-            }
+      // Update role display in clinic app
+      setTimeout(() => {
+        const roleStrip = document.querySelector('.role-strip');
+        if (roleStrip) {
+          roleStrip.className = 'role-strip ' + (isAdminUser ? 'adm' : 'rec');
+          const txt = roleStrip.querySelector('#role-strip-txt');
+          if (txt) txt.textContent = isAdminUser ? 'Admin' : 'Reception';
+        }
 
-            // Update role strip display
-            const roleStrip = document.querySelector('.role-strip');
-            if (roleStrip) {
-              roleStrip.className = 'role-strip ' + (isAdminUser ? 'adm' : 'rec');
-              const txt = roleStrip.querySelector('#role-strip-txt');
-              if (txt) txt.textContent = isAdminUser ? 'Admin' : 'Reception';
-            }
+        const roleLabel = document.getElementById('role-lbl');
+        if (roleLabel) {
+          roleLabel.textContent = 'Logged in as: ' + (isAdminUser ? 'Admin' : 'Reception');
+        }
 
-            // Update role label in top bar
-            const roleLabel = document.getElementById('role-lbl');
-            if (roleLabel) {
-              roleLabel.textContent = 'Logged in as: ' + (isAdminUser ? 'Admin' : 'Reception');
-            }
-
-            // Lock/unlock admin nav based on role
-            const admNav = document.getElementById('nav-admin');
-            if (admNav) {
-              if (isAdminUser) {
-                admNav.classList.remove('locked');
-                admNav.style.pointerEvents = 'auto';
-                admNav.style.opacity = '1';
-              } else {
-                admNav.classList.add('locked');
-                admNav.style.pointerEvents = 'none';
-                admNav.style.opacity = '0.5';
-              }
-            }
-
-            console.log('User role set to:', isAdminUser ? 'Admin' : 'Reception');
-            resolve(null);
-          }, 500);
-        })
-        .catch((err) => {
-          console.error('Failed to load clinic app:', err);
-          document.body.innerHTML = '<p>Failed to load clinic app</p>';
-          reject(err);
-        });
-    });
-  };
+        const admNav = document.getElementById('nav-admin');
+        if (admNav) {
+          if (isAdminUser) {
+            admNav.classList.remove('locked');
+            admNav.style.pointerEvents = 'auto';
+            admNav.style.opacity = '1';
+          } else {
+            admNav.classList.add('locked');
+            admNav.style.pointerEvents = 'none';
+            admNav.style.opacity = '0.5';
+          }
+        }
+      }, 100);
+    }
+  }, [isAuthenticated]);
 
   if (isLoading) {
     return (
@@ -106,5 +88,21 @@ export default function ClinicPage() {
     );
   }
 
-  return null;
+  if (!isAuthenticated) {
+    return null;
+  }
+
+  return (
+    <iframe
+      src="/clinic.html"
+      style={{
+        width: '100%',
+        height: '100vh',
+        border: 'none',
+        margin: 0,
+        padding: 0,
+      }}
+      title="Clinic Management System"
+    />
+  );
 }
