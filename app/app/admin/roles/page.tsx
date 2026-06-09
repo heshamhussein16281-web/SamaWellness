@@ -449,6 +449,15 @@ export default function RolesPage() {
           }
         }
 
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
         @media (max-width: 1024px) {
           .roles-grid {
             grid-template-columns: 1fr;
@@ -476,11 +485,80 @@ export default function RolesPage() {
           </button>
         </div>
 
-        {/* Create Role Form */}
+        {/* Modal Overlay */}
         {showForm && (
-          <div className="form-card">
-            <h2 className="form-card__title">Create New Role</h2>
-            <form onSubmit={handleCreateRole}>
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: 'rgba(0, 0, 0, 0.4)',
+              zIndex: 999,
+              animation: 'fadeIn 0.3s ease-out',
+            }}
+            onClick={() => setShowForm(false)}
+          />
+        )}
+
+        {/* Slide-in Panel */}
+        <div
+          style={{
+            position: 'fixed',
+            right: 0,
+            top: 0,
+            bottom: 0,
+            width: '100%',
+            maxWidth: '500px',
+            background: 'white',
+            boxShadow: '-4px 0 20px rgba(0, 0, 0, 0.15)',
+            zIndex: 1000,
+            transform: showForm ? 'translateX(0)' : 'translateX(100%)',
+            transition: 'transform 0.3s ease-out',
+            overflowY: 'auto',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          {/* Panel Header */}
+          <div
+            style={{
+              padding: '2rem',
+              borderBottom: '1px solid var(--color-sand)',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexShrink: 0,
+            }}
+          >
+            <h2
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: '1.5rem',
+                color: 'var(--color-nav-text)',
+                margin: 0,
+              }}
+            >
+              Create New Role
+            </h2>
+            <button
+              onClick={() => setShowForm(false)}
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                color: 'var(--color-nav-text)',
+                padding: '0.5rem',
+              }}
+            >
+              <X size={24} />
+            </button>
+          </div>
+
+          {/* Form Content */}
+          <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
+            <form id="role-form" onSubmit={handleCreateRole} style={{ flex: 1 }}>
               <div className="form-group">
                 <label>Role Name</label>
                 <input
@@ -504,22 +582,30 @@ export default function RolesPage() {
                 />
               </div>
 
-              <div className="form-actions">
-                <button type="submit" className="btn btn-primary">
-                  Create Role
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowForm(false)}
-                  className="btn btn-secondary"
-                >
-                  <X size={16} />
-                  Cancel
-                </button>
-              </div>
             </form>
+            <div
+              style={{
+                display: 'flex',
+                gap: '1rem',
+                marginTop: 'auto',
+                paddingTop: '1.5rem',
+                borderTop: '1px solid var(--color-sand)',
+              }}
+            >
+              <button type="submit" className="btn btn-primary" form="role-form">
+                Create Role
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowForm(false)}
+                className="btn btn-secondary"
+              >
+                <X size={16} />
+                Cancel
+              </button>
+            </div>
           </div>
-        )}
+        </div>
 
         {/* Roles and Permissions Grid */}
         <div className="roles-grid">
