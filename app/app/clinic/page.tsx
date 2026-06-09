@@ -1,13 +1,14 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function ClinicPage() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Verify authentication
+    // Verify authentication before loading clinic app
     const checkAuth = async () => {
       try {
         const res = await fetch('/api/auth/verify', {
@@ -15,13 +16,19 @@ export default function ClinicPage() {
         });
 
         if (!res.ok) {
+          // Not authenticated, redirect to login
           router.push('/app/login');
           return;
         }
 
-        // If authenticated, load the clinic HTML
-        loadClinicApp();
+        // Authenticated - load the clinic HTML
+        const userRole = await res.json();
+        localStorage.setItem('userRole', userRole.role);
+
+        await loadClinicApp();
+        setIsLoading(false);
       } catch (err) {
+        console.error('Auth check failed:', err);
         router.push('/app/login');
       }
     };
@@ -29,62 +36,75 @@ export default function ClinicPage() {
     checkAuth();
   }, [router]);
 
-  const loadClinicApp = () => {
-    fetch('/clinic.html')
-      .then((res) => res.text())
-      .then((html) => {
-        // Replace entire document with clinic app
-        document.open();
-        document.write(html);
-        document.close();
+  const loadClinicApp = async () => {
+    return new Promise((resolve, reject) => {
+      fetch('/clinic.html')
+        .then((res) => res.text())
+        .then((html) => {
+          // Replace entire document with clinic app
+          document.open();
+          document.write(html);
+          document.close();
 
-        // After document is loaded, set the user role
-        // Wait for clinic app to initialize before setting role
-        setTimeout(() => {
-          const userRole = localStorage.getItem('userRole');
-          const isAdminUser = userRole === 'admin';
+          // After document is loaded, set the user role
+          setTimeout(() => {
+            const userRole = localStorage.getItem('userRole');
+            const isAdminUser = userRole === 'admin';
 
-          // Set isAdmin in the window context for clinic app
-          if (typeof window !== 'undefined') {
-            (window as any).isAdmin = isAdminUser;
-          }
-
-          // Update role strip display
-          const roleStrip = document.querySelector('.role-strip');
-          if (roleStrip) {
-            roleStrip.className = 'role-strip ' + (isAdminUser ? 'adm' : 'rec');
-            const txt = roleStrip.querySelector('#role-strip-txt');
-            if (txt) txt.textContent = isAdminUser ? 'Admin' : 'Reception';
-          }
-
-          // Update role label in top bar
-          const roleLabel = document.getElementById('role-lbl');
-          if (roleLabel) {
-            roleLabel.textContent = 'Logged in as: ' + (isAdminUser ? 'Admin' : 'Reception');
-          }
-
-          // Lock/unlock admin nav based on role
-          const admNav = document.getElementById('nav-admin');
-          if (admNav) {
-            if (isAdminUser) {
-              admNav.classList.remove('locked');
-              admNav.style.pointerEvents = 'auto';
-              admNav.style.opacity = '1';
-            } else {
-              admNav.classList.add('locked');
-              admNav.style.pointerEvents = 'none';
-              admNav.style.opacity = '0.5';
+            // Set isAdmin in the window context for clinic app
+            if (typeof window !== 'undefined') {
+              (window as any).isAdmin = isAdminUser;
             }
-          }
 
-          console.log('User role set to:', isAdminUser ? 'Admin' : 'Reception');
-        }, 500);
-      })
-      .catch((err) => {
-        console.error('Failed to load clinic app:', err);
-        document.body.innerHTML = '<p>Failed to load clinic app</p>';
-      });
+            // Update role strip display
+            const roleStrip = document.querySelector('.role-strip');
+            if (roleStrip) {
+              roleStrip.className = 'role-strip ' + (isAdminUser ? 'adm' : 'rec');
+              const txt = roleStrip.querySelector('#role-strip-txt');
+              if (txt) txt.textContent = isAdminUser ? 'Admin' : 'Reception';
+            }
+
+            // Update role label in top bar
+            const roleLabel = document.getElementById('role-lbl');
+            if (roleLabel) {
+              roleLabel.textContent = 'Logged in as: ' + (isAdminUser ? 'Admin' : 'Reception');
+            }
+
+            // Lock/unlock admin nav based on role
+            const admNav = document.getElementById('nav-admin');
+            if (admNav) {
+              if (isAdminUser) {
+                admNav.classList.remove('locked');
+                admNav.style.pointerEvents = 'auto';
+                admNav.style.opacity = '1';
+              } else {
+                admNav.classList.add('locked');
+                admNav.style.pointerEvents = 'none';
+                admNav.style.opacity = '0.5';
+              }
+            }
+
+            console.log('User role set to:', isAdminUser ? 'Admin' : 'Reception');
+            resolve(null);
+          }, 500);
+        })
+        .catch((err) => {
+          console.error('Failed to load clinic app:', err);
+          document.body.innerHTML = '<p>Failed to load clinic app</p>';
+          reject(err);
+        });
+    });
   };
+
+  if (isLoading) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+        <div style={{ textAlign: 'center', color: '#999' }}>
+          <p>Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return null;
 }
