@@ -1,15 +1,25 @@
 import { jwtVerify, SignJWT } from 'jose';
+import * as bcrypt from 'bcryptjs';
+import { createClient } from '@supabase/supabase-js';
 
 const jwtSecret = new TextEncoder().encode(
   process.env.JWT_SECRET || 'sama_wellness_jwt_secret_2024_secure_key_32chars'
 );
 
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+);
+
 export interface JWTPayload {
+  userId: string;
   username: string;
-  role: 'reception' | 'admin';
+  role: string;
+  roleName: string;
+  permissions: string[];
   iat?: number;
   exp?: number;
-  [key: string]: string | number | undefined;
+  [key: string]: unknown;
 }
 
 /**
@@ -39,21 +49,60 @@ export async function verifyJWT(token: string): Promise<JWTPayload | null> {
 }
 
 /**
- * Verify credentials against environment variables
+ * Verify credentials against database
  */
-export function verifyCredentials(username: string, password: string): JWTPayload | null {
-  const receptionPassword = process.env.RECEPTION_PASSWORD || '1234';
-  const adminPassword = process.env.ADMIN_PASSWORD || 'Sama202#';
+export async function verifyCredentials(username: string, password: string): Promise<JWTPayload | null> {
+  try {
+    const { data: user, error } = await supabase
+      .from('clinic_users')
+      .select(`
+        id,
+        username,
+        password_hash,
+        is_active,
+        roles:role_id (
+          id,
+          name,
+          role_permissions (
+            permissions (key, name)
+          )
+        )
+      `)
+      .eq('username', username)
+      .single();
 
-  if (username === 'reception' && password === receptionPassword) {
-    return { username: 'reception', role: 'reception' };
+    if (error || !user) {
+      console.log('User not found:', username);
+      return null;
+    }
+
+    if (!user.is_active) {
+      console.log('User is inactive:', username);
+      return null;
+    }
+
+    // Verify password
+    const passwordMatch = await bcrypt.compare(password, user.password_hash);
+    if (!passwordMatch) {
+      console.log('Invalid password for user:', username);
+      return null;
+    }
+
+    // Extract permissions from role_permissions
+    const role = user.roles;
+    const permissions = role?.role_permissions?.map((rp: any) => rp.permissions.key) || [];
+
+    return {
+      userId: user.id,
+      username: user.username,
+      role: role?.id,
+      roleName: role?.name || 'user',
+      permissions,
+    };
+  } catch (error) {
+    console.error('Credential verification error:', error);
+    return null;
   }
-
-  if (username === 'admin' && password === adminPassword) {
-    return { username: 'admin', role: 'admin' };
-  }
-
-  return null;
 }
 
 /**

@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify credentials
-    const payload = verifyCredentials(username, password);
+    const payload = await verifyCredentials(username, password);
     console.log('Credentials check:', { valid: !!payload });
 
     if (!payload) {

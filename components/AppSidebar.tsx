@@ -2,28 +2,60 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const MENU_ITEMS = [
-  { label: 'Dashboard', href: '/app', icon: '📊' },
-  { label: 'Clients', href: '/app/clients', icon: '👥' },
-  { label: 'Bookings', href: '/app/bookings', icon: '📅' },
-  { label: 'Payments', href: '/app/payments', icon: '💳' },
-  { label: 'Assessments', href: '/app/assessments', icon: '📝' },
-  { label: 'Satisfaction', href: '/app/satisfaction', icon: '⭐' },
-  { label: 'Reassignments', href: '/app/reassignments', icon: '🔄' },
-  { label: 'Change Log', href: '/app/change-log', icon: '📋' },
-  { label: 'Ended Calls', href: '/app/ended-calls', icon: '📞' },
-  { label: 'Credit Balance', href: '/app/credits', icon: '💰' },
-  { label: 'Payouts', href: '/app/payouts', icon: '🏦' },
-  { label: 'Expenses', href: '/app/expenses', icon: '💸' },
-  { label: 'Discharged', href: '/app/discharged', icon: '✅' },
+  { label: 'Dashboard', href: '/app', icon: '📊', permission: null },
+  { label: 'Clients', href: '/app/clients', icon: '👥', permission: 'view_clients' },
+  { label: 'Bookings', href: '/app/bookings', icon: '📅', permission: 'view_bookings' },
+  { label: 'Payments', href: '/app/payments', icon: '💳', permission: 'view_payments' },
+  { label: 'Assessments', href: '/app/assessments', icon: '📝', permission: 'view_assessments' },
+  { label: 'Satisfaction', href: '/app/satisfaction', icon: '⭐', permission: 'view_satisfaction' },
+  { label: 'Reassignments', href: '/app/reassignments', icon: '🔄', permission: 'view_clients' },
+  { label: 'Change Log', href: '/app/change-log', icon: '📋', permission: 'view_change_log' },
+  { label: 'Ended Calls', href: '/app/ended-calls', icon: '📞', permission: 'view_bookings' },
+  { label: 'Credit Balance', href: '/app/credits', icon: '💰', permission: 'view_clients' },
+  { label: 'Payouts', href: '/app/payouts', icon: '🏦', permission: 'view_payouts' },
+  { label: 'Expenses', href: '/app/expenses', icon: '💸', permission: 'view_expenses' },
+  { label: 'Discharged', href: '/app/discharged', icon: '✅', permission: 'view_clients' },
+];
+
+const ADMIN_ITEMS = [
+  { label: 'Users', href: '/app/admin/users', icon: '👤', permission: 'manage_users' },
+  { label: 'Roles', href: '/app/admin/roles', icon: '⚙️', permission: 'manage_roles' },
 ];
 
 export default function AppSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [permissions, setPermissions] = useState<string[]>([]);
+  const [userName, setUserName] = useState<string>('');
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const res = await fetch('/api/auth/verify');
+        if (res.ok) {
+          const data = await res.json();
+          setPermissions(data.permissions || []);
+          setUserName(data.username || '');
+        }
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
+
+  const filteredMenuItems = MENU_ITEMS.filter(
+    (item) => !item.permission || permissions.includes(item.permission)
+  );
+
+  const filteredAdminItems = ADMIN_ITEMS.filter(
+    (item) => !item.permission || permissions.includes(item.permission)
+  );
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' });
@@ -46,10 +78,11 @@ export default function AppSidebar() {
         <div className="sidebar-header">
           <h2 className="sidebar-title">SWT Clinic</h2>
           <p className="sidebar-subtitle">Management System</p>
+          {userName && <p className="sidebar-user">👤 {userName}</p>}
         </div>
 
         <nav className="sidebar-nav">
-          {MENU_ITEMS.map((item) => (
+          {filteredMenuItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -60,6 +93,27 @@ export default function AppSidebar() {
               <span className="sidebar-label">{item.label}</span>
             </Link>
           ))}
+
+          {/* Admin Section */}
+          {filteredAdminItems.length > 0 && (
+            <>
+              <div className="sidebar-divider" />
+              <div className="sidebar-section-title">Administration</div>
+              {filteredAdminItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`sidebar-link admin-link ${
+                    pathname === item.href ? 'active' : ''
+                  }`}
+                  onClick={() => setIsMobileOpen(false)}
+                >
+                  <span className="sidebar-icon">{item.icon}</span>
+                  <span className="sidebar-label">{item.label}</span>
+                </Link>
+              ))}
+            </>
+          )}
         </nav>
 
         <div className="sidebar-footer">
@@ -148,6 +202,15 @@ export default function AppSidebar() {
           margin: 0;
         }
 
+        .sidebar-user {
+          font-family: var(--font-body);
+          font-size: 11px;
+          color: #999;
+          margin: 8px 0 0 0;
+          padding-top: 8px;
+          border-top: 1px solid var(--color-sand);
+        }
+
         .sidebar-nav {
           flex: 1;
           display: flex;
@@ -177,6 +240,30 @@ export default function AppSidebar() {
           background: var(--color-burgundy);
           color: white;
           font-weight: 600;
+        }
+
+        .sidebar-link.admin-link {
+          background: #fafafa;
+        }
+
+        .sidebar-link.admin-link:hover {
+          background: #f0f0f0;
+        }
+
+        .sidebar-divider {
+          height: 1px;
+          background: var(--color-sand);
+          margin: 8px 0;
+        }
+
+        .sidebar-section-title {
+          font-family: var(--font-body);
+          font-size: 11px;
+          font-weight: 600;
+          color: #999;
+          text-transform: uppercase;
+          padding: 8px 12px;
+          letter-spacing: 0.5px;
         }
 
         .sidebar-icon {

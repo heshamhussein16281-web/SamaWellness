@@ -29,7 +29,8 @@ export async function GET(request: NextRequest) {
       {
         authenticated: true,
         username: payload.username,
-        role: payload.role,
+        role: payload.roleName,
+        permissions: payload.permissions,
       },
       { status: 200 }
     );
