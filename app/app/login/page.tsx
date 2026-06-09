@@ -137,18 +137,18 @@ export default function LoginPage() {
           box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
           padding: var(--space-xl);
           width: 100%;
-          max-width: 400px;
+          max-width: 380px;
           border: 1px solid var(--color-sand);
         }
 
         .login-logo {
           text-align: center;
-          margin-bottom: var(--space-lg);
+          margin-bottom: var(--space-md);
         }
 
         .login-logo img {
-          width: 80px;
-          height: 80px;
+          width: 50px;
+          height: 50px;
           object-fit: contain;
         }
 
