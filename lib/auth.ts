@@ -80,13 +80,20 @@ export function getJWTFromCookie(cookieHeader?: string): string | null {
 export function createAuthCookie(token: string): string {
   // 8 hours in seconds
   const maxAge = 8 * 60 * 60;
+  const isProduction = process.env.NODE_ENV === 'production';
 
-  return `auth_token=${token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${maxAge}`;
+  // Only use Secure flag in production (HTTPS)
+  const secure = isProduction ? '; Secure' : '';
+
+  return `auth_token=${token}; Path=/; HttpOnly${secure}; SameSite=Strict; Max-Age=${maxAge}`;
 }
 
 /**
  * Create a logout cookie (expires immediately)
  */
 export function createLogoutCookie(): string {
-  return `auth_token=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0`;
+  const isProduction = process.env.NODE_ENV === 'production';
+  const secure = isProduction ? '; Secure' : '';
+
+  return `auth_token=; Path=/; HttpOnly${secure}; SameSite=Strict; Max-Age=0`;
 }
