@@ -27,6 +27,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
         if (!isLoginPage) {
           router.push('/app/login');
         }
+        setLoading(false);
         return;
       }
 
@@ -37,6 +38,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
       if (!isLoginPage) {
         router.push('/app/login');
       }
+      setLoading(false);
     }
   };
 
