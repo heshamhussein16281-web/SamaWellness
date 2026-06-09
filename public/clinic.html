@@ -591,41 +591,83 @@ button:active { transform: scale(0.98); }
 }
 
 /* LOGOUT DIALOG */
+/* Smooth backdrop overlay with blur effect */
 .logout-dialog-overlay {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(0);
   z-index: 998;
   display: none;
-  animation: fadeIn 0.2s ease;
+  animation: overlayFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .logout-dialog-overlay.show {
   display: block;
+  backdrop-filter: blur(4px);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideIn {
+/* Sophisticated keyframe animations */
+@keyframes overlayFadeIn {
   from {
     opacity: 0;
-    transform: scale(0.95) translateY(10px);
+    backdrop-filter: blur(0);
   }
   to {
     opacity: 1;
-    transform: scale(1) translateY(0);
+    backdrop-filter: blur(4px);
   }
 }
 
+@keyframes dialogEntry {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.92) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) translateY(0);
+  }
+}
+
+@keyframes headerSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes contentFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes actionsFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Main dialog with premium entrance animation */
 .logout-dialog {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
   background: white;
   border-radius: 12px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -633,7 +675,7 @@ button:active { transform: scale(0.98); }
   max-width: 420px;
   width: 90%;
   display: none;
-  animation: slideIn 0.3s ease;
+  animation: dialogEntry 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .logout-dialog.show {
@@ -646,6 +688,7 @@ button:active { transform: scale(0.98); }
   justify-content: space-between;
   padding: 20px 20px 16px 20px;
   border-bottom: 1px solid var(--border);
+  animation: headerSlideDown 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
 }
 
 .logout-dialog__title {
@@ -667,16 +710,22 @@ button:active { transform: scale(0.98); }
   cursor: pointer;
   color: #666;
   font-size: 16px;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .logout-dialog__close:hover {
   background: #eee;
   color: var(--text);
+  transform: rotate(90deg);
+}
+
+.logout-dialog__close:active {
+  transform: rotate(90deg) scale(0.95);
 }
 
 .logout-dialog__content {
   padding: 16px 20px;
+  animation: contentFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
 }
 
 .logout-dialog__message {
@@ -691,6 +740,7 @@ button:active { transform: scale(0.98); }
   gap: 10px;
   padding: 16px 20px;
   border-top: 1px solid var(--border);
+  animation: actionsFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
 }
 
 .logout-dialog__button {
@@ -702,7 +752,7 @@ button:active { transform: scale(0.98); }
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .logout-dialog__button--cancel {
@@ -712,8 +762,13 @@ button:active { transform: scale(0.98); }
 }
 
 .logout-dialog__button--cancel:hover {
-  background: #eee;
-  border-color: #ccc;
+  background: #ececec;
+  border-color: #bbb;
+  transform: translateY(-1px);
+}
+
+.logout-dialog__button--cancel:active {
+  transform: translateY(0);
 }
 
 .logout-dialog__button--confirm {
@@ -724,11 +779,13 @@ button:active { transform: scale(0.98); }
 
 .logout-dialog__button--confirm:hover {
   background: linear-gradient(135deg, #8a3548 0%, #662435 100%);
-  box-shadow: 0 4px 12px rgba(123, 45, 62, 0.3);
+  box-shadow: 0 6px 20px rgba(123, 45, 62, 0.35);
+  transform: translateY(-2px);
 }
 
-.logout-dialog__button:active {
-  transform: scale(0.98);
+.logout-dialog__button--confirm:active {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(123, 45, 62, 0.25);
 }
 </style>
 </head>
