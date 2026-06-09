@@ -1567,7 +1567,7 @@ button:active { transform: scale(0.98); }
   <div class="card" style="margin-bottom: 20px;">
     <div class="ct" style="color: var(--text)">User Management</div>
     <p style="font-size: 13px; color: var(--text3); margin-bottom: 14px;">Manage system users and their access permissions.</p>
-    <button class="btn-primary btn-sm" style="margin-bottom: 14px;" onclick="alert('Add new user feature coming soon')">+ Add new user</button>
+    <button class="btn-primary btn-sm" style="margin-bottom: 14px;" onclick="addUser()">+ Add new user</button>
     <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
       <thead style="background: var(--surface2);">
         <tr>
@@ -1590,7 +1590,7 @@ button:active { transform: scale(0.98); }
   <div class="card" style="margin-bottom: 20px;">
     <div class="ct" style="color: var(--text)">Role Management</div>
     <p style="font-size: 13px; color: var(--text3); margin-bottom: 14px;">Configure system roles and their permissions.</p>
-    <button class="btn-primary btn-sm" style="margin-bottom: 14px;" onclick="alert('Add new role feature coming soon')">+ Add new role</button>
+    <button class="btn-primary btn-sm" style="margin-bottom: 14px;" onclick="addRole()">+ Add new role</button>
     <div id="roles-list">
       <!-- Populated by buildRolesMgmt() -->
     </div>
@@ -1603,7 +1603,7 @@ button:active { transform: scale(0.98); }
     <div class="ct" style="display: flex; align-items: center; justify-content: space-between;">
       <div>
         <button style="background: none; border: none; color: var(--text2); cursor: pointer; font-size: 18px; margin-right: 8px;" onclick="go('users')">← Back</button>
-        <span style="color: var(--text)">Edit User</span>
+        <span id="eu-page-title" style="color: var(--text)">Edit User</span>
       </div>
     </div>
     <div class="fr" style="margin-top: 20px;">
@@ -1611,6 +1611,9 @@ button:active { transform: scale(0.98); }
     </div>
     <div class="fr">
       <div class="fg"><div class="fl">Email</div><input id="eu-email"></div>
+      <div class="fg"><div class="fl">Password</div><input id="eu-password" type="password"></div>
+    </div>
+    <div class="fr">
       <div class="fg"><div class="fl">Role</div>
         <select id="eu-role">
           <option value="">— select —</option>
@@ -1641,7 +1644,7 @@ button:active { transform: scale(0.98); }
     <div class="ct" style="display: flex; align-items: center; justify-content: space-between;">
       <div>
         <button style="background: none; border: none; color: var(--text2); cursor: pointer; font-size: 18px; margin-right: 8px;" onclick="go('roles')">← Back</button>
-        <span style="color: var(--text)">Edit Role</span>
+        <span id="er-page-title" style="color: var(--text)">Edit Role</span>
       </div>
     </div>
     <div class="fr" style="margin-top: 20px;">
@@ -1785,17 +1788,47 @@ function editUser(userName){
   if(editingUser){
     document.getElementById('eu-name').value = editingUser.name;
     document.getElementById('eu-email').value = editingUser.email;
+    document.getElementById('eu-password').value = editingUser.password || '';
     document.getElementById('eu-role').value = editingUser.role;
     document.getElementById('eu-status').value = editingUser.status;
+    document.getElementById('eu-name').setAttribute('readonly', '');
+    document.getElementById('eu-page-title').textContent = 'Edit User';
   }
   go('edit-user');
 }
 
+function addUser(){
+  editingUser = null;
+  document.getElementById('eu-name').value = '';
+  document.getElementById('eu-email').value = '';
+  document.getElementById('eu-password').value = '';
+  document.getElementById('eu-role').value = '';
+  document.getElementById('eu-status').value = 'Active';
+  document.getElementById('eu-name').removeAttribute('readonly');
+  document.getElementById('eu-page-title').textContent = 'Add New User';
+  go('edit-user');
+}
+
 function saveUserChanges(){
-  if(!editingUser) return;
-  editingUser.email = document.getElementById('eu-email').value;
-  editingUser.role = document.getElementById('eu-role').value;
-  editingUser.status = document.getElementById('eu-status').value;
+  const name = document.getElementById('eu-name').value;
+  const email = document.getElementById('eu-email').value;
+  const password = document.getElementById('eu-password').value;
+  const role = document.getElementById('eu-role').value;
+  const status = document.getElementById('eu-status').value;
+
+  if(!name || !email || !role) {
+    alert('Please fill in all required fields');
+    return;
+  }
+
+  if(editingUser){
+    editingUser.email = email;
+    editingUser.password = password;
+    editingUser.role = role;
+    editingUser.status = status;
+  } else {
+    USERS.push({ name, email, password, role, status });
+  }
   go('users');
 }
 
@@ -1814,15 +1847,41 @@ function editRole(roleName){
     document.getElementById('er-description').value = editingRole.description;
     document.getElementById('er-users').value = editingRole.users;
     document.getElementById('er-permissions').value = editingRole.permissions;
+    document.getElementById('er-name').setAttribute('readonly', '');
+    document.getElementById('er-page-title').textContent = 'Edit Role';
   }
   go('edit-role');
 }
 
+function addRole(){
+  editingRole = null;
+  document.getElementById('er-name').value = '';
+  document.getElementById('er-description').value = '';
+  document.getElementById('er-users').value = '0';
+  document.getElementById('er-permissions').value = '';
+  document.getElementById('er-name').removeAttribute('readonly');
+  document.getElementById('er-page-title').textContent = 'Add New Role';
+  go('edit-role');
+}
+
 function saveRoleChanges(){
-  if(!editingRole) return;
-  editingRole.description = document.getElementById('er-description').value;
-  editingRole.users = parseInt(document.getElementById('er-users').value) || 0;
-  editingRole.permissions = document.getElementById('er-permissions').value;
+  const name = document.getElementById('er-name').value;
+  const description = document.getElementById('er-description').value;
+  const users = parseInt(document.getElementById('er-users').value) || 0;
+  const permissions = document.getElementById('er-permissions').value;
+
+  if(!name || !description || !permissions) {
+    alert('Please fill in all required fields');
+    return;
+  }
+
+  if(editingRole){
+    editingRole.description = description;
+    editingRole.users = users;
+    editingRole.permissions = permissions;
+  } else {
+    ROLES.push({ name, description, users, permissions });
+  }
   go('roles');
 }
 
