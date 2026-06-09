@@ -1,11 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { verifyJWT, getJWTFromCookie } from '@/lib/auth';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ''
-);
+import { getServiceClient } from '@/lib/supabase-service';
 
 async function authenticate(request: NextRequest) {
   const cookieHeader = request.headers.get('cookie');
@@ -19,6 +14,7 @@ export async function GET(request: NextRequest) {
     const auth = await authenticate(request);
     if (!auth) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
+    const supabase = getServiceClient();
     const { data, error } = await supabase
       .from('bookings')
       .select('*')
@@ -37,6 +33,7 @@ export async function POST(request: NextRequest) {
     const auth = await authenticate(request);
     if (!auth) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
+    const supabase = getServiceClient();
     const body = await request.json();
     const { client_id, therapist_id, session_date, duration_minutes, status, notes } = body;
 
