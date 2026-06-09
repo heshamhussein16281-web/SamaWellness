@@ -88,12 +88,6 @@ export default function LoginPage() {
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
-
-        <div style={{ marginTop: '20px', paddingTop: '15px', borderTop: '1px solid #ddd', background: '#f9f9f9', padding: '12px', borderRadius: '4px', fontSize: '12px', color: '#666' }}>
-          <p style={{ margin: '0 0 5px 0', fontWeight: 'bold' }}>Test Credentials:</p>
-          <p style={{ margin: '0 0 3px 0' }}>Username: <code style={{ background: '#eee', padding: '2px 4px', borderRadius: '2px' }}>reception</code></p>
-          <p style={{ margin: 0 }}>Password: <code style={{ background: '#eee', padding: '2px 4px', borderRadius: '2px' }}>1234</code></p>
-        </div>
       </div>
     </div>
   );
