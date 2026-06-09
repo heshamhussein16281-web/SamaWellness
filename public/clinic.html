@@ -590,6 +590,8 @@ button:active { transform: scale(0.98); }
     <div class="nav-item" id="nav-calendar" onclick="go('calendar')"><span class="ni-ico">🗓</span> Calendar</div>
     <div class="nav-section">Admin only</div>
     <div class="nav-item locked adm-nav" id="nav-admin" onclick="go('admin')"><span class="ni-ico">⚙️</span> System settings <span class="ni-lock">🔒</span></div>
+    <div class="nav-item adm-nav" id="nav-users" onclick="window.open('/app/admin/users', '_blank')"><span class="ni-ico">👤</span> User management</div>
+    <div class="nav-item adm-nav" id="nav-roles" onclick="window.open('/app/admin/roles', '_blank')"><span class="ni-ico">🔑</span> Role management</div>
   </nav>
   <div class="yr-sw">
     <label>Operating year</label>
@@ -3520,6 +3522,8 @@ const PERMISSION_MAP = {
   'nav-payouts': ['view_payouts'],                            // Therapist payouts
   'nav-calendar': ['view_bookings'],                          // Calendar
   'nav-admin': ['manage_users', 'manage_roles'],              // System settings (admin)
+  'nav-users': ['manage_users'],                              // User management
+  'nav-roles': ['manage_roles'],                              // Role management
 };
 
 async function applyPermissionFiltering() {
