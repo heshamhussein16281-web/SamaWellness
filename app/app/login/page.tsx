@@ -8,187 +8,84 @@ export default function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     setError('');
-    setIsLoading(true);
+    setLoading(true);
 
     try {
-      const response = await fetch('/api/auth/login', {
+      const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
       });
 
-      const data = await response.json();
+      const data = await res.json();
 
-      if (!response.ok) {
+      if (!res.ok) {
         setError(data.error || 'Login failed');
-        setIsLoading(false);
+        setLoading(false);
         return;
       }
 
       router.push('/app');
-    } catch (err) {
-      setError('An error occurred. Please try again.');
-      setIsLoading(false);
+    } catch (err: any) {
+      setError('Error: ' + err.message);
+      setLoading(false);
     }
   };
 
   return (
-    <>
-      <div style={styles.container}>
-        <div style={styles.card}>
-          <div style={styles.logoBox}>
-            <img src="/logo.png" alt="Logo" style={styles.logo} />
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#F5F2EE', padding: '20px' }}>
+      <div style={{ background: 'white', padding: '40px', borderRadius: '8px', width: '100%', maxWidth: '360px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+
+        <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+          <img src="/logo.png" alt="Logo" style={{ width: '175px', height: '175px' }} />
+        </div>
+
+        <h1 style={{ fontSize: '24px', textAlign: 'center', margin: '0 0 10px 0', color: '#2d4a46' }}>Sama Wellness</h1>
+        <p style={{ textAlign: 'center', color: '#999', margin: '0 0 30px 0', fontSize: '14px' }}>Clinic Management</p>
+
+        {error && <div style={{ background: '#fee', color: '#c33', padding: '10px', borderRadius: '4px', marginBottom: '15px', fontSize: '14px' }}>{error}</div>}
+
+        <form onSubmit={handleSubmit}>
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ display: 'block', marginBottom: '5px', fontSize: '13px', fontWeight: 500, color: '#2d4a46' }}>Username</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="reception"
+              style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', boxSizing: 'border-box' }}
+            />
           </div>
 
-          <h1 style={styles.title}>Sama Wellness Therapy</h1>
-          <p style={styles.subtitle}>Clinic Management</p>
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', marginBottom: '5px', fontSize: '13px', fontWeight: 500, color: '#2d4a46' }}>Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', boxSizing: 'border-box' }}
+            />
+          </div>
 
-          <form onSubmit={handleSubmit} style={styles.form}>
-            {error && <div style={styles.error}>{error}</div>}
+          <button
+            type="submit"
+            disabled={loading}
+            style={{ width: '100%', padding: '12px', background: '#7b2d3e', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '14px', fontWeight: 600, textTransform: 'uppercase' }}
+          >
+            {loading ? 'Logging in...' : 'Login'}
+          </button>
+        </form>
 
-            <div style={styles.field}>
-              <label style={styles.label}>Username</label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="reception"
-                disabled={isLoading}
-                required
-                style={styles.input}
-              />
-            </div>
-
-            <div style={styles.field}>
-              <label style={styles.label}>Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                disabled={isLoading}
-                required
-                style={styles.input}
-              />
-            </div>
-
-            <button type="submit" disabled={isLoading} style={styles.button}>
-              {isLoading ? 'Logging in...' : 'Login'}
-            </button>
-          </form>
-
-          <p style={styles.hint}>Demo: reception / 1234</p>
-        </div>
+        <p style={{ textAlign: 'center', marginTop: '20px', paddingTop: '15px', borderTop: '1px solid #ddd', fontSize: '12px', color: '#999' }}>
+          Demo: reception / 1234
+        </p>
       </div>
-    </>
+    </div>
   );
 }
-
-const styles = {
-  container: {
-    width: '100%',
-    minHeight: '100vh',
-    display: 'flex' as const,
-    alignItems: 'center' as const,
-    justifyContent: 'center' as const,
-    background: 'linear-gradient(135deg, #F5F2EE 0%, #f0ebe4 100%)',
-    padding: '20px',
-    boxSizing: 'border-box' as const,
-  },
-  card: {
-    background: 'white',
-    width: '100%',
-    maxWidth: '340px',
-    padding: '40px 30px',
-    borderRadius: '10px',
-    boxShadow: '0 10px 40px rgba(0, 0, 0, 0.1)',
-    border: '1px solid #EAEAE2',
-  },
-  logoBox: {
-    textAlign: 'center' as const,
-    marginBottom: '20px',
-  },
-  logo: {
-    width: '175px',
-    height: '175px',
-    objectFit: 'contain' as const,
-  },
-  title: {
-    fontFamily: 'Gilda Display, serif',
-    fontSize: '20px',
-    color: '#2d4a46',
-    margin: '0 0 5px 0',
-    textAlign: 'center' as const,
-    fontWeight: 600,
-  },
-  subtitle: {
-    fontFamily: 'Nunito Sans, sans-serif',
-    fontSize: '13px',
-    color: '#999',
-    textAlign: 'center' as const,
-    margin: '0 0 25px 0',
-  },
-  form: {
-    display: 'flex' as const,
-    flexDirection: 'column' as const,
-    gap: '15px',
-  },
-  field: {
-    display: 'flex' as const,
-    flexDirection: 'column' as const,
-    gap: '6px',
-  },
-  label: {
-    fontFamily: 'Nunito Sans, sans-serif',
-    fontSize: '13px',
-    fontWeight: 500,
-    color: '#2d4a46',
-  },
-  input: {
-    fontFamily: 'Nunito Sans, sans-serif',
-    fontSize: '15px',
-    padding: '10px 12px',
-    border: '1px solid #EAEAE2',
-    borderRadius: '6px',
-    color: '#333',
-    boxSizing: 'border-box' as const,
-  },
-  button: {
-    fontFamily: 'Josefin Sans, sans-serif',
-    fontSize: '15px',
-    fontWeight: 600,
-    padding: '11px 20px',
-    background: '#7b2d3e',
-    color: 'white',
-    border: 'none',
-    borderRadius: '6px',
-    cursor: 'pointer',
-    textTransform: 'uppercase' as const,
-    letterSpacing: '0.5px',
-    marginTop: '10px',
-  },
-  error: {
-    background: '#fee',
-    border: '1px solid #fcc',
-    color: '#c33',
-    padding: '10px 12px',
-    borderRadius: '6px',
-    fontSize: '13px',
-    fontFamily: 'Nunito Sans, sans-serif',
-  },
-  hint: {
-    textAlign: 'center' as const,
-    marginTop: '20px',
-    paddingTop: '15px',
-    borderTop: '1px solid #EAEAE2',
-    fontFamily: 'Nunito Sans, sans-serif',
-    fontSize: '12px',
-    color: '#999',
-    margin: '20px 0 0 0',
-  },
-};
