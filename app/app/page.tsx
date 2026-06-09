@@ -128,22 +128,23 @@ export default function AppPage() {
   }
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100vh' }}>
+    <>
       <button
         onClick={handleLogout}
         style={{
-          position: 'absolute',
-          top: '10px',
-          right: '10px',
-          zIndex: 1000,
-          padding: '8px 16px',
+          position: 'fixed',
+          top: '20px',
+          right: '20px',
+          zIndex: 9999,
+          padding: '12px 24px',
           backgroundColor: '#7b2d3e',
           color: 'white',
           border: 'none',
           borderRadius: '4px',
           cursor: 'pointer',
-          fontSize: '14px',
-          fontWeight: '600',
+          fontSize: '16px',
+          fontWeight: '700',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
         }}
       >
         Logout
@@ -151,6 +152,9 @@ export default function AppPage() {
       <iframe
         src="/clinic.html"
         style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
           width: '100%',
           height: '100%',
           border: 'none',
@@ -159,6 +163,6 @@ export default function AppPage() {
         }}
         title="Clinic Management System"
       />
-    </div>
+    </>
   );
 }
