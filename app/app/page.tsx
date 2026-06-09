@@ -8,19 +8,17 @@ export default function AppDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState<'reception' | 'admin' | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [stats, setStats] = useState({ clients: 0, bookings: 0, payments: 0 });
 
   useEffect(() => {
-    // Check if user has valid auth token
     const checkAuth = async () => {
       try {
-        // Verify token is present by trying to access a protected route
         const response = await fetch('/api/auth/verify', {
           method: 'GET',
           credentials: 'include',
         }).catch(() => null);
 
         if (!response || !response.ok) {
-          // No valid auth, redirect to login
           router.push('/app/login');
           return;
         }
@@ -28,8 +26,26 @@ export default function AppDashboard() {
         const data = await response.json();
         setUserRole(data.role);
         setIsAuthenticated(true);
+
+        // Fetch stats
+        try {
+          const clientsRes = await fetch('/api/clinic/clients', { credentials: 'include' });
+          const bookingsRes = await fetch('/api/clinic/bookings', { credentials: 'include' });
+          const paymentsRes = await fetch('/api/clinic/payments', { credentials: 'include' });
+
+          const clientsData = await clientsRes.json();
+          const bookingsData = await bookingsRes.json();
+          const paymentsData = await paymentsRes.json();
+
+          setStats({
+            clients: clientsData.data?.length || 0,
+            bookings: bookingsData.data?.length || 0,
+            payments: paymentsData.data?.length || 0,
+          });
+        } catch (error) {
+          console.error('Error fetching stats:', error);
+        }
       } catch (error) {
-        // Error checking auth, redirect to login
         router.push('/app/login');
       } finally {
         setIsLoading(false);
@@ -38,16 +54,6 @@ export default function AppDashboard() {
 
     checkAuth();
   }, [router]);
-
-  const handleLogout = async () => {
-    try {
-      await fetch('/api/auth/logout', { method: 'POST' });
-      router.push('/app/login');
-    } catch (error) {
-      console.error('Logout error:', error);
-      router.push('/app/login');
-    }
-  };
 
   if (isLoading) {
     return (
@@ -59,63 +65,88 @@ export default function AppDashboard() {
   }
 
   if (!isAuthenticated) {
-    return null; // Will be redirected by useEffect
+    return null;
   }
 
   return (
     <div className="app-dashboard">
-      {/* Header */}
-      <header className="app-header">
-        <div className="app-header-content">
-          <h1 className="app-title">Sama Wellness Therapy</h1>
-          <p className="app-subtitle">Clinic Management System</p>
-        </div>
-        <div className="app-user-info">
-          <span className="app-role-badge">{userRole?.toUpperCase()}</span>
-          <button onClick={handleLogout} className="app-logout-btn">
-            Logout
-          </button>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="app-content">
-        <div className="app-welcome">
-          <h2>Welcome to the Clinic Management System</h2>
-          <p>This is the dashboard for managing clients, bookings, and clinic operations.</p>
-
-          {/* Feature Overview */}
-          <div className="app-features">
-            <div className="feature-box">
-              <h3>👥 Clients</h3>
-              <p>Manage client records, intake assessments, and therapy stages</p>
-            </div>
-            <div className="feature-box">
-              <h3>📅 Bookings</h3>
-              <p>Schedule sessions, track appointment history, and manage availability</p>
-            </div>
-            <div className="feature-box">
-              <h3>💳 Payments</h3>
-              <p>Process payments, track invoices, and manage client credits</p>
-            </div>
-            <div className="feature-box">
-              <h3>📊 Reports</h3>
-              <p>View analytics, generate reports, and track clinic metrics</p>
-            </div>
+      <div className="app-content">
+        {/* Welcome Section */}
+        <div className="dashboard-header">
+          <div>
+            <h1 className="dashboard-title">Dashboard</h1>
+            <p className="dashboard-subtitle">Clinic Management System</p>
           </div>
-
-          {/* Current Status */}
-          <div className="app-status">
-            <h3>System Status</h3>
-            <ul>
-              <li>✅ Database connection active</li>
-              <li>✅ Authentication system operational</li>
-              <li>✅ API routes ready</li>
-              <li>⏳ Clinic data management features coming soon</li>
-            </ul>
+          <div className="user-badge">
+            <span>{userRole?.toUpperCase()}</span>
           </div>
         </div>
-      </main>
+
+        {/* Quick Stats */}
+        <div className="stats-grid">
+          <div className="stat-card">
+            <div className="stat-icon">👥</div>
+            <div className="stat-content">
+              <div className="stat-number">{stats.clients}</div>
+              <div className="stat-label">Clients</div>
+            </div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-icon">📅</div>
+            <div className="stat-content">
+              <div className="stat-number">{stats.bookings}</div>
+              <div className="stat-label">Bookings</div>
+            </div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-icon">💳</div>
+            <div className="stat-content">
+              <div className="stat-number">{stats.payments}</div>
+              <div className="stat-label">Payments</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Overview Cards */}
+        <div className="overview-section">
+          <h2 className="section-title">System Overview</h2>
+          <div className="overview-grid">
+            <div className="overview-card">
+              <h3>🎯 Core Features</h3>
+              <ul>
+                <li>Client management & tracking</li>
+                <li>Session booking & scheduling</li>
+                <li>Payment processing</li>
+                <li>Therapist management</li>
+              </ul>
+            </div>
+            <div className="overview-card">
+              <h3>📊 Advanced Tools</h3>
+              <ul>
+                <li>Assessment tracking</li>
+                <li>Satisfaction surveys</li>
+                <li>Therapist reassignments</li>
+                <li>Financial reports</li>
+              </ul>
+            </div>
+            <div className="overview-card">
+              <h3>✅ Admin Features</h3>
+              <ul>
+                <li>Change log & audit trail</li>
+                <li>Expense tracking</li>
+                <li>Therapist payouts</li>
+                <li>Client discharge</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Tips */}
+        <div className="tips-section">
+          <h3>💡 Quick Tips</h3>
+          <p>Use the sidebar navigation to access all 13 clinic management modules. Each module provides full CRUD operations for managing clinic data efficiently.</p>
+        </div>
+      </div>
 
       <style jsx>{`
         .app-loading {
@@ -152,182 +183,180 @@ export default function AppDashboard() {
         .app-dashboard {
           min-height: 100vh;
           background: var(--color-linen);
-          display: flex;
-          flex-direction: column;
         }
 
-        .app-header {
-          background: white;
-          border-bottom: 1px solid var(--color-sand);
-          padding: var(--space-lg);
+        .app-content {
+          padding: var(--space-xl);
+          max-width: 1400px;
+          margin: 0 auto;
+        }
+
+        .dashboard-header {
           display: flex;
           justify-content: space-between;
-          align-items: center;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+          align-items: flex-start;
+          margin-bottom: var(--space-xl);
         }
 
-        .app-header-content {
-          flex: 1;
-        }
-
-        .app-title {
+        .dashboard-title {
           font-family: var(--font-display);
-          font-size: 28px;
+          font-size: 32px;
           color: var(--color-nav-text);
           margin: 0 0 4px 0;
         }
 
-        .app-subtitle {
+        .dashboard-subtitle {
           font-family: var(--font-body);
           font-size: 14px;
           color: #999;
           margin: 0;
         }
 
-        .app-user-info {
-          display: flex;
-          align-items: center;
-          gap: var(--space-md);
-        }
-
-        .app-role-badge {
+        .user-badge {
+          background: var(--color-burgundy);
+          color: white;
+          padding: 8px 16px;
+          border-radius: 20px;
           font-family: var(--font-ui);
           font-size: 12px;
           font-weight: 600;
           text-transform: uppercase;
-          background: var(--color-burgundy);
-          color: white;
-          padding: 6px 12px;
-          border-radius: 20px;
-          letter-spacing: 0.5px;
         }
 
-        .app-logout-btn {
-          font-family: var(--font-body);
-          font-size: 14px;
-          padding: 8px 16px;
-          background: #f5f5f5;
-          border: 1px solid var(--color-sand);
-          border-radius: 6px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          color: var(--color-nav-text);
-        }
-
-        .app-logout-btn:hover {
-          background: var(--color-sand);
-          border-color: var(--color-burgundy);
-        }
-
-        .app-content {
-          flex: 1;
-          padding: var(--space-xl);
-          max-width: 1200px;
-          margin: 0 auto;
-          width: 100%;
-        }
-
-        .app-welcome {
-          background: white;
-          padding: var(--space-xl);
-          border-radius: 12px;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-
-        .app-welcome h2 {
-          font-family: var(--font-display);
-          font-size: 24px;
-          color: var(--color-nav-text);
-          margin: 0 0 var(--space-sm) 0;
-        }
-
-        .app-welcome > p {
-          font-family: var(--font-body);
-          color: #666;
-          margin: 0 0 var(--space-lg) 0;
-        }
-
-        .app-features {
+        .stats-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-          gap: var(--space-md);
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: var(--space-lg);
           margin-bottom: var(--space-xl);
         }
 
-        .feature-box {
-          padding: var(--space-md);
-          background: #fafafa;
-          border: 1px solid var(--color-sand);
+        .stat-card {
+          background: white;
+          padding: var(--space-lg);
           border-radius: 8px;
-          transition: all 0.2s ease;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+          display: flex;
+          align-items: center;
+          gap: var(--space-md);
+          border-left: 4px solid var(--color-burgundy);
         }
 
-        .feature-box:hover {
-          border-color: var(--color-burgundy);
-          box-shadow: 0 4px 12px rgba(123, 45, 62, 0.1);
+        .stat-icon {
+          font-size: 32px;
         }
 
-        .feature-box h3 {
+        .stat-content {
+          flex: 1;
+        }
+
+        .stat-number {
           font-family: var(--font-display);
-          font-size: 18px;
+          font-size: 28px;
+          font-weight: 600;
           color: var(--color-nav-text);
-          margin: 0 0 var(--space-xs) 0;
-        }
-
-        .feature-box p {
-          font-family: var(--font-body);
-          font-size: 14px;
-          color: #666;
           margin: 0;
         }
 
-        .app-status {
-          padding: var(--space-md);
+        .stat-label {
+          font-family: var(--font-body);
+          font-size: 12px;
+          color: #999;
+          margin: 4px 0 0 0;
+        }
+
+        .overview-section {
+          margin-bottom: var(--space-xl);
+        }
+
+        .section-title {
+          font-family: var(--font-display);
+          font-size: 20px;
+          color: var(--color-nav-text);
+          margin: 0 0 var(--space-lg) 0;
+        }
+
+        .overview-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: var(--space-lg);
+        }
+
+        .overview-card {
+          background: white;
+          padding: var(--space-lg);
+          border-radius: 8px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .overview-card h3 {
+          font-family: var(--font-display);
+          font-size: 16px;
+          color: var(--color-nav-text);
+          margin: 0 0 var(--space-md) 0;
+        }
+
+        .overview-card ul {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .overview-card li {
+          font-family: var(--font-body);
+          font-size: 14px;
+          color: #666;
+          padding-left: 20px;
+          position: relative;
+        }
+
+        .overview-card li::before {
+          content: '✓';
+          position: absolute;
+          left: 0;
+          color: var(--color-olive);
+          font-weight: bold;
+        }
+
+        .tips-section {
           background: #f0f8f5;
           border: 1px solid #c8e6de;
           border-radius: 8px;
+          padding: var(--space-lg);
         }
 
-        .app-status h3 {
+        .tips-section h3 {
           font-family: var(--font-display);
           font-size: 16px;
           color: var(--color-nav-text);
           margin: 0 0 var(--space-sm) 0;
         }
 
-        .app-status ul {
-          list-style: none;
-          margin: 0;
-          padding: 0;
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-          gap: 8px;
-        }
-
-        .app-status li {
+        .tips-section p {
           font-family: var(--font-body);
           font-size: 14px;
           color: #333;
+          margin: 0;
         }
 
         @media (max-width: 768px) {
-          .app-header {
+          .dashboard-header {
             flex-direction: column;
             gap: var(--space-md);
-            align-items: flex-start;
           }
 
-          .app-user-info {
-            width: 100%;
-            justify-content: space-between;
+          .dashboard-title {
+            font-size: 24px;
           }
 
-          .app-content {
-            padding: var(--space-lg);
+          .stats-grid {
+            grid-template-columns: 1fr;
           }
 
-          .app-title {
-            font-size: 20px;
+          .overview-grid {
+            grid-template-columns: 1fr;
           }
         }
       `}</style>
