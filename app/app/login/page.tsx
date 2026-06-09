@@ -38,202 +38,157 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="login-wrapper">
-      <div className="login-box">
-        <div className="logo-section">
-          <img src="/logo.png" alt="Sama Wellness" className="logo" />
-        </div>
-
-        <h1 className="title">Sama Wellness Therapy</h1>
-        <p className="subtitle">Clinic Management</p>
-
-        <form onSubmit={handleSubmit} className="form">
-          {error && <div className="error-message">{error}</div>}
-
-          <div className="form-group">
-            <label htmlFor="username">Username</label>
-            <input
-              id="username"
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="reception"
-              disabled={isLoading}
-              required
-            />
+    <>
+      <div style={styles.container}>
+        <div style={styles.card}>
+          <div style={styles.logoBox}>
+            <img src="/logo.png" alt="Logo" style={styles.logo} />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              disabled={isLoading}
-              required
-            />
-          </div>
+          <h1 style={styles.title}>Sama Wellness Therapy</h1>
+          <p style={styles.subtitle}>Clinic Management</p>
 
-          <button type="submit" disabled={isLoading}>
-            {isLoading ? 'Logging in...' : 'Login'}
-          </button>
-        </form>
+          <form onSubmit={handleSubmit} style={styles.form}>
+            {error && <div style={styles.error}>{error}</div>}
 
-        <div className="help-text">
-          <p>Demo: reception / 1234</p>
+            <div style={styles.field}>
+              <label style={styles.label}>Username</label>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="reception"
+                disabled={isLoading}
+                required
+                style={styles.input}
+              />
+            </div>
+
+            <div style={styles.field}>
+              <label style={styles.label}>Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                disabled={isLoading}
+                required
+                style={styles.input}
+              />
+            </div>
+
+            <button type="submit" disabled={isLoading} style={styles.button}>
+              {isLoading ? 'Logging in...' : 'Login'}
+            </button>
+          </form>
+
+          <p style={styles.hint}>Demo: reception / 1234</p>
         </div>
       </div>
-
-      <style jsx>{`
-        .login-wrapper {
-          width: 100%;
-          height: 100vh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: linear-gradient(135deg, var(--color-linen) 0%, #f0ebe4 100%);
-          padding: 20px;
-        }
-
-        .login-box {
-          background: white;
-          width: 100%;
-          max-width: 360px;
-          padding: 40px 30px;
-          border-radius: 10px;
-          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-          border: 1px solid var(--color-sand);
-        }
-
-        .logo-section {
-          text-align: center;
-          margin-bottom: 20px;
-        }
-
-        .logo {
-          width: 40px;
-          height: 40px;
-          object-fit: contain;
-        }
-
-        .title {
-          font-family: var(--font-display);
-          font-size: 22px;
-          color: var(--color-nav-text);
-          margin: 0 0 5px 0;
-          text-align: center;
-          font-weight: 600;
-        }
-
-        .subtitle {
-          font-family: var(--font-body);
-          font-size: 13px;
-          color: #999;
-          text-align: center;
-          margin: 0 0 25px 0;
-        }
-
-        .form {
-          display: flex;
-          flex-direction: column;
-          gap: 15px;
-        }
-
-        .form-group {
-          display: flex;
-          flex-direction: column;
-          gap: 6px;
-        }
-
-        .form-group label {
-          font-family: var(--font-body);
-          font-size: 13px;
-          font-weight: 500;
-          color: var(--color-nav-text);
-        }
-
-        .form-group input {
-          font-family: var(--font-body);
-          font-size: 15px;
-          padding: 10px 12px;
-          border: 1px solid var(--color-sand);
-          border-radius: 6px;
-          color: #333;
-        }
-
-        .form-group input:focus {
-          outline: none;
-          border-color: var(--color-burgundy);
-        }
-
-        .form-group input:disabled {
-          background: #f5f5f5;
-          color: #999;
-        }
-
-        .form button {
-          font-family: var(--font-ui);
-          font-size: 15px;
-          font-weight: 600;
-          padding: 11px 20px;
-          background: var(--color-burgundy);
-          color: white;
-          border: none;
-          border-radius: 6px;
-          cursor: pointer;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-          transition: all 0.2s ease;
-          margin-top: 10px;
-        }
-
-        .form button:hover:not(:disabled) {
-          background: #6a2538;
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(123, 45, 62, 0.3);
-        }
-
-        .form button:disabled {
-          opacity: 0.6;
-          cursor: not-allowed;
-        }
-
-        .error-message {
-          background: #fee;
-          border: 1px solid #fcc;
-          color: #c33;
-          padding: 10px 12px;
-          border-radius: 6px;
-          font-size: 13px;
-          font-family: var(--font-body);
-        }
-
-        .help-text {
-          text-align: center;
-          margin-top: 20px;
-          padding-top: 15px;
-          border-top: 1px solid var(--color-sand);
-        }
-
-        .help-text p {
-          font-family: var(--font-body);
-          font-size: 12px;
-          color: #999;
-          margin: 0;
-        }
-
-        @media (max-width: 480px) {
-          .login-box {
-            padding: 30px 20px;
-          }
-
-          .title {
-            font-size: 20px;
-          }
-        }
-      `}</style>
-    </div>
+    </>
   );
 }
+
+const styles = {
+  container: {
+    width: '100%',
+    minHeight: '100vh',
+    display: 'flex' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    background: 'linear-gradient(135deg, #F5F2EE 0%, #f0ebe4 100%)',
+    padding: '20px',
+    boxSizing: 'border-box' as const,
+  },
+  card: {
+    background: 'white',
+    width: '100%',
+    maxWidth: '340px',
+    padding: '40px 30px',
+    borderRadius: '10px',
+    boxShadow: '0 10px 40px rgba(0, 0, 0, 0.1)',
+    border: '1px solid #EAEAE2',
+  },
+  logoBox: {
+    textAlign: 'center' as const,
+    marginBottom: '20px',
+  },
+  logo: {
+    width: '35px',
+    height: '35px',
+    objectFit: 'contain' as const,
+  },
+  title: {
+    fontFamily: 'Gilda Display, serif',
+    fontSize: '20px',
+    color: '#2d4a46',
+    margin: '0 0 5px 0',
+    textAlign: 'center' as const,
+    fontWeight: 600,
+  },
+  subtitle: {
+    fontFamily: 'Nunito Sans, sans-serif',
+    fontSize: '13px',
+    color: '#999',
+    textAlign: 'center' as const,
+    margin: '0 0 25px 0',
+  },
+  form: {
+    display: 'flex' as const,
+    flexDirection: 'column' as const,
+    gap: '15px',
+  },
+  field: {
+    display: 'flex' as const,
+    flexDirection: 'column' as const,
+    gap: '6px',
+  },
+  label: {
+    fontFamily: 'Nunito Sans, sans-serif',
+    fontSize: '13px',
+    fontWeight: 500,
+    color: '#2d4a46',
+  },
+  input: {
+    fontFamily: 'Nunito Sans, sans-serif',
+    fontSize: '15px',
+    padding: '10px 12px',
+    border: '1px solid #EAEAE2',
+    borderRadius: '6px',
+    color: '#333',
+    boxSizing: 'border-box' as const,
+  },
+  button: {
+    fontFamily: 'Josefin Sans, sans-serif',
+    fontSize: '15px',
+    fontWeight: 600,
+    padding: '11px 20px',
+    background: '#7b2d3e',
+    color: 'white',
+    border: 'none',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    textTransform: 'uppercase' as const,
+    letterSpacing: '0.5px',
+    marginTop: '10px',
+  },
+  error: {
+    background: '#fee',
+    border: '1px solid #fcc',
+    color: '#c33',
+    padding: '10px 12px',
+    borderRadius: '6px',
+    fontSize: '13px',
+    fontFamily: 'Nunito Sans, sans-serif',
+  },
+  hint: {
+    textAlign: 'center' as const,
+    marginTop: '20px',
+    paddingTop: '15px',
+    borderTop: '1px solid #EAEAE2',
+    fontFamily: 'Nunito Sans, sans-serif',
+    fontSize: '12px',
+    color: '#999',
+    margin: '20px 0 0 0',
+  },
+};
