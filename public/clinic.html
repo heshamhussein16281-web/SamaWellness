@@ -1343,7 +1343,7 @@ const MON_IDX = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov
 const M26 = ['May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const M27 = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-let isAdmin = false, activeYear = 2026, activeMon = 'May';
+let isAdmin = (typeof localStorage !== 'undefined' && localStorage.getItem('userRole') === 'admin') || false, activeYear = 2026, activeMon = 'May';
 let feeAgreed = null, hasPref = null;
 
 const TH = [
@@ -1556,24 +1556,8 @@ function setYear(yr){
 }
 
 function toggleRole(){
-  isAdmin=!isAdmin;
-  const strip=document.getElementById('role-strip');
-  strip.className='role-strip '+(isAdmin?'adm':'rec');
-  document.getElementById('role-strip-txt').textContent=isAdmin?'Admin':'Reception';
-  document.getElementById('role-lbl').textContent='Logged in as: '+(isAdmin?'Admin':'Reception');
-  const sw=document.getElementById('role-sw');sw.textContent=isAdmin?'Switch to Reception':'Switch to Admin';sw.className='role-sw '+(isAdmin?'adm':'rec');
-  const admNav=document.getElementById('nav-admin');
-  if(isAdmin){
-    admNav.classList.remove('locked');
-    admNav.style.pointerEvents='auto';
-    admNav.style.opacity='1';
-    go('admin');
-  } else {
-    admNav.classList.add('locked');
-    admNav.style.pointerEvents='none';
-    admNav.style.opacity='';
-    go('intake');
-  }
+  // Role switching disabled - role is determined by login credentials
+  console.log('Admin access requires logging in with admin credentials');
 }
 
 // ─── INTAKE ───

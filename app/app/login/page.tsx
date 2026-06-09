@@ -33,6 +33,8 @@ export default function LoginPage() {
       }
 
       console.log('Login successful, redirecting...');
+      // Store user role for clinic app
+      localStorage.setItem('userRole', data.user.role);
       setLoading(false);
       router.push('/app');
     } catch (err: any) {
