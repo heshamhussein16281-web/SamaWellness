@@ -116,16 +116,18 @@ export default function AppPage() {
   }
 
   return (
-    <iframe
-      src="/clinic.html"
-      style={{
-        width: '100%',
-        height: '100%',
-        border: 'none',
-        margin: 0,
-        padding: 0,
-      }}
-      title="Clinic Management System"
-    />
+    <div style={{ width: '100%', height: '100vh', position: 'relative' }}>
+      <iframe
+        src="/clinic.html"
+        style={{
+          width: '100%',
+          height: '100%',
+          border: 'none',
+          margin: 0,
+          padding: 0,
+        }}
+        title="Clinic Management System"
+      />
+    </div>
   );
 }
