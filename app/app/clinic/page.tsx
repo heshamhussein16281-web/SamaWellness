@@ -45,8 +45,8 @@ export default function ClinicPage() {
           const isAdminUser = userRole === 'admin';
 
           // Set isAdmin in the window context for clinic app
-          if (typeof window !== 'undefined' && window.isAdmin !== undefined) {
-            window.isAdmin = isAdminUser;
+          if (typeof window !== 'undefined') {
+            (window as any).isAdmin = isAdminUser;
           }
 
           // Update role strip display
