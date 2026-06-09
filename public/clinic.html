@@ -3509,6 +3509,75 @@ function runDiagnostic(){
   document.body.appendChild(modal);
 }
 
+// ─── PERMISSION-BASED MENU FILTERING ───
+const PERMISSION_MAP = {
+  'nav-intake': ['create_client', 'view_clients'],           // New intake call
+  'nav-pipeline': ['view_clients'],                           // Client pipeline
+  'nav-satisfaction': ['view_satisfaction'],                  // Satisfaction check
+  'nav-reassign': ['view_clients'],                           // Log reassignment
+  'nav-expenses': ['view_expenses'],                          // Expense tracker
+  'nav-pnl': ['view_reports'],                                // Clinic P&L
+  'nav-payouts': ['view_payouts'],                            // Therapist payouts
+  'nav-calendar': ['view_bookings'],                          // Calendar
+  'nav-admin': ['manage_users', 'manage_roles'],              // System settings (admin)
+};
+
+async function applyPermissionFiltering() {
+  try {
+    const res = await fetch('/api/auth/verify', {
+      credentials: 'include',
+    });
+
+    if (!res.ok) {
+      console.error('Failed to fetch permissions');
+      return;
+    }
+
+    const data = await res.json();
+    const userPermissions = data.permissions || [];
+
+    // Filter menu items based on permissions
+    Object.entries(PERMISSION_MAP).forEach(([navId, requiredPerms]) => {
+      const navItem = document.getElementById(navId);
+      if (!navItem) return;
+
+      // Check if user has at least one of the required permissions
+      const hasPermission = requiredPerms.some(perm =>
+        userPermissions.includes(perm)
+      );
+
+      if (!hasPermission) {
+        navItem.style.display = 'none';
+      } else {
+        navItem.style.display = 'flex';
+      }
+    });
+
+    // Special handling for "Admin only" section
+    const adminSection = document.querySelector(
+      '.nav-section:contains("Admin only")'
+    );
+    if (adminSection) {
+      const nextItem = adminSection.nextElementSibling;
+      if (nextItem && nextItem.id === 'nav-admin') {
+        const isAdminVisible = nextItem.style.display !== 'none';
+        adminSection.style.display = isAdminVisible ? 'block' : 'none';
+      }
+    }
+  } catch (error) {
+    console.error('Error applying permission filtering:', error);
+  }
+}
+
+// Apply permission filtering when page loads
+document.addEventListener('DOMContentLoaded', applyPermissionFiltering);
+// Also run immediately in case DOM is already ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', applyPermissionFiltering);
+} else {
+  applyPermissionFiltering();
+}
+
 </script>
 </body>
 </html>
