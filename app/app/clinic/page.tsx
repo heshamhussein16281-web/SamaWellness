@@ -1,23 +1,48 @@
-import { Metadata } from 'next';
+'use client';
 
-export const metadata: Metadata = {
-  title: 'SWT Psychology — Clinic Management',
-};
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function ClinicPage() {
-  return (
-    <div style={{ height: '100vh', width: '100%', margin: 0, padding: 0, overflow: 'hidden' }}>
-      <iframe
-        src="/clinic.html"
-        style={{
-          width: '100%',
-          height: '100%',
-          border: 'none',
-          margin: 0,
-          padding: 0,
-        }}
-        title="Clinic Management System"
-      />
-    </div>
-  );
+  const router = useRouter();
+
+  useEffect(() => {
+    // Verify authentication
+    const checkAuth = async () => {
+      try {
+        const res = await fetch('/api/auth/verify', {
+          credentials: 'include',
+        });
+
+        if (!res.ok) {
+          router.push('/app/login');
+          return;
+        }
+
+        // If authenticated, load the clinic HTML
+        loadClinicApp();
+      } catch (err) {
+        router.push('/app/login');
+      }
+    };
+
+    checkAuth();
+  }, [router]);
+
+  const loadClinicApp = () => {
+    fetch('/clinic.html')
+      .then((res) => res.text())
+      .then((html) => {
+        // Replace entire document with clinic app
+        document.open();
+        document.write(html);
+        document.close();
+      })
+      .catch((err) => {
+        console.error('Failed to load clinic app:', err);
+        document.body.innerHTML = '<p>Failed to load clinic app</p>';
+      });
+  };
+
+  return null;
 }
