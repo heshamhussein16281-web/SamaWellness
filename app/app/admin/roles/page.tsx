@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Plus, CheckCircle2, Circle } from 'lucide-react';
+import { Plus, CheckCircle2, Circle, X } from 'lucide-react';
 
 interface Permission {
   id: string;
@@ -87,7 +87,9 @@ export default function RolesPage() {
     try {
       const res = await fetch(`/api/admin/roles/${selectedRole.id}/permissions`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ permission_ids: selectedPermissions }),
       });
 
@@ -110,151 +112,525 @@ export default function RolesPage() {
     {} as Record<string, Permission[]>
   );
 
-  if (loading) return <div className="p-6">Loading roles...</div>;
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-gradient-to-br from-linen via-white to-linen pt-12 pb-20">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center text-nav-text">Loading roles...</div>
+        </div>
+      </main>
+    );
+  }
 
   return (
-    <div className="p-6">
-      <div className="mb-6 flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Role Management</h1>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-        >
-          <Plus size={20} />
-          Create Role
-        </button>
-      </div>
+    <main className="min-h-screen bg-gradient-to-br from-linen via-white to-linen pt-12 pb-20">
+      <style>{`
+        :root {
+          --color-linen: #F5F2EE;
+          --color-sand: rgb(234, 228, 221);
+          --color-nav-text: rgb(45, 74, 70);
+          --color-burgundy: #7b2d3e;
+          --color-olive: #4a6741;
+          --color-charcoal: #2c2c2c;
+          --font-display: 'Gilda Display', serif;
+          --font-body: 'Nunito Sans', sans-serif;
+          --font-ui: 'Josefin Sans', sans-serif;
+        }
 
-      {/* Create Role Form */}
-      {showForm && (
-        <div className="mb-6 bg-white p-6 rounded-lg border border-gray-200">
-          <h2 className="text-xl font-semibold mb-4">Create New Role</h2>
-          <form onSubmit={handleCreateRole} className="space-y-4">
-            <input
-              type="text"
-              placeholder="Role Name (e.g., supervisor)"
-              value={newRole.name}
-              onChange={(e) => setNewRole({ ...newRole, name: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-              required
-            />
-            <textarea
-              placeholder="Description"
-              value={newRole.description}
-              onChange={(e) => setNewRole({ ...newRole, description: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-              rows={3}
-            />
-            <div className="flex gap-2">
-              <button
-                type="submit"
-                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
-              >
-                Create Role
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowForm(false)}
-                className="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500"
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
+        * {
+          font-family: var(--font-body);
+        }
+
+        .admin-page {
+          max-width: 6xl;
+          margin: 0 auto;
+          padding: 0 1.5rem;
+        }
+
+        .page-header {
+          margin-bottom: 3rem;
+          animation: fadeInDown 0.6s ease-out;
+        }
+
+        .page-header__title {
+          font-family: var(--font-display);
+          font-size: 2.5rem;
+          font-weight: 400;
+          color: var(--color-nav-text);
+          margin-bottom: 0.5rem;
+          letter-spacing: -0.5px;
+        }
+
+        .page-header__subtitle {
+          font-size: 0.875rem;
+          color: var(--color-charcoal);
+          opacity: 0.7;
+        }
+
+        .btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.75rem 1.5rem;
+          border: none;
+          border-radius: 6px;
+          font-size: 0.875rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          font-family: var(--font-ui);
+          letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+          background: var(--color-burgundy);
+          color: white;
+        }
+
+        .btn-primary:hover {
+          background: #5a1f2d;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(123, 45, 62, 0.2);
+        }
+
+        .btn-secondary {
+          background: var(--color-sand);
+          color: var(--color-nav-text);
+          border: 1px solid rgba(45, 74, 70, 0.2);
+        }
+
+        .btn-secondary:hover {
+          background: #ddd6cd;
+        }
+
+        .btn-success {
+          background: var(--color-olive);
+          color: white;
+        }
+
+        .btn-success:hover {
+          background: #3a5535;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(74, 103, 65, 0.2);
+        }
+
+        .form-card {
+          background: white;
+          border: 1px solid var(--color-sand);
+          border-radius: 10px;
+          padding: 2rem;
+          margin-bottom: 2rem;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+          animation: slideUp 0.4s ease-out;
+        }
+
+        .form-card__title {
+          font-family: var(--font-display);
+          font-size: 1.5rem;
+          color: var(--color-nav-text);
+          margin-bottom: 1.5rem;
+          border-bottom: 2px solid var(--color-sand);
+          padding-bottom: 1rem;
+        }
+
+        .form-group {
+          margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+          display: block;
+          margin-bottom: 0.5rem;
+          font-size: 0.875rem;
+          font-weight: 500;
+          color: var(--color-nav-text);
+          font-family: var(--font-ui);
+          letter-spacing: 0.3px;
+          text-transform: uppercase;
+        }
+
+        .form-control {
+          width: 100%;
+          padding: 0.75rem 1rem;
+          border: 1px solid var(--color-sand);
+          border-radius: 6px;
+          background: white;
+          color: var(--color-charcoal);
+          font-size: 0.875rem;
+          transition: all 0.2s ease;
+        }
+
+        .form-control:focus {
+          outline: none;
+          border-color: var(--color-burgundy);
+          box-shadow: 0 0 0 3px rgba(123, 45, 62, 0.1);
+        }
+
+        .form-actions {
+          display: flex;
+          gap: 1rem;
+          margin-top: 2rem;
+          padding-top: 1.5rem;
+          border-top: 1px solid var(--color-sand);
+        }
+
+        .roles-grid {
+          display: grid;
+          grid-template-columns: 1fr 2fr;
+          gap: 2rem;
+          animation: slideUp 0.4s ease-out 0.1s both;
+        }
+
+        .roles-list {
+          background: white;
+          border: 1px solid var(--color-sand);
+          border-radius: 10px;
+          overflow: hidden;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+          height: fit-content;
+        }
+
+        .roles-list__header {
+          padding: 1.25rem 1.5rem;
+          border-bottom: 2px solid var(--color-sand);
+          background: var(--color-sand);
+          font-family: var(--font-ui);
+          font-size: 0.875rem;
+          font-weight: 600;
+          color: var(--color-nav-text);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .role-item {
+          padding: 1rem 1.5rem;
+          border-bottom: 1px solid var(--color-sand);
+          background: transparent;
+          border: none;
+          width: 100%;
+          text-align: left;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          display: block;
+        }
+
+        .role-item:hover {
+          background: var(--color-sand);
+        }
+
+        .role-item.active {
+          background: rgba(123, 45, 62, 0.08);
+          border-left: 3px solid var(--color-burgundy);
+          padding-left: calc(1.5rem - 3px);
+        }
+
+        .role-item__name {
+          font-weight: 600;
+          color: var(--color-nav-text);
+          margin-bottom: 0.25rem;
+          text-transform: capitalize;
+        }
+
+        .role-item__count {
+          font-size: 0.75rem;
+          color: var(--color-charcoal);
+          opacity: 0.6;
+        }
+
+        .permissions-panel {
+          background: white;
+          border: 1px solid var(--color-sand);
+          border-radius: 10px;
+          padding: 2rem;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .permissions-panel__header {
+          margin-bottom: 2rem;
+          padding-bottom: 1.5rem;
+          border-bottom: 2px solid var(--color-sand);
+        }
+
+        .permissions-panel__title {
+          font-family: var(--font-display);
+          font-size: 1.5rem;
+          color: var(--color-nav-text);
+          margin-bottom: 0.5rem;
+        }
+
+        .permissions-panel__desc {
+          font-size: 0.875rem;
+          color: var(--color-charcoal);
+          opacity: 0.7;
+        }
+
+        .permission-category {
+          margin-bottom: 2rem;
+        }
+
+        .permission-category__title {
+          font-family: var(--font-ui);
+          font-size: 0.75rem;
+          font-weight: 600;
+          color: var(--color-nav-text);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          margin-bottom: 1rem;
+          padding-bottom: 0.75rem;
+          border-bottom: 1px solid var(--color-sand);
+        }
+
+        .permission-item {
+          display: flex;
+          gap: 1rem;
+          padding: 1rem;
+          cursor: pointer;
+          border-radius: 6px;
+          transition: all 0.2s ease;
+          margin-bottom: 0.75rem;
+        }
+
+        .permission-item:hover {
+          background: var(--color-sand);
+        }
+
+        .permission-checkbox {
+          flex-shrink: 0;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .permission-content {
+          flex: 1;
+        }
+
+        .permission-name {
+          font-weight: 500;
+          font-size: 0.875rem;
+          color: var(--color-nav-text);
+          margin-bottom: 0.25rem;
+        }
+
+        .permission-desc {
+          font-size: 0.8rem;
+          color: var(--color-charcoal);
+          opacity: 0.6;
+          line-height: 1.4;
+        }
+
+        .permissions-actions {
+          display: flex;
+          gap: 1rem;
+          margin-top: 2rem;
+          padding-top: 1.5rem;
+          border-top: 2px solid var(--color-sand);
+        }
+
+        @keyframes fadeInDown {
+          from {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @media (max-width: 1024px) {
+          .roles-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .page-header__title {
+            font-size: 1.875rem;
+          }
+        }
+      `}</style>
+
+      <div className="admin-page">
+        <div className="page-header">
+          <h1 className="page-header__title">Role Management</h1>
+          <p className="page-header__subtitle">Create roles and assign permissions to manage clinic access</p>
         </div>
-      )}
 
-      <div className="grid grid-cols-3 gap-6">
-        {/* Roles List */}
-        <div className="col-span-1 bg-white rounded-lg border border-gray-200 h-fit">
-          <div className="p-4 border-b font-semibold">Roles</div>
-          <div className="divide-y">
-            {roles.map((role) => (
-              <button
-                key={role.id}
-                onClick={() => {
-                  setSelectedRole(role);
-                  setSelectedPermissions(
-                    role.role_permissions.map((rp) => rp.permissions.id)
-                  );
-                }}
-                className={`w-full text-left px-4 py-3 hover:bg-gray-50 ${
-                  selectedRole?.id === role.id ? 'bg-blue-50' : ''
-                }`}
-              >
-                <div className="font-medium">{role.name}</div>
-                <div className="text-sm text-gray-600">
-                  {role.role_permissions.length} permissions
-                </div>
-              </button>
-            ))}
-          </div>
+        <div style={{ marginBottom: '2rem', textAlign: 'right' }}>
+          <button
+            onClick={() => setShowForm(!showForm)}
+            className="btn btn-primary"
+          >
+            <Plus size={18} />
+            Create Role
+          </button>
         </div>
 
-        {/* Permissions Selector */}
-        {selectedRole && (
-          <div className="col-span-2 bg-white rounded-lg border border-gray-200 p-6">
-            <div className="mb-4">
-              <h2 className="text-xl font-semibold mb-2">{selectedRole.name}</h2>
-              <p className="text-gray-600">{selectedRole.description}</p>
-            </div>
-
-            <div className="mb-6">
-              <h3 className="font-semibold mb-4">Assign Permissions</h3>
-              <div className="space-y-4">
-                {Object.entries(groupedPermissions).map(
-                  ([category, perms]) => (
-                    <div key={category}>
-                      <h4 className="text-sm font-semibold text-gray-700 mb-2 uppercase">
-                        {category}
-                      </h4>
-                      <div className="space-y-2 ml-4">
-                        {perms.map((perm) => (
-                          <label
-                            key={perm.id}
-                            className="flex items-start gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded"
-                          >
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setSelectedPermissions(
-                                  selectedPermissions.includes(perm.id)
-                                    ? selectedPermissions.filter((id) => id !== perm.id)
-                                    : [...selectedPermissions, perm.id]
-                                );
-                              }}
-                              className="mt-1"
-                            >
-                              {selectedPermissions.includes(perm.id) ? (
-                                <CheckCircle2 size={20} className="text-green-600" />
-                              ) : (
-                                <Circle size={20} className="text-gray-300" />
-                              )}
-                            </button>
-                            <div>
-                              <div className="font-medium text-sm">{perm.name}</div>
-                              <div className="text-xs text-gray-600">
-                                {perm.description}
-                              </div>
-                            </div>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-                  )
-                )}
+        {/* Create Role Form */}
+        {showForm && (
+          <div className="form-card">
+            <h2 className="form-card__title">Create New Role</h2>
+            <form onSubmit={handleCreateRole}>
+              <div className="form-group">
+                <label>Role Name</label>
+                <input
+                  type="text"
+                  placeholder="e.g., supervisor, therapist"
+                  value={newRole.name}
+                  onChange={(e) => setNewRole({ ...newRole, name: e.target.value })}
+                  className="form-control"
+                  required
+                />
               </div>
-            </div>
 
-            <button
-              onClick={handleAssignPermissions}
-              className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700"
-            >
-              Save Permissions
-            </button>
+              <div className="form-group">
+                <label>Description</label>
+                <textarea
+                  placeholder="Describe the purpose and responsibilities of this role..."
+                  value={newRole.description}
+                  onChange={(e) => setNewRole({ ...newRole, description: e.target.value })}
+                  className="form-control"
+                  rows={3}
+                />
+              </div>
+
+              <div className="form-actions">
+                <button type="submit" className="btn btn-primary">
+                  Create Role
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowForm(false)}
+                  className="btn btn-secondary"
+                >
+                  <X size={16} />
+                  Cancel
+                </button>
+              </div>
+            </form>
           </div>
         )}
+
+        {/* Roles and Permissions Grid */}
+        <div className="roles-grid">
+          {/* Roles List */}
+          <div className="roles-list">
+            <div className="roles-list__header">Available Roles</div>
+            <div>
+              {roles.length === 0 ? (
+                <div style={{ padding: '2rem 1.5rem', textAlign: 'center', color: 'var(--color-charcoal)', opacity: 0.6 }}>
+                  No roles yet. Create your first role.
+                </div>
+              ) : (
+                roles.map((role) => (
+                  <button
+                    key={role.id}
+                    onClick={() => {
+                      setSelectedRole(role);
+                      setSelectedPermissions(
+                        role.role_permissions.map((rp) => rp.permissions.id)
+                      );
+                    }}
+                    className={`role-item ${selectedRole?.id === role.id ? 'active' : ''}`}
+                  >
+                    <div className="role-item__name">{role.name}</div>
+                    <div className="role-item__count">
+                      {role.role_permissions.length} permission{role.role_permissions.length !== 1 ? 's' : ''}
+                    </div>
+                  </button>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* Permissions Selector */}
+          {selectedRole && (
+            <div className="permissions-panel">
+              <div className="permissions-panel__header">
+                <h2 className="permissions-panel__title">{selectedRole.name}</h2>
+                {selectedRole.description && (
+                  <p className="permissions-panel__desc">{selectedRole.description}</p>
+                )}
+              </div>
+
+              <div>
+                <h3 style={{
+                  fontFamily: 'var(--font-ui)',
+                  fontSize: '0.875rem',
+                  fontWeight: 600,
+                  color: 'var(--color-nav-text)',
+                  marginBottom: '1.5rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px',
+                }}>
+                  Assign Permissions
+                </h3>
+
+                {Object.entries(groupedPermissions).map(([category, perms]) => (
+                  <div key={category} className="permission-category">
+                    <div className="permission-category__title">{category}</div>
+                    {perms.map((perm) => (
+                      <label key={perm.id} className="permission-item">
+                        <div className="permission-checkbox">
+                          {selectedPermissions.includes(perm.id) ? (
+                            <CheckCircle2 size={20} color="var(--color-olive)" />
+                          ) : (
+                            <Circle size={20} color="var(--color-sand)" />
+                          )}
+                        </div>
+                        <div className="permission-content">
+                          <div className="permission-name">{perm.name}</div>
+                          <div className="permission-desc">{perm.description}</div>
+                        </div>
+                        <input
+                          type="checkbox"
+                          checked={selectedPermissions.includes(perm.id)}
+                          onChange={() => {
+                            setSelectedPermissions(
+                              selectedPermissions.includes(perm.id)
+                                ? selectedPermissions.filter((id) => id !== perm.id)
+                                : [...selectedPermissions, perm.id]
+                            );
+                          }}
+                          style={{ display: 'none' }}
+                        />
+                      </label>
+                    ))}
+                  </div>
+                ))}
+              </div>
+
+              <div className="permissions-actions">
+                <button
+                  onClick={handleAssignPermissions}
+                  className="btn btn-success"
+                >
+                  Save Permissions
+                </button>
+                <span style={{
+                  fontSize: '0.875rem',
+                  color: 'var(--color-charcoal)',
+                  opacity: 0.6,
+                  display: 'flex',
+                  alignItems: 'center',
+                }}>
+                  {selectedPermissions.length} permission{selectedPermissions.length !== 1 ? 's' : ''} selected
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </main>
   );
 }
