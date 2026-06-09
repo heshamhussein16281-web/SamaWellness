@@ -1747,7 +1747,7 @@ function buildUsersMgmt(){
       <td style="padding: 10px 8px;"><span style="color: green; font-size: 12px;">● ${u.status}</span></td>
       <td style="padding: 10px 8px;">
         <button style="background: var(--surface2); border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; margin-right: 4px; font-size: 12px;" onclick="editUser('${u.name}')">Edit</button>
-        <button style="background: var(--surface2); border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 12px;" onclick="alert('Delete user feature coming soon')">Delete</button>
+        <button style="background: var(--surface2); border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 12px;" onclick="deleteUser('${u.name}')">Delete</button>
       </td>
     </tr>
   `).join('');
@@ -1767,7 +1767,7 @@ function buildRolesMgmt(){
       </div>
       <div style="margin-top: 10px;">
         <button style="background: var(--surface2); border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; margin-right: 4px; font-size: 12px;" onclick="editRole('${r.name}')">Edit</button>
-        <button style="background: var(--surface2); border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 12px;" onclick="alert('Delete role feature coming soon')">Delete</button>
+        <button style="background: var(--surface2); border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 12px;" onclick="deleteRole('${r.name}')">Delete</button>
       </div>
     </div>
   `).join('');
@@ -1882,6 +1882,36 @@ function saveRoleChanges(){
   } else {
     ROLES.push({ name, description, users, permissions });
   }
+  go('roles');
+}
+
+// USER & ROLE DELETION
+function deleteUser(userName){
+  if(!confirm(`Are you sure you want to delete user "${userName}"? This action cannot be undone.`)) {
+    return;
+  }
+  if(!confirm(`Delete "${userName}"? Click OK again to confirm.`)) {
+    return;
+  }
+  const idx = USERS.findIndex(u => u.name === userName);
+  if(idx >= 0) USERS.splice(idx, 1);
+  go('users');
+}
+
+function deleteRole(roleName){
+  const affectedUsers = USERS.filter(u => u.role === roleName).length;
+  const message = affectedUsers > 0
+    ? `Are you sure you want to delete the "${roleName}" role?\n\n⚠️ This will affect ${affectedUsers} user(s) assigned to this role.\n\nClick OK to proceed.`
+    : `Are you sure you want to delete the "${roleName}" role?\n\nThis action cannot be undone.`;
+
+  if(!confirm(message)) {
+    return;
+  }
+  if(!confirm(`Delete "${roleName}"? Click OK again to confirm.`)) {
+    return;
+  }
+  const idx = ROLES.findIndex(r => r.name === roleName);
+  if(idx >= 0) ROLES.splice(idx, 1);
   go('roles');
 }
 
