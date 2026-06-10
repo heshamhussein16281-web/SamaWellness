@@ -2437,15 +2437,51 @@ const M27 = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','
 let isAdmin = (typeof localStorage !== 'undefined' && localStorage.getItem('userRole') === 'admin') || false, activeYear = 2026, activeMon = 'May';
 let feeAgreed = null, hasPref = null;
 
-const TH = [
-  {name:'Sama Eissa',initials:'SE',rate:3000,senior:true,days:['Mon'],schedule:{Mon:{start:11,end:22}},clients:[],sessions:0,reassigned_out:0,paid:false},
-  {name:'Dr Sara',initials:'DS',rate:2000,senior:false,days:['Tue'],schedule:{Tue:{start:11,end:19}},clients:[],sessions:0,reassigned_out:0,paid:false},
-  {name:'Sandy',initials:'SN',rate:2000,senior:false,days:['Tue'],schedule:{Tue:{start:11,end:22}},clients:[],sessions:0,reassigned_out:0,paid:false},
-  {name:'Marina',initials:'MR',rate:2000,senior:false,days:['Tue','Wed'],schedule:{Tue:{start:17,end:22},Wed:{start:11,end:17}},clients:[],sessions:0,reassigned_out:0,paid:false},
-  {name:'Heidy',initials:'HY',rate:2000,senior:false,days:['Thu'],schedule:{Thu:{start:11,end:22}},clients:[],sessions:0,reassigned_out:0,paid:false},
-  {name:'aliaa',initials:'AL',rate:2000,senior:false,days:['Thu'],schedule:{Thu:{start:12,end:17}},clients:[],sessions:0,reassigned_out:0,paid:false},
-  {name:'Mohamed',initials:'MO',rate:2000,senior:false,days:['Sun'],schedule:{Sun:{start:17,end:22}},clients:[],sessions:0,reassigned_out:0,paid:false},
-];
+// Therapists array - will be populated from Supabase via API
+let TH = [];
+
+// Fetch therapists from Supabase API
+async function loadTherapists(){
+  try {
+    const response = await fetch('/api/clinic/therapists');
+    if(!response.ok) throw new Error('Failed to fetch therapists');
+    const therapists = await response.json();
+
+    // Transform Supabase data to app format
+    TH = therapists.map(t => {
+      // Build schedule object from schedules array
+      const schedule = {};
+      const days = [];
+      if(t.schedules && Array.isArray(t.schedules)) {
+        t.schedules.forEach(s => {
+          const day = s.day_of_week;
+          schedule[day] = {start: s.start_hour, end: s.end_hour};
+          if(!days.includes(day)) days.push(day);
+        });
+      }
+      return {
+        name: t.name,
+        initials: t.initials,
+        rate: t.rate,
+        senior: t.is_senior || false,
+        days: days,
+        schedule: schedule,
+        clients: [],
+        sessions: 0,
+        reassigned_out: 0,
+        paid: false,
+        id: t.id
+      };
+    });
+
+    console.log('Therapists loaded from Supabase:', TH.length);
+    return TH;
+  } catch(error) {
+    console.error('Error loading therapists:', error);
+    // Fallback: keep existing TH or return empty
+    return TH;
+  }
+}
 
 let CLIENTS = [];
 
@@ -4874,7 +4910,10 @@ function saveScheds(){
 }
 
 // ─── INIT ───
-document.addEventListener('DOMContentLoaded',()=>{
+document.addEventListener('DOMContentLoaded',async ()=>{
+  // Load therapists from Supabase
+  await loadTherapists();
+
   const today=new Date().toISOString().split('T')[0];
   ['pv-date','sa-date','sat-date','re-date','rs-date'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=today;});
 });
