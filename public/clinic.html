@@ -2183,16 +2183,38 @@ async function deleteRole(roleName){
 
 // NAV
 function go(p){
-  console.log('go() called with page:', p);
-  // Permission check is handled by menu filtering in applyPermissionFiltering()
-  // If a menu item is visible, the user has permission to access it
+  try {
+    console.log('go() called with page:', p);
+    console.log('Step 1: Clearing context banners');
+    clearCtxBanners();
 
-  clearCtxBanners();
-  document.querySelectorAll('[id^="page-"]').forEach(el=>el.classList.add('hidden'));
-  document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
-  const pg=document.getElementById('page-'+p);if(!pg)return;
-  pg.classList.remove('hidden');
-  const nav=document.getElementById('nav-'+p);if(nav)nav.classList.add('active');
+    console.log('Step 2: Hiding all pages');
+    document.querySelectorAll('[id^="page-"]').forEach(el=>el.classList.add('hidden'));
+
+    console.log('Step 3: Removing active from nav items');
+    document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+
+    console.log('Step 4: Finding page element with id:', 'page-'+p);
+    const pg=document.getElementById('page-'+p);
+    if(!pg) {
+      console.error('ERROR: Page element not found for:', p);
+      console.log('Available page elements:', Array.from(document.querySelectorAll('[id^="page-"]')).map(el => el.id));
+      return;
+    }
+    console.log('Step 5: Showing page:', p);
+    pg.classList.remove('hidden');
+
+    console.log('Step 6: Highlighting nav item');
+    const nav=document.getElementById('nav-'+p);
+    if(nav) {
+      nav.classList.add('active');
+      console.log('Nav item activated:', 'nav-'+p);
+    } else {
+      console.warn('Nav item not found:', 'nav-'+p);
+    }
+  } catch(e) {
+    console.error('ERROR in go() function:', e.message, e.stack);
+  }
   const T={intake:'New intake call',pipeline:'Client pipeline',payment:'Verify Instapay',assessment:'Log assessment',booking:'Book session',reschedule:'Reschedule / cancel',satisfaction:'Satisfaction check',reassign:'Log reassignment',expenses:'Expense tracker',pnl:'Clinic P&L',payouts:'Therapist payouts',calendar:'Calendar',admin:'System settings',users:'User Management',roles:'Role Management','edit-user':'Edit User','edit-role':'Edit Role'};
   document.getElementById('page-title').textContent=T[p]||p;
   const d=new Date().toISOString().split('T')[0];
