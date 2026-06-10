@@ -2183,11 +2183,8 @@ async function deleteRole(roleName){
 
 // NAV
 function go(p){
-  // Check permission for this section
-  if(!hasPermission(p)){
-    alert('You do not have permission to access this section.');
-    return;
-  }
+  // Permission check is handled by menu filtering in applyPermissionFiltering()
+  // If a menu item is visible, the user has permission to access it
 
   clearCtxBanners();
   document.querySelectorAll('[id^="page-"]').forEach(el=>el.classList.add('hidden'));
