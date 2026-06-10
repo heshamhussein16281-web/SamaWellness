@@ -8,7 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // Stub functions to prevent ReferenceError before main script loads
-function go(p) { console.log('Loading page:', p); }
+// Note: go() is NOT stubbed here - it's defined later in the page and shouldn't be overridden
 function hasPermission(p) { return true; }
 function showLogoutDialog() { console.log('Logout dialog'); }
 function setYear(y) { console.log('Year set:', y); }
