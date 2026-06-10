@@ -4463,6 +4463,44 @@ document.addEventListener('DOMContentLoaded', function() {
 })();
 </script>
 
+<!-- PAYMENT VERIFICATION MODAL SYSTEM -->
+<script src="/clinic-payment-modal.js"></script>
+<script>
+// Initialize payment modal system after clinic app loads
+document.addEventListener('DOMContentLoaded', function() {
+  // Wait a moment for clinic app to fully initialize
+  setTimeout(() => {
+    try {
+      // Initialize payment modal
+      PaymentModal.initialize();
+
+      // Get current receptionist name from UI or user data
+      const currentUser = sessionStorage.getItem('username') || localStorage.getItem('username') || 'unknown';
+      PaymentModal.setReceptionist(currentUser);
+
+      // Check for pending expiries on initial load
+      PaymentModal.checkForPendingExpiries();
+
+      // Check every 30 seconds for new pending expiries
+      setInterval(() => {
+        PaymentModal.checkForPendingExpiries();
+      }, 30000);
+
+      // Check when page becomes visible (user returns from another tab)
+      document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+          PaymentModal.checkForPendingExpiries();
+        }
+      });
+
+      console.log('Payment modal system initialized');
+    } catch (error) {
+      console.error('Failed to initialize payment modal:', error);
+    }
+  }, 500);
+});
+</script>
+
 <!-- LOGOUT CONFIRMATION DIALOG -->
 <div class="logout-dialog-overlay" id="logout-dialog-overlay"></div>
 <div class="logout-dialog" id="logout-dialog">
