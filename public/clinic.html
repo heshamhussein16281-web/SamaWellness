@@ -4356,7 +4356,14 @@ async function applyPermissionFiltering() {
     }
 
     const data = await res.json();
-    const userPermissions = data.permissions || [];
+    const apiPermissions = data.permissions || [];
+
+    // Update global userPermissions object with API permissions
+    // Convert array of permission strings to object format
+    userPermissions = {};
+    apiPermissions.forEach(perm => {
+      userPermissions[perm] = true;
+    });
 
     // Filter menu items based on permissions
     Object.entries(PERMISSION_MAP).forEach(([navId, requiredPerms]) => {
@@ -4365,7 +4372,7 @@ async function applyPermissionFiltering() {
 
       // Check if user has at least one of the required permissions
       const hasPermission = requiredPerms.some(perm =>
-        userPermissions.includes(perm)
+        apiPermissions.includes(perm)
       );
 
       if (!hasPermission) {
