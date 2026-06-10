@@ -1910,20 +1910,35 @@ async function loadUsers(){
 // Fetch roles from Supabase database
 async function loadRoles(){
   try {
-    const { data, error } = await clinicSupabase.from('roles').select('*');
+    const { data: roles, error } = await clinicSupabase.from('roles').select('*');
     if(error) {
       console.warn('Could not load roles from Supabase:', error.message);
       return;
     }
+
     ROLES.length = 0;
-    if(data && Array.isArray(data)) {
-      ROLES.push(...data.map(r => ({
-        name: r.name,
-        description: r.description,
-        users: r.users || 0,
-        permissions: r.permissions || 'Limited'
-      })));
-      console.log('Loaded ' + data.length + ' roles from Supabase');
+    if(roles && Array.isArray(roles)) {
+      // Fetch user counts and permission counts for each role
+      for(const r of roles) {
+        // Count users with this role
+        const { data: users } = await clinicSupabase.from('clinic_users')
+          .select('id', { count: 'exact', head: false })
+          .eq('role_id', r.id);
+
+        // Count permissions for this role
+        const { data: perms } = await clinicSupabase.from('role_permissions')
+          .select('id', { count: 'exact', head: false })
+          .eq('role_id', r.id);
+
+        ROLES.push({
+          id: r.id,
+          name: r.name,
+          description: r.description,
+          users: users ? users.length : 0,
+          permissions: perms ? perms.length : 0
+        });
+      }
+      console.log('Loaded ' + roles.length + ' roles from Supabase');
     }
   } catch(e) {
     console.warn('Error loading roles:', e.message);
