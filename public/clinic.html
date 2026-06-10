@@ -1753,7 +1753,7 @@ async function loadCurrentUser(){
       return currentUser;
     }
 
-    const { data: user, error } = await supabase.from('clinic_users').select(`
+    const { data: user, error } = await clinicSupabase.from('clinic_users').select(`
       id,
       username,
       email,
@@ -1877,7 +1877,7 @@ function hasPermission(section){
 // Fetch users from Supabase database
 async function loadUsers(){
   try {
-    const { data, error } = await supabase.from('clinic_users').select(`
+    const { data, error } = await clinicSupabase.from('clinic_users').select(`
       id,
       username,
       email,
@@ -1910,7 +1910,7 @@ async function loadUsers(){
 // Fetch roles from Supabase database
 async function loadRoles(){
   try {
-    const { data, error } = await supabase.from('roles').select('*');
+    const { data, error } = await clinicSupabase.from('roles').select('*');
     if(error) {
       console.warn('Could not load roles from Supabase:', error.message);
       return;
@@ -2067,21 +2067,21 @@ async function saveUserChanges(){
 
   try {
     // Get role_id from role name
-    const { data: roleData } = await supabase.from('roles').select('id').eq('name', role).single();
+    const { data: roleData } = await clinicSupabase.from('roles').select('id').eq('name', role).single();
     if(!roleData) {
       alert('Role not found');
       return;
     }
 
     if(editingUser){
-      const { error } = await supabase.from('clinic_users').update({
+      const { error } = await clinicSupabase.from('clinic_users').update({
         email,
         role_id: roleData.id,
         is_active: status === 'Active'
       }).eq('id', editingUser.id);
       if(error) throw error;
     } else {
-      const { error } = await supabase.from('clinic_users').insert([{
+      const { error } = await clinicSupabase.from('clinic_users').insert([{
         username: name,
         email,
         password_hash: password,
@@ -2138,10 +2138,10 @@ async function saveRoleChanges(){
 
   try {
     if(editingRole){
-      const { error } = await supabase.from('roles').update({ description, users, permissions }).eq('name', editingRole.name);
+      const { error } = await clinicSupabase.from('roles').update({ description, users, permissions }).eq('name', editingRole.name);
       if(error) throw error;
     } else {
-      const { error } = await supabase.from('roles').insert([{ name, description, users, permissions }]);
+      const { error } = await clinicSupabase.from('roles').insert([{ name, description, users, permissions }]);
       if(error) throw error;
     }
     await loadRoles();
@@ -2162,7 +2162,7 @@ async function deleteUser(userName){
       alert('User not found');
       return;
     }
-    const { error } = await supabase.from('clinic_users').delete().eq('id', user.id);
+    const { error } = await clinicSupabase.from('clinic_users').delete().eq('id', user.id);
     if(error) throw error;
     await loadUsers();
     go('users');
@@ -2181,7 +2181,7 @@ async function deleteRole(roleName){
     return;
   }
   try {
-    const { error } = await supabase.from('roles').delete().eq('name', roleName);
+    const { error } = await clinicSupabase.from('roles').delete().eq('name', roleName);
     if(error) throw error;
     await loadRoles();
     go('roles');
