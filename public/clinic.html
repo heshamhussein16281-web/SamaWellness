@@ -1702,12 +1702,12 @@ button:active { transform: scale(0.98); }
 const SUPABASE_URL = 'https://aelgbqybcvmuzlbmkwia.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFlbGdicXliY3ZtdXpsYm1rd2lhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3ODQ5ODcsImV4cCI6MjA5NTM2MDk4N30.59JK93w5xK1jjF5ygw91OVe6vLJISpgMod0xMpuXHSk';
 
-let supabase;
+let clinicSupabase;
 if (typeof window !== 'undefined' && !window.clinic_supabase) {
-  supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
-  window.clinic_supabase = supabase;
+  clinicSupabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+  window.clinic_supabase = clinicSupabase;
 } else {
-  supabase = window.clinic_supabase || null;
+  clinicSupabase = window.clinic_supabase || null;
 }
 
 // Current user and permissions
