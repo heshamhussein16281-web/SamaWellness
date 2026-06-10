@@ -1656,31 +1656,518 @@ button:active { transform: scale(0.98); }
   </div>
 </div>
 
-<!-- EDIT ROLE PAGE -->
+<!-- EDIT ROLE PAGE - PREMIUM DESIGN -->
 <div id="page-edit-role" class="hidden">
-  <div class="card" style="margin-bottom: 20px;">
-    <div class="ct" style="display: flex; align-items: center; justify-content: space-between;">
-      <div>
-        <button style="background: none; border: none; color: var(--text2); cursor: pointer; font-size: 18px; margin-right: 8px;" onclick="go('roles')">← Back</button>
-        <span id="er-page-title" style="color: var(--text)">Edit Role</span>
+  <div class="role-page">
+    <!-- HEADER -->
+    <div class="role-header">
+      <button class="role-header__back" onclick="go('roles')">← Back</button>
+      <h1 id="er-page-title" class="role-header__title">Edit Role</h1>
+      <div id="role-status" class="role-header__status"></div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="role-container">
+
+      <!-- ROLE FORM SECTION -->
+      <section class="role-form-section">
+        <div class="role-form__group">
+          <label class="role-form__label">Role Name</label>
+          <input id="er-name" class="role-form__input role-form__input--readonly" readonly>
+        </div>
+
+        <div class="role-form__group">
+          <label class="role-form__label">Description</label>
+          <textarea id="er-description" class="role-form__textarea" rows="3" placeholder="Enter a brief description of this role's purpose..."></textarea>
+        </div>
+      </section>
+
+      <!-- PERMISSION ASSIGNMENT SECTION -->
+      <section class="permission-section">
+        <div class="permission-header">
+          <div>
+            <h2 class="permission-header__title">Assign Permissions</h2>
+            <p class="permission-header__subtitle">Organize and assign granular permissions to this role</p>
+          </div>
+          <div class="permission-counter">
+            <span id="perm-count" class="permission-counter__text">0 of 0</span>
+          </div>
+        </div>
+
+        <!-- SEARCH BOX -->
+        <div class="permission-search">
+          <input id="perm-search" type="text" class="permission-search__input" placeholder="Search permissions...">
+          <span class="permission-search__icon">🔍</span>
+        </div>
+
+        <!-- PERMISSION GROUPS CONTAINER -->
+        <div id="permission-groups-container" class="permission-groups">
+          <!-- Dynamically populated by JavaScript -->
+        </div>
+      </section>
+
+      <!-- ACTIONS -->
+      <div class="role-actions">
+        <button class="role-actions__save btn-primary" onclick="saveRoleChanges()">Save Changes</button>
+        <button class="role-actions__cancel" onclick="go('roles')">Cancel</button>
       </div>
-    </div>
-    <div class="fr" style="margin-top: 20px;">
-      <div class="fg"><div class="fl">Role Name</div><input id="er-name" readonly></div>
-    </div>
-    <div class="fr">
-      <div class="fg"><div class="fl">Description</div><textarea id="er-description" rows="3"></textarea></div>
-    </div>
-    <div class="fr">
-      <div class="fg" style="grid-column: 1 / -1;"><div class="fl">Permissions</div>
-        <div id="er-permissions-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 12px; padding: 12px; background: var(--surface2); border-radius: 6px;"></div>
-      </div>
-    </div>
-    <div style="display: flex; gap: 10px; margin-top: 20px;">
-      <button class="btn-primary" onclick="saveRoleChanges()">Save Changes</button>
-      <button onclick="go('roles')" style="background: var(--surface2);">Cancel</button>
     </div>
   </div>
+
+  <style>
+    /* ================================
+       LAYER 1: Design Tokens (Role Management)
+       ================================ */
+    :root {
+      --role-color-primary: #2d4a46;
+      --role-color-accent: #7b2d3e;
+      --role-color-bg: #F5F2EE;
+      --role-color-surface: #FFFFFF;
+      --role-color-surface-secondary: #F0EEE9;
+      --role-color-border: #E2DED6;
+      --role-color-text: #1A1816;
+      --role-color-text-secondary: #6B6560;
+      --role-color-text-muted: #9C9590;
+      --role-color-success: #2D5A3D;
+      --role-font-display: 'Josefin Sans', sans-serif;
+      --role-font-body: 'Nunito Sans', sans-serif;
+      --role-space-xs: 8px;
+      --role-space-sm: 12px;
+      --role-space-md: 16px;
+      --role-space-lg: 24px;
+      --role-space-xl: 32px;
+      --role-radius: 8px;
+      --role-radius-lg: 12px;
+      --role-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.05);
+      --role-shadow-lg: 0 4px 16px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.05);
+      --role-transition: 0.2s ease;
+    }
+
+    /* ================================
+       LAYER 2: Layout Containers
+       ================================ */
+    .role-page {
+      padding: var(--role-space-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--role-space-xl);
+    }
+
+    .role-container {
+      display: flex;
+      flex-direction: column;
+      gap: var(--role-space-xl);
+    }
+
+    .role-form-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--role-space-lg);
+    }
+
+    .role-form__group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--role-space-sm);
+    }
+
+    .permission-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .permission-groups {
+      display: flex;
+      flex-direction: column;
+      gap: var(--role-space-lg);
+    }
+
+    .permission-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--role-space-md);
+    }
+
+    .permission-group__content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--role-space-md);
+    }
+
+    .role-actions {
+      display: flex;
+      gap: var(--role-space-md);
+      padding-top: var(--role-space-lg);
+      border-top: 1px solid var(--role-color-border);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 980px) {
+      .role-form-section {
+        grid-template-columns: 1fr;
+      }
+      .permission-group__content {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 560px) {
+      .role-page {
+        padding: var(--role-space-md);
+      }
+      .role-form-section {
+        grid-template-columns: 1fr;
+      }
+      .permission-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--role-space-md);
+      }
+      .permission-group__content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ================================
+       LAYER 3: Components
+       ================================ */
+
+    /* HEADER */
+    .role-header {
+      display: flex;
+      align-items: center;
+      gap: var(--role-space-md);
+      padding-bottom: var(--role-space-md);
+      border-bottom: 1px solid var(--role-color-border);
+    }
+
+    .role-header__back {
+      background: none;
+      border: none;
+      color: var(--role-color-text-secondary);
+      font-size: 16px;
+      cursor: pointer;
+      padding: var(--role-space-xs);
+      font-family: var(--role-font-body);
+      transition: color var(--role-transition);
+    }
+
+    .role-header__back:hover {
+      color: var(--role-color-primary);
+    }
+
+    .role-header__title {
+      font-family: var(--role-font-display);
+      font-size: 28px;
+      color: var(--role-color-text);
+      margin: 0;
+      flex: 1;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .role-header__status {
+      padding: 6px 12px;
+      background: var(--role-color-surface-secondary);
+      border-radius: var(--role-radius);
+      font-size: 12px;
+      color: var(--role-color-text-secondary);
+      font-family: var(--role-font-body);
+      font-weight: 500;
+    }
+
+    /* FORM INPUTS */
+    .role-form__label {
+      font-family: var(--role-font-display);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--role-color-text);
+      letter-spacing: -0.2px;
+    }
+
+    .role-form__input,
+    .role-form__textarea {
+      font-family: var(--role-font-body);
+      font-size: 13px;
+      color: var(--role-color-text);
+      border: 1px solid var(--role-color-border);
+      border-radius: var(--role-radius);
+      padding: var(--role-space-sm);
+      background: var(--role-color-surface);
+      transition: all var(--role-transition);
+    }
+
+    .role-form__input:focus,
+    .role-form__textarea:focus {
+      outline: none;
+      border-color: var(--role-color-primary);
+      background: var(--role-color-surface);
+      box-shadow: 0 0 0 3px rgba(45, 74, 70, 0.1);
+    }
+
+    .role-form__input--readonly {
+      background: var(--role-color-surface-secondary);
+      color: var(--role-color-text-secondary);
+      cursor: not-allowed;
+    }
+
+    .role-form__input--readonly:focus {
+      border-color: var(--role-color-border);
+      box-shadow: none;
+    }
+
+    /* PERMISSION SECTION HEADER */
+    .permission-header__title {
+      font-family: var(--role-font-display);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--role-color-text);
+      margin: 0;
+      letter-spacing: -0.3px;
+    }
+
+    .permission-header__subtitle {
+      font-family: var(--role-font-body);
+      font-size: 12px;
+      color: var(--role-color-text-secondary);
+      margin: 4px 0 0 0;
+    }
+
+    /* SEARCH BOX */
+    .permission-search {
+      position: relative;
+      margin-bottom: var(--role-space-lg);
+    }
+
+    .permission-search__input {
+      width: 100%;
+      padding: var(--role-space-sm) var(--role-space-sm) var(--role-space-sm) var(--role-space-lg);
+      font-family: var(--role-font-body);
+      font-size: 13px;
+      border: 1px solid var(--role-color-border);
+      border-radius: var(--role-radius);
+      background: var(--role-color-surface);
+      color: var(--role-color-text);
+      transition: all var(--role-transition);
+    }
+
+    .permission-search__input:focus {
+      outline: none;
+      border-color: var(--role-color-primary);
+      box-shadow: 0 0 0 3px rgba(45, 74, 70, 0.1);
+    }
+
+    .permission-search__input::placeholder {
+      color: var(--role-color-text-muted);
+    }
+
+    .permission-search__icon {
+      position: absolute;
+      right: var(--role-space-sm);
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      color: var(--role-color-text-muted);
+      pointer-events: none;
+    }
+
+    /* PERMISSION COUNTER */
+    .permission-counter {
+      display: flex;
+      align-items: center;
+      gap: var(--role-space-sm);
+    }
+
+    .permission-counter__text {
+      font-family: var(--role-font-display);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--role-color-primary);
+      background: var(--role-color-surface-secondary);
+      padding: 6px 12px;
+      border-radius: var(--role-radius);
+    }
+
+    /* PERMISSION GROUP */
+    .permission-group__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--role-space-md);
+      background: var(--role-color-surface);
+      border: 1px solid var(--role-color-border);
+      border-radius: var(--role-radius);
+      cursor: pointer;
+      transition: all var(--role-transition);
+    }
+
+    .permission-group__header:hover {
+      background: var(--role-color-surface-secondary);
+      border-color: var(--role-color-primary);
+    }
+
+    .permission-group__header-left {
+      display: flex;
+      align-items: center;
+      gap: var(--role-space-md);
+      flex: 1;
+    }
+
+    .permission-group__toggle-checkbox {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: var(--role-color-accent);
+    }
+
+    .permission-group__title {
+      font-family: var(--role-font-display);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--role-color-text);
+      margin: 0;
+      letter-spacing: -0.2px;
+    }
+
+    .permission-group__count {
+      font-family: var(--role-font-body);
+      font-size: 12px;
+      color: var(--role-color-text-secondary);
+      margin-left: auto;
+    }
+
+    .permission-group__chevron {
+      font-size: 14px;
+      color: var(--role-color-text-secondary);
+      transition: transform var(--role-transition);
+      min-width: 20px;
+      text-align: center;
+    }
+
+    .permission-group.collapsed .permission-group__chevron {
+      transform: rotate(-90deg);
+    }
+
+    /* PERMISSION GROUP CONTENT */
+    .permission-group__content {
+      padding: var(--role-space-lg);
+      background: var(--role-color-surface-secondary);
+      border: 1px solid var(--role-color-border);
+      border-top: none;
+      border-radius: 0 0 var(--role-radius) var(--role-radius);
+    }
+
+    .permission-group.collapsed .permission-group__content {
+      display: none;
+    }
+
+    /* PERMISSION ITEM */
+    .permission-item {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--role-space-sm);
+      padding: var(--role-space-sm);
+      background: var(--role-color-surface);
+      border: 1px solid var(--role-color-border);
+      border-radius: var(--role-radius);
+      cursor: pointer;
+      transition: all var(--role-transition);
+    }
+
+    .permission-item:hover {
+      background: var(--role-color-surface-secondary);
+      border-color: var(--role-color-primary);
+    }
+
+    .permission-item.hidden {
+      display: none;
+    }
+
+    .permission-item__checkbox {
+      width: 16px;
+      height: 16px;
+      margin-top: 2px;
+      cursor: pointer;
+      accent-color: var(--role-color-accent);
+      flex-shrink: 0;
+    }
+
+    .permission-item__content {
+      flex: 1;
+    }
+
+    .permission-item__label {
+      display: block;
+      font-family: var(--role-font-display);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--role-color-text);
+      cursor: pointer;
+      letter-spacing: -0.1px;
+      margin-bottom: 2px;
+    }
+
+    .permission-item__description {
+      display: block;
+      font-family: var(--role-font-body);
+      font-size: 11px;
+      color: var(--role-color-text-muted);
+      margin-top: 2px;
+    }
+
+    .permission-item input[type="checkbox"]:checked + .permission-item__label {
+      color: var(--role-color-accent);
+      font-weight: 600;
+    }
+
+    /* ACTIONS */
+    .role-actions {
+      justify-content: flex-start;
+    }
+
+    .role-actions__save {
+      background: var(--role-color-accent);
+      color: white;
+      border: none;
+      padding: var(--role-space-sm) var(--role-space-lg);
+      border-radius: var(--role-radius);
+      font-family: var(--role-font-display);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--role-transition);
+      letter-spacing: -0.1px;
+    }
+
+    .role-actions__save:hover {
+      background: #6a2635;
+      box-shadow: var(--role-shadow-lg);
+    }
+
+    .role-actions__save:active {
+      transform: scale(0.98);
+    }
+
+    .role-actions__cancel {
+      background: var(--role-color-surface-secondary);
+      color: var(--role-color-text);
+      border: 1px solid var(--role-color-border);
+      padding: var(--role-space-sm) var(--role-space-lg);
+      border-radius: var(--role-radius);
+      font-family: var(--role-font-display);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--role-transition);
+      letter-spacing: -0.1px;
+    }
+
+    .role-actions__cancel:hover {
+      background: var(--role-color-border);
+      color: var(--role-color-text);
+    }
+  </style>
 </div>
 
   </div><!-- content -->
@@ -2117,6 +2604,7 @@ async function editRole(roleName){
     document.getElementById('er-description').value = editingRole.description;
     document.getElementById('er-name').setAttribute('readonly', '');
     document.getElementById('er-page-title').textContent = 'Edit Role';
+    document.getElementById('role-status').textContent = `${editingRole.users} users • ${editingRole.permissions} permissions`;
   }
   await loadPermissionsForRole(editingRole?.id);
   go('edit-role');
@@ -2128,9 +2616,38 @@ async function addRole(){
   document.getElementById('er-description').value = '';
   document.getElementById('er-name').removeAttribute('readonly');
   document.getElementById('er-page-title').textContent = 'Add New Role';
+  document.getElementById('role-status').textContent = 'New Role';
   await loadPermissionsForRole(null);
   go('edit-role');
 }
+
+// Permission group definitions with category mapping
+const PERMISSION_GROUPS = {
+  'Client Management': {
+    icon: '👤',
+    permissions: ['view_clients', 'create_client', 'edit_client', 'delete_client', 'discharge_client']
+  },
+  'Booking Management': {
+    icon: '📅',
+    permissions: ['view_bookings', 'create_booking', 'edit_booking', 'cancel_booking']
+  },
+  'Assessments': {
+    icon: '📋',
+    permissions: ['view_assessments', 'create_assessment', 'edit_assessment']
+  },
+  'Payments': {
+    icon: '💳',
+    permissions: ['view_payments', 'create_payment', 'edit_payment']
+  },
+  'Reports & Analytics': {
+    icon: '📊',
+    permissions: ['view_reports', 'view_expenses', 'create_expense', 'view_payouts', 'create_payout']
+  },
+  'Admin Functions': {
+    icon: '⚙️',
+    permissions: ['manage_users', 'manage_roles', 'view_admin_panel', 'view_change_log']
+  }
+};
 
 async function loadPermissionsForRole(roleId){
   try {
@@ -2146,17 +2663,146 @@ async function loadPermissionsForRole(roleId){
       assignedPerms = rolePerms ? rolePerms.map(p => p.permission_id) : [];
     }
 
-    // Render permission checkboxes
-    const container = document.getElementById('er-permissions-list');
-    container.innerHTML = (allPermissions || []).map(p => `
-      <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px; border-radius: 4px; background: white;">
-        <input type="checkbox" value="${p.id}" class="perm-checkbox" ${assignedPerms.includes(p.id) ? 'checked' : ''}>
-        <span style="font-size: 12px;">${p.name}</span>
-      </label>
-    `).join('');
+    // Create a map of permission keys to full objects
+    const permMap = {};
+    (allPermissions || []).forEach(p => {
+      permMap[p.key] = p;
+    });
+
+    // Render permission groups
+    const container = document.getElementById('permission-groups-container');
+    let html = '';
+
+    Object.entries(PERMISSION_GROUPS).forEach(([groupName, groupData]) => {
+      const groupPerms = groupData.permissions
+        .map(key => permMap[key])
+        .filter(p => p); // Filter out undefined permissions
+
+      const groupAssignedCount = groupPerms.filter(p => assignedPerms.includes(p.id)).length;
+      const groupChecked = groupAssignedCount === groupPerms.length && groupPerms.length > 0;
+      const groupIndeterminate = groupAssignedCount > 0 && groupAssignedCount < groupPerms.length;
+
+      html += `
+        <div class="permission-group">
+          <div class="permission-group__header" onclick="togglePermissionGroup(this)">
+            <div class="permission-group__header-left">
+              <input type="checkbox" class="permission-group__toggle-checkbox group-toggle"
+                data-group="${groupName}"
+                ${groupChecked ? 'checked' : ''}
+                onclick="event.stopPropagation(); toggleGroupPermissions(this)">
+              <h3 class="permission-group__title">${groupData.icon} ${groupName}</h3>
+            </div>
+            <span class="permission-group__count">${groupAssignedCount}/${groupPerms.length}</span>
+            <span class="permission-group__chevron">▼</span>
+          </div>
+          <div class="permission-group__content">
+            ${groupPerms.map(p => `
+              <label class="permission-item">
+                <input type="checkbox" value="${p.id}" class="permission-item__checkbox perm-checkbox"
+                  data-group="${groupName}"
+                  ${assignedPerms.includes(p.id) ? 'checked' : ''}
+                  onchange="updatePermissionUI()">
+                <div class="permission-item__content">
+                  <span class="permission-item__label">${p.name.replace(/_/g, ' ').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</span>
+                  <span class="permission-item__description">${p.key}</span>
+                </div>
+              </label>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    });
+
+    container.innerHTML = html;
+
+    // Add search functionality
+    const searchInput = document.getElementById('perm-search');
+    if(searchInput) {
+      searchInput.addEventListener('input', filterPermissions);
+    }
+
+    // Initial UI update
+    updatePermissionUI();
   } catch(e) {
     console.error('Error loading permissions:', e.message);
   }
+}
+
+function togglePermissionGroup(header) {
+  const group = header.parentElement;
+  group.classList.toggle('collapsed');
+}
+
+function toggleGroupPermissions(checkbox) {
+  const groupName = checkbox.dataset.group;
+  const isChecked = checkbox.checked;
+
+  // Find all checkboxes in this group
+  const groupCheckboxes = document.querySelectorAll(`.perm-checkbox[data-group="${groupName}"]`);
+  groupCheckboxes.forEach(cb => {
+    cb.checked = isChecked;
+  });
+
+  updatePermissionUI();
+}
+
+function updatePermissionUI() {
+  const allCheckboxes = document.querySelectorAll('.perm-checkbox');
+  const selectedCount = document.querySelectorAll('.perm-checkbox:checked').length;
+  const totalCount = allCheckboxes.length;
+
+  // Update global counter
+  const counter = document.getElementById('perm-count');
+  if(counter) {
+    counter.textContent = `${selectedCount} of ${totalCount}`;
+  }
+
+  // Update group checkboxes and counts
+  Object.keys(PERMISSION_GROUPS).forEach(groupName => {
+    const groupCheckboxes = document.querySelectorAll(`.perm-checkbox[data-group="${groupName}"]`);
+    const groupToggle = document.querySelector(`.group-toggle[data-group="${groupName}"]`);
+
+    if(groupToggle) {
+      const checkedCount = document.querySelectorAll(`.perm-checkbox[data-group="${groupName}"]:checked`).length;
+      const totalGroupCount = groupCheckboxes.length;
+
+      if(checkedCount === totalGroupCount && totalGroupCount > 0) {
+        groupToggle.checked = true;
+        groupToggle.indeterminate = false;
+      } else if(checkedCount > 0) {
+        groupToggle.indeterminate = true;
+        groupToggle.checked = false;
+      } else {
+        groupToggle.checked = false;
+        groupToggle.indeterminate = false;
+      }
+
+      // Update group count display
+      const header = groupToggle.closest('.permission-group__header');
+      if(header) {
+        const countSpan = header.querySelector('.permission-group__count');
+        if(countSpan) {
+          countSpan.textContent = `${checkedCount}/${totalGroupCount}`;
+        }
+      }
+    }
+  });
+}
+
+function filterPermissions() {
+  const searchTerm = document.getElementById('perm-search').value.toLowerCase();
+  const allItems = document.querySelectorAll('.permission-item');
+
+  allItems.forEach(item => {
+    const label = item.querySelector('.permission-item__label').textContent.toLowerCase();
+    const key = item.querySelector('.permission-item__description').textContent.toLowerCase();
+
+    if(label.includes(searchTerm) || key.includes(searchTerm)) {
+      item.classList.remove('hidden');
+    } else {
+      item.classList.add('hidden');
+    }
+  });
 }
 
 async function saveRoleChanges(){
