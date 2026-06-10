@@ -7,8 +7,17 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// Stub functions to prevent ReferenceError before main script loads
-// Note: go() is NOT stubbed here - it's defined later in the page and shouldn't be overridden
+// Global function holder - will be assigned to real implementation when loaded
+let goFunction = null;
+
+// Stub function that delegates to the real go() when available
+function go(p) {
+  if (goFunction && typeof goFunction === 'function') {
+    return goFunction(p);
+  }
+  console.log('Loading page:', p);
+}
+
 function hasPermission(p) { return true; }
 function showLogoutDialog() { console.log('Logout dialog'); }
 function setYear(y) { console.log('Year set:', y); }
@@ -2182,7 +2191,7 @@ async function deleteRole(roleName){
 }
 
 // NAV
-function go(p){
+function goImplementation(p){
   try {
     console.log('go() called with page:', p);
     console.log('Step 1: Clearing context banners');
@@ -2276,6 +2285,9 @@ function go(p){
     }
   }
 }
+
+// Register the real implementation with the global stub
+goFunction = goImplementation;
 
 // ─── PIPELINE CONTEXT ───
 // Holds the client name passed from pipeline buttons
