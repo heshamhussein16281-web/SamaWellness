@@ -1672,14 +1672,8 @@ button:active { transform: scale(0.98); }
       <div class="fg"><div class="fl">Description</div><textarea id="er-description" rows="3"></textarea></div>
     </div>
     <div class="fr">
-      <div class="fg"><div class="fl">Assigned Users</div><input id="er-users" type="number" min="0"></div>
-      <div class="fg"><div class="fl">Permission Level</div>
-        <select id="er-permissions">
-          <option value="">— select —</option>
-          <option value="All">All</option>
-          <option value="Limited">Limited</option>
-          <option value="View-only">View-only</option>
-        </select>
+      <div class="fg" style="grid-column: 1 / -1;"><div class="fl">Permissions</div>
+        <div id="er-permissions-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 12px; padding: 12px; background: var(--surface2); border-radius: 6px;"></div>
       </div>
     </div>
     <div style="display: flex; gap: 10px; margin-top: 20px;">
@@ -2116,49 +2110,98 @@ async function saveUserChanges(){
 const ROLES = [];
 let editingRole = null;
 
-function editRole(roleName){
+async function editRole(roleName){
   editingRole = ROLES.find(r => r.name === roleName);
   if(editingRole){
     document.getElementById('er-name').value = editingRole.name;
     document.getElementById('er-description').value = editingRole.description;
-    document.getElementById('er-users').value = editingRole.users;
-    document.getElementById('er-permissions').value = editingRole.permissions;
     document.getElementById('er-name').setAttribute('readonly', '');
     document.getElementById('er-page-title').textContent = 'Edit Role';
   }
+  await loadPermissionsForRole(editingRole?.id);
   go('edit-role');
 }
 
-function addRole(){
+async function addRole(){
   editingRole = null;
   document.getElementById('er-name').value = '';
   document.getElementById('er-description').value = '';
-  document.getElementById('er-users').value = '0';
-  document.getElementById('er-permissions').value = '';
   document.getElementById('er-name').removeAttribute('readonly');
   document.getElementById('er-page-title').textContent = 'Add New Role';
+  await loadPermissionsForRole(null);
   go('edit-role');
+}
+
+async function loadPermissionsForRole(roleId){
+  try {
+    // Load all available permissions
+    const { data: allPermissions } = await clinicSupabase.from('permissions').select('*');
+
+    // Load assigned permissions for this role
+    let assignedPerms = [];
+    if(roleId){
+      const { data: rolePerms } = await clinicSupabase.from('role_permissions')
+        .select('permission_id')
+        .eq('role_id', roleId);
+      assignedPerms = rolePerms ? rolePerms.map(p => p.permission_id) : [];
+    }
+
+    // Render permission checkboxes
+    const container = document.getElementById('er-permissions-list');
+    container.innerHTML = (allPermissions || []).map(p => `
+      <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px; border-radius: 4px; background: white;">
+        <input type="checkbox" value="${p.id}" class="perm-checkbox" ${assignedPerms.includes(p.id) ? 'checked' : ''}>
+        <span style="font-size: 12px;">${p.name}</span>
+      </label>
+    `).join('');
+  } catch(e) {
+    console.error('Error loading permissions:', e.message);
+  }
 }
 
 async function saveRoleChanges(){
   const name = document.getElementById('er-name').value;
   const description = document.getElementById('er-description').value;
-  const users = parseInt(document.getElementById('er-users').value) || 0;
-  const permissions = document.getElementById('er-permissions').value;
 
-  if(!name || !description || !permissions) {
+  if(!name || !description) {
     alert('Please fill in all required fields');
+    return;
+  }
+
+  const selectedPermissions = Array.from(document.querySelectorAll('.perm-checkbox:checked')).map(cb => cb.value);
+  if(selectedPermissions.length === 0) {
+    alert('Please select at least one permission');
     return;
   }
 
   try {
     if(editingRole){
-      const { error } = await clinicSupabase.from('roles').update({ description, users, permissions }).eq('name', editingRole.name);
-      if(error) throw error;
+      // Update role
+      const { error: updateError } = await clinicSupabase.from('roles')
+        .update({ description })
+        .eq('id', editingRole.id);
+      if(updateError) throw updateError;
+
+      // Delete old permissions
+      await clinicSupabase.from('role_permissions').delete().eq('role_id', editingRole.id);
     } else {
-      const { error } = await clinicSupabase.from('roles').insert([{ name, description, users, permissions }]);
-      if(error) throw error;
+      // Create new role
+      const { data: newRole, error: insertError } = await clinicSupabase.from('roles')
+        .insert([{ name, description }])
+        .select()
+        .single();
+      if(insertError) throw insertError;
+      editingRole = newRole;
     }
+
+    // Add selected permissions
+    const permissionLinks = selectedPermissions.map(permId => ({
+      role_id: editingRole.id,
+      permission_id: permId
+    }));
+    const { error: permError } = await clinicSupabase.from('role_permissions').insert(permissionLinks);
+    if(permError) throw permError;
+
     await loadRoles();
     go('roles');
   } catch(e) {
