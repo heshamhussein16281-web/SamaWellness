@@ -90,7 +90,29 @@ export async function verifyCredentials(username: string, password: string): Pro
 
     // Extract permissions from role_permissions
     const role = Array.isArray(user.roles) ? user.roles[0] : user.roles;
-    const permissions = role?.role_permissions?.map((rp: any) => rp.permissions.key) || [];
+    const dbPermissions = role?.role_permissions?.map((rp: any) => rp.permissions.key) || [];
+
+    // Provide default permissions based on role if no database permissions exist
+    const roleName = role?.name || 'user';
+    const defaultPermissions: Record<string, string[]> = {
+      'admin': [
+        'create_client', 'view_clients', 'view_bookings', 'view_payments',
+        'view_assessments', 'view_satisfaction', 'view_expenses', 'view_reports',
+        'view_payouts', 'manage_users', 'manage_roles', 'view_change_log'
+      ],
+      'reception': [
+        'create_client', 'view_clients', 'view_bookings', 'view_payments',
+        'view_assessments', 'view_satisfaction'
+      ],
+      'clinician': [
+        'view_clients', 'view_bookings', 'view_assessments', 'view_satisfaction'
+      ]
+    };
+
+    // Use database permissions if available, otherwise use defaults for the role
+    const permissions = dbPermissions.length > 0
+      ? dbPermissions
+      : (defaultPermissions[roleName.toLowerCase()] || []);
 
     return {
       userId: user.id,
