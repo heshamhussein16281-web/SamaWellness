@@ -3560,17 +3560,36 @@ function renderExpenses(){
   if(mSel.options.length<=1){mSel.innerHTML='<option value="all">All months YTD</option>'+months.map(m=>`<option value="${m}">${m} ${activeYear}</option>`).join('');}
   const selMon=mSel.value,showMs=selMon==='all'?months:[selMon];
   document.getElementById('exp-rows').innerHTML=EXP.map((e,ei)=>{
-    const isFixed=e.type==='Fixed';const totalBudget=e.budget*showMs.length;
-    const totalActual=showMs.reduce((s,m)=>{const v=e.actuals[m]!==undefined?e.actuals[m]:(isFixed?e.budget:0);return s+v;},0);
-    const variance=totalBudget-totalActual;const vClass=variance>=0?'var-g':'var-r';
-    const inputVal=selMon==='all'?totalActual:(e.actuals[selMon]!==undefined?e.actuals[selMon]:(isFixed?e.budget:0));
-    return`<div class="exp-grid"><span style="font-weight:${isFixed?'600':'400'}">${e.name}</span><span class="exp-r" style="font-family:var(--mono);color:var(--text3)">${fmt(totalBudget)}</span><span><input class="exp-inp${isFixed?' fx':''}" type="number" id="exp-${ei}" value="${inputVal}" min="0" step="100"${isFixed?' readonly':''}></span><span class="exp-r" style="font-family:var(--mono);color:${variance>=0?'var(--accent)':'var(--red)'}">${variance>=0?'+':''}${fmt(variance)}</span><span><span class="badge ${isFixed?'bgr':'bb'}">${e.type}</span></span></div>`;
+    const isFixed=e.type==='Fixed';
+    // CAPEX should only show for first 12 months, then zero
+    const isCapex=e.name==='CAPEX amortization';
+    const capexMonths=['May','June','July','Aug','Sept','Oct','Nov','Dec','Jan','Feb','Mar','Apr'];
+    const shouldShowCapex=!isCapex||capexMonths.includes(selMon)||selMon==='all';
+    const budgetAmount=shouldShowCapex?e.budget:0;
+
+    // For monthly view: show budget per month; for all months: show total
+    const totalBudget=selMon==='all'?budgetAmount*showMs.length:budgetAmount;
+    const totalActual=showMs.reduce((s,m)=>{const v=e.actuals[m]!==undefined?e.actuals[m]:(isFixed?0:0);return s+v;},0);
+    const variance=totalBudget-totalActual;
+    const inputVal=selMon==='all'?totalActual:(e.actuals[selMon]!==undefined?e.actuals[selMon]:0);
+
+    // Fixed costs don't show actual column
+    if(isFixed){
+      return`<div class="exp-grid"><span style="font-weight:600">${e.name}</span><span class="exp-r" style="font-family:var(--mono);color:var(--text3)">${fmt(budgetAmount)}</span><span style="color:var(--text3);font-style:italic">Fixed</span><span class="exp-r" style="font-family:var(--mono)">—</span><span><span class="badge bgr">${e.type}</span></span></div>`;
+    }
+    // Variable costs show actual column
+    return`<div class="exp-grid"><span>${e.name}</span><span class="exp-r" style="font-family:var(--mono);color:var(--text3)">${fmt(budgetAmount)}</span><span><input class="exp-inp" type="number" id="exp-${ei}" value="${inputVal}" min="0" step="100"></span><span class="exp-r" style="font-family:var(--mono);color:${variance>=0?'var(--accent)':'var(--red)'}">${variance>=0?'+':''}${fmt(variance)}</span><span><span class="badge bb">${e.type}</span></span></div>`;
   }).join('');
   calcExpTotal();
 }
 function calcExpTotal(){
   const months=getMonths();const selMon=document.getElementById('exp-month-sel').value,showMs=selMon==='all'?months:[selMon];
-  let totalVar=0;EXP.forEach((e,ei)=>{const inp=document.getElementById('exp-'+ei);if(!inp)return;totalVar+=e.budget*showMs.length-(parseFloat(inp.value)||0);});
+  let totalVar=0;EXP.forEach((e,ei)=>{
+    if(e.type==='Fixed')return; // Skip fixed costs in variance calculation
+    const inp=document.getElementById('exp-'+ei);if(!inp)return;
+    const budgetMultiplier=selMon==='all'?showMs.length:1;
+    totalVar+=e.budget*budgetMultiplier-(parseFloat(inp.value)||0);
+  });
   document.getElementById('exp-total-var').textContent=fmt(Math.abs(totalVar));
   document.getElementById('exp-total-var-s').textContent=totalVar>=0?'EGP — under budget':'EGP — over budget';
 }
