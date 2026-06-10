@@ -44,7 +44,7 @@ export default function LoginPage() {
       sessionStorage.setItem('username', username);
       localStorage.setItem('username', username);
       setLoading(false);
-      router.push('/clinic.html');
+      router.push('/app');
     } catch (err: any) {
       console.error('Login error:', err);
       setError('Error: ' + (err.message || 'Unknown error'));
