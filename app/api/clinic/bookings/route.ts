@@ -35,15 +35,69 @@ export async function POST(request: NextRequest) {
 
     const supabase = getServiceClient();
     const body = await request.json();
-    const { client_id, therapist_id, session_date, duration_minutes, status, notes } = body;
+    const { client_id, therapist_id, session_date, duration_minutes, status, notes, force_hold } = body;
+
+    // Check if client is new
+    const { data: clientData, error: clientError } = await supabase
+      .from('clients')
+      .select('is_new_client')
+      .eq('id', client_id)
+      .single();
+
+    if (clientError) {
+      return NextResponse.json({ error: 'Client not found' }, { status: 404 });
+    }
+
+    // Determine booking status
+    let bookingStatus = status;
+    let holdCreatedAt = null;
+    let holdExpiresAt = null;
+
+    if (clientData.is_new_client && !force_hold) {
+      // New clients without force_hold cannot create bookings
+      return NextResponse.json(
+        { error: 'Payment verification required before booking. New client bookings must be held and confirmed.' },
+        { status: 403 }
+      );
+    }
+
+    if (clientData.is_new_client && force_hold) {
+      // Create hold booking for new client
+      bookingStatus = 'H'; // Hold status
+      holdCreatedAt = new Date().toISOString();
+      holdExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(); // 24 hours
+    }
+
+    const bookingData = {
+      client_id,
+      therapist_id,
+      session_date,
+      duration_minutes,
+      status: bookingStatus,
+      notes,
+      hold_created_at: holdCreatedAt,
+      hold_expires_at: holdExpiresAt
+    };
 
     const { data, error } = await supabase
       .from('bookings')
-      .insert([{ client_id, therapist_id, session_date, duration_minutes, status, notes }])
+      .insert([bookingData])
       .select();
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-    return NextResponse.json({ data: data[0] }, { status: 201 });
+
+    // If hold created, add to pending_expiry tracking
+    if (bookingStatus === 'H') {
+      await supabase
+        .from('pending_expiry')
+        .insert([{
+          booking_id: data[0].id,
+          client_id,
+          status: 'awaiting_confirmation'
+        }]);
+    }
+
+    return NextResponse.json({ data: data[0], booking_status: bookingStatus }, { status: 201 });
   } catch (error) {
     console.error('POST /api/clinic/bookings error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
