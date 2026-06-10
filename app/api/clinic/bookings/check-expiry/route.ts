@@ -61,6 +61,8 @@ export async function GET(request: NextRequest) {
     const expiringBookings = pendingExpiries
       .map(expiry => {
         const booking = expiry.bookings as any;
+        const clientsArray = expiry.clients as any[];
+        const clientName = (clientsArray && clientsArray[0]?.name) || booking.clients?.[0]?.name || 'Unknown';
         const createdTime = new Date(expiry.created_at).getTime();
         const hoursHeld = (now - createdTime) / (1000 * 60 * 60);
         const timeUntilExpiry = 24 - hoursHeld;
@@ -69,7 +71,7 @@ export async function GET(request: NextRequest) {
           pending_expiry_id: expiry.id,
           booking_id: booking.id,
           client_id: expiry.client_id,
-          client_name: expiry.clients.name,
+          client_name: clientName,
           therapist_name: booking.therapists?.name || 'Unknown',
           session_date: booking.session_date,
           hold_created_at: booking.hold_created_at,
