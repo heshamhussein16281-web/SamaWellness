@@ -2183,6 +2183,7 @@ async function deleteRole(roleName){
 
 // NAV
 function go(p){
+  console.log('go() called with page:', p);
   // Permission check is handled by menu filtering in applyPermissionFiltering()
   // If a menu item is visible, the user has permission to access it
 
@@ -4354,6 +4355,8 @@ async function applyPermissionFiltering() {
 
     const data = await res.json();
     const apiPermissions = data.permissions || [];
+    console.log('API returned permissions:', apiPermissions);
+    console.log('User role:', data.role);
 
     // Update global userPermissions object with API permissions
     // Convert array of permission strings to object format
@@ -4361,6 +4364,7 @@ async function applyPermissionFiltering() {
     apiPermissions.forEach(perm => {
       userPermissions[perm] = true;
     });
+    console.log('Updated userPermissions object:', userPermissions);
 
     // Filter menu items based on permissions
     Object.entries(PERMISSION_MAP).forEach(([navId, requiredPerms]) => {
