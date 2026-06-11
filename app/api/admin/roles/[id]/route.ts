@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyJWT, getJWTFromCookie } from '@/lib/auth';
 import { createClient } from '@supabase/supabase-js';
+import { logAuditAction, calculateChanges } from '@/lib/audit';
 
 export const dynamic = 'force-dynamic';
 
@@ -51,6 +52,15 @@ export async function PUT(
       );
     }
 
+    // Fetch current role before update
+    const { data: currentRole, error: fetchError } = await supabase
+      .from('roles')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (fetchError) throw fetchError;
+
     const { data: role, error } = await supabase
       .from('roles')
       .update({ name, description: description || null })
@@ -67,6 +77,22 @@ export async function PUT(
       }
       throw error;
     }
+
+    // Calculate changes for audit log
+    const changedFields: Record<string, any> = {};
+    if (name !== undefined) changedFields.name = name;
+    if (description !== undefined) changedFields.description = description;
+
+    const changes = calculateChanges(currentRole, changedFields);
+
+    await logAuditAction({
+      adminId: auth.user!.id,
+      action: 'update',
+      entityType: 'role',
+      entityId: id,
+      entityName: currentRole.name,
+      changes: Object.keys(changes).length > 0 ? changes : undefined,
+    });
 
     return NextResponse.json(
       {
@@ -98,6 +124,15 @@ export async function DELETE(
   try {
     const { id } = params;
 
+    // Fetch role name before deletion
+    const { data: roleInfo, error: fetchError } = await supabase
+      .from('roles')
+      .select('name')
+      .eq('id', id)
+      .single();
+
+    if (fetchError) throw fetchError;
+
     // First, delete all role_permissions associations
     const { error: deletePermissionsError } = await supabase
       .from('role_permissions')
@@ -115,6 +150,14 @@ export async function DELETE(
       .single();
 
     if (error) throw error;
+
+    await logAuditAction({
+      adminId: auth.user!.id,
+      action: 'delete',
+      entityType: 'role',
+      entityId: id,
+      entityName: roleInfo.name,
+    });
 
     return NextResponse.json(
       {
