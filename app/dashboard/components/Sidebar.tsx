@@ -1,13 +1,40 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+interface UserData {
+  role: string;
+  permissions: string[];
+}
+
 export default function Sidebar() {
   const pathname = usePathname();
+  const [user, setUser] = useState<UserData | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const isActive = (href: string) => pathname === href;
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch('/api/auth/verify', { credentials: 'include' });
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch user data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  const isSuperAdmin = user && (user.role === 'Super Admin' || user.permissions?.includes('is_super_admin'));
 
   return (
     <aside className="dashboard-sidebar">
@@ -39,6 +66,16 @@ export default function Sidebar() {
             </span>
           </div>
         </Link>
+
+        {!loading && isSuperAdmin && (
+          <Link href="/app/dashboard/admin/audit-logs">
+            <div className={`sidebar-nav-item ${isActive('/app/dashboard/admin/audit-logs') ? 'active' : ''}`}>
+              <span className={`sidebar-nav-link ${isActive('/app/dashboard/admin/audit-logs') ? 'active' : ''}`}>
+                📋 Audit Logs
+              </span>
+            </div>
+          </Link>
+        )}
       </div>
     </aside>
   );
