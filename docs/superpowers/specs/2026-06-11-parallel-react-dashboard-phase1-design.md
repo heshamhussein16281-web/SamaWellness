@@ -266,58 +266,106 @@ ADMIN
 
 ### Feature Group 1: Admin/Roles Management
 
-**1.1 — View Roles List**
-- Display all roles in sidebar/list
-- Columns/info: Name, permission count
-- Click to select role for permission editing
-- Search/filter by role name
-- Sort by name/created date
-- Empty state: "No roles yet"
-- Loading state: Skeleton loaders
+**1.1 — View Roles List** (Partially implemented ✓, needs enhancement)
 
-**1.2 — Create New Role**
-- Slide-in panel with form
-- Fields: Name (req), Description (opt)
-- Validation: Name not empty, unique
-- Cancel & Create buttons
-- Success: Close panel, refresh list, show toast
+*Currently working:*
+- ✓ Display all roles in list
+- ✓ Show role name + permission count
+- ✓ Click to select role for permission editing
+- ✓ Empty state messaging
+- ✓ Loading states
 
-**1.3 — Assign Permissions to Role**
-- Right panel shows selected role
-- Permissions grouped by category
-- Checkboxes: Toggle permission on/off
-- Visual: Checked = Olive circle, Unchecked = Sand circle
-- Counter: "X permissions selected"
-- Save button (only if changed)
-- Success: Toast, refresh list
+*Missing - To be added in Phase 1:*
+- ✗ Search/filter by role name
+- ✗ Sort by name/created date
+- ✗ Edit role (change name/description)
+- ✗ Delete/archive role
+
+**Action for Phase 1:** Add search input, sort options, and edit/delete buttons to roles list.
+
+**1.2 — Create New Role** (Fully implemented ✓)
+- ✓ Slide-in panel with form
+- ✓ Fields: Name (req), Description (opt)
+- ✓ Validation: Name not empty, unique
+- ✓ Cancel & Create buttons
+- ✓ Success: Close panel, refresh list
+
+**Action for Phase 1:** No code changes needed. Reuse as-is.
+
+**1.3 — Assign Permissions to Role** (Fully implemented ✓)
+- ✓ Right panel shows selected role
+- ✓ Permissions grouped by category
+- ✓ Checkboxes: Toggle permission on/off
+- ✓ Visual: Checked = Olive circle, Unchecked = Sand circle
+- ✓ Counter: "X permissions selected"
+- ✓ Save button (only if changed)
+- ✓ Success: Toast, refresh list
+
+**Action for Phase 1:** No code changes needed. Reuse as-is.
+
+**1.4 — Edit Role** (NEW - Not yet implemented ✗)
+- Button: "Edit" (pencil icon) next to each role in list
+- Modal form: Name (editable), Description (editable)
+- Save & Cancel buttons
+- Validation: Name not empty, unique (excluding current role)
+- Success: Update list, show toast
+
+**Action for Phase 1:** Implement this new feature.
+
+**1.5 — Delete Role** (NEW - Not yet implemented ✗)
+- Button: "Delete" (trash icon) next to each role
+- Confirmation dialog: "Delete this role? Users with this role will need reassignment."
+- Hard or soft delete (recommend soft delete to preserve history)
+- Success: Remove from list, show toast
+
+**Action for Phase 1:** Implement this new feature.
 
 ### Feature Group 2: Admin/Users Management
 
-**2.1 — View Users List**
-- Table: Username, Email, Role, Status, Created date
-- Search: By username/email
-- Filter: By role or status (Active/Inactive)
-- Sort: By username, created date, role
-- Pagination: 25-50 users per page
-- Actions: Edit & Deactivate buttons
-- Status badges: Active (Olive) / Inactive (Sand)
-- Empty state: "No users created yet"
+**2.1 — View Users List** (Partially implemented ✓, needs enhancement)
 
-**2.2 — Create User**
-- Modal/slide-in form
-- Fields: Username (req, unique), Email (opt, unique), Password (req), Role (req, dropdown)
-- Validation: Username unique, email format, password strength, role selected
-- Cancel & Create buttons
-- Success: Close panel, refresh list, show toast
-- Error: Show specific error (e.g., "Username already exists")
+*Currently working:*
+- ✓ Table: Username, Email, Role, Status, Created date
+- ✓ Actions: Edit & Deactivate buttons
+- ✓ Status badges (Active/Inactive)
+- ✓ Empty state messaging
+- ✓ Loading states
 
-**2.3 — Edit & Deactivate User**
-- Edit form: Username (read-only), Email, Password (opt), Role, Status toggle
-- Leave password blank = keep current password
-- Update button (only if data changed)
-- Deactivate: Confirmation dialog, soft delete
-- Cannot deactivate self (button disabled)
-- Success: Update list, show toast
+*Missing - To be added in Phase 1:*
+- ✗ Search by username/email
+- ✗ Filter by role or status (Active/Inactive)
+- ✗ Sort by column (username, created date, role)
+- ✗ Pagination (currently shows all users; needs 25 users per page)
+
+**Action for Phase 1:** Add search input, filter dropdowns, sortable column headers, and pagination.
+
+**2.2 — Create User** (Fully implemented ✓)
+- ✓ Modal/slide-in form
+- ✓ Fields: Username (req, unique), Email (opt, unique), Password (req), Role (req, dropdown)
+- ✓ Validation: Username unique, email format, password strength, role selected
+- ✓ Cancel & Create buttons
+- ✓ Success: Close panel, refresh list, show toast
+- ✓ Error handling: Specific error messages
+
+**Action for Phase 1:** No code changes needed. Reuse as-is.
+
+**2.3 — Edit User** (Fully implemented ✓)
+- ✓ Edit form: Username (read-only), Email, Password (opt), Role, Status toggle
+- ✓ Leave password blank = keep current password
+- ✓ Update button (only if data changed)
+- ✓ Validation: Same as create form
+- ✓ Success: Update list, show toast
+
+**Action for Phase 1:** No code changes needed. Reuse as-is.
+
+**2.4 — Deactivate User** (Fully implemented ✓, minor enhancement needed)
+- ✓ Button: "Deactivate" in users table
+- ✓ Confirmation dialog: "Are you sure you want to block this user?"
+- ✓ Soft delete: Mark as inactive
+- ✓ Success: Update list, show toast
+- ✗ Missing: Check to prevent deactivating current user (disable button for self)
+
+**Action for Phase 1:** Add logic to disable deactivate button for current logged-in user.
 
 ---
 
@@ -336,9 +384,21 @@ ADMIN
 - `PUT /api/admin/users/[id]` — Update user
 - `DELETE /api/admin/users/[id]` — Deactivate user (soft delete)
 
-### No New Endpoints Required for Phase 1
+### New Endpoints Required for Phase 1
 
-All necessary endpoints already exist. Phase 1 is a pure integration of existing components.
+**Admin/Roles — Enhancement Endpoints:**
+- `PUT /api/admin/roles/[id]` — Update role (name, description) — **NEEDS TO BE BUILT**
+- `DELETE /api/admin/roles/[id]` — Delete/archive role — **NEEDS TO BE BUILT**
+
+**Admin/Users — No new endpoints needed** (all functionality covered by existing endpoints)
+
+### Implementation Notes
+
+- **Roles edit/delete:** Need to create two new API endpoints at `/api/admin/roles/[id]` (PUT and DELETE)
+- **Users search/filter/sort:** Implemented client-side (no API changes needed, all users fetched then filtered in React)
+- **Users pagination:** Implemented client-side (fetch all users, paginate in React component)
+
+**Note:** If users table grows large, consider moving search/filter/sort/pagination to server-side in Phase 2 for better performance.
 
 ---
 
