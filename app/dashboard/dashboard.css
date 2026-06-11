@@ -14,7 +14,7 @@
 :root {
   /* ─── Dashboard Layout ─── */
   --dashboard-sidebar-width:   220px;
-  --dashboard-topbar-height:   60px;
+  --dashboard-topbar-height:   48px;
   --dashboard-content-padding: 20px;
 
   /* ─── Dashboard Colors (inherit from global) ─── */
@@ -29,6 +29,7 @@
   --dashboard-nav-margin:     4px 0;
   --dashboard-section-gap:    15px;
   --dashboard-section-margin: 15px 0;
+  --dashboard-topbar-gap:     12px;
 }
 
 
@@ -86,8 +87,15 @@
 /* Topbar left section flex */
 .topbar-left {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  align-items: center;
+  gap: var(--dashboard-topbar-gap);
+}
+
+/* Topbar right section flex */
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 
@@ -191,38 +199,73 @@
 .dashboard-topbar {
   background-color: #FFFFFF;
   border-bottom: 1px solid var(--color-sand);
+  padding: 0 20px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 /* Topbar title */
 .topbar-title {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--color-nav-text);
+  margin: 0;
+  letter-spacing: -0.3px;
+  line-height: 1;
 }
 
-/* Topbar subtitle */
-.topbar-subtitle {
-  font-size: 12px;
+/* Topbar badge */
+.topbar-badge {
+  font-size: 11px;
+  font-weight: 500;
   color: var(--color-charcoal);
-  opacity: 0.7;
+  background-color: rgba(123, 45, 62, 0.08);
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
 }
 
-/* Topbar toggle button */
-.topbar-toggle-button {
-  padding: 8px 14px;
-  border: 2px solid var(--color-burgundy);
-  border-radius: var(--radius-sm);
+.topbar-badge--secondary {
   background-color: transparent;
-  color: var(--color-nav-text);
+  color: var(--color-charcoal);
+  padding: 2px 0;
+  opacity: 0.7;
   font-size: 10px;
+}
+
+/* Topbar role label */
+.topbar-role-label {
+  font-size: 11px;
+  color: var(--color-charcoal);
+  font-weight: 500;
+  opacity: 0.75;
+}
+
+/* Topbar button */
+.topbar-button {
+  padding: 6px 12px;
+  border: 1px solid var(--color-sand);
+  border-radius: 4px;
+  background-color: #FFFFFF;
+  color: var(--color-nav-text);
+  font-size: 11px;
   font-weight: 600;
   cursor: pointer;
-  text-transform: uppercase;
-  transition: all 0.2s ease;
+  transition: all 0.12s ease;
+  white-space: nowrap;
 }
 
-.topbar-toggle-button:hover {
-  background-color: rgba(123, 45, 62, 0.08);
+.topbar-button:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+  border-color: rgba(123, 45, 62, 0.3);
+}
+
+.topbar-button--secondary {
+  background-color: transparent;
+  border-color: var(--color-sand);
+}
+
+.topbar-button--secondary:hover {
+  background-color: rgba(123, 45, 62, 0.05);
   border-color: var(--color-burgundy);
 }
 
