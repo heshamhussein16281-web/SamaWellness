@@ -16,6 +16,9 @@ export default function Sidebar() {
 
   const isActive = (href: string) => pathname === href;
 
+  const isClinicalSection = pathname.includes('/dashboard/clinical');
+  const isAdminSection = pathname.includes('/dashboard/admin');
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -48,7 +51,7 @@ export default function Sidebar() {
       <div className="sidebar-divider" />
 
       {/* Clinical Section */}
-      <div>
+      <div className={`sidebar-section ${isClinicalSection ? 'sidebar-section-active' : ''}`}>
         <div className="sidebar-section-label">Clinical</div>
 
         <Link href="/app/dashboard/clinical/clients">
@@ -72,7 +75,7 @@ export default function Sidebar() {
       <div className="sidebar-divider" />
 
       {/* Admin Section */}
-      <div>
+      <div className={`sidebar-section ${isAdminSection ? 'sidebar-section-active' : ''}`}>
         <div className="sidebar-section-label">Admin</div>
 
         <Link href="/app/dashboard/admin/users">

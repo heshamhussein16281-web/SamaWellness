@@ -1,0 +1,432 @@
+/* ========================================
+   PAYMENT INSTRUCTIONS — COMPONENT STYLES
+
+   Architecture: 3-Layer CSS System
+   Layer 1: Design Tokens     — payment-specific CSS variables
+   Layer 2: Layout Containers — display, grid, flex, gap, padding, margin, position
+   Layer 3: Components        — self-contained visual units (cards, buttons, status indicators)
+   ======================================== */
+
+/* ════════════════════════════════════════════════════════════════
+   LAYER 1: DESIGN TOKENS (Payment-specific)
+   ════════════════════════════════════════════════════════════════ */
+:root {
+  /* ─── Payment Colors ─── */
+  --payment-color-primary: #7b2d3e; /* burgundy for CTAs */
+  --payment-color-success: #4a6741; /* olive for confirmed */
+  --payment-color-warning: #ff9800; /* orange for urgent */
+  --payment-color-error: #d32f2f; /* red for overdue */
+  --payment-color-border: rgb(234, 228, 221);
+  --payment-color-bg-light: #f9f9f9;
+  --payment-color-bg-info: #e3f2fd;
+  --payment-color-bg-warning: #fff3e0;
+  --payment-color-bg-error: #ffebee;
+  --payment-color-text-primary: rgb(45, 74, 70);
+  --payment-color-text-secondary: #2c2c2c;
+  --payment-color-text-muted: rgba(44, 44, 44, 0.6);
+
+  /* ─── Payment Spacing ─── */
+  --payment-space-xs: 4px;
+  --payment-space-sm: 8px;
+  --payment-space-md: 16px;
+  --payment-space-lg: 24px;
+  --payment-space-xl: 32px;
+
+  /* ─── Payment Dimensions ─── */
+  --payment-border-radius: 8px;
+  --payment-card-radius: 12px;
+
+  /* ─── Typography ─── */
+  --payment-font-display: "Gilda Display", Georgia, serif;
+  --payment-font-body: "Nunito Sans", system-ui, sans-serif;
+  --payment-font-ui: "Josefin Sans", system-ui, sans-serif;
+  --payment-font-mono: "Courier New", monospace;
+
+  /* ─── Transitions ─── */
+  --payment-transition-default: 0.3s ease-out;
+  --payment-transition-fast: 0.15s ease-out;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   LAYER 2: LAYOUT CONTAINERS
+   Rule: only display / grid / flex / gap / padding / margin /
+         width / position. NEVER colors, fonts, borders, shadows.
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Main container ── */
+.payment-instructions-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--payment-space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--payment-space-lg);
+}
+
+/* ── Header section ── */
+.payment-instructions__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--payment-space-sm);
+  margin-bottom: var(--payment-space-md);
+}
+
+.payment-instructions__title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 400;
+  font-family: var(--payment-font-display);
+}
+
+.payment-instructions__subtitle {
+  margin: 0;
+  font-size: 0.875rem;
+  opacity: 0.7;
+}
+
+/* ── Info section ── */
+.payment-instructions__info-section {
+  width: 100%;
+}
+
+.payment-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--payment-space-lg);
+}
+
+.payment-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--payment-space-xs);
+}
+
+.payment-info-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.payment-info-value {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.payment-info-amount {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+/* ── Status indicator ── */
+.payment-status {
+  display: flex;
+  flex-direction: column;
+  gap: var(--payment-space-md);
+  padding: var(--payment-space-lg);
+  border-radius: var(--payment-card-radius);
+}
+
+.payment-status__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--payment-space-md);
+}
+
+.payment-status__title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.payment-status__timer {
+  font-family: var(--payment-font-mono);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.payment-status__message {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* ── Payment methods section ── */
+.payment-methods-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--payment-space-lg);
+}
+
+.payment-methods-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.payment-methods-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--payment-space-lg);
+}
+
+/* ── Payment method card ── */
+.payment-method-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--payment-space-md);
+  padding: var(--payment-space-lg);
+  border-radius: var(--payment-card-radius);
+}
+
+.payment-method-card__header {
+  display: flex;
+  align-items: center;
+  gap: var(--payment-space-md);
+}
+
+.payment-method-card__name {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.payment-method-card__description {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.payment-method-card__details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--payment-space-sm);
+}
+
+.payment-method-detail {
+  display: flex;
+  align-items: center;
+  gap: var(--payment-space-sm);
+  padding: var(--payment-space-sm) var(--payment-space-md);
+  border-radius: var(--payment-border-radius);
+  position: relative;
+}
+
+.payment-method-detail__label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  min-width: 60px;
+}
+
+.payment-method-detail__value {
+  font-family: var(--payment-font-mono);
+  font-size: 0.875rem;
+  font-weight: 500;
+  flex: 1;
+  word-break: break-all;
+}
+
+.payment-method-detail__copy {
+  padding: var(--payment-space-xs) var(--payment-space-sm);
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1rem;
+  border-radius: var(--payment-border-radius);
+  transition: all var(--payment-transition-fast);
+  flex-shrink: 0;
+}
+
+.payment-method-detail__copy:hover {
+  transform: scale(1.1);
+  opacity: 0.8;
+}
+
+/* ── Actions section ── */
+.payment-instructions__actions {
+  display: flex;
+  gap: var(--payment-space-md);
+  justify-content: center;
+  margin-top: var(--payment-space-lg);
+}
+
+.payment-instructions__button {
+  padding: var(--payment-space-md) var(--payment-space-lg);
+  border: 1px solid var(--payment-color-border);
+  border-radius: var(--payment-border-radius);
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-family: var(--payment-font-body);
+  cursor: pointer;
+  transition: all var(--payment-transition-default);
+}
+
+.payment-instructions__button--secondary {
+  background-color: white;
+  color: var(--payment-color-text-secondary);
+}
+
+.payment-instructions__button--secondary:hover {
+  background-color: var(--payment-color-bg-light);
+  border-color: var(--payment-color-primary);
+  color: var(--payment-color-primary);
+}
+
+.payment-instructions__button--primary {
+  background-color: var(--payment-color-primary);
+  color: white;
+  border-color: var(--payment-color-primary);
+}
+
+.payment-instructions__button--primary:hover {
+  opacity: 0.9;
+}
+
+/* ── Footer section ── */
+.payment-instructions__footer {
+  margin-top: var(--payment-space-lg);
+  padding-top: var(--payment-space-lg);
+  border-top: 1px solid var(--payment-color-border);
+  text-align: center;
+}
+
+.payment-instructions__footer-text {
+  margin: 0;
+  font-size: 0.875rem;
+  opacity: 0.7;
+  line-height: 1.5;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   LAYER 3: COMPONENTS
+   Self-contained visual units with full styling
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Status variants ── */
+.payment-status--pending {
+  background-color: var(--payment-color-bg-info);
+  border-left: 4px solid #2196f3;
+  color: var(--payment-color-text-primary);
+}
+
+.payment-status--pending .payment-status__title {
+  color: #1976d2;
+}
+
+.payment-status--urgent {
+  background-color: var(--payment-color-bg-warning);
+  border-left: 4px solid var(--payment-color-warning);
+  color: var(--payment-color-text-secondary);
+}
+
+.payment-status--urgent .payment-status__title {
+  color: #f57c00;
+}
+
+.payment-status--overdue {
+  background-color: var(--payment-color-bg-error);
+  border-left: 4px solid var(--payment-color-error);
+  color: var(--payment-color-text-secondary);
+}
+
+.payment-status--overdue .payment-status__title {
+  color: var(--payment-color-error);
+}
+
+/* ── Method card styling ── */
+.payment-method-card {
+  border: 1px solid var(--payment-color-border);
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.payment-method-detail {
+  background-color: var(--payment-color-bg-light);
+}
+
+/* ── Print styles ── */
+@media print {
+  .payment-instructions-container {
+    padding: 0;
+    gap: 20px;
+  }
+
+  .payment-instructions__actions {
+    display: none;
+  }
+
+  .payment-method-detail__copy {
+    display: none;
+  }
+
+  body {
+    background: white;
+  }
+}
+
+/* ── Responsive design ── */
+@media (max-width: 768px) {
+  .payment-instructions-container {
+    padding: var(--payment-space-lg);
+    gap: var(--payment-space-md);
+  }
+
+  .payment-instructions__title {
+    font-size: 24px;
+  }
+
+  .payment-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .payment-methods-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .payment-status__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .payment-instructions__actions {
+    flex-direction: column;
+  }
+
+  .payment-instructions__button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .payment-instructions-container {
+    padding: var(--payment-space-md);
+  }
+
+  .payment-instructions__title {
+    font-size: 20px;
+  }
+
+  .payment-info-value {
+    font-size: 0.9rem;
+  }
+
+  .payment-info-amount {
+    font-size: 1.1rem;
+  }
+
+  .payment-method-detail {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .payment-method-detail__label {
+    width: 100%;
+  }
+
+  .payment-method-detail__value {
+    width: 100%;
+  }
+}

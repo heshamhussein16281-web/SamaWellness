@@ -3,7 +3,7 @@ import { getServiceClient } from './supabase-service';
 export interface AuditLogInput {
   adminId: string;
   action: 'create' | 'update' | 'delete';
-  entityType: 'user' | 'role' | 'permission';
+  entityType: 'user' | 'role' | 'permission' | 'booking' | 'payment' | 'session_note' | 'client';
   entityId: string;
   entityName: string;
   changes?: Record<string, { old: any; new: any }>;

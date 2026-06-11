@@ -13,6 +13,8 @@ interface Client {
   status: string;
   client_since: string;
   therapist_name: string;
+  is_recurring?: boolean;
+  total_sessions_completed?: number;
 }
 
 type ViewMode = 'list' | 'intake';
@@ -66,6 +68,29 @@ export default function ClientsPage() {
     );
   }
 
+  const getStatusLabel = (status: string) => {
+    const labels: Record<string, string> = {
+      intake: 'Intake',
+      assessment_pending: 'Assessment Pending',
+      ready_for_booking: 'Ready for Booking',
+      booking_scheduled: 'Booking Scheduled',
+      payment_pending: 'Payment Pending',
+      active: 'Active',
+      completed: 'Completed',
+      inactive: 'Inactive',
+      booking_expired: 'Booking Expired',
+    };
+    return labels[status] || status;
+  };
+
+  const formatClientSince = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  };
+
   return (
     <div className="clients-page">
       <div className="clients-page-header">
@@ -96,6 +121,8 @@ export default function ClientsPage() {
                 <th>Email</th>
                 <th>Phone</th>
                 <th>Status</th>
+                <th>Recurring</th>
+                <th>Sessions</th>
                 <th>Therapist</th>
                 <th>Client Since</th>
                 <th>Actions</th>
@@ -104,16 +131,34 @@ export default function ClientsPage() {
             <tbody>
               {clients.map((client) => (
                 <tr key={client.id}>
-                  <td>{client.name}</td>
-                  <td>{client.email || '-'}</td>
-                  <td>{client.phone || '-'}</td>
+                  <td>
+                    <span className="client-name">{client.name}</span>
+                  </td>
+                  <td className="client-email">{client.email || '-'}</td>
+                  <td className="client-phone">{client.phone || '-'}</td>
                   <td>
                     <span className={`client-status-badge client-status-badge--${client.status}`}>
-                      {client.status}
+                      {getStatusLabel(client.status)}
+                    </span>
+                  </td>
+                  <td>
+                    {client.is_recurring ? (
+                      <span className="client-recurring-badge">
+                        🔄 Recurring
+                      </span>
+                    ) : (
+                      <span className="client-one-time">One-time</span>
+                    )}
+                  </td>
+                  <td>
+                    <span className="client-sessions-count">
+                      {client.total_sessions_completed || 0}
                     </span>
                   </td>
                   <td>{client.therapist_name || 'Not assigned'}</td>
-                  <td>{new Date(client.client_since).toLocaleDateString()}</td>
+                  <td className="client-since-date">
+                    {formatClientSince(client.client_since)}
+                  </td>
                   <td>
                     <Link href={`/app/dashboard/clinical/clients/${client.id}`}>
                       <button className="client-action-btn">View Profile</button>

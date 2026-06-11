@@ -129,6 +129,22 @@
   margin: var(--dashboard-divider-margin) 0;
 }
 
+/* Section container */
+.sidebar-section {
+  margin-bottom: var(--dashboard-section-margin);
+  transition: all 0.2s ease;
+}
+
+/* Section container active state */
+.sidebar-section-active {
+  padding: 8px 0;
+}
+
+.sidebar-section-active .sidebar-section-label {
+  opacity: 1;
+  font-weight: 700;
+}
+
 /* Section label */
 .sidebar-section-label {
   font-size: 11px;
@@ -138,6 +154,7 @@
   letter-spacing: 0.5px;
   margin-bottom: var(--dashboard-section-gap);
   opacity: 0.7;
+  transition: all 0.2s ease;
 }
 
 /* Navigation item container */

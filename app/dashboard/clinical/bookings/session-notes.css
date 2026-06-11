@@ -1,0 +1,458 @@
+/* ========================================
+   SESSION NOTES COMPONENT STYLES
+   3-Layer CSS Architecture
+   ======================================== */
+
+/* ─── Layer 1: Design Tokens ─── */
+/* (Defined in app/globals.css) */
+
+/* ─── Layer 2: Layout Containers ─── */
+
+.session-notes-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  max-width: 900px;
+}
+
+.session-notes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.session-notes-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.progress-score-group {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.progress-score-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.progress-score-input {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.session-notes-list-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.session-notes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.session-note-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.session-note-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.session-note-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.session-note-score {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.session-note-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.session-note-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.session-note-outcome {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* ─── Layer 3: Components ─── */
+
+.session-notes-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-charcoal);
+  font-family: var(--font-display);
+}
+
+.session-notes-close-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background-color: var(--color-sand);
+  border-radius: var(--radius-sm);
+  color: var(--color-nav-text);
+  font-size: 16px;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.session-notes-close-btn:hover {
+  background-color: #d9cdc0;
+  transform: scale(1.05);
+}
+
+.session-notes-error {
+  padding: 12px 16px;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: var(--radius-md);
+  color: #721c24;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.session-notes-success {
+  padding: 12px 16px;
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-radius: var(--radius-md);
+  color: #155724;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-charcoal);
+  font-family: var(--font-ui);
+}
+
+.form-required {
+  color: #d9534f;
+}
+
+.form-optional {
+  font-size: 12px;
+  font-weight: 400;
+  color: #999;
+}
+
+.form-textarea {
+  padding: 12px;
+  border: 1px solid var(--color-sand);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--color-charcoal);
+  resize: vertical;
+  transition: all var(--transition-base);
+}
+
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--color-burgundy);
+  box-shadow: 0 0 0 3px rgba(123, 45, 62, 0.1);
+}
+
+.form-textarea:disabled {
+  background-color: var(--color-linen);
+  color: #999;
+  cursor: not-allowed;
+}
+
+.form-char-count {
+  font-size: 12px;
+  color: #999;
+  text-align: right;
+}
+
+.progress-score-value {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--color-sand);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  color: var(--color-charcoal);
+  font-size: 14px;
+  transition: all var(--transition-base);
+}
+
+.progress-score-input:checked + .progress-score-value {
+  border-color: var(--color-burgundy);
+  background-color: var(--color-burgundy);
+  color: white;
+}
+
+.progress-score-text {
+  font-size: 12px;
+  color: var(--color-charcoal);
+  font-weight: 500;
+  text-align: center;
+}
+
+.btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-ui);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn--primary {
+  background-color: var(--color-burgundy);
+  color: white;
+}
+
+.btn--primary:hover:not(:disabled) {
+  background-color: #6a1f2e;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(123, 45, 62, 0.2);
+}
+
+.btn--primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn--secondary {
+  background-color: var(--color-sand);
+  color: var(--color-nav-text);
+  border: 1px solid var(--color-sand);
+}
+
+.btn--secondary:hover:not(:disabled) {
+  background-color: #d9cdc0;
+  transform: translateY(-2px);
+}
+
+.btn--secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.session-notes-list-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-charcoal);
+  font-family: var(--font-display);
+  padding-top: 16px;
+  border-top: 1px solid var(--color-sand);
+}
+
+.session-notes-loading {
+  padding: 32px 16px;
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+}
+
+.session-notes-empty {
+  padding: 32px 16px;
+  text-align: center;
+  background-color: var(--color-linen);
+  border-radius: var(--radius-md);
+}
+
+.session-notes-empty p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.session-note-card {
+  padding: 16px;
+  background-color: #fff;
+  border: 1px solid var(--color-sand);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+}
+
+.session-note-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.session-note-therapist {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-charcoal);
+}
+
+.session-note-timestamp {
+  margin: 0;
+  font-size: 12px;
+  color: #999;
+}
+
+.score-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  background-color: var(--color-linen);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-nav-text);
+}
+
+.score-label {
+  font-size: 12px;
+  color: var(--color-burgundy);
+  font-weight: 600;
+}
+
+.session-note-notes {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-charcoal);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.session-note-outcome-label {
+  margin: 0 0 4px 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-nav-text);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.session-note-outcome-text {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-charcoal);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  background-color: var(--color-linen);
+  padding: 8px;
+  border-radius: var(--radius-sm);
+}
+
+/* ─── Responsive ─── */
+
+@media (max-width: 768px) {
+  .session-notes-container {
+    gap: 16px;
+  }
+
+  .progress-score-group {
+    gap: 8px;
+  }
+
+  .progress-score-value {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .session-note-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .session-note-score {
+    align-items: flex-start;
+    flex-direction: row;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .session-notes-title {
+    font-size: 20px;
+  }
+
+  .progress-score-label {
+    flex: 1 1 calc(33.333% - 8px);
+  }
+
+  .progress-score-value {
+    width: 24px;
+    height: 24px;
+    font-size: 11px;
+  }
+
+  .progress-score-text {
+    font-size: 10px;
+  }
+
+  .session-note-card {
+    padding: 12px;
+  }
+
+  .session-note-therapist {
+    font-size: 13px;
+  }
+
+  .session-note-notes,
+  .session-note-outcome-text {
+    font-size: 12px;
+  }
+}
