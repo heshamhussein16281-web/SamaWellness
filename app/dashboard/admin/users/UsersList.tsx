@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { Plus, Edit2, Trash2, X } from 'lucide-react';
+import './users.css';
 
 interface User {
   id: string;
@@ -17,6 +18,10 @@ interface Role {
   name: string;
 }
 
+type StatusFilter = 'all' | 'active' | 'inactive';
+type SortByOption = 'username' | 'created_at' | 'role';
+type SortOrder = 'asc' | 'desc';
+
 export default function UsersList() {
   const [users, setUsers] = useState<User[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
@@ -30,29 +35,69 @@ export default function UsersList() {
     role_id: '',
   });
 
+  // Loading states for individual operations
+  const [loadingCreate, setLoadingCreate] = useState(false);
+  const [loadingEdit, setLoadingEdit] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
+
+  // Message states (replacing alert)
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const errorTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const successTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   // Filter and search states
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [roleFilter, setRoleFilter] = useState<'all' | string>('all');
-  const [sortBy, setSortBy] = useState<'username' | 'created_at' | 'role'>('username');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [sortBy, setSortBy] = useState<SortByOption>('username');
+  const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 25;
+  const maxPaginationButtons = 7; // Performance optimization: limit visible page buttons
+
+  // Auto-dismiss notifications
+  useEffect(() => {
+    return () => {
+      if (errorTimeoutRef.current) clearTimeout(errorTimeoutRef.current);
+      if (successTimeoutRef.current) clearTimeout(successTimeoutRef.current);
+    };
+  }, []);
+
+  // Show error message with auto-dismiss
+  const showError = useCallback((message: string) => {
+    setErrorMessage(message);
+    if (errorTimeoutRef.current) clearTimeout(errorTimeoutRef.current);
+    errorTimeoutRef.current = setTimeout(() => setErrorMessage(''), 3000);
+  }, []);
+
+  // Show success message with auto-dismiss
+  const showSuccess = useCallback((message: string) => {
+    setSuccessMessage(message);
+    if (successTimeoutRef.current) clearTimeout(successTimeoutRef.current);
+    successTimeoutRef.current = setTimeout(() => setSuccessMessage(''), 3000);
+  }, []);
 
   useEffect(() => {
-    fetchUsers();
-    fetchRoles();
+    const initData = async () => {
+      await Promise.all([fetchUsers(), fetchRoles()]);
+    };
+    initData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function fetchUsers() {
     try {
       const res = await fetch('/api/admin/users');
-      const data = await res.json();
-      if (res.ok) {
-        setUsers(data.users);
+      if (!res.ok) {
+        throw new Error(`Failed to fetch users: ${res.statusText}`);
       }
+      const data = await res.json();
+      setUsers(data.users || []);
     } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : 'Failed to load users';
       console.error('Error fetching users:', error);
+      showError(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -61,73 +106,79 @@ export default function UsersList() {
   async function fetchRoles() {
     try {
       const res = await fetch('/api/admin/roles');
-      const data = await res.json();
-      if (res.ok) {
-        setRoles(data.roles);
+      if (!res.ok) {
+        throw new Error(`Failed to fetch roles: ${res.statusText}`);
       }
+      const data = await res.json();
+      setRoles(data.roles || []);
     } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : 'Failed to load roles';
       console.error('Error fetching roles:', error);
+      showError(errorMsg);
     }
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
+    const isEditing = !!editingUser;
+    const loaderSetter = isEditing ? setLoadingEdit : setLoadingCreate;
+    loaderSetter(true);
+
     try {
-      if (editingUser) {
-        const res = await fetch(`/api/admin/users/${editingUser.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        });
-        if (res.ok) {
-          fetchUsers();
-          setEditingUser(null);
-          setShowForm(false);
-          alert('User updated successfully');
-        } else {
-          const error = await res.json();
-          alert('Error: ' + error.error);
-        }
-      } else {
-        const res = await fetch('/api/admin/users', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        });
-        if (res.ok) {
-          fetchUsers();
-          setShowForm(false);
-          alert('User created successfully');
-        } else {
-          const error = await res.json();
-          alert('Error: ' + error.error);
-        }
+      const url = isEditing ? `/api/admin/users/${editingUser.id}` : '/api/admin/users';
+      const method = isEditing ? 'PUT' : 'POST';
+
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || `Failed to ${isEditing ? 'update' : 'create'} user`);
       }
+
+      await fetchUsers();
+      setEditingUser(null);
+      setShowForm(false);
       setFormData({ username: '', email: '', password: '', role_id: '' });
+      showSuccess(`User ${isEditing ? 'updated' : 'created'} successfully`);
     } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : 'Failed to save user';
       console.error('Error saving user:', error);
-      alert('Error saving user');
+      showError(errorMsg);
+      // Reset form on error
+      setFormData({ username: '', email: '', password: '', role_id: '' });
+    } finally {
+      loaderSetter(false);
     }
   }
 
   async function handleBlockUser(userId: string) {
     if (!confirm('Are you sure you want to deactivate this user?')) return;
 
+    setLoadingDelete(true);
+
     try {
       const res = await fetch(`/api/admin/users/${userId}`, {
         method: 'DELETE',
       });
-      if (res.ok) {
-        fetchUsers();
-        alert('User deactivated successfully');
-      } else {
-        const error = await res.json();
-        alert('Error: ' + error.error);
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Failed to deactivate user');
       }
+
+      await fetchUsers();
+      showSuccess('User deactivated successfully');
     } catch (error) {
-      console.error('Error blocking user:', error);
-      alert('Error deactivating user');
+      const errorMsg = error instanceof Error ? error.message : 'Failed to deactivate user';
+      console.error('Error deactivating user:', error);
+      showError(errorMsg);
+    } finally {
+      setLoadingDelete(false);
     }
   }
 
@@ -151,15 +202,18 @@ export default function UsersList() {
 
   // Sort
   filteredUsers.sort((a, b) => {
-    let aVal: any = a[sortBy];
-    let bVal: any = b[sortBy];
+    let aVal: string | number = '';
+    let bVal: string | number = '';
 
     if (sortBy === 'role') {
       aVal = a.roles?.name || '';
       bVal = b.roles?.name || '';
+    } else {
+      aVal = a[sortBy] || '';
+      bVal = b[sortBy] || '';
     }
 
-    if (typeof aVal === 'string') {
+    if (typeof aVal === 'string' && typeof bVal === 'string') {
       aVal = aVal.toLowerCase();
       bVal = bVal.toLowerCase();
     }
@@ -168,59 +222,81 @@ export default function UsersList() {
     return sortOrder === 'asc' ? comparison : -comparison;
   });
 
-  // Pagination
+  // Pagination with performance optimization
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedUsers = filteredUsers.slice(startIndex, startIndex + itemsPerPage);
 
+  // Calculate which page buttons to show (e.g., 5-7 buttons instead of all)
+  const getPaginationRange = (): number[] => {
+    if (totalPages <= maxPaginationButtons) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+
+    const halfWindow = Math.floor(maxPaginationButtons / 2);
+    let start = Math.max(1, currentPage - halfWindow);
+    let end = Math.min(totalPages, start + maxPaginationButtons - 1);
+
+    if (end - start + 1 < maxPaginationButtons) {
+      start = Math.max(1, end - maxPaginationButtons + 1);
+    }
+
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  };
+
   if (loading) {
-    return <div style={{ padding: '20px', textAlign: 'center' }}>Loading users...</div>;
+    return (
+      <div className="users-container" style={{ padding: '20px', textAlign: 'center' }}>
+        Loading users...
+      </div>
+    );
   }
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-      <div style={{ marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '28px', fontWeight: '400', color: 'rgb(45, 74, 70)', marginBottom: '0.5rem', fontFamily: 'Gilda Display, serif' }}>
-          User Management
-        </h1>
-        <p style={{ fontSize: '0.875rem', color: '#2c2c2c', opacity: 0.7 }}>
-          Create and manage clinic staff accounts and permissions
-        </p>
+    <div className="users-container">
+      {/* Error Message */}
+      {errorMessage && (
+        <div className="toast-notification toast-notification--error" role="alert" aria-live="polite">
+          {errorMessage}
+        </div>
+      )}
+
+      {/* Success Message */}
+      {successMessage && (
+        <div className="toast-notification toast-notification--success" role="status" aria-live="polite">
+          {successMessage}
+        </div>
+      )}
+
+      {/* Header */}
+      <div className="users-header">
+        <h1 className="users-title">User Management</h1>
+        <p className="users-subtitle">Create and manage clinic staff accounts and permissions</p>
       </div>
 
-      <div style={{ marginBottom: '2rem', textAlign: 'right' }}>
+      {/* Action Bar */}
+      <div className="users-action-bar">
         <button
+          className="btn-primary"
           onClick={() => {
             setEditingUser(null);
             setFormData({ username: '', email: '', password: '', role_id: '' });
             setShowForm(!showForm);
           }}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            padding: '0.75rem 1.5rem',
-            backgroundColor: '#7b2d3e',
-            color: 'white',
-            border: 'none',
-            borderRadius: '6px',
-            fontSize: '0.875rem',
-            fontWeight: '500',
-            cursor: 'pointer',
-          }}
+          disabled={loadingCreate || loadingEdit || loadingDelete}
+          aria-label="Create a new user"
         >
-          <Plus size={18} /> Create User
+          <Plus size={18} aria-hidden="true" /> Create User
         </button>
       </div>
 
       {/* Filters */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', marginBottom: '2rem' }}>
+      <div className="users-filters">
         {/* Search */}
-        <div>
-          <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '600', marginBottom: '0.5rem', color: 'rgb(45, 74, 70)', textTransform: 'uppercase' }}>
-            Search
-          </label>
+        <div className="filter-group">
+          <label htmlFor="search-input" className="filter-group__label">Search</label>
           <input
+            id="search-input"
             type="text"
             placeholder="Username or email"
             value={searchTerm}
@@ -228,34 +304,23 @@ export default function UsersList() {
               setSearchTerm(e.target.value);
               setCurrentPage(1);
             }}
-            style={{
-              width: '100%',
-              padding: '0.75rem 1rem',
-              border: '1px solid rgb(234, 228, 221)',
-              borderRadius: '6px',
-              fontSize: '0.875rem',
-            }}
+            className="form-field__input"
+            aria-label="Search users by username or email"
           />
         </div>
 
         {/* Status Filter */}
-        <div>
-          <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '600', marginBottom: '0.5rem', color: 'rgb(45, 74, 70)', textTransform: 'uppercase' }}>
-            Status
-          </label>
+        <div className="filter-group">
+          <label htmlFor="status-filter" className="filter-group__label">Status</label>
           <select
+            id="status-filter"
             value={statusFilter}
             onChange={(e) => {
-              setStatusFilter(e.target.value as any);
+              setStatusFilter(e.target.value as StatusFilter);
               setCurrentPage(1);
             }}
-            style={{
-              width: '100%',
-              padding: '0.75rem 1rem',
-              border: '1px solid rgb(234, 228, 221)',
-              borderRadius: '6px',
-              fontSize: '0.875rem',
-            }}
+            className="form-field__select"
+            aria-label="Filter users by status"
           >
             <option value="all">All</option>
             <option value="active">Active</option>
@@ -264,23 +329,17 @@ export default function UsersList() {
         </div>
 
         {/* Role Filter */}
-        <div>
-          <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '600', marginBottom: '0.5rem', color: 'rgb(45, 74, 70)', textTransform: 'uppercase' }}>
-            Role
-          </label>
+        <div className="filter-group">
+          <label htmlFor="role-filter" className="filter-group__label">Role</label>
           <select
+            id="role-filter"
             value={roleFilter}
             onChange={(e) => {
               setRoleFilter(e.target.value);
               setCurrentPage(1);
             }}
-            style={{
-              width: '100%',
-              padding: '0.75rem 1rem',
-              border: '1px solid rgb(234, 228, 221)',
-              borderRadius: '6px',
-              fontSize: '0.875rem',
-            }}
+            className="form-field__select"
+            aria-label="Filter users by role"
           >
             <option value="all">All Roles</option>
             {roles.map((role) => (
@@ -292,36 +351,26 @@ export default function UsersList() {
         </div>
 
         {/* Sort */}
-        <div>
-          <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '600', marginBottom: '0.5rem', color: 'rgb(45, 74, 70)', textTransform: 'uppercase' }}>
-            Sort By
-          </label>
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <div className="filter-group">
+          <label htmlFor="sort-by" className="filter-group__label">Sort By</label>
+          <div className="filter-group__sort-wrapper">
             <select
+              id="sort-by"
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
-              style={{
-                flex: 1,
-                padding: '0.75rem 1rem',
-                border: '1px solid rgb(234, 228, 221)',
-                borderRadius: '6px',
-                fontSize: '0.875rem',
-              }}
+              onChange={(e) => setSortBy(e.target.value as SortByOption)}
+              className="form-field__select"
+              aria-label="Sort users by"
+              style={{ flex: 1 }}
             >
               <option value="username">Username</option>
               <option value="created_at">Created Date</option>
               <option value="role">Role</option>
             </select>
             <button
+              className="btn-sort"
               onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-              style={{
-                padding: '0.75rem 1rem',
-                border: '1px solid rgb(234, 228, 221)',
-                borderRadius: '6px',
-                backgroundColor: 'white',
-                cursor: 'pointer',
-              }}
               title={`Sort ${sortOrder === 'asc' ? 'descending' : 'ascending'}`}
+              aria-label={`Toggle sort order: currently ${sortOrder === 'asc' ? 'ascending' : 'descending'}`}
             >
               {sortOrder === 'asc' ? '↑' : '↓'}
             </button>
@@ -329,105 +378,93 @@ export default function UsersList() {
         </div>
       </div>
 
-      {/* Create Form Modal */}
+      {/* Modal Overlay */}
       {showForm && (
         <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0, 0, 0, 0.4)',
-            zIndex: 999,
-          }}
+          className="users-modal-overlay"
           onClick={() => setShowForm(false)}
+          aria-hidden="true"
         />
       )}
 
-      <div
-        style={{
-          position: 'fixed',
-          right: 0,
-          top: 0,
-          bottom: 0,
-          width: '100%',
-          maxWidth: '500px',
-          background: 'white',
-          boxShadow: '-4px 0 20px rgba(0, 0, 0, 0.15)',
-          zIndex: 1000,
-          transform: showForm ? 'translateX(0)' : 'translateX(100%)',
-          transition: 'transform 0.3s ease-out',
-          overflowY: 'auto',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <div style={{ padding: '2rem', borderBottom: '1px solid rgb(234, 228, 221)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
-          <h2 style={{ fontFamily: 'Gilda Display, serif', fontSize: '1.5rem', color: 'rgb(45, 74, 70)', margin: 0 }}>
+      {/* Modal Panel */}
+      <div className={`users-modal-panel ${showForm ? 'open' : ''}`}>
+        <div className="users-modal-header">
+          <h2 className="users-modal-title">
             {editingUser ? 'Edit User' : 'Create New User'}
           </h2>
           <button
+            className="users-modal-close-btn"
             onClick={() => setShowForm(false)}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgb(45, 74, 70)', padding: '0.5rem' }}
+            aria-label="Close modal"
           >
             <X size={24} />
           </button>
         </div>
 
-        <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
-          <form id="user-form" onSubmit={handleSubmit} style={{ flex: 1 }}>
-            <div style={{ marginBottom: '1.25rem' }}>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '500', color: 'rgb(45, 74, 70)', textTransform: 'uppercase' }}>
+        <div className="users-modal-content">
+          <form id="user-form" onSubmit={handleSubmit} className="users-modal-form">
+            <div className="form-field">
+              <label htmlFor="username-input" className="form-field__label">
                 Username
               </label>
               <input
+                id="username-input"
                 type="text"
                 placeholder="username"
                 value={formData.username}
                 onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                style={{ width: '100%', padding: '0.75rem 1rem', border: '1px solid rgb(234, 228, 221)', borderRadius: '6px', fontSize: '0.875rem' }}
-                disabled={!!editingUser}
+                className="form-field__input"
+                disabled={!!editingUser || loadingCreate || loadingEdit}
                 required
+                aria-required="true"
               />
             </div>
 
-            <div style={{ marginBottom: '1.25rem' }}>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '500', color: 'rgb(45, 74, 70)', textTransform: 'uppercase' }}>
+            <div className="form-field">
+              <label htmlFor="email-input" className="form-field__label">
                 Email (Optional)
               </label>
               <input
+                id="email-input"
                 type="email"
                 placeholder="email@example.com"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                style={{ width: '100%', padding: '0.75rem 1rem', border: '1px solid rgb(234, 228, 221)', borderRadius: '6px', fontSize: '0.875rem' }}
+                className="form-field__input"
+                disabled={loadingCreate || loadingEdit}
               />
             </div>
 
-            <div style={{ marginBottom: '1.25rem' }}>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '500', color: 'rgb(45, 74, 70)', textTransform: 'uppercase' }}>
+            <div className="form-field">
+              <label htmlFor="password-input" className="form-field__label">
                 Password {editingUser && '(Leave blank to keep current)'}
               </label>
               <input
+                id="password-input"
                 type="password"
                 placeholder="password"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                style={{ width: '100%', padding: '0.75rem 1rem', border: '1px solid rgb(234, 228, 221)', borderRadius: '6px', fontSize: '0.875rem' }}
+                className="form-field__input"
+                disabled={loadingCreate || loadingEdit}
                 required={!editingUser}
+                aria-required={!editingUser}
               />
             </div>
 
-            <div style={{ marginBottom: '1.25rem' }}>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '500', color: 'rgb(45, 74, 70)', textTransform: 'uppercase' }}>
+            <div className="form-field">
+              <label htmlFor="role-input" className="form-field__label">
                 Role
               </label>
               <select
+                id="role-input"
                 value={formData.role_id}
                 onChange={(e) => setFormData({ ...formData, role_id: e.target.value })}
-                style={{ width: '100%', padding: '0.75rem 1rem', border: '1px solid rgb(234, 228, 221)', borderRadius: '6px', fontSize: '0.875rem' }}
+                className="form-field__select"
+                disabled={loadingCreate || loadingEdit}
                 required
+                aria-required="true"
               >
                 <option value="">Select a role</option>
                 {roles.map((role) => (
@@ -439,94 +476,68 @@ export default function UsersList() {
             </div>
           </form>
 
-          <div style={{ display: 'flex', gap: '1rem', marginTop: 'auto', paddingTop: '1.5rem', borderTop: '1px solid rgb(234, 228, 221)' }}>
+          <div className="users-modal-footer">
             <button
               type="submit"
               form="user-form"
-              style={{
-                backgroundColor: '#7b2d3e',
-                color: 'white',
-                border: 'none',
-                borderRadius: '6px',
-                padding: '0.75rem 1.5rem',
-                cursor: 'pointer',
-                fontWeight: '500',
-              }}
+              className="btn-primary"
+              disabled={loadingCreate || loadingEdit}
+              aria-label={editingUser ? 'Update user' : 'Create user'}
             >
+              {(loadingCreate || loadingEdit) && <span className="spinner" aria-hidden="true" />}
               {editingUser ? 'Update User' : 'Create User'}
             </button>
             <button
               type="button"
               onClick={() => setShowForm(false)}
-              style={{
-                backgroundColor: 'rgb(234, 228, 221)',
-                color: 'rgb(45, 74, 70)',
-                border: 'none',
-                borderRadius: '6px',
-                padding: '0.75rem 1.5rem',
-                cursor: 'pointer',
-              }}
+              className="btn-secondary"
+              disabled={loadingCreate || loadingEdit}
+              aria-label="Cancel and close form"
             >
-              <X size={16} style={{ marginRight: '0.5rem' }} /> Cancel
+              <X size={16} aria-hidden="true" /> Cancel
             </button>
           </div>
         </div>
       </div>
 
       {/* Users Table */}
-      <div style={{ backgroundColor: 'white', border: '1px solid rgb(234, 228, 221)', borderRadius: '10px', overflow: 'hidden' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
-          <thead>
-            <tr style={{ backgroundColor: 'rgb(234, 228, 221)', borderBottom: '2px solid rgba(45, 74, 70, 0.15)' }}>
-              <th style={{ padding: '1rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '600', color: 'rgb(45, 74, 70)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                Username
-              </th>
-              <th style={{ padding: '1rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '600', color: 'rgb(45, 74, 70)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                Email
-              </th>
-              <th style={{ padding: '1rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '600', color: 'rgb(45, 74, 70)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                Role
-              </th>
-              <th style={{ padding: '1rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '600', color: 'rgb(45, 74, 70)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                Status
-              </th>
-              <th style={{ padding: '1rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '600', color: 'rgb(45, 74, 70)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                Actions
-              </th>
+      <div className="table-container">
+        <table className="users-table">
+          <thead className="users-table__header">
+            <tr>
+              <th className="users-table__header-cell">Username</th>
+              <th className="users-table__header-cell">Email</th>
+              <th className="users-table__header-cell">Role</th>
+              <th className="users-table__header-cell">Status</th>
+              <th className="users-table__header-cell">Actions</th>
             </tr>
           </thead>
           <tbody>
             {paginatedUsers.length === 0 ? (
               <tr>
-                <td colSpan={5} style={{ padding: '2rem 1.5rem', textAlign: 'center', color: '#2c2c2c', opacity: 0.6 }}>
+                <td colSpan={5} className="users-table__empty-cell">
                   No users found
                 </td>
               </tr>
             ) : (
               paginatedUsers.map((user) => (
-                <tr key={user.id} style={{ borderBottom: '1px solid rgb(234, 228, 221)' }}>
-                  <td style={{ padding: '1rem 1.5rem' }}>{user.username}</td>
-                  <td style={{ padding: '1rem 1.5rem' }}>{user.email || '-'}</td>
-                  <td style={{ padding: '1rem 1.5rem' }}>{user.roles?.name || '-'}</td>
-                  <td style={{ padding: '1rem 1.5rem' }}>
+                <tr key={user.id} className="users-table__body-row">
+                  <td className="users-table__cell">{user.username}</td>
+                  <td className="users-table__cell">{user.email || '-'}</td>
+                  <td className="users-table__cell">{user.roles?.name || '-'}</td>
+                  <td className="users-table__cell">
                     <span
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        padding: '2px 8px',
-                        borderRadius: '20px',
-                        fontSize: '10px',
-                        fontWeight: '600',
-                        backgroundColor: user.is_active ? '#4a6741' : 'rgb(234, 228, 221)',
-                        color: user.is_active ? 'white' : '#2c2c2c',
-                      }}
+                      className={`status-badge ${user.is_active ? 'status-badge--active' : 'status-badge--inactive'}`}
+                      role="status"
+                      aria-label={`User status: ${user.is_active ? 'active' : 'inactive'}`}
                     >
                       {user.is_active ? 'Active' : 'Inactive'}
                     </span>
                   </td>
-                  <td style={{ padding: '1rem 1.5rem' }}>
-                    <div style={{ display: 'flex', gap: '8px' }}>
+                  <td className="users-table__cell">
+                    <div className="user-actions">
                       <button
+                        className="icon-btn icon-btn--edit"
                         onClick={() => {
                           setEditingUser(user);
                           setFormData({
@@ -537,30 +548,20 @@ export default function UsersList() {
                           });
                           setShowForm(true);
                         }}
-                        style={{
-                          background: 'none',
-                          border: 'none',
-                          cursor: 'pointer',
-                          color: '#7b2d3e',
-                          padding: '4px',
-                        }}
+                        disabled={loadingEdit || loadingDelete}
                         title="Edit user"
+                        aria-label={`Edit user ${user.username}`}
                       >
-                        <Edit2 size={16} />
+                        <Edit2 size={16} aria-hidden="true" />
                       </button>
                       <button
+                        className="icon-btn icon-btn--delete"
                         onClick={() => handleBlockUser(user.id)}
-                        disabled={!user.is_active}
-                        style={{
-                          background: 'none',
-                          border: 'none',
-                          cursor: user.is_active ? 'pointer' : 'not-allowed',
-                          color: user.is_active ? '#d32f2f' : '#ccc',
-                          padding: '4px',
-                        }}
+                        disabled={!user.is_active || loadingDelete || loadingEdit}
                         title="Deactivate user"
+                        aria-label={`Deactivate user ${user.username}`}
                       >
-                        <Trash2 size={16} />
+                        <Trash2 size={16} aria-hidden="true" />
                       </button>
                     </div>
                   </td>
@@ -572,55 +573,38 @@ export default function UsersList() {
       </div>
 
       {/* Pagination */}
-      <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ fontSize: '0.875rem', color: '#2c2c2c' }}>
+      <div className="users-pagination">
+        <div className="users-pagination__info">
           Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredUsers.length)} of {filteredUsers.length} users
         </div>
 
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <div className="users-pagination__buttons">
           <button
+            className="btn-pagination"
             onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
             disabled={currentPage === 1}
-            style={{
-              padding: '0.5rem 1rem',
-              border: '1px solid rgb(234, 228, 221)',
-              borderRadius: '4px',
-              backgroundColor: 'white',
-              cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
-              opacity: currentPage === 1 ? 0.5 : 1,
-            }}
+            aria-label="Go to previous page"
           >
             ← Previous
           </button>
 
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+          {getPaginationRange().map((page) => (
             <button
               key={page}
+              className={`btn-pagination ${currentPage === page ? 'active' : ''}`}
               onClick={() => setCurrentPage(page)}
-              style={{
-                padding: '0.5rem 1rem',
-                border: '1px solid rgb(234, 228, 221)',
-                borderRadius: '4px',
-                backgroundColor: currentPage === page ? '#7b2d3e' : 'white',
-                color: currentPage === page ? 'white' : 'rgb(45, 74, 70)',
-                cursor: 'pointer',
-              }}
+              aria-label={`Go to page ${page}`}
+              aria-current={currentPage === page ? 'page' : undefined}
             >
               {page}
             </button>
           ))}
 
           <button
+            className="btn-pagination"
             onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
             disabled={currentPage === totalPages}
-            style={{
-              padding: '0.5rem 1rem',
-              border: '1px solid rgb(234, 228, 221)',
-              borderRadius: '4px',
-              backgroundColor: 'white',
-              cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
-              opacity: currentPage === totalPages ? 0.5 : 1,
-            }}
+            aria-label="Go to next page"
           >
             Next →
           </button>

@@ -1,0 +1,527 @@
+/* ========================================
+   USERS MANAGEMENT — COMPONENT STYLES
+
+   Architecture: 3-Layer CSS System
+   Layer 1: Design Tokens     — users-specific CSS variables
+   Layer 2: Layout Containers — display, grid, flex, gap, padding, margin, position
+   Layer 3: Components        — self-contained visual units (panels, buttons, inputs)
+   ======================================== */
+
+
+/* ════════════════════════════════════════════════════════════════
+   LAYER 1: DESIGN TOKENS (Users-specific)
+   ════════════════════════════════════════════════════════════════ */
+:root {
+  /* ─── Users-specific Colors ─── */
+  --users-color-primary:        #7b2d3e; /* burgundy for CTAs */
+  --users-color-success:        #4a6741; /* olive for active/success states */
+  --users-color-error:          #d32f2f; /* red for delete/deactivate */
+  --users-color-border:         rgb(234, 228, 221);
+  --users-color-bg-header:      rgb(234, 228, 221);
+  --users-color-text-primary:   rgb(45, 74, 70);
+  --users-color-text-secondary: #2c2c2c;
+  --users-color-text-muted:     rgba(44, 44, 44, 0.6);
+  --users-color-overlay:        rgba(0, 0, 0, 0.4);
+  --users-color-shadow:         rgba(0, 0, 0, 0.15);
+  --users-color-input-disabled: #ccc;
+  --users-color-icon-inactive:  rgb(234, 228, 221);
+
+  /* ─── Users-specific Spacing ─── */
+  --users-space-xs:     4px;
+  --users-space-sm:     8px;
+  --users-space-md:     16px;
+  --users-space-lg:     24px;
+  --users-space-xl:     32px;
+  --users-space-2xl:    48px;
+
+  /* ─── Users-specific Dimensions ─── */
+  --users-modal-width:          500px;
+  --users-modal-shadow:         -4px 0 20px rgba(0, 0, 0, 0.15);
+  --users-icon-size-sm:         16px;
+  --users-icon-size-md:         18px;
+  --users-border-radius:        6px;
+  --users-panel-border-radius:  10px;
+  --users-table-header-font:    0.75rem;
+  --users-status-badge-size:    10px;
+
+  /* ─── Users-specific Typography ─── */
+  --users-font-display:         "Gilda Display", Georgia, serif;
+  --users-font-ui:              "Josefin Sans", system-ui, sans-serif;
+  --users-font-body:            "Nunito Sans", system-ui, sans-serif;
+
+  /* ─── Transitions ─── */
+  --users-transition-default:   0.3s ease-out;
+}
+
+
+/* ════════════════════════════════════════════════════════════════
+   LAYER 2: LAYOUT CONTAINERS
+   Rule: only display / grid / flex / gap / padding / margin /
+         width / position. NEVER colors, fonts, borders, shadows.
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Main container ── */
+.users-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ── Header section ── */
+.users-header {
+  margin-bottom: 2rem;
+}
+
+.users-title {
+  margin-bottom: 0.5rem;
+  font-size: 28px;
+  font-weight: 400;
+  font-family: var(--users-font-display);
+}
+
+.users-subtitle {
+  font-size: 0.875rem;
+  opacity: 0.7;
+}
+
+/* ── Action bar (Create button) ── */
+.users-action-bar {
+  margin-bottom: 2rem;
+  text-align: right;
+}
+
+/* ── Filters section ── */
+.users-filters {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--users-space-lg);
+  margin-bottom: 2rem;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filter-group__label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.filter-group__sort-wrapper {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* ── Users table container ── */
+.users-table-wrapper {
+  overflow: hidden;
+  border-radius: var(--users-panel-border-radius);
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.users-table__header {
+  background-color: var(--users-color-bg-header);
+  border-bottom: 2px solid rgba(45, 74, 70, 0.15);
+}
+
+.users-table__header-cell {
+  padding: 1rem 1.5rem;
+  text-align: left;
+  font-size: var(--users-table-header-font);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.users-table__body-row {
+  border-bottom: 1px solid var(--users-color-border);
+}
+
+.users-table__cell {
+  padding: 1rem 1.5rem;
+}
+
+.users-table__empty-cell {
+  padding: 2rem 1.5rem;
+  text-align: center;
+}
+
+/* ── Status badge ── */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: var(--users-status-badge-size);
+  font-weight: 600;
+}
+
+.status-badge--active {
+  background-color: var(--users-color-success);
+  color: white;
+}
+
+.status-badge--inactive {
+  background-color: var(--users-color-border);
+  color: var(--users-color-text-secondary);
+}
+
+/* ── Actions in table ── */
+.user-actions {
+  display: flex;
+  gap: var(--users-space-sm);
+}
+
+/* ── Pagination section ── */
+.users-pagination {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.users-pagination__info {
+  font-size: 0.875rem;
+}
+
+.users-pagination__buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* ── Modal overlay ── */
+.users-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--users-color-overlay);
+  z-index: 999;
+}
+
+/* ── Modal panel (right-side drawer) ── */
+.users-modal-panel {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: var(--users-modal-width);
+  background: white;
+  box-shadow: var(--users-modal-shadow);
+  z-index: 1000;
+  transform: translateX(100%);
+  transition: transform var(--users-transition-default);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.users-modal-panel.open {
+  transform: translateX(0);
+}
+
+.users-modal-header {
+  padding: 2rem;
+  border-bottom: 1px solid var(--users-color-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.users-modal-title {
+  font-family: var(--users-font-display);
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin: 0;
+}
+
+.users-modal-close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity var(--users-transition-default);
+}
+
+.users-modal-close-btn:hover {
+  opacity: 0.7;
+}
+
+.users-modal-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.users-modal-footer {
+  display: flex;
+  gap: 1rem;
+  margin-top: auto;
+  padding: 1.5rem;
+  border-top: 1px solid var(--users-color-border);
+  flex-shrink: 0;
+}
+
+/* ── Form wrapper inside modal ── */
+.users-modal-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Form field ── */
+.form-field {
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-field__label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-field__input,
+.form-field__select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--users-color-border);
+  border-radius: var(--users-border-radius);
+  font-size: 0.875rem;
+  font-family: var(--users-font-body);
+  background: white;
+  transition: border-color var(--users-transition-default);
+}
+
+.form-field__input:focus,
+.form-field__select:focus {
+  outline: none;
+  border-color: var(--users-color-primary);
+}
+
+.form-field__input:disabled,
+.form-field__select:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* ── Toast notification ── */
+.toast-notification {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: var(--users-border-radius);
+  font-size: 0.875rem;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  animation: slideDown 0.3s ease-out;
+}
+
+.toast-notification--error {
+  color: var(--users-color-error);
+  background: rgba(211, 47, 47, 0.08);
+}
+
+.toast-notification--success {
+  color: var(--users-color-success);
+  background: rgba(74, 103, 65, 0.08);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* ════════════════════════════════════════════════════════════════
+   LAYER 3: COMPONENTS
+   Self-contained visual units with full styling
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Button: Primary (Create User) ── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--users-color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--users-border-radius);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity var(--users-transition-default);
+  font-family: var(--users-font-body);
+}
+
+.btn-primary:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Button: Secondary (Cancel) ── */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--users-color-border);
+  color: var(--users-color-text-primary);
+  border: none;
+  border-radius: var(--users-border-radius);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity var(--users-transition-default);
+  font-family: var(--users-font-body);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  opacity: 0.8;
+}
+
+.btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Button: Pagination ── */
+.btn-pagination {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--users-color-border);
+  border-radius: var(--users-border-radius);
+  background-color: white;
+  cursor: pointer;
+  font-family: var(--users-font-body);
+  transition: background-color var(--users-transition-default),
+              color var(--users-transition-default);
+}
+
+.btn-pagination:hover:not(:disabled) {
+  background-color: rgba(234, 228, 221, 0.5);
+}
+
+.btn-pagination:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-pagination.active {
+  background-color: var(--users-color-primary);
+  color: white;
+  border-color: var(--users-color-primary);
+}
+
+/* ── Button: Sort (▲/▼) ── */
+.btn-sort {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--users-color-border);
+  border-radius: var(--users-border-radius);
+  background-color: white;
+  cursor: pointer;
+  font-family: var(--users-font-body);
+  transition: background-color var(--users-transition-default);
+}
+
+.btn-sort:hover {
+  background-color: rgba(234, 228, 221, 0.5);
+}
+
+/* ── Icon button (Edit, Delete) ── */
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--users-space-xs);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity var(--users-transition-default);
+}
+
+.icon-btn:hover:not(:disabled) {
+  opacity: 0.7;
+}
+
+.icon-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.icon-btn--edit {
+  color: var(--users-color-primary);
+}
+
+.icon-btn--delete {
+  color: var(--users-color-error);
+}
+
+/* ── Table wrapper with border ── */
+.table-container {
+  background-color: white;
+  border: 1px solid var(--users-color-border);
+  border-radius: var(--users-panel-border-radius);
+  overflow: hidden;
+}
+
+/* ── Loading spinner ── */
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(45, 74, 70, 0.2);
+  border-top-color: var(--users-color-primary);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Text utilities ── */
+.text-error {
+  color: var(--users-color-error);
+  font-size: 0.875rem;
+}
+
+.text-success {
+  color: var(--users-color-success);
+  font-size: 0.875rem;
+}
+
+.text-muted {
+  color: var(--users-color-text-muted);
+}
