@@ -33,7 +33,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           data.role !== 'Super Admin' &&
           !data.permissions?.includes('is_super_admin')
         ) {
-          router.push('/app/dashboard');
+          router.push('/dashboard');
           return;
         }
 

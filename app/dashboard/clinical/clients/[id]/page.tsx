@@ -16,7 +16,7 @@ export default function ClientProfilePage() {
     return (
       <div style={{ padding: '20px' }}>
         <h1>Invalid Client ID</h1>
-        <Link href="/app/dashboard/clinical/clients">Back to Clients</Link>
+        <Link href="/dashboard/clinical/clients">Back to Clients</Link>
       </div>
     );
   }
@@ -24,7 +24,7 @@ export default function ClientProfilePage() {
   return (
     <div>
       <div style={{ marginBottom: '16px' }}>
-        <Link href="/app/dashboard/clinical/clients">
+        <Link href="/dashboard/clinical/clients">
           <button
             style={{
               padding: '8px 16px',

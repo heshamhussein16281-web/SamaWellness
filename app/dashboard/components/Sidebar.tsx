@@ -54,17 +54,17 @@ export default function Sidebar() {
       <div className={`sidebar-section ${isClinicalSection ? 'sidebar-section-active' : ''}`}>
         <div className="sidebar-section-label">Clinical</div>
 
-        <Link href="/app/dashboard/clinical/clients">
-          <div className={`sidebar-nav-item ${isActive('/app/dashboard/clinical/clients') ? 'active' : ''}`}>
-            <span className={`sidebar-nav-link ${isActive('/app/dashboard/clinical/clients') ? 'active' : ''}`}>
+        <Link href="/dashboard/clinical/clients">
+          <div className={`sidebar-nav-item ${isActive('/dashboard/clinical/clients') ? 'active' : ''}`}>
+            <span className={`sidebar-nav-link ${isActive('/dashboard/clinical/clients') ? 'active' : ''}`}>
               👤 Clients
             </span>
           </div>
         </Link>
 
-        <Link href="/app/dashboard/clinical/bookings">
-          <div className={`sidebar-nav-item ${isActive('/app/dashboard/clinical/bookings') ? 'active' : ''}`}>
-            <span className={`sidebar-nav-link ${isActive('/app/dashboard/clinical/bookings') ? 'active' : ''}`}>
+        <Link href="/dashboard/clinical/bookings">
+          <div className={`sidebar-nav-item ${isActive('/dashboard/clinical/bookings') ? 'active' : ''}`}>
+            <span className={`sidebar-nav-link ${isActive('/dashboard/clinical/bookings') ? 'active' : ''}`}>
               📅 Bookings
             </span>
           </div>
@@ -78,26 +78,26 @@ export default function Sidebar() {
       <div className={`sidebar-section ${isAdminSection ? 'sidebar-section-active' : ''}`}>
         <div className="sidebar-section-label">Admin</div>
 
-        <Link href="/app/dashboard/admin/users">
-          <div className={`sidebar-nav-item ${isActive('/app/dashboard/admin/users') ? 'active' : ''}`}>
-            <span className={`sidebar-nav-link ${isActive('/app/dashboard/admin/users') ? 'active' : ''}`}>
+        <Link href="/dashboard/admin/users">
+          <div className={`sidebar-nav-item ${isActive('/dashboard/admin/users') ? 'active' : ''}`}>
+            <span className={`sidebar-nav-link ${isActive('/dashboard/admin/users') ? 'active' : ''}`}>
               👥 Users
             </span>
           </div>
         </Link>
 
-        <Link href="/app/dashboard/admin/roles">
-          <div className={`sidebar-nav-item ${isActive('/app/dashboard/admin/roles') ? 'active' : ''}`}>
-            <span className={`sidebar-nav-link ${isActive('/app/dashboard/admin/roles') ? 'active' : ''}`}>
+        <Link href="/dashboard/admin/roles">
+          <div className={`sidebar-nav-item ${isActive('/dashboard/admin/roles') ? 'active' : ''}`}>
+            <span className={`sidebar-nav-link ${isActive('/dashboard/admin/roles') ? 'active' : ''}`}>
               🔐 Roles
             </span>
           </div>
         </Link>
 
         {!loading && isSuperAdmin && (
-          <Link href="/app/dashboard/admin/audit-logs">
-            <div className={`sidebar-nav-item ${isActive('/app/dashboard/admin/audit-logs') ? 'active' : ''}`}>
-              <span className={`sidebar-nav-link ${isActive('/app/dashboard/admin/audit-logs') ? 'active' : ''}`}>
+          <Link href="/dashboard/admin/audit-logs">
+            <div className={`sidebar-nav-item ${isActive('/dashboard/admin/audit-logs') ? 'active' : ''}`}>
+              <span className={`sidebar-nav-link ${isActive('/dashboard/admin/audit-logs') ? 'active' : ''}`}>
                 📋 Audit Logs
               </span>
             </div>

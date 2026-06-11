@@ -160,7 +160,7 @@ export default function ClientsPage() {
                     {formatClientSince(client.client_since)}
                   </td>
                   <td>
-                    <Link href={`/app/dashboard/clinical/clients/${client.id}`}>
+                    <Link href={`/dashboard/clinical/clients/${client.id}`}>
                       <button className="client-action-btn">View Profile</button>
                     </Link>
                   </td>

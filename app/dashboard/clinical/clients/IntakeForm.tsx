@@ -124,7 +124,7 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
           </p>
           <button
             className="intake-success-button"
-            onClick={() => window.location.href = '/app/dashboard/clinical/clients'}
+            onClick={() => window.location.href = '/dashboard/clinical/clients'}
           >
             View All Clients
           </button>
