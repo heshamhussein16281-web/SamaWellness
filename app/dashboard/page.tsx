@@ -7,7 +7,7 @@ export default function DashboardHome() {
   const router = useRouter();
 
   useEffect(() => {
-    // Redirect to roles page by default
+    // Redirect to the new dashboard's roles page (created in Task 4)
     router.push('/app/dashboard/admin/roles');
   }, [router]);
 
