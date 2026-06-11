@@ -73,7 +73,7 @@ export default function AuditLogsList() {
             { id: log.admin_id, username: log.admin_name },
           ])
         ).values()
-      );
+      ) as Array<{ id: string; username: string }>;
       setAdmins(uniqueAdmins);
     } catch (err) {
       setError('Unable to load audit logs');
