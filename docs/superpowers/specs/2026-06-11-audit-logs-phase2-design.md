@@ -17,7 +17,7 @@
 ```sql
 CREATE TABLE audit_logs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  admin_id UUID NOT NULL REFERENCES users(id) ON DELETE SET NULL,
+  admin_id UUID NOT NULL REFERENCES clinic_users(id) ON DELETE SET NULL,
   action VARCHAR(20) NOT NULL CHECK (action IN ('create', 'update', 'delete')),
   entity_type VARCHAR(20) NOT NULL CHECK (entity_type IN ('user', 'role', 'permission')),
   entity_id UUID NOT NULL,
