@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import '../audit-logs.css';
+import './audit-logs.css';
 
 interface AuditLogDetailModalProps {
   isOpen: boolean;

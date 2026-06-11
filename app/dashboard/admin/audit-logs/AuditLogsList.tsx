@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import AuditLogsFilter from './AuditLogsFilter';
 import AuditLogDetailModal from './AuditLogDetailModal';
-import '../audit-logs.css';
+import './audit-logs.css';
 
 interface AuditLog {
   id: string;

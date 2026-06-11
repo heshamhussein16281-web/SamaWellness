@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import '../audit-logs.css';
+import './audit-logs.css';
 
 interface FilterState {
   adminId?: string;
