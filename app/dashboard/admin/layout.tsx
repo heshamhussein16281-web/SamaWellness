@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -9,6 +9,7 @@ interface AdminLayoutProps {
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -25,13 +26,27 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         }
 
         const data = await res.json();
-        // Check if user has admin permissions
-        if (data.permissions && (data.permissions.includes('manage_roles') || data.permissions.includes('manage_users'))) {
-          setIsAuthorized(true);
-        } else {
-          // User not authorized for admin section
+
+        // Check if accessing audit-logs and user is not super-admin
+        if (
+          pathname.includes('audit-logs') &&
+          data.role !== 'Super Admin' &&
+          !data.permissions?.includes('is_super_admin')
+        ) {
           router.push('/app/dashboard');
+          return;
         }
+
+        // Check for manage_roles or manage_users
+        if (
+          !data.permissions?.includes('manage_roles') &&
+          !data.permissions?.includes('manage_users')
+        ) {
+          router.push('/app/login');
+          return;
+        }
+
+        setIsAuthorized(true);
       } catch (err) {
         console.error('Auth check failed:', err);
         router.push('/app/login');
@@ -41,7 +56,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     };
 
     checkAuth();
-  }, [router]);
+  }, [router, pathname]);
 
   if (isLoading) {
     return (
