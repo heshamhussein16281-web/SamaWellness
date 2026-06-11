@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyJWT, getJWTFromCookie } from '@/lib/auth';
 import { createClient } from '@supabase/supabase-js';
+import { logAuditAction } from '@/lib/audit';
 
 export const dynamic = 'force-dynamic';
 
@@ -51,6 +52,15 @@ export async function POST(
       );
     }
 
+    // Fetch role name before updating permissions
+    const { data: roleInfo, error: fetchRoleError } = await supabase
+      .from('roles')
+      .select('name')
+      .eq('id', id)
+      .single();
+
+    if (fetchRoleError) throw fetchRoleError;
+
     // First, delete existing permissions for this role
     const { error: deleteError } = await supabase
       .from('role_permissions')
@@ -86,6 +96,14 @@ export async function POST(
       .single();
 
     if (fetchError) throw fetchError;
+
+    await logAuditAction({
+      adminId: auth.user!.id,
+      action: 'update',
+      entityType: 'permission',
+      entityId: id,
+      entityName: `${roleInfo.name} permissions`,
+    });
 
     return NextResponse.json(
       {
