@@ -1,19 +1,5 @@
 {
   "env": {
     "CRON_SECRET": "@sama-wellness-cron-secret-2026"
-  },
-  "crons": [
-    {
-      "path": "/api/cron/check-payment-deadlines",
-      "schedule": "*/15 * * * *"
-    },
-    {
-      "path": "/api/cron/update-recurring-clients",
-      "schedule": "0 1 * * *"
-    },
-    {
-      "path": "/api/cron/mark-inactive-clients",
-      "schedule": "0 2 * * *"
-    }
-  ]
+  }
 }
