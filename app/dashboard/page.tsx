@@ -11,5 +11,11 @@ export default function DashboardHome() {
     router.push('/dashboard/admin/roles');
   }, [router]);
 
-  return null;
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+      <div style={{ textAlign: 'center', color: '#666' }}>
+        <p>Loading dashboard...</p>
+      </div>
+    </div>
+  );
 }
