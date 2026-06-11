@@ -3,25 +3,25 @@
 import React, { ReactNode } from 'react';
 import Sidebar from './Sidebar';
 import Topbar from './Topbar';
+import '../dashboard.css';
 
 interface DashboardLayoutProps {
   children: ReactNode;
-  currentPage?: string;
 }
 
-export default function DashboardLayout({ children, currentPage }: DashboardLayoutProps) {
+export default function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
+    <div className="dashboard-container">
       {/* Sidebar */}
-      <Sidebar currentPage={currentPage} />
+      <Sidebar />
 
       {/* Main Content */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div className="dashboard-content-wrapper">
         {/* Topbar */}
         <Topbar />
 
         {/* Content Area */}
-        <main style={{ flex: 1, overflow: 'auto', padding: '20px', backgroundColor: '#F5F2EE' }}>
+        <main className="dashboard-main-content">
           {children}
         </main>
       </div>
