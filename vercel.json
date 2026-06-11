@@ -1,10 +1,7 @@
 {
-  "env": [
-    {
-      "key": "CRON_SECRET",
-      "value": "@sama-wellness-cron-secret-2026"
-    }
-  ],
+  "env": {
+    "CRON_SECRET": "@sama-wellness-cron-secret-2026"
+  },
   "crons": [
     {
       "path": "/api/cron/check-payment-deadlines",
