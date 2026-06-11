@@ -1,0 +1,655 @@
+/* ========================================
+   ROLES MANAGEMENT — COMPONENT STYLES
+
+   Architecture: 3-Layer CSS System
+   Layer 1: Design Tokens     — role-specific CSS variables
+   Layer 2: Layout Containers — display, grid, flex, gap, padding, margin, position
+   Layer 3: Components        — self-contained visual units (panels, buttons, inputs)
+   ======================================== */
+
+
+/* ════════════════════════════════════════════════════════════════
+   LAYER 1: DESIGN TOKENS (Roles-specific)
+   ════════════════════════════════════════════════════════════════ */
+:root {
+  /* ─── Roles-specific Colors ─── */
+  --roles-color-primary:        #7b2d3e; /* burgundy for CTAs */
+  --roles-color-success:        #4a6741; /* olive for save actions */
+  --roles-color-error:          #d32f2f; /* red for delete actions */
+  --roles-color-border:         rgb(234, 228, 221);
+  --roles-color-bg-selected:    rgba(123, 45, 62, 0.08);
+  --roles-color-text-primary:   rgb(45, 74, 70);
+  --roles-color-text-secondary: #2c2c2c;
+  --roles-color-text-muted:     rgba(44, 44, 44, 0.6);
+  --roles-color-icon-inactive:  rgb(234, 228, 221);
+  --roles-color-overlay:        rgba(0, 0, 0, 0.4);
+  --roles-color-shadow:         rgba(0, 0, 0, 0.15);
+
+  /* ─── Roles-specific Spacing ─── */
+  --roles-space-xs:     4px;
+  --roles-space-sm:     8px;
+  --roles-space-md:     16px;
+  --roles-space-lg:     24px;
+  --roles-space-xl:     32px;
+  --roles-space-2xl:    48px;
+
+  /* ─── Roles-specific Dimensions ─── */
+  --roles-modal-width:          500px;
+  --roles-modal-shadow:         -4px 0 20px rgba(0, 0, 0, 0.15);
+  --roles-icon-size-sm:         16px;
+  --roles-icon-size-md:         18px;
+  --roles-icon-size-lg:         20px;
+  --roles-icon-size-xl:         24px;
+  --roles-border-radius:        6px;
+  --roles-panel-border-radius:  10px;
+
+  /* ─── Roles-specific Typography ─── */
+  --roles-font-display:         "Gilda Display", Georgia, serif;
+  --roles-font-ui:              "Josefin Sans", system-ui, sans-serif;
+  --roles-font-body:            "Nunito Sans", system-ui, sans-serif;
+
+  /* ─── Transitions ─── */
+  --roles-transition-default:   0.3s ease-out;
+}
+
+
+/* ════════════════════════════════════════════════════════════════
+   LAYER 2: LAYOUT CONTAINERS
+   Rule: only display / grid / flex / gap / padding / margin /
+         width / position. NEVER colors, fonts, borders, shadows.
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Main roles container ── */
+.roles-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ── Header section ── */
+.roles-header {
+  margin-bottom: 2rem;
+}
+
+.roles-title {
+  margin-bottom: 0.5rem;
+  font-size: 28px;
+  font-weight: 400;
+  font-family: var(--roles-font-display);
+}
+
+.roles-subtitle {
+  font-size: 0.875rem;
+  opacity: 0.7;
+}
+
+/* ── Action bar (Create button) ── */
+.roles-action-bar {
+  margin-bottom: 2rem;
+  text-align: right;
+}
+
+/* ── Grid layout: roles list + permissions panel ── */
+.roles-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+}
+
+/* ── Roles list panel ── */
+.roles-list-panel {
+  background-color: white;
+  border: 1px solid var(--roles-color-border);
+  border-radius: var(--roles-panel-border-radius);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.roles-list-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 2px solid var(--roles-color-border);
+  background: var(--roles-color-border);
+  font-family: var(--roles-font-ui);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.roles-list-body {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.roles-list-empty {
+  padding: 2rem 1.5rem;
+  text-align: center;
+  opacity: 0.6;
+}
+
+/* ── Individual role item ── */
+.role-item {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--roles-color-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.role-item__content {
+  flex: 1;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.role-item__border-left {
+  border-left: 3px solid transparent;
+  padding-left: 1.5rem;
+  transition: border-color var(--roles-transition-default),
+              background-color var(--roles-transition-default),
+              padding-left var(--roles-transition-default);
+}
+
+.role-item.selected {
+  background-color: var(--roles-color-bg-selected);
+}
+
+.role-item.selected .role-item__border-left {
+  border-left-color: var(--roles-color-primary);
+  padding-left: calc(1.5rem - 3px);
+}
+
+.role-item__name {
+  font-weight: 600;
+  text-transform: capitalize;
+  margin-bottom: 0.25rem;
+}
+
+.role-item__count {
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+
+.role-item__actions {
+  display: flex;
+  gap: var(--roles-space-sm);
+  flex-shrink: 0;
+}
+
+.role-item__action-btn {
+  background: none;
+  border: none;
+  padding: var(--roles-space-xs);
+  cursor: pointer;
+  transition: opacity var(--roles-transition-default);
+}
+
+.role-item__action-btn:hover {
+  opacity: 0.7;
+}
+
+/* ── Permissions selector panel ── */
+.permissions-panel {
+  background-color: white;
+  border: 1px solid var(--roles-color-border);
+  border-radius: var(--roles-panel-border-radius);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.permissions-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid var(--roles-color-border);
+}
+
+.permissions-title {
+  font-size: 1.5rem;
+  font-weight: 400;
+  font-family: var(--roles-font-display);
+  margin-bottom: 0.5rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.permissions-description {
+  font-size: 0.875rem;
+  opacity: 0.7;
+  margin: 0;
+}
+
+.permissions-content {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 2rem;
+}
+
+/* ── Permission category ── */
+.permission-category {
+  margin-bottom: 2rem;
+}
+
+.permission-category__title {
+  font-family: var(--roles-font-ui);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--roles-color-border);
+}
+
+.permission-category__items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ── Permission item (checkbox wrapper) ── */
+.permission-item {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: var(--roles-border-radius);
+  cursor: pointer;
+  transition: background-color var(--roles-transition-default);
+  align-items: flex-start;
+}
+
+.permission-item:hover {
+  background-color: rgba(234, 228, 221, 0.5);
+}
+
+.permission-item__checkbox-wrapper {
+  flex-shrink: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}
+
+.permission-item__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.permission-item__name {
+  font-weight: 500;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.permission-item__description {
+  font-size: 0.8rem;
+  opacity: 0.6;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.permission-item__input {
+  display: none;
+}
+
+/* ── Permissions footer (count + save button) ── */
+.permissions-footer {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 1.5rem;
+  border-top: 2px solid var(--roles-color-border);
+}
+
+.permissions-count {
+  font-size: 0.875rem;
+  opacity: 0.6;
+  margin-left: auto;
+}
+
+/* ── Modal overlay ── */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--roles-color-overlay);
+  z-index: 999;
+}
+
+/* ── Modal panel (right-side drawer) ── */
+.modal-panel {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: var(--roles-modal-width);
+  background: white;
+  box-shadow: var(--roles-modal-shadow);
+  z-index: 1000;
+  transform: translateX(100%);
+  transition: transform var(--roles-transition-default);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-panel.open {
+  transform: translateX(0);
+}
+
+.modal-header {
+  padding: 2rem;
+  border-bottom: 1px solid var(--roles-color-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.modal-title {
+  font-family: var(--roles-font-display);
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin: 0;
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity var(--roles-transition-default);
+}
+
+.modal-close-btn:hover {
+  opacity: 0.7;
+}
+
+.modal-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 1rem;
+  margin-top: auto;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--roles-color-border);
+  flex-shrink: 0;
+}
+
+/* ── Form wrapper inside modal ── */
+.modal-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Form field ── */
+.form-field {
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-field__label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-field__input,
+.form-field__textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--roles-color-border);
+  border-radius: var(--roles-border-radius);
+  font-size: 0.875rem;
+  font-family: var(--roles-font-body);
+  background: white;
+  transition: border-color var(--roles-transition-default);
+}
+
+.form-field__input:focus,
+.form-field__textarea:focus {
+  outline: none;
+  border-color: var(--roles-color-primary);
+}
+
+.form-field__textarea {
+  min-height: 100px;
+  resize: none;
+}
+
+/* ── Toast notification ── */
+.toast-error {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: var(--roles-border-radius);
+  font-size: 0.875rem;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.toast-error--visible {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Notification in permissions panel ── */
+.permissions-notification {
+  padding: 1rem;
+  border-radius: var(--roles-border-radius);
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.permissions-notification--error {
+  color: var(--roles-color-error);
+  background: rgba(211, 47, 47, 0.08);
+}
+
+
+/* ════════════════════════════════════════════════════════════════
+   LAYER 3: COMPONENTS
+   Self-contained visual units with full styling
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Button: Primary (Create, Save) ── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--roles-color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--roles-border-radius);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity var(--roles-transition-default);
+  font-family: var(--roles-font-body);
+}
+
+.btn-primary:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Button: Success (Save permissions) ── */
+.btn-success {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--roles-color-success);
+  color: white;
+  border: none;
+  border-radius: var(--roles-border-radius);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity var(--roles-transition-default);
+  font-family: var(--roles-font-body);
+}
+
+.btn-success:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.btn-success:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Button: Secondary (Cancel) ── */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--roles-color-border);
+  color: var(--roles-color-text-primary);
+  border: none;
+  border-radius: var(--roles-border-radius);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity var(--roles-transition-default);
+  font-family: var(--roles-font-body);
+}
+
+.btn-secondary:hover {
+  opacity: 0.8;
+}
+
+.btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Icon button (Edit, Delete) ── */
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--roles-space-xs);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity var(--roles-transition-default);
+}
+
+.icon-btn:hover {
+  opacity: 0.7;
+}
+
+.icon-btn--edit {
+  color: var(--roles-color-primary);
+}
+
+.icon-btn--delete {
+  color: var(--roles-color-error);
+}
+
+/* ── Checkbox circle indicator (custom styled) ── */
+.checkbox-circle {
+  width: var(--roles-icon-size-lg);
+  height: var(--roles-icon-size-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: color var(--roles-transition-default);
+}
+
+.checkbox-circle.checked {
+  color: var(--roles-color-success);
+}
+
+.checkbox-circle.unchecked {
+  color: var(--roles-color-icon-inactive);
+}
+
+/* ── Loading state spinner ── */
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(45, 74, 70, 0.2);
+  border-top-color: var(--roles-color-primary);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Text with color ── */
+.text-error {
+  color: var(--roles-color-error);
+  font-size: 0.875rem;
+}
+
+.text-success {
+  color: var(--roles-color-success);
+  font-size: 0.875rem;
+}
+
+.text-muted {
+  color: var(--roles-color-text-muted);
+  opacity: 0.7;
+}
+
+/* ── Color tokens for inline use ── */
+.text-primary {
+  color: var(--roles-color-text-primary);
+}
+
+.bg-error-light {
+  background-color: rgba(211, 47, 47, 0.08);
+}

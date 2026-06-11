@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Plus, Edit2, Trash2, CheckCircle2, Circle, X } from 'lucide-react';
+import './roles.css';
 
 interface Permission {
   id: string;
@@ -24,7 +25,12 @@ interface Role {
 export default function RolesList() {
   const [roles, setRoles] = useState<Role[]>([]);
   const [permissions, setPermissions] = useState<Permission[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loadingRoles, setLoadingRoles] = useState(true);
+  const [loadingPermissions, setLoadingPermissions] = useState(false);
+  const [loadingCreate, setLoadingCreate] = useState(false);
+  const [loadingEdit, setLoadingEdit] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState<string | null>(null);
+  const [loadingPermissionsAssign, setLoadingPermissionsAssign] = useState(false);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
@@ -32,40 +38,81 @@ export default function RolesList() {
   const [newRole, setNewRole] = useState({ name: '', description: '' });
   const [editingRole, setEditingRole] = useState<Role | null>(null);
   const [editFormData, setEditFormData] = useState({ name: '', description: '' });
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [deleteConfirmRole, setDeleteConfirmRole] = useState<{ id: string; name: string } | null>(null);
 
-  useEffect(() => {
-    fetchRoles();
-    fetchPermissions();
-  }, []);
-
-  async function fetchRoles() {
+  // Fetch roles with error handling
+  const fetchRoles = useCallback(async () => {
     try {
+      setErrorMessage(null);
       const res = await fetch('/api/admin/roles');
       const data = await res.json();
       if (res.ok) {
         setRoles(data.roles);
+      } else {
+        setErrorMessage(data.error || 'Failed to load roles');
       }
     } catch (error) {
-      console.error('Error fetching roles:', error);
+      const errorMsg = error instanceof Error ? error.message : 'Failed to load roles';
+      setErrorMessage(errorMsg);
     } finally {
-      setLoading(false);
+      setLoadingRoles(false);
     }
-  }
+  }, []);
 
-  async function fetchPermissions() {
+  // Fetch permissions with error handling
+  const fetchPermissions = useCallback(async () => {
     try {
+      setLoadingPermissions(true);
+      setErrorMessage(null);
       const res = await fetch('/api/admin/roles/dummy/permissions');
       const data = await res.json();
       if (res.ok) {
         setPermissions(data.permissions);
+      } else {
+        setErrorMessage(data.error || 'Failed to load permissions');
       }
     } catch (error) {
-      console.error('Error fetching permissions:', error);
+      const errorMsg = error instanceof Error ? error.message : 'Failed to load permissions';
+      setErrorMessage(errorMsg);
+    } finally {
+      setLoadingPermissions(false);
     }
-  }
+  }, []);
 
-  async function handleCreateRole(e: React.FormEvent) {
+  // Initialize data on mount
+  useEffect(() => {
+    fetchRoles();
+    fetchPermissions();
+  }, [fetchRoles, fetchPermissions]);
+
+  // Cleanup timeout messages after 5 seconds
+  useEffect(() => {
+    if (successMessage) {
+      const timer = setTimeout(() => setSuccessMessage(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage]);
+
+  useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => setErrorMessage(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage]);
+
+  // Handle create role with validation and error states
+  const handleCreateRole = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!newRole.name.trim()) {
+      setErrorMessage('Role name is required');
+      return;
+    }
+
+    setLoadingCreate(true);
+    setErrorMessage(null);
 
     try {
       const res = await fetch('/api/admin/roles', {
@@ -74,24 +121,35 @@ export default function RolesList() {
         body: JSON.stringify(newRole),
       });
 
+      const data = await res.json();
       if (res.ok) {
-        fetchRoles();
+        await fetchRoles();
         setNewRole({ name: '', description: '' });
         setShowCreateForm(false);
-        alert('Role created successfully');
+        setSuccessMessage('Role created successfully');
       } else {
-        const error = await res.json();
-        alert('Error: ' + error.error);
+        setErrorMessage(data.error || 'Failed to create role');
       }
     } catch (error) {
-      console.error('Error creating role:', error);
-      alert('Error creating role');
+      const errorMsg = error instanceof Error ? error.message : 'Failed to create role';
+      setErrorMessage(errorMsg);
+    } finally {
+      setLoadingCreate(false);
     }
-  }
+  }, [newRole, fetchRoles]);
 
-  async function handleEditRole(e: React.FormEvent) {
+  // Handle edit role with validation and error states
+  const handleEditRole = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingRole) return;
+
+    if (!editFormData.name.trim()) {
+      setErrorMessage('Role name is required');
+      return;
+    }
+
+    setLoadingEdit(true);
+    setErrorMessage(null);
 
     try {
       const res = await fetch(`/api/admin/roles/${editingRole.id}`, {
@@ -100,46 +158,57 @@ export default function RolesList() {
         body: JSON.stringify(editFormData),
       });
 
+      const data = await res.json();
       if (res.ok) {
-        fetchRoles();
+        await fetchRoles();
         setEditingRole(null);
         setShowEditForm(false);
         setEditFormData({ name: '', description: '' });
-        alert('Role updated successfully');
+        setSuccessMessage('Role updated successfully');
       } else {
-        const error = await res.json();
-        alert('Error: ' + error.error);
+        setErrorMessage(data.error || 'Failed to update role');
       }
     } catch (error) {
-      console.error('Error updating role:', error);
-      alert('Error updating role');
+      const errorMsg = error instanceof Error ? error.message : 'Failed to update role';
+      setErrorMessage(errorMsg);
+    } finally {
+      setLoadingEdit(false);
     }
-  }
+  }, [editingRole, editFormData, fetchRoles]);
 
-  async function handleDeleteRole(roleId: string) {
-    if (!confirm('Delete this role? Users with this role will need reassignment.')) return;
+  // Handle delete role with confirmation and error states
+  const handleDeleteRole = useCallback(async (roleId: string) => {
+    setLoadingDelete(roleId);
+    setErrorMessage(null);
 
     try {
       const res = await fetch(`/api/admin/roles/${roleId}`, {
         method: 'DELETE',
       });
 
+      const data = await res.json();
       if (res.ok) {
-        fetchRoles();
+        await fetchRoles();
         setSelectedRole(null);
-        alert('Role deleted successfully');
+        setDeleteConfirmRole(null);
+        setSuccessMessage('Role deleted successfully');
       } else {
-        const error = await res.json();
-        alert('Error: ' + error.error);
+        setErrorMessage(data.error || 'Failed to delete role');
       }
     } catch (error) {
-      console.error('Error deleting role:', error);
-      alert('Error deleting role');
+      const errorMsg = error instanceof Error ? error.message : 'Failed to delete role';
+      setErrorMessage(errorMsg);
+    } finally {
+      setLoadingDelete(null);
     }
-  }
+  }, [fetchRoles]);
 
-  async function handleAssignPermissions() {
+  // Handle assign permissions with error states and prevent double-submit
+  const handleAssignPermissions = useCallback(async () => {
     if (!selectedRole) return;
+
+    setLoadingPermissionsAssign(true);
+    setErrorMessage(null);
 
     try {
       const res = await fetch(`/api/admin/roles/${selectedRole.id}/permissions`, {
@@ -148,20 +217,22 @@ export default function RolesList() {
         body: JSON.stringify({ permission_ids: selectedPermissions }),
       });
 
+      const data = await res.json();
       if (res.ok) {
-        fetchRoles();
+        await fetchRoles();
         setSelectedRole(null);
         setSelectedPermissions([]);
-        alert('Permissions saved successfully');
+        setSuccessMessage('Permissions saved successfully');
       } else {
-        const error = await res.json();
-        alert('Error: ' + error.error);
+        setErrorMessage(data.error || 'Failed to save permissions');
       }
     } catch (error) {
-      console.error('Error assigning permissions:', error);
-      alert('Error saving permissions');
+      const errorMsg = error instanceof Error ? error.message : 'Failed to save permissions';
+      setErrorMessage(errorMsg);
+    } finally {
+      setLoadingPermissionsAssign(false);
     }
-  }
+  }, [selectedRole, selectedPermissions, fetchRoles]);
 
   const groupedPermissions = permissions.reduce(
     (acc, perm) => {
@@ -172,297 +243,336 @@ export default function RolesList() {
     {} as Record<string, Permission[]>
   );
 
-  if (loading) {
-    return <div style={{ padding: '20px', textAlign: 'center' }}>Loading roles...</div>;
+  if (loadingRoles) {
+    return (
+      <div className="roles-container">
+        <div className="roles-header">
+          <h1 className="roles-title">Role Management</h1>
+        </div>
+        <div style={{ textAlign: 'center', padding: '2rem' }}>
+          <div className="spinner"></div>
+          <p style={{ marginTop: '1rem' }}>Loading roles...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-      <div style={{ marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '28px', fontWeight: '400', color: 'rgb(45, 74, 70)', marginBottom: '0.5rem', fontFamily: 'Gilda Display, serif' }}>
-          Role Management
-        </h1>
-        <p style={{ fontSize: '0.875rem', color: '#2c2c2c', opacity: 0.7 }}>
+    <div className="roles-container">
+      {/* Header */}
+      <div className="roles-header">
+        <h1 className="roles-title">Role Management</h1>
+        <p className="roles-subtitle">
           Create roles and assign permissions to manage clinic access
         </p>
       </div>
 
-      <div style={{ marginBottom: '2rem', textAlign: 'right' }}>
+      {/* Error/Success Notifications */}
+      {errorMessage && (
+        <div className="toast-error toast-error--visible text-error" role="alert">
+          <X size={16} style={{ flexShrink: 0, marginTop: '2px' }} />
+          <span>{errorMessage}</span>
+        </div>
+      )}
+      {successMessage && (
+        <div className="toast-error text-success" style={{ color: 'var(--roles-color-success)', background: 'rgba(74, 103, 65, 0.08)' }} role="status">
+          <CheckCircle2 size={16} style={{ flexShrink: 0, marginTop: '2px', color: 'var(--roles-color-success)' }} />
+          <span>{successMessage}</span>
+        </div>
+      )}
+
+      {/* Action Bar */}
+      <div className="roles-action-bar">
         <button
           onClick={() => setShowCreateForm(!showCreateForm)}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            padding: '0.75rem 1.5rem',
-            backgroundColor: '#7b2d3e',
-            color: 'white',
-            border: 'none',
-            borderRadius: '6px',
-            fontSize: '0.875rem',
-            fontWeight: '500',
-            cursor: 'pointer',
-          }}
+          className="btn-primary"
+          disabled={loadingCreate}
         >
-          <Plus size={18} /> Create Role
+          <Plus size={18} />
+          Create Role
         </button>
       </div>
 
-      {/* Create Form Modal */}
+      {/* Create Form Modal Overlay */}
       {showCreateForm && (
         <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0, 0, 0, 0.4)',
-            zIndex: 999,
-          }}
+          className="modal-overlay"
           onClick={() => setShowCreateForm(false)}
+          aria-hidden="true"
         />
       )}
 
-      <div
-        style={{
-          position: 'fixed',
-          right: 0,
-          top: 0,
-          bottom: 0,
-          width: '100%',
-          maxWidth: '500px',
-          background: 'white',
-          boxShadow: '-4px 0 20px rgba(0, 0, 0, 0.15)',
-          zIndex: 1000,
-          transform: showCreateForm ? 'translateX(0)' : 'translateX(100%)',
-          transition: 'transform 0.3s ease-out',
-          overflowY: 'auto',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <div style={{ padding: '2rem', borderBottom: '1px solid rgb(234, 228, 221)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
-          <h2 style={{ fontFamily: 'Gilda Display, serif', fontSize: '1.5rem', color: 'rgb(45, 74, 70)', margin: 0 }}>
-            Create New Role
-          </h2>
+      {/* Create Form Modal */}
+      <div className={`modal-panel ${showCreateForm ? 'open' : ''}`}>
+        <div className="modal-header">
+          <h2 className="modal-title">Create New Role</h2>
           <button
             onClick={() => setShowCreateForm(false)}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgb(45, 74, 70)', padding: '0.5rem' }}
+            className="modal-close-btn"
+            aria-label="Close"
+            type="button"
           >
             <X size={24} />
           </button>
         </div>
 
-        <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
-          <form id="create-role-form" onSubmit={handleCreateRole} style={{ flex: 1 }}>
-            <div style={{ marginBottom: '1.25rem' }}>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '500', color: 'rgb(45, 74, 70)', textTransform: 'uppercase' }}>
+        <div className="modal-content">
+          {errorMessage && (
+            <div className="permissions-notification permissions-notification--error" role="alert">
+              <X size={16} style={{ flexShrink: 0 }} />
+              <span>{errorMessage}</span>
+            </div>
+          )}
+
+          <form id="create-role-form" onSubmit={handleCreateRole} className="modal-form">
+            <div className="form-field">
+              <label htmlFor="create-name" className="form-field__label">
                 Role Name
               </label>
               <input
+                id="create-name"
                 type="text"
                 placeholder="e.g., supervisor, therapist"
                 value={newRole.name}
                 onChange={(e) => setNewRole({ ...newRole, name: e.target.value })}
-                style={{ width: '100%', padding: '0.75rem 1rem', border: '1px solid rgb(234, 228, 221)', borderRadius: '6px', fontSize: '0.875rem' }}
+                className="form-field__input"
                 required
+                disabled={loadingCreate}
               />
             </div>
 
-            <div style={{ marginBottom: '1.25rem' }}>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '500', color: 'rgb(45, 74, 70)', textTransform: 'uppercase' }}>
+            <div className="form-field">
+              <label htmlFor="create-description" className="form-field__label">
                 Description
               </label>
               <textarea
+                id="create-description"
                 placeholder="Describe the purpose and responsibilities of this role..."
                 value={newRole.description}
                 onChange={(e) => setNewRole({ ...newRole, description: e.target.value })}
-                style={{ width: '100%', padding: '0.75rem 1rem', border: '1px solid rgb(234, 228, 221)', borderRadius: '6px', fontSize: '0.875rem', minHeight: '100px' }}
+                className="form-field__textarea"
                 rows={3}
+                disabled={loadingCreate}
               />
             </div>
           </form>
 
-          <div style={{ display: 'flex', gap: '1rem', marginTop: 'auto', paddingTop: '1.5rem', borderTop: '1px solid rgb(234, 228, 221)' }}>
+          <div className="modal-footer">
             <button
               type="submit"
               form="create-role-form"
-              style={{ backgroundColor: '#7b2d3e', color: 'white', border: 'none', borderRadius: '6px', padding: '0.75rem 1.5rem', cursor: 'pointer', fontWeight: '500' }}
+              className="btn-primary"
+              disabled={loadingCreate}
             >
+              {loadingCreate ? <span className="spinner" style={{ marginRight: '0.5rem' }}></span> : null}
               Create Role
             </button>
             <button
               type="button"
               onClick={() => setShowCreateForm(false)}
-              style={{ backgroundColor: 'rgb(234, 228, 221)', color: 'rgb(45, 74, 70)', border: 'none', borderRadius: '6px', padding: '0.75rem 1.5rem', cursor: 'pointer' }}
+              className="btn-secondary"
+              disabled={loadingCreate}
             >
-              <X size={16} style={{ marginRight: '0.5rem' }} /> Cancel
+              <X size={16} />
+              Cancel
             </button>
           </div>
         </div>
       </div>
 
-      {/* Edit Form Modal */}
+      {/* Edit Form Modal Overlay */}
       {showEditForm && editingRole && (
         <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0, 0, 0, 0.4)',
-            zIndex: 999,
-          }}
+          className="modal-overlay"
           onClick={() => setShowEditForm(false)}
+          aria-hidden="true"
         />
       )}
 
-      <div
-        style={{
-          position: 'fixed',
-          right: 0,
-          top: 0,
-          bottom: 0,
-          width: '100%',
-          maxWidth: '500px',
-          background: 'white',
-          boxShadow: '-4px 0 20px rgba(0, 0, 0, 0.15)',
-          zIndex: 1000,
-          transform: showEditForm ? 'translateX(0)' : 'translateX(100%)',
-          transition: 'transform 0.3s ease-out',
-          overflowY: 'auto',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <div style={{ padding: '2rem', borderBottom: '1px solid rgb(234, 228, 221)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
-          <h2 style={{ fontFamily: 'Gilda Display, serif', fontSize: '1.5rem', color: 'rgb(45, 74, 70)', margin: 0 }}>
-            Edit Role
-          </h2>
+      {/* Edit Form Modal */}
+      <div className={`modal-panel ${showEditForm ? 'open' : ''}`}>
+        <div className="modal-header">
+          <h2 className="modal-title">Edit Role</h2>
           <button
             onClick={() => setShowEditForm(false)}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgb(45, 74, 70)', padding: '0.5rem' }}
+            className="modal-close-btn"
+            aria-label="Close"
+            type="button"
           >
             <X size={24} />
           </button>
         </div>
 
-        <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
-          <form id="edit-role-form" onSubmit={handleEditRole} style={{ flex: 1 }}>
-            <div style={{ marginBottom: '1.25rem' }}>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '500', color: 'rgb(45, 74, 70)', textTransform: 'uppercase' }}>
+        <div className="modal-content">
+          {errorMessage && (
+            <div className="permissions-notification permissions-notification--error" role="alert">
+              <X size={16} style={{ flexShrink: 0 }} />
+              <span>{errorMessage}</span>
+            </div>
+          )}
+
+          <form id="edit-role-form" onSubmit={handleEditRole} className="modal-form">
+            <div className="form-field">
+              <label htmlFor="edit-name" className="form-field__label">
                 Role Name
               </label>
               <input
+                id="edit-name"
                 type="text"
                 value={editFormData.name}
                 onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
-                style={{ width: '100%', padding: '0.75rem 1rem', border: '1px solid rgb(234, 228, 221)', borderRadius: '6px', fontSize: '0.875rem' }}
+                className="form-field__input"
                 required
+                disabled={loadingEdit}
               />
             </div>
 
-            <div style={{ marginBottom: '1.25rem' }}>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '500', color: 'rgb(45, 74, 70)', textTransform: 'uppercase' }}>
+            <div className="form-field">
+              <label htmlFor="edit-description" className="form-field__label">
                 Description
               </label>
               <textarea
+                id="edit-description"
                 value={editFormData.description}
                 onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
-                style={{ width: '100%', padding: '0.75rem 1rem', border: '1px solid rgb(234, 228, 221)', borderRadius: '6px', fontSize: '0.875rem', minHeight: '100px' }}
+                className="form-field__textarea"
                 rows={3}
+                disabled={loadingEdit}
               />
             </div>
           </form>
 
-          <div style={{ display: 'flex', gap: '1rem', marginTop: 'auto', paddingTop: '1.5rem', borderTop: '1px solid rgb(234, 228, 221)' }}>
+          <div className="modal-footer">
             <button
               type="submit"
               form="edit-role-form"
-              style={{ backgroundColor: '#7b2d3e', color: 'white', border: 'none', borderRadius: '6px', padding: '0.75rem 1.5rem', cursor: 'pointer', fontWeight: '500' }}
+              className="btn-primary"
+              disabled={loadingEdit}
             >
+              {loadingEdit ? <span className="spinner" style={{ marginRight: '0.5rem' }}></span> : null}
               Save Changes
             </button>
             <button
               type="button"
               onClick={() => setShowEditForm(false)}
-              style={{ backgroundColor: 'rgb(234, 228, 221)', color: 'rgb(45, 74, 70)', border: 'none', borderRadius: '6px', padding: '0.75rem 1.5rem', cursor: 'pointer' }}
+              className="btn-secondary"
+              disabled={loadingEdit}
             >
-              <X size={16} style={{ marginRight: '0.5rem' }} /> Cancel
+              <X size={16} />
+              Cancel
             </button>
           </div>
         </div>
       </div>
 
-      {/* Roles and Permissions Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '2rem' }}>
-        {/* Roles List */}
-        <div style={{ backgroundColor: 'white', border: '1px solid rgb(234, 228, 221)', borderRadius: '10px', overflow: 'hidden' }}>
-          <div style={{ padding: '1.25rem 1.5rem', borderBottom: '2px solid rgb(234, 228, 221)', background: 'rgb(234, 228, 221)', fontFamily: 'Josefin Sans, sans-serif', fontSize: '0.875rem', fontWeight: '600', color: 'rgb(45, 74, 70)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-            Available Roles
+      {/* Delete Confirmation Modal Overlay */}
+      {deleteConfirmRole && (
+        <div
+          className="modal-overlay"
+          onClick={() => setDeleteConfirmRole(null)}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirmRole && (
+        <div className="modal-panel open" style={{ maxWidth: '400px', left: '50%', right: 'auto', top: '50%', transform: 'translate(-50%, -50%)' }}>
+          <div className="modal-header">
+            <h2 className="modal-title">Confirm Delete</h2>
+            <button
+              onClick={() => setDeleteConfirmRole(null)}
+              className="modal-close-btn"
+              aria-label="Close"
+              type="button"
+            >
+              <X size={24} />
+            </button>
           </div>
-          <div>
+
+          <div className="modal-content" style={{ padding: '2rem' }}>
+            <p style={{ marginBottom: '1rem' }}>
+              Delete role <strong>{deleteConfirmRole.name}</strong>? Users with this role will need reassignment.
+            </p>
+            <div className="modal-footer">
+              <button
+                onClick={() => handleDeleteRole(deleteConfirmRole.id)}
+                className="btn-primary"
+                style={{ backgroundColor: 'var(--roles-color-error)' }}
+                disabled={loadingDelete === deleteConfirmRole.id}
+              >
+                {loadingDelete === deleteConfirmRole.id ? <span className="spinner" style={{ marginRight: '0.5rem' }}></span> : null}
+                Delete
+              </button>
+              <button
+                onClick={() => setDeleteConfirmRole(null)}
+                className="btn-secondary"
+                disabled={loadingDelete === deleteConfirmRole.id}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Roles and Permissions Grid */}
+      <div className="roles-grid">
+        {/* Roles List Panel */}
+        <div className="roles-list-panel">
+          <div className="roles-list-header">Available Roles</div>
+          <div className="roles-list-body">
             {roles.length === 0 ? (
-              <div style={{ padding: '2rem 1.5rem', textAlign: 'center', color: '#2c2c2c', opacity: 0.6 }}>
+              <div className="roles-list-empty">
                 No roles yet. Create your first role.
               </div>
             ) : (
               roles.map((role) => (
                 <div
                   key={role.id}
-                  style={{
-                    padding: '1rem 1.5rem',
-                    borderBottom: '1px solid rgb(234, 228, 221)',
-                    backgroundColor: selectedRole?.id === role.id ? 'rgba(123, 45, 62, 0.08)' : 'transparent',
-                    borderLeft: selectedRole?.id === role.id ? '3px solid #7b2d3e' : '3px solid transparent',
-                    paddingLeft: selectedRole?.id === role.id ? 'calc(1.5rem - 3px)' : '1.5rem',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}
+                  className={`role-item role-item__border-left ${selectedRole?.id === role.id ? 'selected' : ''}`}
                 >
                   <button
                     onClick={() => {
                       setSelectedRole(role);
                       setSelectedPermissions(role.role_permissions.map((rp) => rp.permissions.id));
                     }}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
-                      textAlign: 'left',
-                      flex: 1,
-                    }}
+                    className="role-item__content"
+                    type="button"
                   >
-                    <div style={{ fontWeight: '600', color: 'rgb(45, 74, 70)', marginBottom: '0.25rem', textTransform: 'capitalize' }}>
+                    <div className="role-item__name text-primary">
                       {role.name}
                     </div>
-                    <div style={{ fontSize: '0.75rem', color: '#2c2c2c', opacity: 0.6 }}>
+                    <div className="role-item__count">
                       {role.role_permissions.length} permission{role.role_permissions.length !== 1 ? 's' : ''}
                     </div>
                   </button>
 
-                  <div style={{ display: 'flex', gap: '8px' }}>
+                  <div className="role-item__actions">
                     <button
                       onClick={() => {
                         setEditingRole(role);
                         setEditFormData({ name: role.name, description: role.description });
                         setShowEditForm(true);
                       }}
-                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#7b2d3e', padding: '4px' }}
+                      className="icon-btn icon-btn--edit"
                       title="Edit role"
+                      type="button"
+                      disabled={loadingDelete === role.id}
                     >
                       <Edit2 size={16} />
                     </button>
                     <button
-                      onClick={() => handleDeleteRole(role.id)}
-                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#d32f2f', padding: '4px' }}
+                      onClick={() => setDeleteConfirmRole({ id: role.id, name: role.name })}
+                      className="icon-btn icon-btn--delete"
                       title="Delete role"
+                      type="button"
+                      disabled={loadingDelete === role.id}
                     >
-                      <Trash2 size={16} />
+                      {loadingDelete === role.id ? (
+                        <span className="spinner" style={{ width: '14px', height: '14px' }}></span>
+                      ) : (
+                        <Trash2 size={16} />
+                      )}
                     </button>
                   </div>
                 </div>
@@ -471,91 +581,82 @@ export default function RolesList() {
           </div>
         </div>
 
-        {/* Permissions Selector */}
+        {/* Permissions Selector Panel */}
         {selectedRole && (
-          <div style={{ backgroundColor: 'white', border: '1px solid rgb(234, 228, 221)', borderRadius: '10px', padding: '2rem' }}>
-            <div style={{ marginBottom: '2rem', paddingBottom: '1.5rem', borderBottom: '2px solid rgb(234, 228, 221)' }}>
-              <h2 style={{ fontFamily: 'Gilda Display, serif', fontSize: '1.5rem', color: 'rgb(45, 74, 70)', marginBottom: '0.5rem' }}>
-                {selectedRole.name}
-              </h2>
+          <div className="permissions-panel">
+            <div className="permissions-header">
+              <h2 className="permissions-title">{selectedRole.name}</h2>
               {selectedRole.description && (
-                <p style={{ fontSize: '0.875rem', color: '#2c2c2c', opacity: 0.7 }}>
+                <p className="permissions-description">
                   {selectedRole.description}
                 </p>
               )}
             </div>
 
-            <div>
-              <h3 style={{ fontFamily: 'Josefin Sans, sans-serif', fontSize: '0.875rem', fontWeight: '600', color: 'rgb(45, 74, 70)', marginBottom: '1.5rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            {errorMessage && (
+              <div className="permissions-notification permissions-notification--error" role="alert">
+                <X size={16} style={{ flexShrink: 0 }} />
+                <span>{errorMessage}</span>
+              </div>
+            )}
+
+            <div className="permissions-content">
+              <h3 style={{ fontFamily: 'var(--roles-font-ui)', fontSize: '0.875rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '1.5rem' }}>
                 Assign Permissions
               </h3>
 
               {Object.entries(groupedPermissions).map(([category, perms]) => (
-                <div key={category} style={{ marginBottom: '2rem' }}>
-                  <div style={{ fontFamily: 'Josefin Sans, sans-serif', fontSize: '0.75rem', fontWeight: '600', color: 'rgb(45, 74, 70)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '1rem', paddingBottom: '0.75rem', borderBottom: '1px solid rgb(234, 228, 221)' }}>
-                    {category}
+                <div key={category} className="permission-category">
+                  <div className="permission-category__title">{category}</div>
+                  <div className="permission-category__items">
+                    {perms.map((perm) => (
+                      <label key={perm.id} className="permission-item">
+                        <div className="permission-item__checkbox-wrapper">
+                          <div className={`checkbox-circle ${selectedPermissions.includes(perm.id) ? 'checked' : 'unchecked'}`}>
+                            {selectedPermissions.includes(perm.id) ? (
+                              <CheckCircle2 size={20} />
+                            ) : (
+                              <Circle size={20} />
+                            )}
+                          </div>
+                        </div>
+                        <div className="permission-item__content">
+                          <div className="permission-item__name">{perm.name}</div>
+                          <div className="permission-item__description">
+                            {perm.description}
+                          </div>
+                        </div>
+                        <input
+                          type="checkbox"
+                          className="permission-item__input"
+                          checked={selectedPermissions.includes(perm.id)}
+                          onChange={() => {
+                            setSelectedPermissions(
+                              selectedPermissions.includes(perm.id)
+                                ? selectedPermissions.filter((id) => id !== perm.id)
+                                : [...selectedPermissions, perm.id]
+                            );
+                          }}
+                          aria-label={`Assign ${perm.name} permission`}
+                          disabled={loadingPermissionsAssign}
+                        />
+                      </label>
+                    ))}
                   </div>
-                  {perms.map((perm) => (
-                    <label
-                      key={perm.id}
-                      style={{
-                        display: 'flex',
-                        gap: '1rem',
-                        padding: '1rem',
-                        cursor: 'pointer',
-                        borderRadius: '6px',
-                        marginBottom: '0.75rem',
-                      }}
-                    >
-                      <div style={{ flexShrink: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        {selectedPermissions.includes(perm.id) ? (
-                          <CheckCircle2 size={20} color="#4a6741" />
-                        ) : (
-                          <Circle size={20} color="rgb(234, 228, 221)" />
-                        )}
-                      </div>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: '500', fontSize: '0.875rem', color: 'rgb(45, 74, 70)', marginBottom: '0.25rem' }}>
-                          {perm.name}
-                        </div>
-                        <div style={{ fontSize: '0.8rem', color: '#2c2c2c', opacity: 0.6, lineHeight: 1.4 }}>
-                          {perm.description}
-                        </div>
-                      </div>
-                      <input
-                        type="checkbox"
-                        checked={selectedPermissions.includes(perm.id)}
-                        onChange={() => {
-                          setSelectedPermissions(
-                            selectedPermissions.includes(perm.id)
-                              ? selectedPermissions.filter((id) => id !== perm.id)
-                              : [...selectedPermissions, perm.id]
-                          );
-                        }}
-                        style={{ display: 'none' }}
-                      />
-                    </label>
-                  ))}
                 </div>
               ))}
             </div>
 
-            <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem', paddingTop: '1.5rem', borderTop: '2px solid rgb(234, 228, 221)' }}>
+            <div className="permissions-footer">
               <button
                 onClick={handleAssignPermissions}
-                style={{
-                  backgroundColor: '#4a6741',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '6px',
-                  padding: '0.75rem 1.5rem',
-                  cursor: 'pointer',
-                  fontWeight: '500',
-                }}
+                className="btn-success"
+                disabled={loadingPermissionsAssign}
               >
+                {loadingPermissionsAssign ? <span className="spinner" style={{ marginRight: '0.5rem' }}></span> : null}
                 Save Permissions
               </button>
-              <span style={{ fontSize: '0.875rem', color: '#2c2c2c', opacity: 0.6, display: 'flex', alignItems: 'center' }}>
+              <span className="permissions-count">
                 {selectedPermissions.length} permission{selectedPermissions.length !== 1 ? 's' : ''} selected
               </span>
             </div>
