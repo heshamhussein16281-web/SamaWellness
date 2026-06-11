@@ -47,6 +47,30 @@ export default function Sidebar() {
       {/* Divider */}
       <div className="sidebar-divider" />
 
+      {/* Clinical Section */}
+      <div>
+        <div className="sidebar-section-label">Clinical</div>
+
+        <Link href="/app/dashboard/clinical/clients">
+          <div className={`sidebar-nav-item ${isActive('/app/dashboard/clinical/clients') ? 'active' : ''}`}>
+            <span className={`sidebar-nav-link ${isActive('/app/dashboard/clinical/clients') ? 'active' : ''}`}>
+              👤 Clients
+            </span>
+          </div>
+        </Link>
+
+        <Link href="/app/dashboard/clinical/bookings">
+          <div className={`sidebar-nav-item ${isActive('/app/dashboard/clinical/bookings') ? 'active' : ''}`}>
+            <span className={`sidebar-nav-link ${isActive('/app/dashboard/clinical/bookings') ? 'active' : ''}`}>
+              📅 Bookings
+            </span>
+          </div>
+        </Link>
+      </div>
+
+      {/* Divider */}
+      <div className="sidebar-divider" />
+
       {/* Admin Section */}
       <div>
         <div className="sidebar-section-label">Admin</div>

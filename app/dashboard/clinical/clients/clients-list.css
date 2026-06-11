@@ -1,0 +1,217 @@
+/* ========================================
+   CLIENTS LIST STYLES
+   ======================================== */
+
+/* Page container */
+.clients-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Page header */
+.clients-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.clients-page-title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--color-charcoal);
+  font-family: var(--font-display);
+}
+
+/* Page button */
+.clients-page-btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-ui);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.clients-page-btn--primary {
+  background-color: var(--color-burgundy);
+  color: #fff;
+}
+
+.clients-page-btn--primary:hover {
+  background-color: #6a1f2e;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(123, 45, 62, 0.2);
+}
+
+/* Loading state */
+.clients-page-loading,
+.clients-page-error {
+  padding: 40px 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+}
+
+.clients-page-error {
+  color: #d9534f;
+}
+
+/* Empty state */
+.clients-page-empty {
+  padding: 60px 20px;
+  text-align: center;
+  background-color: var(--color-linen);
+  border-radius: var(--radius-lg);
+}
+
+.clients-page-empty p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+}
+
+/* Clients list container */
+.clients-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-x: auto;
+}
+
+/* Table */
+.clients-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.clients-table thead {
+  background-color: var(--color-linen);
+}
+
+.clients-table th {
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--color-nav-text);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: var(--font-ui);
+  border-bottom: 2px solid var(--color-sand);
+}
+
+.clients-table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--color-sand);
+  font-size: 13px;
+  color: var(--color-charcoal);
+}
+
+.clients-table tbody tr:hover {
+  background-color: var(--color-linen);
+}
+
+/* Status badge */
+.client-status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-family: var(--font-ui);
+}
+
+.client-status-badge--intake {
+  background-color: #e8f4f8;
+  color: #0c5460;
+}
+
+.client-status-badge--active {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.client-status-badge--completed {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+.client-status-badge--cancelled {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Action button */
+.client-action-btn {
+  padding: 6px 12px;
+  background-color: var(--color-sand);
+  border: 1px solid var(--color-sand);
+  border-radius: var(--radius-sm);
+  color: var(--color-nav-text);
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font-ui);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-decoration: none;
+  display: inline-block;
+}
+
+.client-action-btn:hover {
+  background-color: #d9cdc0;
+  transform: translateY(-1px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .clients-page-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .clients-page-btn {
+    width: 100%;
+  }
+
+  .clients-table {
+    font-size: 12px;
+  }
+
+  .clients-table th,
+  .clients-table td {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 560px) {
+  .clients-page-title {
+    font-size: 22px;
+  }
+
+  .clients-table {
+    font-size: 11px;
+  }
+
+  .clients-table th,
+  .clients-table td {
+    padding: 8px;
+  }
+
+  .clients-list {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}

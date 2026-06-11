@@ -1,0 +1,398 @@
+/* ========================================
+   INTAKE FORM STYLES
+
+   Architecture: 3-Layer CSS System
+   Layer 1: Design Tokens     — CSS variables
+   Layer 2: Layout Containers — display, flex, gap, padding, margin
+   Layer 3: Components        — visual styling
+   ======================================== */
+
+
+/* ════════════════════════════════════════════════════════════════
+   LAYER 1: DESIGN TOKENS (Intake Form specific)
+   ════════════════════════════════════════════════════════════════ */
+:root {
+  /* Form tokens */
+  --form-max-width:         600px;
+  --form-container-padding: 20px;
+  --form-section-gap:       24px;
+  --form-group-gap:         16px;
+  --form-row-gap:           16px;
+  --form-input-padding:     12px 14px;
+  --form-input-height:      40px;
+  --form-input-border-width: 1px;
+  --form-label-margin:      8px;
+  --form-button-padding:    12px 20px;
+  --form-button-height:     40px;
+}
+
+
+/* ════════════════════════════════════════════════════════════════
+   LAYER 2: LAYOUT CONTAINERS
+   ════════════════════════════════════════════════════════════════ */
+
+/* Main form container */
+.intake-form-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--form-group-gap);
+  max-width: var(--form-max-width);
+  margin: 0 auto;
+  padding: var(--form-container-padding);
+}
+
+/* Form header */
+.intake-form-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+/* Form element */
+.intake-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--form-section-gap);
+}
+
+/* Form section (fieldset) */
+.intake-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--form-group-gap);
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Form group (label + input) */
+.intake-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--form-label-margin);
+}
+
+/* Form row (multiple groups side-by-side) */
+.intake-form-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--form-row-gap);
+}
+
+@media (min-width: 600px) {
+  .intake-form-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .intake-form-row.three-cols {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+/* Form actions (buttons) */
+.intake-form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+
+/* ════════════════════════════════════════════════════════════════
+   LAYER 3: COMPONENTS — Visual Styling
+   ════════════════════════════════════════════════════════════════ */
+
+/* Form title */
+.intake-form-title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--color-charcoal);
+  font-family: var(--font-display);
+}
+
+/* Form description */
+.intake-form-description {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+  font-family: var(--font-body);
+}
+
+/* Section title */
+.intake-form-section-title {
+  margin: 0;
+  padding-bottom: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-nav-text);
+  border-bottom: 2px solid var(--color-sand);
+  font-family: var(--font-ui);
+}
+
+/* Form label */
+.intake-form-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-nav-text);
+  font-family: var(--font-ui);
+}
+
+/* Required indicator */
+.intake-form-required {
+  color: var(--color-burgundy);
+  font-weight: 600;
+}
+
+/* Input styling */
+.intake-form-input {
+  padding: var(--form-input-padding);
+  height: var(--form-input-height);
+  border: var(--form-input-border-width) solid var(--color-sand);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--color-charcoal);
+  background-color: #fff;
+  transition: all var(--transition-base);
+}
+
+.intake-form-input:focus {
+  outline: none;
+  border-color: var(--color-burgundy);
+  box-shadow: 0 0 0 3px rgba(123, 45, 62, 0.1);
+}
+
+.intake-form-input:disabled {
+  background-color: #f5f5f5;
+  color: #999;
+  cursor: not-allowed;
+}
+
+/* Textarea styling */
+.intake-form-textarea {
+  padding: var(--form-input-padding);
+  border: var(--form-input-border-width) solid var(--color-sand);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--color-charcoal);
+  background-color: #fff;
+  resize: vertical;
+  min-height: 100px;
+  transition: all var(--transition-base);
+}
+
+.intake-form-textarea:focus {
+  outline: none;
+  border-color: var(--color-burgundy);
+  box-shadow: 0 0 0 3px rgba(123, 45, 62, 0.1);
+}
+
+.intake-form-textarea:disabled {
+  background-color: #f5f5f5;
+  color: #999;
+  cursor: not-allowed;
+}
+
+/* Error message */
+.intake-form-error {
+  padding: 12px 14px;
+  background-color: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: var(--radius-md);
+  color: #856404;
+  font-size: 13px;
+  font-family: var(--font-body);
+}
+
+/* Button styling */
+.intake-form-button {
+  padding: var(--form-button-padding);
+  height: var(--form-button-height);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font-ui);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.intake-form-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Primary button */
+.intake-form-button--primary {
+  background-color: var(--color-burgundy);
+  color: #fff;
+  min-width: 140px;
+}
+
+.intake-form-button--primary:hover:not(:disabled) {
+  background-color: #6a1f2e;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(123, 45, 62, 0.2);
+}
+
+/* Secondary button */
+.intake-form-button--secondary {
+  background-color: transparent;
+  color: var(--color-nav-text);
+  border: 2px solid var(--color-sand);
+}
+
+.intake-form-button--secondary:hover:not(:disabled) {
+  background-color: var(--color-sand);
+  border-color: var(--color-sand);
+  transform: translateY(-2px);
+}
+
+
+/* ════════════════════════════════════════════════════════════════
+   SUCCESS STATE
+   ════════════════════════════════════════════════════════════════ */
+
+.intake-success-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  padding: 20px;
+}
+
+.intake-success-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  max-width: 500px;
+  padding: 40px;
+  background-color: #fff;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.intake-success-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background-color: var(--color-olive);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 40px;
+  font-weight: bold;
+}
+
+.intake-success-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-charcoal);
+  font-family: var(--font-display);
+}
+
+.intake-success-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  padding: 16px;
+  background-color: var(--color-linen);
+  border-radius: var(--radius-md);
+  text-align: left;
+}
+
+.intake-success-details p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-charcoal);
+}
+
+.intake-success-details strong {
+  color: var(--color-nav-text);
+}
+
+.intake-success-message {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+}
+
+.intake-success-button {
+  padding: 12px 28px;
+  background-color: var(--color-burgundy);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font-ui);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.intake-success-button:hover {
+  background-color: #6a1f2e;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(123, 45, 62, 0.2);
+}
+
+
+/* ════════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 600px) {
+  .intake-form-container {
+    max-width: 100%;
+    padding: 16px;
+  }
+
+  .intake-form-title {
+    font-size: 22px;
+  }
+
+  .intake-form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .intake-form-row.three-cols {
+    grid-template-columns: 1fr;
+  }
+
+  .intake-form-actions {
+    flex-direction: column-reverse;
+    gap: 10px;
+  }
+
+  .intake-form-button {
+    width: 100%;
+  }
+
+  .intake-success-content {
+    padding: 24px;
+  }
+
+  .intake-success-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 32px;
+  }
+
+  .intake-success-title {
+    font-size: 20px;
+  }
+}

@@ -1,0 +1,601 @@
+/* ========================================
+   CLIENT PROFILE STYLES
+
+   Architecture: 3-Layer CSS System
+   Layer 1: Design Tokens     — CSS variables
+   Layer 2: Layout Containers — display, flex, gap, padding, margin
+   Layer 3: Components        — visual styling
+   ======================================== */
+
+
+/* ════════════════════════════════════════════════════════════════
+   LAYER 1: DESIGN TOKENS (Client Profile specific)
+   ════════════════════════════════════════════════════════════════ */
+:root {
+  /* Profile tokens */
+  --profile-padding:        20px;
+  --profile-header-gap:     20px;
+  --profile-stats-gap:      20px;
+  --profile-tabs-gap:       0;
+  --profile-tab-padding:    20px;
+}
+
+
+/* ════════════════════════════════════════════════════════════════
+   LAYER 2: LAYOUT CONTAINERS
+   ════════════════════════════════════════════════════════════════ */
+
+/* Main container */
+.client-profile-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--profile-header-gap);
+  padding: var(--profile-padding);
+}
+
+/* Profile header */
+.client-profile-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.client-profile-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.client-profile-title-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.client-profile-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.client-profile-header-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Stats grid */
+.client-profile-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--profile-stats-gap);
+}
+
+.client-profile-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Tabs container */
+.client-profile-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--profile-tabs-gap);
+}
+
+/* Tab navigation */
+.client-profile-tabs-nav {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--color-sand);
+  overflow-x: auto;
+}
+
+/* Tab content */
+.client-profile-tabs-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.client-profile-tab-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Info grid */
+.client-profile-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.client-profile-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Table */
+.client-profile-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.client-profile-table thead {
+  background-color: var(--color-linen);
+}
+
+.client-profile-table th,
+.client-profile-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-sand);
+}
+
+/* Timeline */
+.client-profile-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 20px 0;
+}
+
+.client-profile-timeline-item {
+  display: flex;
+  gap: 16px;
+  position: relative;
+}
+
+/* Pagination */
+.client-profile-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 20px 0;
+}
+
+
+/* ════════════════════════════════════════════════════════════════
+   LAYER 3: COMPONENTS — Visual Styling
+   ════════════════════════════════════════════════════════════════ */
+
+/* Loading & Error States */
+.client-profile-loading,
+.client-profile-error {
+  padding: 40px 20px;
+  text-align: center;
+  font-size: 16px;
+  color: #666;
+}
+
+.client-profile-error {
+  color: #d9534f;
+}
+
+/* Profile name */
+.client-profile-name {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--color-charcoal);
+  font-family: var(--font-display);
+}
+
+/* Badge styling */
+.client-profile-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: var(--font-ui);
+}
+
+.client-profile-badge--intake {
+  background-color: #e8f4f8;
+  color: #0c5460;
+}
+
+.client-profile-badge--active {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.client-profile-badge--completed {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+.client-profile-badge--cancelled {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.client-profile-badge--recurring {
+  background-color: #cfe2ff;
+  color: #084298;
+}
+
+/* Action buttons */
+.client-profile-action-btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-ui);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.client-profile-action-btn--secondary {
+  background-color: var(--color-sand);
+  color: var(--color-nav-text);
+  border: 1px solid var(--color-sand);
+}
+
+.client-profile-action-btn--secondary:hover {
+  background-color: #d9cdc0;
+}
+
+.client-profile-action-btn--danger {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.client-profile-action-btn--danger:hover {
+  background-color: #f5c2c7;
+}
+
+/* Stat styling */
+.client-profile-stat-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: var(--font-ui);
+}
+
+.client-profile-stat-value {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--color-charcoal);
+  font-family: var(--font-ui);
+}
+
+/* Tab button */
+.client-profile-tab-button {
+  padding: 12px 20px;
+  background-color: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: #666;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font-ui);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.client-profile-tab-button:hover {
+  color: var(--color-nav-text);
+}
+
+.client-profile-tab-button.active {
+  color: var(--color-burgundy);
+  border-bottom-color: var(--color-burgundy);
+}
+
+/* Info label & value */
+.client-profile-info-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: var(--font-ui);
+}
+
+.client-profile-info-value {
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-charcoal);
+  font-family: var(--font-body);
+}
+
+/* Notes section */
+.client-profile-notes-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background-color: var(--color-linen);
+  border-radius: var(--radius-md);
+  margin-top: 20px;
+}
+
+.client-profile-notes-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-nav-text);
+}
+
+.client-profile-notes-text {
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-charcoal);
+  line-height: 1.6;
+}
+
+/* Empty state */
+.client-profile-empty-state {
+  margin: 0;
+  padding: 40px 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #999;
+}
+
+/* Table styling */
+.client-profile-table th {
+  font-weight: 600;
+  color: var(--color-nav-text);
+  font-family: var(--font-ui);
+}
+
+.client-profile-table td {
+  font-size: 13px;
+  color: var(--color-charcoal);
+}
+
+.client-profile-table tbody tr:hover {
+  background-color: var(--color-linen);
+}
+
+/* Status badge in table */
+.client-profile-status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-family: var(--font-ui);
+}
+
+.client-profile-status-badge--completed {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.client-profile-status-badge--confirmed {
+  background-color: #cfe2ff;
+  color: #084298;
+}
+
+.client-profile-status-badge--scheduled {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.client-profile-status-badge--cancelled {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.client-profile-status-badge--expired {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.client-profile-status-badge--pending {
+  background-color: #e2e3e5;
+  color: #383d41;
+}
+
+.client-profile-status-badge--paid {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.client-profile-status-badge--unpaid {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.client-profile-status-badge--partial {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+/* Progress badge */
+.client-profile-progress-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  background-color: #d4edda;
+  color: #155724;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--font-ui);
+}
+
+/* Timeline styling */
+.client-profile-timeline-dot {
+  width: 12px;
+  height: 12px;
+  background-color: var(--color-burgundy);
+  border-radius: 50%;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.client-profile-timeline-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.client-profile-timeline-text {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-charcoal);
+}
+
+.client-profile-timeline-date {
+  margin: 0;
+  font-size: 12px;
+  color: #999;
+  font-family: var(--font-ui);
+}
+
+.client-profile-timeline-reason {
+  margin: 0;
+  font-size: 13px;
+  color: #666;
+  font-style: italic;
+}
+
+.client-profile-timeline-user {
+  margin: 0;
+  font-size: 12px;
+  color: #999;
+}
+
+/* Pagination */
+.client-profile-pagination-btn {
+  padding: 8px 14px;
+  background-color: var(--color-sand);
+  border: 1px solid var(--color-sand);
+  border-radius: var(--radius-md);
+  color: var(--color-nav-text);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.client-profile-pagination-btn:hover:not(:disabled) {
+  background-color: #d9cdc0;
+}
+
+.client-profile-pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.client-profile-pagination-info {
+  font-size: 12px;
+  color: #666;
+  font-family: var(--font-ui);
+}
+
+
+/* ════════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .client-profile-container {
+    padding: 16px;
+  }
+
+  .client-profile-name {
+    font-size: 24px;
+  }
+
+  .client-profile-header-content {
+    flex-direction: column;
+  }
+
+  .client-profile-header-actions {
+    width: 100%;
+  }
+
+  .client-profile-action-btn {
+    flex: 1;
+    min-width: 100px;
+  }
+
+  .client-profile-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .client-profile-tabs-nav {
+    flex-wrap: wrap;
+  }
+
+  .client-profile-tab-button {
+    padding: 10px 16px;
+    font-size: 12px;
+  }
+
+  .client-profile-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .client-profile-table {
+    font-size: 12px;
+  }
+
+  .client-profile-table th,
+  .client-profile-table td {
+    padding: 8px;
+  }
+
+  .client-profile-pagination {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 560px) {
+  .client-profile-container {
+    padding: 12px;
+  }
+
+  .client-profile-name {
+    font-size: 20px;
+  }
+
+  .client-profile-badges {
+    flex-direction: column;
+  }
+
+  .client-profile-badge {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+
+  .client-profile-tabs-nav {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .client-profile-tab-button {
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+
+  .client-profile-table {
+    font-size: 11px;
+    overflow-x: auto;
+  }
+}
