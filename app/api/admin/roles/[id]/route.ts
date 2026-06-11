@@ -86,7 +86,7 @@ export async function PUT(
     const changes = calculateChanges(currentRole, changedFields);
 
     await logAuditAction({
-      adminId: auth.user!.id,
+      adminId: auth.user!.userId,
       action: 'update',
       entityType: 'role',
       entityId: id,
@@ -152,7 +152,7 @@ export async function DELETE(
     if (error) throw error;
 
     await logAuditAction({
-      adminId: auth.user!.id,
+      adminId: auth.user!.userId,
       action: 'delete',
       entityType: 'role',
       entityId: id,

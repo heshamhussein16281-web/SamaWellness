@@ -98,7 +98,7 @@ export async function POST(
     if (fetchError) throw fetchError;
 
     await logAuditAction({
-      adminId: auth.user!.id,
+      adminId: auth.user!.userId,
       action: 'update',
       entityType: 'permission',
       entityId: id,

@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
     }
 
     await logAuditAction({
-      adminId: auth.user!.id,
+      adminId: auth.user!.userId,
       action: 'create',
       entityType: 'role',
       entityId: role.id,
