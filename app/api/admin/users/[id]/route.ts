@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { verifyJWT, getJWTFromCookie } from '@/lib/auth';
 import { createClient } from '@supabase/supabase-js';
 import * as bcrypt from 'bcryptjs';
+import { logAuditAction, calculateChanges } from '@/lib/audit';
 
 export const dynamic = 'force-dynamic';
 
@@ -45,6 +46,15 @@ export async function PUT(
     const body = await request.json();
     const { email, password, role_id, is_active } = body;
 
+    // Fetch current user before update
+    const { data: currentUser, error: fetchError } = await supabase
+      .from('clinic_users')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (fetchError) throw fetchError;
+
     const updateData: Record<string, unknown> = {
       updated_at: new Date().toISOString(),
     };
@@ -66,6 +76,23 @@ export async function PUT(
       .single();
 
     if (error) throw error;
+
+    // Calculate changes for audit log
+    const changedFields: Record<string, any> = {};
+    if (email !== undefined) changedFields.email = email;
+    if (role_id !== undefined) changedFields.role_id = role_id;
+    if (is_active !== undefined) changedFields.is_active = is_active;
+
+    const changes = calculateChanges(currentUser, changedFields);
+
+    await logAuditAction({
+      adminId: auth.user!.id,
+      action: 'update',
+      entityType: 'user',
+      entityId: id,
+      entityName: currentUser.username || currentUser.email,
+      changes: Object.keys(changes).length > 0 ? changes : undefined,
+    });
 
     return NextResponse.json(
       {
@@ -102,6 +129,15 @@ export async function DELETE(
   try {
     const { id } = params;
 
+    // Fetch user info before deactivation
+    const { data: userInfo, error: fetchError } = await supabase
+      .from('clinic_users')
+      .select('username, email')
+      .eq('id', id)
+      .single();
+
+    if (fetchError) throw fetchError;
+
     // Deactivate user instead of deleting
     const { data: user, error } = await supabase
       .from('clinic_users')
@@ -111,6 +147,14 @@ export async function DELETE(
       .single();
 
     if (error) throw error;
+
+    await logAuditAction({
+      adminId: auth.user!.id,
+      action: 'delete',
+      entityType: 'user',
+      entityId: id,
+      entityName: `${userInfo.username || userInfo.email} (deactivated)`,
+    });
 
     return NextResponse.json(
       {
