@@ -476,7 +476,7 @@ section[id] {
 .ask-sama-textarea {
   width: 100%;
   border: 1px solid rgba(44, 44, 44, 0.22);
-  background: transparent;
+  background: rgba(245, 242, 238, 0.5);
   padding: 10px 14px;
   font-size: 14px;
   font-family: var(--font-body);
