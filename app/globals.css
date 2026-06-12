@@ -629,6 +629,7 @@ section[id] {
   height: 100%;
   display: block;
   object-fit: contain;
+  transform: scale(1.1);
 }
 
 .ask-sama-info-col {
