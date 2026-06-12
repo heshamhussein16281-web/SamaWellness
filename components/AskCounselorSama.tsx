@@ -125,7 +125,7 @@ export default function AskCounselorSama() {
         <div className="ask-sama-photo-col">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/sama-portrait-cropped.png"
+            src="/sama_no_bg.png"
             alt="Sama Eissa - Founder & Counselor"
             className="ask-sama-photo"
           />
