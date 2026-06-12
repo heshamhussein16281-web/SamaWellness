@@ -443,14 +443,6 @@ section[id] {
   }
 }
 
-/* GRID DEBUG - REMOVE AFTER CHECKING */
-.ask-sama-form-col {
-  border: 2px solid red;
-}
-
-.ask-sama-photo-col {
-  border: 2px solid blue;
-}
 
 .ask-sama-heading {
   font-family: var(--font-display);
