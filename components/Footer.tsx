@@ -1,28 +1,17 @@
 "use client";
 
-const marqueeItems = Array(16).fill("SAMA WELLNESS THERAPY — YOUR JOURNEY TO HEALING —");
-
-const navLinks = [
-  { label: "Home",        href: "#home" },
-  { label: "Services",    href: "#services" },
-  { label: "The Process", href: "#process" },
-  { label: "The Team",    href: "#team" },
-  { label: "Rooms",       href: "#rooms" },
-  { label: "Ask Sama",    href: "#ask-sama" },
+const socialLinks = [
+  { label: "Email", href: "mailto:info@samawellnesstherapy.com", icon: "✉️" },
+  { label: "Phone", href: "tel:+201130946556", icon: "📱" },
+  { label: "WhatsApp", href: "https://api.whatsapp.com/send?phone=201130946556", icon: "💬" },
+  { label: "Instagram", href: "https://www.instagram.com/sama.wellness.therapy/", icon: "📷" },
 ];
-
 
 export default function Footer() {
   return (
     <>
-      {/* Marquee — dark teal background */}
-      <div className="footer-marquee-wrap">
-        <div className="marquee-track">
-          {marqueeItems.map((t, i) => (
-            <span key={i} className="footer-marquee-item">{t}</span>
-          ))}
-        </div>
-      </div>
+      {/* Subtle separator — replaces marquee */}
+      <div className="footer-separator"></div>
 
       {/* Slim band footer — linen background */}
       <footer className="site-footer">
@@ -34,13 +23,21 @@ export default function Footer() {
             <span className="footer__brand-name">Sama Wellness Therapy</span>
           </a>
 
-          <ul className="footer__nav">
-            {navLinks.map((l) => (
-              <li key={l.label}>
-                <a href={l.href} className="footer__nav-link">{l.label}</a>
-              </li>
+          {/* Social Links */}
+          <div className="footer__socials">
+            {socialLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                title={link.label}
+                className="footer__social-link"
+                target={link.href.startsWith("http") ? "_blank" : undefined}
+                rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
+              >
+                {link.icon}
+              </a>
             ))}
-          </ul>
+          </div>
 
         </div>
 
