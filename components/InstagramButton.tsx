@@ -1,7 +1,7 @@
 export default function InstagramButton() {
   return (
     <a
-      href="https://www.instagram.com/sama.wellness.therapy?igsh=NGNtcnMxYnRqYnBt"
+      href="https://www.instagram.com/sama.wellness.therapy/"
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Follow on Instagram"

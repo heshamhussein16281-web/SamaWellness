@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ask Counselor Sama - Design Mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gilda+Display&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      /* Brand Colors */
+      --color-linen: #F5F2EE;
+      --color-navy: #2d4a46;
+      --color-burgundy: #7b2d3e;
+      --color-rose: #d4a5a5;
+      --color-sage: #a4b8a8;
+      --color-charcoal: #2c2c2c;
+      --color-text-light: #5a5a5a;
+
+      /* Typography */
+      --font-display: 'Gilda Display', serif;
+      --font-body: 'Nunito Sans', sans-serif;
+
+      /* Spacing */
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 1.5rem;
+      --space-lg: 2.5rem;
+      --space-xl: 4rem;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--color-linen);
+      font-family: var(--font-body);
+      color: var(--color-charcoal);
+      line-height: 1.6;
+    }
+
+    /* ========================
+       HEADER / INTRO
+       ======================== */
+    .mockup-header {
+      background: linear-gradient(135deg, var(--color-navy) 0%, #3a5a54 100%);
+      padding: 3rem var(--space-lg);
+      text-align: center;
+      color: white;
+    }
+
+    .mockup-header h1 {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      margin-bottom: var(--space-sm);
+    }
+
+    .mockup-header p {
+      font-size: 1.1rem;
+      opacity: 0.95;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* ========================
+       DESIGN PROPOSAL TEXT
+       ======================== */
+    .design-intro {
+      max-width: 1200px;
+      margin: 3rem auto;
+      padding: 0 var(--space-lg);
+      background: white;
+      padding: 2rem var(--space-lg);
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(45, 74, 70, 0.08);
+    }
+
+    .design-intro h2 {
+      font-family: var(--font-display);
+      color: var(--color-navy);
+      font-size: 2rem;
+      margin-bottom: var(--space-md);
+    }
+
+    .design-intro p {
+      margin-bottom: var(--space-md);
+      color: var(--color-text-light);
+      line-height: 1.8;
+    }
+
+    .design-points {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--space-lg);
+      margin-top: 2rem;
+    }
+
+    .design-point {
+      padding: var(--space-md);
+      background: #fafaf8;
+      border-left: 4px solid var(--color-burgundy);
+      border-radius: 4px;
+    }
+
+    .design-point h3 {
+      font-family: var(--font-display);
+      color: var(--color-burgundy);
+      font-size: 1.3rem;
+      margin-bottom: var(--space-sm);
+    }
+
+    /* ========================
+       DESKTOP MOCKUP
+       ======================== */
+    .mockup-section {
+      max-width: 1200px;
+      margin: 4rem auto;
+      padding: 0 var(--space-lg);
+    }
+
+    .mockup-section h2 {
+      font-family: var(--font-display);
+      color: var(--color-navy);
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    /* Desktop Layout */
+    .ask-sama-desktop {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(45, 74, 70, 0.12);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 600px;
+    }
+
+    .ask-sama-left {
+      background: linear-gradient(135deg, var(--color-navy) 0%, #3a5a54 100%);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: white;
+    }
+
+    .ask-sama-left h3 {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .ask-sama-left p {
+      font-size: 1.05rem;
+      margin-bottom: 1.5rem;
+      opacity: 0.95;
+      line-height: 1.8;
+    }
+
+    .instagram-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 0.75rem 1.25rem;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      width: fit-content;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .instagram-badge::before {
+      content: "📱";
+      font-size: 1.2rem;
+    }
+
+    .feature-list {
+      list-style: none;
+      margin: 1.5rem 0;
+    }
+
+    .feature-list li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.95rem;
+    }
+
+    .feature-list li::before {
+      content: "✓";
+      color: var(--color-rose);
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .ask-sama-right {
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Form Styles */
+    .ask-sama-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: var(--color-navy);
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      padding: 0.85rem 1rem;
+      border: 2px solid #e0dbd4;
+      border-radius: 6px;
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+      background: #fafaf8;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--color-burgundy);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(123, 45, 62, 0.08);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .form-checkbox {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin: 1rem 0;
+    }
+
+    .form-checkbox input {
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+      cursor: pointer;
+      accent-color: var(--color-burgundy);
+    }
+
+    .form-checkbox label {
+      flex: 1;
+      font-size: 0.9rem;
+      color: var(--color-text-light);
+      margin: 0;
+      cursor: pointer;
+    }
+
+    .form-submit {
+      padding: 1rem 2rem;
+      background: linear-gradient(135deg, var(--color-burgundy), #a73d52);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: var(--font-body);
+      margin-top: 0.5rem;
+    }
+
+    .form-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(123, 45, 62, 0.25);
+    }
+
+    .form-submit:active {
+      transform: translateY(0);
+    }
+
+    /* ========================
+       MOBILE MOCKUP
+       ======================== */
+    .mockup-mobile-container {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+      margin: 3rem 0;
+    }
+
+    .mobile-frame {
+      width: 320px;
+      background: white;
+      border-radius: 40px;
+      border: 12px solid #333;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    .mobile-screen {
+      background: var(--color-linen);
+      min-height: 600px;
+      padding: 2rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mobile-screen.form-state {
+      background: white;
+    }
+
+    .mobile-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .mobile-header h3 {
+      font-family: var(--font-display);
+      color: var(--color-navy);
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .mobile-header p {
+      font-size: 0.85rem;
+      color: var(--color-text-light);
+    }
+
+    .mobile-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .mobile-form .form-group input,
+    .mobile-form .form-group textarea,
+    .mobile-form .form-group select {
+      padding: 0.75rem 0.75rem;
+      font-size: 0.9rem;
+    }
+
+    .mobile-form .form-submit {
+      padding: 0.85rem 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    /* ========================
+       SUCCESS STATE
+       ======================== */
+    .success-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px;
+      text-align: center;
+      padding: 2rem 1.5rem;
+    }
+
+    .success-icon {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .success-container h3 {
+      font-family: var(--font-display);
+      color: var(--color-navy);
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .success-container p {
+      color: var(--color-text-light);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .instagram-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, #e1306c, #fd1d1d);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .instagram-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(225, 48, 108, 0.3);
+    }
+
+    /* ========================
+       INTERACTIONS SECTION
+       ======================== */
+    .interactions-section {
+      max-width: 1200px;
+      margin: 4rem auto;
+      padding: 0 var(--space-lg);
+    }
+
+    .interactions-section h2 {
+      font-family: var(--font-display);
+      color: var(--color-navy);
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .interaction-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .interaction-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(45, 74, 70, 0.08);
+    }
+
+    .interaction-card h3 {
+      font-family: var(--font-display);
+      color: var(--color-burgundy);
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+
+    .interaction-card p {
+      color: var(--color-text-light);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    /* ========================
+       FOOTER
+       ======================== */
+    .mockup-footer {
+      background: var(--color-navy);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+      margin-top: 4rem;
+    }
+
+    /* ========================
+       RESPONSIVE
+       ======================== */
+    @media (max-width: 768px) {
+      .ask-sama-desktop {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .ask-sama-left {
+        padding: 2rem;
+      }
+
+      .ask-sama-right {
+        padding: 2rem;
+      }
+
+      .ask-sama-left h3 {
+        font-size: 2rem;
+      }
+
+      .design-intro {
+        padding: 1.5rem;
+      }
+
+      .mockup-mobile-container {
+        gap: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mockup-header">
+    <h1>Ask Counselor Sama</h1>
+    <p>Design Proposal for Instagram Engagement Feature</p>
+  </div>
+
+  <div class="design-intro">
+    <h2>Design Philosophy</h2>
+    <p>
+      The <strong>"Ask Counselor Sama"</strong> section replaces the generic "Contact Us" form with an Instagram-focused engagement strategy. It transforms your website from a passive contact point into an active content creation funnel, where visitors submit wellness questions that Sama answers in her Instagram reels.
+    </p>
+
+    <div class="design-points">
+      <div class="design-point">
+        <h3>🎯 Strategic Purpose</h3>
+        <p>Shift from generic inquiries to curated content. Every submission feeds your Instagram growth engine.</p>
+      </div>
+      <div class="design-point">
+        <h3>✨ Aesthetic Direction</h3>
+        <p>Warm, inviting, conversational. Less corporate form, more intimate fireside chat. Uses your brand palette: navy + burgundy with rose accents.</p>
+      </div>
+      <div class="design-point">
+        <h3>📱 Instagram Loop</h3>
+        <p>Form → Email submission → Sama creates reel → Link back to Instagram. Creates a viral feedback loop driving followers.</p>
+      </div>
+      <div class="design-point">
+        <h3>🎨 Form Field Strategy</h3>
+        <p>Minimal required fields (just email + question). Optional name. Topics dropdown for content categorization. Consent checkbox for Instagram usage.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- DESKTOP MOCKUP -->
+  <div class="mockup-section">
+    <h2>Desktop Layout (2-Column Design)</h2>
+
+    <div class="ask-sama-desktop">
+      <!-- LEFT COLUMN: Messaging & Value Prop -->
+      <div class="ask-sama-left">
+        <div class="instagram-badge">Featured in my reels 🎬</div>
+
+        <h3>Ask me anything about wellness</h3>
+        <p>
+          Share your wellness question and I might feature your question in my Instagram reels. Get authentic advice while helping others discover their path to better mental health.
+        </p>
+
+        <ul class="feature-list">
+          <li>Your question could inspire thousands</li>
+          <li>Authentic, personalized guidance</li>
+          <li>Featured in weekly reels</li>
+          <li>Join our wellness community</li>
+        </ul>
+
+        <p style="font-size: 0.9rem; opacity: 0.85; margin-top: 1.5rem;">
+          💡 <strong>Pro Tip:</strong> The more specific your question, the better the answer!
+        </p>
+      </div>
+
+      <!-- RIGHT COLUMN: Form -->
+      <div class="ask-sama-right">
+        <form class="ask-sama-form">
+          <div class="form-group">
+            <label for="name">Your Name (optional)</label>
+            <input type="text" id="name" placeholder="How should I address you?">
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email *</label>
+            <input type="email" id="email" placeholder="I'll notify you when your reel goes live" required>
+          </div>
+
+          <div class="form-group">
+            <label for="topic">Topic *</label>
+            <select id="topic" required>
+              <option value="">Select a topic...</option>
+              <option value="anxiety">Anxiety & Stress</option>
+              <option value="relationships">Relationships</option>
+              <option value="self-care">Self-Care</option>
+              <option value="mindfulness">Mindfulness</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="question">Your Question *</label>
+            <textarea id="question" placeholder="What's on your mind?" required></textarea>
+          </div>
+
+          <div class="form-checkbox">
+            <input type="checkbox" id="consent" required>
+            <label for="consent">I give permission for my question to be featured in Sama's Instagram reels (anonymously or with my name)</label>
+          </div>
+
+          <button type="submit" class="form-submit">✨ Ask Counselor Sama</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOBILE MOCKUP -->
+  <div class="mockup-section">
+    <h2>Mobile Layout (Responsive Vertical Stack)</h2>
+
+    <div class="mockup-mobile-container">
+      <!-- Mobile - Initial State -->
+      <div class="mobile-frame">
+        <div class="mobile-screen form-state">
+          <div class="mobile-header">
+            <h3>Ask Sama</h3>
+            <p>Share your wellness question</p>
+          </div>
+
+          <form class="mobile-form">
+            <div class="form-group">
+              <label for="mobile-email">Email *</label>
+              <input type="email" id="mobile-email" placeholder="Your email">
+            </div>
+
+            <div class="form-group">
+              <label for="mobile-topic">Topic *</label>
+              <select id="mobile-topic">
+                <option value="">Select...</option>
+                <option value="anxiety">Anxiety</option>
+                <option value="relationships">Relationships</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="mobile-question">Question *</label>
+              <textarea id="mobile-question" placeholder="Your question..."></textarea>
+            </div>
+
+            <button type="submit" class="form-submit">Ask</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Mobile - Success State -->
+      <div class="mobile-frame">
+        <div class="mobile-screen">
+          <div class="success-container">
+            <div class="success-icon">✨</div>
+            <h3>Thank you!</h3>
+            <p>Your question has been submitted. I'll feature it in my reels soon.</p>
+            <a href="#" class="instagram-cta">
+              Follow on Instagram →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTERACTIONS & MICRO-INTERACTIONS -->
+  <div class="interactions-section">
+    <h2>Interactive Details & Animation</h2>
+
+    <div class="interaction-grid">
+      <div class="interaction-card">
+        <h3>Form Focus States</h3>
+        <p>
+          When users click an input, the border transitions to burgundy with a subtle shadow. The background shifts from off-white to pure white, creating a clear visual focus state. This improves usability and draws attention naturally.
+        </p>
+      </div>
+
+      <div class="interaction-card">
+        <h3>Button Hover Effect</h3>
+        <p>
+          The submit button lifts up 2px on hover with an enhanced shadow. The gradient shifts slightly for a 3D effect. On click, it returns to baseline immediately. Creates a satisfying, tactile interaction.
+        </p>
+      </div>
+
+      <div class="interaction-card">
+        <h3>Success State Animation</h3>
+        <p>
+          After submission, the form fades out. The success container fades in with a subtle scale animation (1.02 → 1.0). The checkmark icon bounces gently for delightful feedback.
+        </p>
+      </div>
+
+      <div class="interaction-card">
+        <h3>Mobile Responsiveness</h3>
+        <p>
+          On small screens, the 2-column desktop layout stacks vertically. Left column messaging becomes a header section. Form takes full width. All touch targets remain 44px+ for accessibility.
+        </p>
+      </div>
+
+      <div class="interaction-card">
+        <h3>Instagram CTA Integration</h3>
+        <p>
+          After successful submission, a prominent "Follow on Instagram" button appears with the Instagram gradient background. This closes the loop: question → answer → larger audience → more Instagram followers.
+        </p>
+      </div>
+
+      <div class="interaction-card">
+        <h3>Accessibility Features</h3>
+        <p>
+          All form inputs have clear labels. Color contrast meets WCAG AA standards. Focus states are visible. The required field indicator (*) is semantic. Error messages will be announced to screen readers.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- DESIGN DECISION SUMMARY -->
+  <div class="design-intro" style="margin-top: 4rem;">
+    <h2>Why This Design Works</h2>
+
+    <p><strong>1. Two-Column Desktop Layout:</strong> Separates psychology (why they should submit) from mechanics (the form). The left side builds emotional connection, the right side is frictionless form entry. On mobile, it becomes a single column with the messaging as a hero section.</p>
+
+    <p><strong>2. Minimal Form Fields:</strong> Only email + topic + question required. Optional name. This reduces friction vs. your current 5-field form. Users share more when the barrier is lower, and you still get the info you need.</p>
+
+    <p><strong>3. Instagram Badge & Language:</strong> "Featured in my reels 🎬" immediately communicates the value prop. Users aren't filling out a generic contact form—they're submitting content ideas. This psychological shift increases quality submissions.</p>
+
+    <p><strong>4. Warm, Conversational Tone:</strong> "How should I address you?" vs. "First Name". "What's on your mind?" vs. "Message". Uses Gilda Display serif (luxury/therapy feel) paired with Nunito Sans body (modern, readable).</p>
+
+    <p><strong>5. Consent Checkbox:</strong> "I give permission for my question to be featured... anonymously or with my name." This builds trust and clarifies the Instagram use case upfront. Legal + practical.</p>
+
+    <p><strong>6. Success State Redirect:**  After submission, users see the Instagram follow CTA. This completes the loop: form → gratitude → Instagram follow. Drives direct engagement metrics.</p>
+
+    <p><strong>7. Brand Coherence:</strong> Navy + burgundy + rose accents match your existing site. The gradient backgrounds use your color story. Typography hierarchy (Gilda Display for headers) reinforces your premium wellness positioning.</p>
+  </div>
+
+  <div class="mockup-footer">
+    <h3>Ready to Build</h3>
+    <p>This proposal shows the full user journey: form entry → success state → Instagram follow. The backend follows your existing contact form pattern (email + Supabase). Shall we build it?</p>
+  </div>
+
+</body>
+</html>

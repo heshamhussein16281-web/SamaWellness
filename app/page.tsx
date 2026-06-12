@@ -6,9 +6,9 @@ import Services from "@/components/Services";
 import Process from "@/components/Process";
 import Team from "@/components/Team";
 import RoomsEnvironment from "@/components/RoomsEnvironment";
-import Contact from "@/components/Contact";
+import AskCounselorSama from "@/components/AskCounselorSama";
 import Footer from "@/components/Footer";
-import WhatsAppButton from "@/components/WhatsAppButton";
+import ContactButton from "@/components/ContactButton";
 
 export default function Home() {
   useEffect(() => {
@@ -32,10 +32,10 @@ export default function Home() {
         <Process />
         <Team />
         <RoomsEnvironment />
-        <Contact />
+        <AskCounselorSama />
       </main>
       <Footer />
-      <WhatsAppButton />
+      <ContactButton />
     </>
   );
 }

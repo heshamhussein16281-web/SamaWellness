@@ -44,7 +44,7 @@ const links = [
   { label: "THE PROCESS", href: "process"  },
   { label: "THE TEAM",    href: "team"     },
   { label: "ROOMS",       href: "rooms"    },
-  { label: "CONTACT US",  href: "contact"  },
+  { label: "ASK SAMA",    href: "ask-sama" },
 ];
 
 export default function Navbar() {
@@ -99,6 +99,9 @@ export default function Navbar() {
       } else if (href === "rooms") {
         // For rooms: scroll to show header, photos, and brief descriptions in one view
         top = Math.max(0, elementOffset - navbarHeight);
+      } else if (href === "ask-sama") {
+        // For ask-sama: scroll to show the section with proper navbar clearance
+        top = Math.max(0, elementOffset - navbarHeight - 30);
       } else {
         // For other sections: scroll to position that accounts for navbar
         // Subtract navbar height so content appears below it
@@ -169,8 +172,8 @@ export default function Navbar() {
           flexDirection: "row",
           flexWrap: "nowrap",
           alignItems: "center",
-          justifyContent: "normal",
-          columnGap: "44px",
+          justifyContent: "space-between",
+          columnGap: "32px",
           rowGap: "12px",
         }}
       >
