@@ -1794,8 +1794,8 @@ textarea.form-input {
   .footer__tagline { margin: -5px 0 0 0; }
 
   /* Contact floating button: reduce to half size */
-  .contact-floating-btn { width: 48px; height: 48px; }
-  .contact-btn-icon { font-size: 20px; }
+  .contact-floating-btn { width: 60px; height: 60px; }
+  .contact-btn-icon { font-size: 25px; }
 
   /* Process: reduce side padding */
   .process-inner { padding: 0 var(--space-md) !important; }
