@@ -1099,8 +1099,9 @@ textarea.form-input {
 
 .contact-floating-btn {
   position: fixed;
-  bottom: 28px;
+  top: 50%;
   right: 24px;
+  transform: translateY(-50%);
   z-index: 50;
   width: 75px;
   height: 75px;
@@ -1116,6 +1117,7 @@ textarea.form-input {
   box-shadow: 0 8px 32px rgba(45, 74, 70, 0.3);
   transition: all 0.3s ease;
   padding: 0;
+  opacity: 0.8;
 }
 
 .contact-btn-icon {
@@ -1137,7 +1139,8 @@ textarea.form-input {
 .contact-floating-btn:hover {
   background: #3a5a54;
   box-shadow: 0 12px 48px rgba(45, 74, 70, 0.4);
-  transform: translateY(-6px);
+  transform: translateY(calc(-50% - 6px));
+  opacity: 1;
 }
 
 .contact-floating-btn:hover .contact-btn-icon {
