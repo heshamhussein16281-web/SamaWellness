@@ -611,6 +611,19 @@ section[id] {
   flex-direction: column;
 }
 
+.ask-sama-photo-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.ask-sama-photo {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
 .ask-sama-info-col {
   display: flex;
   flex-direction: column;

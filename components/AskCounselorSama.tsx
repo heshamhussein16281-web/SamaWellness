@@ -121,23 +121,14 @@ export default function AskCounselorSama() {
           </form>
         </div>
 
-        {/* Right — Info */}
-        <div className="ask-sama-info-col">
-          <h3 className="ask-sama-info-heading">Featured in my reels</h3>
-          <p className="ask-sama-info-body">
-            Every question submitted helps create meaningful content for our wellness community. Your authentic question could resonate with thousands, spark important conversations, and help others navigate their own wellness journey.
-          </p>
-
-          <div className="ask-sama-info-highlight">
-            <p className="ask-sama-info-highlight-text">
-              <strong>Why share your question?</strong><br/>
-              Your voice matters. The more specific your question, the better the guidance I can offer—and the more valuable it becomes for others watching.
-            </p>
-          </div>
-
-          <a href="https://www.instagram.com/sama.wellness.therapy/" target="_blank" rel="noopener noreferrer" className="ask-sama-info-link">
-            @sama.wellness.therapy on Instagram
-          </a>
+        {/* Right — Sama Photo */}
+        <div className="ask-sama-photo-col">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/PHOTO-2026-06-11-16-13-47.jpg"
+            alt="Sama Eissa - Founder & Counselor"
+            className="ask-sama-photo"
+          />
         </div>
 
       </div>
