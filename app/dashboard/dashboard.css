@@ -1,0 +1,275 @@
+/* ========================================
+   DASHBOARD SHELL — COMPONENT STYLES
+
+   Architecture: 3-Layer CSS System
+   Layer 1: Design Tokens     — dashboard-specific CSS variables
+   Layer 2: Layout Containers — display, flex, gap, padding, margin
+   Layer 3: Components        — buttons, links, visual styling
+   ======================================== */
+
+
+/* ════════════════════════════════════════════════════════════════
+   LAYER 1: DESIGN TOKENS (Dashboard-specific)
+   ════════════════════════════════════════════════════════════════ */
+:root {
+  /* ─── Dashboard Layout ─── */
+  --dashboard-sidebar-width:   220px;
+  --dashboard-topbar-height:   48px;
+  --dashboard-content-padding: 20px;
+
+  /* ─── Dashboard Colors (inherit from global) ─── */
+  /* --color-linen, --color-sand, --color-nav-text, --color-burgundy, etc. */
+
+  /* ─── Dashboard Spacing ─── */
+  --dashboard-logo-gap:       10px;
+  --dashboard-logo-margin:    30px;
+  --dashboard-divider-margin: 20px;
+  --dashboard-nav-gap:        4px;
+  --dashboard-nav-padding:    12px 10px;
+  --dashboard-nav-margin:     4px 0;
+  --dashboard-section-gap:    15px;
+  --dashboard-section-margin: 15px 0;
+  --dashboard-topbar-gap:     12px;
+}
+
+
+/* ════════════════════════════════════════════════════════════════
+   LAYER 2: LAYOUT CONTAINERS
+   ════════════════════════════════════════════════════════════════ */
+
+/* Main dashboard flex container */
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar layout */
+.dashboard-sidebar {
+  display: flex;
+  flex-direction: column;
+  width: var(--dashboard-sidebar-width);
+  padding: var(--space-sm);
+  flex-shrink: 0;
+}
+
+/* Main content area (flex column wrapper) */
+.dashboard-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* Topbar layout */
+.dashboard-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--dashboard-topbar-height);
+  padding: 0 var(--space-sm);
+  flex-shrink: 0;
+}
+
+/* Main content area */
+.dashboard-main-content {
+  flex: 1;
+  overflow: auto;
+  padding: var(--dashboard-content-padding);
+}
+
+/* Logo section flex */
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--dashboard-logo-gap);
+  margin-bottom: var(--dashboard-logo-margin);
+}
+
+/* Topbar left section flex */
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: var(--dashboard-topbar-gap);
+}
+
+/* Topbar right section flex */
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+/* ════════════════════════════════════════════════════════════════
+   LAYER 3: COMPONENTS — Visual Styling
+   ════════════════════════════════════════════════════════════════ */
+
+/* Sidebar styling */
+.dashboard-sidebar {
+  background-color: #FFFFFF;
+  border-right: 1px solid var(--color-sand);
+}
+
+/* Logo mark badge */
+.sidebar-logo-mark {
+  width: 32px;
+  height: 32px;
+  background-color: var(--color-burgundy);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Logo text */
+.sidebar-logo-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-nav-text);
+}
+
+/* Divider */
+.sidebar-divider {
+  height: 1px;
+  background-color: var(--color-sand);
+  margin: var(--dashboard-divider-margin) 0;
+}
+
+/* Section container */
+.sidebar-section {
+  margin-bottom: var(--dashboard-section-margin);
+  transition: all 0.2s ease;
+}
+
+/* Section container active state */
+.sidebar-section-active {
+  padding: 8px 0;
+}
+
+.sidebar-section-active .sidebar-section-label {
+  opacity: 1;
+  font-weight: 700;
+}
+
+/* Section label */
+.sidebar-section-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-nav-text);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: var(--dashboard-section-gap);
+  opacity: 0.7;
+  transition: all 0.2s ease;
+}
+
+/* Navigation item container */
+.sidebar-nav-item {
+  padding: var(--dashboard-nav-padding);
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  border-left: 3px solid transparent;
+  cursor: pointer;
+  margin-bottom: var(--dashboard-nav-gap);
+  transition: all 0.2s ease;
+}
+
+/* Navigation item active state */
+.sidebar-nav-item.active {
+  background-color: rgba(123, 45, 62, 0.08);
+  border-left-color: var(--color-burgundy);
+  padding-left: 7px;
+}
+
+/* Navigation link text */
+.sidebar-nav-link {
+  font-size: 12px;
+  color: var(--color-nav-text);
+  text-decoration: none;
+}
+
+/* Navigation link active text */
+.sidebar-nav-link.active {
+  font-weight: 600;
+}
+
+/* Topbar styling */
+.dashboard-topbar {
+  background-color: #FFFFFF;
+  border-bottom: 1px solid var(--color-sand);
+  padding: 0 20px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+/* Topbar title */
+.topbar-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-nav-text);
+  margin: 0;
+  letter-spacing: -0.3px;
+  line-height: 1;
+}
+
+/* Topbar badge */
+.topbar-badge {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-charcoal);
+  background-color: rgba(123, 45, 62, 0.08);
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.topbar-badge--secondary {
+  background-color: transparent;
+  color: var(--color-charcoal);
+  padding: 2px 0;
+  opacity: 0.7;
+  font-size: 10px;
+}
+
+/* Topbar role label */
+.topbar-role-label {
+  font-size: 11px;
+  color: var(--color-charcoal);
+  font-weight: 500;
+  opacity: 0.75;
+}
+
+/* Topbar button */
+.topbar-button {
+  padding: 6px 12px;
+  border: 1px solid var(--color-sand);
+  border-radius: 4px;
+  background-color: #FFFFFF;
+  color: var(--color-nav-text);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  white-space: nowrap;
+}
+
+.topbar-button:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+  border-color: rgba(123, 45, 62, 0.3);
+}
+
+.topbar-button--secondary {
+  background-color: transparent;
+  border-color: var(--color-sand);
+}
+
+.topbar-button--secondary:hover {
+  background-color: rgba(123, 45, 62, 0.05);
+  border-color: var(--color-burgundy);
+}
+
+/* Main content background */
+.dashboard-main-content {
+  background-color: var(--color-linen);
+}

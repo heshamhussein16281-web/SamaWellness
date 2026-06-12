@@ -1,0 +1,679 @@
+/* ========================================
+   AUDIT LOGS — COMPONENT STYLES
+
+   Architecture: 3-Layer CSS System
+   Layer 1: Design Tokens     — audit-specific CSS variables
+   Layer 2: Layout Containers — display, grid, flex, gap, padding, margin, position
+   Layer 3: Components        — self-contained visual units (tables, badges, modals)
+   ======================================== */
+
+
+/* ════════════════════════════════════════════════════════════════
+   LAYER 1: DESIGN TOKENS (Audit-specific)
+   ════════════════════════════════════════════════════════════════ */
+:root {
+  /* ─── Audit-specific Colors ─── */
+  --audit-color-primary:        #7b2d3e; /* burgundy for CTAs */
+  --audit-color-success:        #4a6741; /* olive for create actions */
+  --audit-color-info:           #2196F3; /* blue for update actions */
+  --audit-color-warning:        #FF9800; /* orange for general info */
+  --audit-color-error:          #d32f2f; /* red for delete actions */
+  --audit-color-border:         rgb(234, 228, 221);
+  --audit-color-bg-header:      rgb(234, 228, 221);
+  --audit-color-bg-row-hover:   rgba(123, 45, 62, 0.04);
+  --audit-color-text-primary:   rgb(45, 74, 70);
+  --audit-color-text-secondary: #2c2c2c;
+  --audit-color-text-muted:     rgba(44, 44, 44, 0.6);
+  --audit-color-text-light:     rgba(44, 44, 44, 0.5);
+  --audit-color-overlay:        rgba(0, 0, 0, 0.4);
+  --audit-color-shadow:         rgba(0, 0, 0, 0.15);
+  --audit-color-bg-light:       #f9f9f9;
+  --audit-color-code-bg:        #f5f5f5;
+
+  /* ─── Audit-specific Spacing ─── */
+  --audit-space-xs:     4px;
+  --audit-space-sm:     8px;
+  --audit-space-md:     16px;
+  --audit-space-lg:     24px;
+  --audit-space-xl:     32px;
+  --audit-space-2xl:    48px;
+
+  /* ─── Audit-specific Dimensions ─── */
+  --audit-modal-width:          600px;
+  --audit-modal-height:         80vh;
+  --audit-modal-shadow:         0 8px 32px rgba(0, 0, 0, 0.2);
+  --audit-icon-size-sm:         16px;
+  --audit-icon-size-md:         18px;
+  --audit-icon-size-lg:         20px;
+  --audit-border-radius:        6px;
+  --audit-panel-border-radius:  10px;
+  --audit-table-header-font:    0.75rem;
+  --audit-badge-size:           0.65rem;
+  --audit-spinner-size:         16px;
+
+  /* ─── Audit-specific Typography ─── */
+  --audit-font-display:         "Gilda Display", Georgia, serif;
+  --audit-font-ui:              "Josefin Sans", system-ui, sans-serif;
+  --audit-font-body:            "Nunito Sans", system-ui, sans-serif;
+  --audit-font-mono:            "Courier New", monospace;
+
+  /* ─── Transitions ─── */
+  --audit-transition-default:   0.3s ease-out;
+  --audit-transition-fast:      0.15s ease-out;
+}
+
+
+/* ════════════════════════════════════════════════════════════════
+   LAYER 2: LAYOUT CONTAINERS
+   Rule: only display / grid / flex / gap / padding / margin /
+         width / position. NEVER colors, fonts, borders, shadows.
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Main audit container ── */
+.audit-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ── Header section ── */
+.audit-header {
+  margin-bottom: 2rem;
+}
+
+.audit-title {
+  margin-bottom: 0.5rem;
+  font-size: 28px;
+  font-weight: 400;
+  font-family: var(--audit-font-display);
+}
+
+.audit-subtitle {
+  font-size: 0.875rem;
+  opacity: 0.7;
+}
+
+/* ── Filters section ── */
+.audit-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--audit-space-lg);
+  margin-bottom: 2rem;
+  align-items: flex-end;
+}
+
+.audit-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.audit-filter-group__label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.audit-filter-actions {
+  display: flex;
+  gap: var(--audit-space-md);
+}
+
+/* ── Audit table container ── */
+.audit-table-wrapper {
+  overflow: hidden;
+  border-radius: var(--audit-panel-border-radius);
+  max-height: 600px;
+  overflow-y: auto;
+  position: relative;
+}
+
+.audit-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.audit-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.audit-table__header {
+  background-color: var(--audit-color-bg-header);
+  border-bottom: 2px solid rgba(45, 74, 70, 0.15);
+}
+
+.audit-table__header-cell {
+  padding: 1rem 1.5rem;
+  text-align: left;
+  font-size: var(--audit-table-header-font);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.audit-table__body-row {
+  border-bottom: 1px solid var(--audit-color-border);
+}
+
+.audit-table__body-row:hover {
+  background-color: var(--audit-color-bg-row-hover);
+}
+
+.audit-table__cell {
+  padding: 1rem 1.5rem;
+  word-break: break-word;
+  max-width: 300px;
+}
+
+.audit-table__empty-cell {
+  padding: 2rem 1.5rem;
+  text-align: center;
+}
+
+/* ── Action badge ── */
+.audit-action-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: var(--audit-badge-size);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ── Details button ── */
+.audit-details-button {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--audit-color-border);
+  border-radius: var(--audit-border-radius);
+  background-color: white;
+  cursor: pointer;
+  font-family: var(--audit-font-body);
+  transition: all var(--audit-transition-fast);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.audit-details-button:hover:not(:disabled) {
+  background-color: var(--audit-color-bg-light);
+  border-color: var(--audit-color-primary);
+}
+
+.audit-details-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Pagination section ── */
+.audit-pagination {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.audit-pagination__info {
+  font-size: 0.875rem;
+}
+
+.audit-pagination__buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* ── Modal overlay ── */
+.audit-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--audit-color-overlay);
+  z-index: 999;
+  display: none;
+}
+
+.audit-modal-overlay.open {
+  display: block;
+}
+
+/* ── Modal container (center modal) ── */
+.audit-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: var(--audit-modal-width);
+  max-height: var(--audit-modal-height);
+  background: white;
+  border-radius: var(--audit-panel-border-radius);
+  z-index: 1000;
+  display: none;
+  flex-direction: column;
+  box-shadow: var(--audit-modal-shadow);
+  overflow: hidden;
+}
+
+.audit-modal.open {
+  display: flex;
+}
+
+.audit-modal-header {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--audit-color-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.audit-modal-title {
+  font-family: var(--audit-font-display);
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin: 0;
+  flex: 1;
+}
+
+.audit-modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity var(--audit-transition-fast);
+  font-size: 24px;
+  line-height: 1;
+}
+
+.audit-modal-close:hover {
+  opacity: 0.7;
+}
+
+.audit-modal-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--audit-space-lg);
+}
+
+.audit-modal-footer {
+  display: flex;
+  gap: 1rem;
+  margin-top: auto;
+  padding: 1.5rem 2rem;
+  border-top: 1px solid var(--audit-color-border);
+  flex-shrink: 0;
+  justify-content: flex-end;
+}
+
+/* ── Changes section ── */
+.audit-changes-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--audit-space-md);
+}
+
+.audit-changes-header {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.audit-changes-json {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid var(--audit-color-border);
+  border-radius: var(--audit-border-radius);
+  background-color: var(--audit-color-code-bg);
+  overflow-x: auto;
+  font-family: var(--audit-font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--audit-color-text-secondary);
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* ── Empty state ── */
+.audit-empty-state {
+  padding: 3rem 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.audit-empty-state__icon {
+  font-size: 3rem;
+  opacity: 0.3;
+}
+
+.audit-empty-state__text {
+  font-size: 0.875rem;
+}
+
+/* ── Loading state ── */
+.audit-loading {
+  padding: 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.audit-loading__text {
+  font-size: 0.875rem;
+}
+
+
+/* ════════════════════════════════════════════════════════════════
+   LAYER 3: COMPONENTS
+   Self-contained visual units with full styling
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Button: Primary (Clear Logs, Export) ── */
+.audit-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: transparent;
+  color: var(--audit-color-text-secondary);
+  border: 1px solid var(--audit-color-border);
+  border-radius: var(--audit-border-radius);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--audit-transition-default);
+  font-family: var(--audit-font-body);
+}
+
+.audit-button:hover:not(:disabled) {
+  background-color: var(--audit-color-bg-light);
+  border-color: var(--audit-color-primary);
+  color: var(--audit-color-primary);
+}
+
+.audit-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.audit-button.primary {
+  background-color: var(--audit-color-primary);
+  color: white;
+  border-color: var(--audit-color-primary);
+}
+
+.audit-button.primary:hover:not(:disabled) {
+  opacity: 0.9;
+  background-color: var(--audit-color-primary);
+}
+
+.audit-button.danger {
+  color: var(--audit-color-error);
+  border-color: var(--audit-color-error);
+}
+
+.audit-button.danger:hover:not(:disabled) {
+  background-color: rgba(211, 47, 47, 0.08);
+  color: var(--audit-color-error);
+}
+
+/* ── Input: Filter inputs ── */
+.audit-filter-input,
+.audit-filter-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--audit-color-border);
+  border-radius: var(--audit-border-radius);
+  font-size: 0.875rem;
+  font-family: var(--audit-font-body);
+  background: white;
+  transition: border-color var(--audit-transition-default);
+  color: var(--audit-color-text-secondary);
+}
+
+.audit-filter-input::placeholder {
+  color: var(--audit-color-text-light);
+}
+
+.audit-filter-input:focus,
+.audit-filter-select:focus {
+  outline: none;
+  border-color: var(--audit-color-primary);
+}
+
+.audit-filter-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%232c2c2c' stroke-width='1.5'><path d='M6 9l6 6 6-6'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2rem;
+}
+
+/* ── Action Badge Variants ── */
+.audit-action-badge.create {
+  background-color: var(--audit-color-success);
+  color: white;
+}
+
+.audit-action-badge.update {
+  background-color: var(--audit-color-info);
+  color: white;
+}
+
+.audit-action-badge.delete {
+  background-color: var(--audit-color-error);
+  color: white;
+}
+
+.audit-action-badge.view {
+  background-color: var(--audit-color-warning);
+  color: white;
+}
+
+.audit-action-badge.login {
+  background-color: var(--audit-color-primary);
+  color: white;
+}
+
+.audit-action-badge.logout {
+  background-color: var(--audit-color-text-muted);
+  color: white;
+}
+
+/* ── Pagination Button ── */
+.audit-pagination-button {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--audit-color-border);
+  border-radius: var(--audit-border-radius);
+  background-color: white;
+  cursor: pointer;
+  font-family: var(--audit-font-body);
+  transition: all var(--audit-transition-fast);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.audit-pagination-button:hover:not(:disabled) {
+  background-color: var(--audit-color-bg-light);
+  border-color: var(--audit-color-primary);
+}
+
+.audit-pagination-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.audit-pagination-button.active {
+  background-color: var(--audit-color-primary);
+  color: white;
+  border-color: var(--audit-color-primary);
+}
+
+/* ── Loading spinner ── */
+.audit-spinner {
+  display: inline-block;
+  width: var(--audit-spinner-size);
+  height: var(--audit-spinner-size);
+  border: 2px solid rgba(45, 74, 70, 0.2);
+  border-top-color: var(--audit-color-primary);
+  border-radius: 50%;
+  animation: auditSpin 0.6s linear infinite;
+}
+
+@keyframes auditSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Text utilities ── */
+.text-error {
+  color: var(--audit-color-error);
+  font-size: 0.875rem;
+}
+
+.text-success {
+  color: var(--audit-color-success);
+  font-size: 0.875rem;
+}
+
+.text-info {
+  color: var(--audit-color-info);
+  font-size: 0.875rem;
+}
+
+.text-muted {
+  color: var(--audit-color-text-muted);
+  font-size: 0.875rem;
+}
+
+/* ── Code block ── */
+.code-block {
+  background-color: var(--audit-color-code-bg);
+  border: 1px solid var(--audit-color-border);
+  border-radius: var(--audit-border-radius);
+  padding: 1rem;
+  font-family: var(--audit-font-mono);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  overflow-x: auto;
+  color: var(--audit-color-text-secondary);
+}
+
+/* ── Table container ── */
+.table-container {
+  background-color: white;
+  border: 1px solid var(--audit-color-border);
+  border-radius: var(--audit-panel-border-radius);
+  overflow: hidden;
+}
+
+/* ── Timestamp ── */
+.audit-timestamp {
+  font-size: 0.8rem;
+  color: var(--audit-color-text-muted);
+  white-space: nowrap;
+}
+
+/* ── User info ── */
+.audit-user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.audit-user-name {
+  font-weight: 500;
+  color: var(--audit-color-text-primary);
+  font-size: 0.875rem;
+}
+
+.audit-user-email {
+  font-size: 0.8rem;
+  color: var(--audit-color-text-muted);
+}
+
+/* ── Resource info ── */
+.audit-resource-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.audit-resource-type {
+  font-weight: 500;
+  color: var(--audit-color-text-primary);
+  font-size: 0.875rem;
+  text-transform: capitalize;
+}
+
+.audit-resource-id {
+  font-size: 0.8rem;
+  color: var(--audit-color-text-muted);
+  font-family: var(--audit-font-mono);
+}
+
+/* ── Responsive adjustments for mobile ── */
+@media (max-width: 768px) {
+  .audit-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .audit-table__cell {
+    padding: 0.75rem 1rem;
+    max-width: 150px;
+  }
+
+  .audit-table__header-cell {
+    padding: 0.75rem 1rem;
+    font-size: 0.7rem;
+  }
+
+  .audit-modal {
+    width: 95%;
+    max-height: 90vh;
+  }
+
+  .audit-modal-content {
+    padding: 1rem;
+  }
+
+  .audit-modal-header {
+    padding: 1rem;
+  }
+
+  .audit-modal-footer {
+    padding: 1rem;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .audit-button,
+  .audit-details-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+  }
+
+  .audit-table-wrapper {
+    max-height: 400px;
+  }
+}

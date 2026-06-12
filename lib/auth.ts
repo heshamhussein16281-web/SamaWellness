@@ -17,6 +17,7 @@ export interface JWTPayload {
   role: string;
   roleName: string;
   permissions: string[];
+  is_super_admin?: boolean;
   iat?: number;
   exp?: number;
   [key: string]: unknown;
@@ -63,6 +64,7 @@ export async function verifyCredentials(username: string, password: string): Pro
         roles:role_id (
           id,
           name,
+          is_super_admin,
           role_permissions (
             permissions (key, name)
           )
@@ -120,6 +122,7 @@ export async function verifyCredentials(username: string, password: string): Pro
       role: role?.id || 'user',
       roleName: role?.name || 'user',
       permissions,
+      is_super_admin: role?.is_super_admin || false,
     };
   } catch (error) {
     console.error('Credential verification error:', error);

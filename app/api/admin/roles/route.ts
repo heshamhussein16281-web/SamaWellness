@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyJWT, getJWTFromCookie } from '@/lib/auth';
 import { createClient } from '@supabase/supabase-js';
+import { logAuditAction } from '@/lib/audit';
 
 export const dynamic = 'force-dynamic';
 
@@ -95,6 +96,14 @@ export async function POST(request: NextRequest) {
       }
       throw error;
     }
+
+    await logAuditAction({
+      adminId: auth.user!.userId,
+      action: 'create',
+      entityType: 'role',
+      entityId: role.id,
+      entityName: role.name,
+    });
 
     return NextResponse.json(
       {

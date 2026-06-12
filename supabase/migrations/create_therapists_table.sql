@@ -1,4 +1,14 @@
--- Create therapists table
+-- DEPRECATED: This migration is SUPERSEDED by 20260608_create_clinic_tables.sql
+-- The authoritative therapists table is defined in 20260608 with BIGSERIAL id
+-- This file (create_therapists_table.sql) defines therapists with UUID id, which CONFLICTS
+-- with the BIGSERIAL definition. Due to "CREATE TABLE IF NOT EXISTS", the FIRST migration
+-- to run determines which schema is used. Currently 20260608 runs first (numeric prefix).
+--
+-- DO NOT USE THIS FILE. Use 20260608_create_clinic_tables.sql instead.
+-- This file is retained only for reference/history. therapist_schedules should be
+-- migrated to the therapist_availability pattern defined in 20260611_phase4_clinical_scheduling.sql
+
+-- OBSOLETE: Create therapists table
 CREATE TABLE IF NOT EXISTS therapists (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name VARCHAR(255) NOT NULL UNIQUE,

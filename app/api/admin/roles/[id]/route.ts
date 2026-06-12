@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyJWT, getJWTFromCookie } from '@/lib/auth';
 import { createClient } from '@supabase/supabase-js';
-import * as bcrypt from 'bcryptjs';
 import { logAuditAction, calculateChanges } from '@/lib/audit';
 
 export const dynamic = 'force-dynamic';
@@ -24,14 +23,14 @@ async function checkAdminPermission(request: NextRequest) {
     return { authorized: false, error: 'Invalid or expired token' };
   }
 
-  if (!payload.permissions.includes('manage_users')) {
+  if (!payload.permissions.includes('manage_roles')) {
     return { authorized: false, error: 'Insufficient permissions' };
   }
 
   return { authorized: true, user: payload };
 }
 
-// PUT: Update user
+// PUT: Update role name and description
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -44,79 +43,75 @@ export async function PUT(
   try {
     const { id } = params;
     const body = await request.json();
-    const { email, password, role_id, is_active } = body;
+    const { name, description } = body;
 
-    // Fetch current user before update
-    const { data: currentUser, error: fetchError } = await supabase
-      .from('clinic_users')
+    if (!name) {
+      return NextResponse.json(
+        { error: 'Role name is required' },
+        { status: 400 }
+      );
+    }
+
+    // Fetch current role before update
+    const { data: currentRole, error: fetchError } = await supabase
+      .from('roles')
       .select('*')
       .eq('id', id)
       .single();
 
     if (fetchError) throw fetchError;
 
-    const updateData: Record<string, unknown> = {
-      updated_at: new Date().toISOString(),
-    };
-
-    if (email !== undefined) updateData.email = email;
-    if (role_id !== undefined) updateData.role_id = role_id;
-    if (is_active !== undefined) updateData.is_active = is_active;
-
-    if (password) {
-      const salt = await bcrypt.genSalt(10);
-      updateData.password_hash = await bcrypt.hash(password, salt);
-    }
-
-    const { data: user, error } = await supabase
-      .from('clinic_users')
-      .update(updateData)
+    const { data: role, error } = await supabase
+      .from('roles')
+      .update({ name, description: description || null })
       .eq('id', id)
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      if (error.code === '23505') {
+        return NextResponse.json(
+          { error: 'Role name already exists' },
+          { status: 400 }
+        );
+      }
+      throw error;
+    }
 
     // Calculate changes for audit log
     const changedFields: Record<string, any> = {};
-    if (email !== undefined) changedFields.email = email;
-    if (role_id !== undefined) changedFields.role_id = role_id;
-    if (is_active !== undefined) changedFields.is_active = is_active;
+    if (name !== undefined) changedFields.name = name;
+    if (description !== undefined) changedFields.description = description;
 
-    const changes = calculateChanges(currentUser, changedFields);
+    const changes = calculateChanges(currentRole, changedFields);
 
     await logAuditAction({
       adminId: auth.user!.userId,
       action: 'update',
-      entityType: 'user',
+      entityType: 'role',
       entityId: id,
-      entityName: currentUser.username || currentUser.email,
+      entityName: currentRole.name,
       changes: Object.keys(changes).length > 0 ? changes : undefined,
     });
 
     return NextResponse.json(
       {
         success: true,
-        message: 'User updated successfully',
-        user: {
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          is_active: user.is_active,
-        },
+        message: 'Role updated successfully',
+        role,
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error updating user:', error);
+    console.error('Error updating role:', error);
     return NextResponse.json(
-      { error: 'Failed to update user' },
+      { error: 'Failed to update role' },
       { status: 500 }
     );
   }
 }
 
-// DELETE: Block/deactivate user
+// DELETE: Delete/archive role
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -129,19 +124,27 @@ export async function DELETE(
   try {
     const { id } = params;
 
-    // Fetch user info before deactivation
-    const { data: userInfo, error: fetchError } = await supabase
-      .from('clinic_users')
-      .select('username, email')
+    // Fetch role name before deletion
+    const { data: roleInfo, error: fetchError } = await supabase
+      .from('roles')
+      .select('name')
       .eq('id', id)
       .single();
 
     if (fetchError) throw fetchError;
 
-    // Deactivate user instead of deleting
-    const { data: user, error } = await supabase
-      .from('clinic_users')
-      .update({ is_active: false, updated_at: new Date().toISOString() })
+    // First, delete all role_permissions associations
+    const { error: deletePermissionsError } = await supabase
+      .from('role_permissions')
+      .delete()
+      .eq('role_id', id);
+
+    if (deletePermissionsError) throw deletePermissionsError;
+
+    // Then delete the role
+    const { data: role, error } = await supabase
+      .from('roles')
+      .delete()
       .eq('id', id)
       .select()
       .single();
@@ -151,27 +154,23 @@ export async function DELETE(
     await logAuditAction({
       adminId: auth.user!.userId,
       action: 'delete',
-      entityType: 'user',
+      entityType: 'role',
       entityId: id,
-      entityName: `${userInfo.username || userInfo.email} (deactivated)`,
+      entityName: roleInfo.name,
     });
 
     return NextResponse.json(
       {
         success: true,
-        message: 'User blocked successfully',
-        user: {
-          id: user.id,
-          username: user.username,
-          is_active: user.is_active,
-        },
+        message: 'Role deleted successfully',
+        role,
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error blocking user:', error);
+    console.error('Error deleting role:', error);
     return NextResponse.json(
-      { error: 'Failed to block user' },
+      { error: 'Failed to delete role' },
       { status: 500 }
     );
   }

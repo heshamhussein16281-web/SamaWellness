@@ -1,0 +1,695 @@
+/* ========================================
+   AVAILABLE SLOTS MODAL — COMPONENT STYLES
+
+   Architecture: 3-Layer CSS System
+   Layer 1: Design Tokens     — slots-specific CSS variables
+   Layer 2: Layout Containers — display, grid, flex, gap, padding, margin, position
+   Layer 3: Components        — self-contained visual units (buttons, cards, modals)
+   ======================================== */
+
+
+/* ════════════════════════════════════════════════════════════════
+   LAYER 1: DESIGN TOKENS (Slots-specific)
+   ════════════════════════════════════════════════════════════════ */
+:root {
+  /* ─── Slots Modal Colors ─── */
+  --slots-color-primary:        #7b2d3e; /* burgundy for CTAs */
+  --slots-color-success:        #4a6741; /* olive for available slots */
+  --slots-color-error:          #d32f2f; /* red for errors */
+  --slots-color-warning:        #FF9800; /* orange for unavailable */
+  --slots-color-border:         rgb(234, 228, 221);
+  --slots-color-bg-header:      rgb(234, 228, 221);
+  --slots-color-bg-light:       #f9f9f9;
+  --slots-color-text-primary:   rgb(45, 74, 70);
+  --slots-color-text-secondary: #2c2c2c;
+  --slots-color-text-muted:     rgba(44, 44, 44, 0.6);
+  --slots-color-overlay:        rgba(0, 0, 0, 0.4);
+  --slots-color-shadow:         rgba(0, 0, 0, 0.15);
+  --slots-color-disabled:       #e0e0e0;
+  --slots-color-disabled-text:  #999;
+  --slots-color-selected-bg:    #e8f5e9;
+  --slots-color-selected-border: #4a6741;
+  --slots-color-slot-hover:     rgba(123, 45, 62, 0.08);
+
+  /* ─── Slots Spacing ─── */
+  --slots-space-xs:     4px;
+  --slots-space-sm:     8px;
+  --slots-space-md:     16px;
+  --slots-space-lg:     24px;
+  --slots-space-xl:     32px;
+
+  /* ─── Slots Dimensions ─── */
+  --slots-modal-width:          700px;
+  --slots-modal-max-height:     85vh;
+  --slots-modal-shadow:         0 8px 32px rgba(0, 0, 0, 0.2);
+  --slots-border-radius:        6px;
+  --slots-panel-border-radius:  10px;
+  --slots-slot-height:          80px;
+  --slots-slot-width:           100px;
+  --slots-spinner-size:         16px;
+
+  /* ─── Slots Typography ─── */
+  --slots-font-display:         "Gilda Display", Georgia, serif;
+  --slots-font-ui:              "Josefin Sans", system-ui, sans-serif;
+  --slots-font-body:            "Nunito Sans", system-ui, sans-serif;
+  --slots-font-mono:            "Courier New", monospace;
+
+  /* ─── Transitions ─── */
+  --slots-transition-default:   0.3s ease-out;
+  --slots-transition-fast:      0.15s ease-out;
+}
+
+
+/* ════════════════════════════════════════════════════════════════
+   LAYER 2: LAYOUT CONTAINERS
+   Rule: only display / grid / flex / gap / padding / margin /
+         width / position. NEVER colors, fonts, borders, shadows.
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Modal overlay (backdrop) ── */
+.slots-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Modal container (center) ── */
+.slots-modal {
+  position: relative;
+  width: 90%;
+  max-width: var(--slots-modal-width);
+  max-height: var(--slots-modal-max-height);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+/* ── Modal header ── */
+.slots-modal-header {
+  padding: var(--slots-space-lg) var(--slots-space-xl);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.slots-modal-title {
+  margin: 0;
+  flex: 1;
+}
+
+.slots-modal-close {
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+/* ── Modal content (scrollable) ── */
+.slots-modal-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 var(--slots-space-xl) var(--slots-space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--slots-space-lg);
+}
+
+/* ── Modal footer ── */
+.slots-modal-footer {
+  display: flex;
+  gap: var(--slots-space-md);
+  padding: var(--slots-space-lg) var(--slots-space-xl);
+  flex-shrink: 0;
+  justify-content: flex-end;
+}
+
+/* ── Filters section ── */
+.slots-filters-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--slots-space-md);
+  padding: var(--slots-space-md);
+  border-radius: var(--slots-border-radius);
+}
+
+/* ── Filter group ── */
+.slots-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.slots-filter-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* ── Filter inputs ── */
+.slots-filter-input,
+.slots-filter-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: var(--slots-border-radius);
+  font-size: 0.875rem;
+  font-family: var(--slots-font-body);
+  transition: border-color var(--slots-transition-default);
+}
+
+.slots-filter-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%232c2c2c' stroke-width='1.5'><path d='M6 9l6 6 6-6'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2rem;
+}
+
+/* ── Session type options (radio) ── */
+.slots-session-type-options {
+  display: flex;
+  gap: var(--slots-space-sm);
+  flex-wrap: wrap;
+}
+
+.slots-radio-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.slots-radio-option input[type="radio"] {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
+.slots-radio-option span {
+  font-size: 0.875rem;
+}
+
+/* ── Error message ── */
+.slots-error-message {
+  padding: var(--slots-space-md) var(--slots-space-lg);
+  border-radius: var(--slots-border-radius);
+  display: flex;
+  gap: var(--slots-space-md);
+  align-items: flex-start;
+}
+
+.slots-error-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* ── Loading state ── */
+.slots-loading-state {
+  padding: var(--slots-space-xl) var(--slots-space-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--slots-space-lg);
+}
+
+.slots-spinner {
+  display: inline-block;
+  width: var(--slots-spinner-size);
+  height: var(--slots-spinner-size);
+  border: 2px solid rgba(45, 74, 70, 0.2);
+  border-top-color: var(--slots-color-primary);
+  border-radius: 50%;
+  animation: slotsSpin 0.6s linear infinite;
+}
+
+@keyframes slotsSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Slots container ── */
+.slots-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--slots-space-lg);
+}
+
+.slots-grid-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* ── Room group ── */
+.slots-room-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--slots-space-md);
+  padding: var(--slots-space-md);
+  border-radius: var(--slots-border-radius);
+}
+
+.slots-room-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding-bottom: var(--slots-space-sm);
+  border-bottom: 1px solid var(--slots-color-border);
+}
+
+/* ── Slots grid (30-min intervals) ── */
+.slots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--slots-slot-width), 1fr));
+  gap: var(--slots-space-sm);
+}
+
+/* ── Individual slot button ── */
+.slots-slot-button {
+  height: var(--slots-slot-height);
+  padding: var(--slots-space-md) var(--slots-space-sm);
+  border-radius: var(--slots-border-radius);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--slots-space-xs);
+  transition: all var(--slots-transition-fast);
+  font-family: var(--slots-font-body);
+  text-align: center;
+}
+
+.slots-time {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.slots-cost {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.slots-reason {
+  font-size: 0.7rem;
+  margin-top: var(--slots-space-xs);
+  text-align: center;
+  opacity: 0.7;
+}
+
+/* ── Slot states ── */
+.slots-slot-button.disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.slots-slot-button.selected {
+  position: relative;
+}
+
+/* ── Empty state ── */
+.slots-empty-state {
+  padding: var(--slots-space-xl) var(--slots-space-lg);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--slots-space-md);
+}
+
+.slots-empty-state p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+/* ── Cost breakdown section ── */
+.slots-cost-breakdown {
+  padding: var(--slots-space-md) var(--slots-space-lg);
+  border-radius: var(--slots-border-radius);
+  display: flex;
+  flex-direction: column;
+  gap: var(--slots-space-md);
+}
+
+.slots-cost-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.slots-cost-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--slots-space-sm) 0;
+}
+
+.slots-cost-row.highlighted {
+  padding: var(--slots-space-md);
+  border-radius: var(--slots-border-radius);
+}
+
+.slots-cost-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.slots-cost-value {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: right;
+}
+
+/* ── Buttons ── */
+.slots-button {
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--slots-border-radius);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--slots-transition-default);
+  font-family: var(--slots-font-body);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.slots-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.slots-button.cancel {
+  border: 1px solid var(--slots-color-border);
+  background-color: transparent;
+}
+
+.slots-button.primary {
+  border: none;
+}
+
+
+/* ════════════════════════════════════════════════════════════════
+   LAYER 3: COMPONENTS
+   Self-contained visual units with full styling
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Modal base styling ── */
+.slots-modal {
+  background-color: white;
+  border-radius: var(--slots-panel-border-radius);
+  box-shadow: var(--slots-modal-shadow);
+}
+
+.slots-modal-header {
+  background-color: white;
+  border-bottom: 1px solid var(--slots-color-border);
+}
+
+.slots-modal-title {
+  font-family: var(--slots-font-display);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--slots-color-text-primary);
+}
+
+.slots-modal-close {
+  background: none;
+  border: none;
+  color: var(--slots-color-text-secondary);
+  font-size: 24px;
+  line-height: 1;
+  transition: opacity var(--slots-transition-fast);
+}
+
+.slots-modal-close:hover {
+  opacity: 0.7;
+}
+
+.slots-modal-footer {
+  background-color: white;
+  border-top: 1px solid var(--slots-color-border);
+}
+
+/* ── Modal overlay backdrop ── */
+.slots-modal-overlay {
+  background-color: var(--slots-color-overlay);
+}
+
+/* ── Filters styling ── */
+.slots-filters-section {
+  background-color: var(--slots-color-bg-light);
+  border: 1px solid var(--slots-color-border);
+}
+
+.slots-filter-label {
+  color: var(--slots-color-text-primary);
+}
+
+.slots-filter-input,
+.slots-filter-select {
+  background-color: white;
+  color: var(--slots-color-text-secondary);
+  border: 1px solid var(--slots-color-border);
+}
+
+.slots-filter-input::placeholder {
+  color: var(--slots-color-text-muted);
+}
+
+.slots-filter-input:focus,
+.slots-filter-select:focus {
+  outline: none;
+  border-color: var(--slots-color-primary);
+  box-shadow: 0 0 0 2px rgba(123, 45, 62, 0.1);
+}
+
+.slots-radio-option {
+  color: var(--slots-color-text-secondary);
+}
+
+/* ── Error message styling ── */
+.slots-error-message {
+  background-color: rgba(211, 47, 47, 0.08);
+  color: var(--slots-color-error);
+  border: 1px solid rgba(211, 47, 47, 0.2);
+}
+
+.slots-error-icon {
+  background-color: var(--slots-color-error);
+  color: white;
+}
+
+/* ── Loading state styling ── */
+.slots-loading-state p {
+  color: var(--slots-color-text-secondary);
+  margin: 0;
+}
+
+/* ── Slots grid styling ── */
+.slots-room-group {
+  background-color: var(--slots-color-bg-light);
+  border: 1px solid var(--slots-color-border);
+}
+
+.slots-room-name {
+  color: var(--slots-color-text-primary);
+}
+
+/* ── Slot button styling ── */
+.slots-slot-button {
+  background-color: white;
+  color: var(--slots-color-text-secondary);
+  border: 2px solid var(--slots-color-border);
+}
+
+.slots-slot-button:not(.disabled):hover {
+  background-color: var(--slots-color-slot-hover);
+  border-color: var(--slots-color-primary);
+}
+
+.slots-slot-button.disabled {
+  background-color: var(--slots-color-disabled);
+  color: var(--slots-color-disabled-text);
+  border-color: var(--slots-color-disabled);
+}
+
+.slots-slot-button.selected {
+  background-color: var(--slots-color-selected-bg);
+  border-color: var(--slots-color-selected-border);
+  color: var(--slots-color-selected-border);
+}
+
+.slots-slot-button.selected::after {
+  content: '✓';
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  font-weight: bold;
+  font-size: 14px;
+  color: var(--slots-color-selected-border);
+}
+
+/* ── Empty state styling ── */
+.slots-empty-state p {
+  color: var(--slots-color-text-muted);
+}
+
+/* ── Cost breakdown styling ── */
+.slots-cost-breakdown {
+  background-color: var(--slots-color-selected-bg);
+  border: 1px solid rgba(74, 103, 65, 0.2);
+}
+
+.slots-cost-title {
+  color: var(--slots-color-text-primary);
+}
+
+.slots-cost-row.highlighted {
+  background-color: rgba(74, 103, 65, 0.08);
+  border: 1px solid rgba(74, 103, 65, 0.2);
+}
+
+.slots-cost-label {
+  color: var(--slots-color-text-secondary);
+}
+
+.slots-cost-value {
+  color: var(--slots-color-primary);
+}
+
+/* ── Button styling ── */
+.slots-button {
+  color: var(--slots-color-text-secondary);
+}
+
+.slots-button.cancel {
+  color: var(--slots-color-text-secondary);
+  background-color: white;
+  border-color: var(--slots-color-border);
+}
+
+.slots-button.cancel:hover:not(:disabled) {
+  background-color: var(--slots-color-bg-light);
+  border-color: var(--slots-color-primary);
+  color: var(--slots-color-primary);
+}
+
+.slots-button.primary {
+  background-color: var(--slots-color-primary);
+  color: white;
+  border: 1px solid var(--slots-color-primary);
+}
+
+.slots-button.primary:hover:not(:disabled) {
+  opacity: 0.9;
+  box-shadow: 0 2px 8px rgba(123, 45, 62, 0.2);
+}
+
+
+/* ════════════════════════════════════════════════════════════════
+   RESPONSIVE ADJUSTMENTS
+   ════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  :root {
+    --slots-modal-width: 95vw;
+    --slots-slot-width: 80px;
+    --slots-slot-height: 70px;
+  }
+
+  .slots-filters-section {
+    grid-template-columns: 1fr;
+  }
+
+  .slots-grid {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  }
+
+  .slots-modal-content {
+    padding: 0 var(--slots-space-md) var(--slots-space-md);
+  }
+
+  .slots-modal-header {
+    padding: var(--slots-space-md) var(--slots-space-lg);
+  }
+
+  .slots-modal-footer {
+    padding: var(--slots-space-md) var(--slots-space-lg);
+    flex-direction: column-reverse;
+    gap: var(--slots-space-sm);
+  }
+
+  .slots-button {
+    width: 100%;
+    padding: 0.75rem 1rem;
+  }
+
+  .slots-cost-row {
+    flex-direction: column;
+    gap: var(--slots-space-xs);
+    align-items: flex-start;
+  }
+
+  .slots-cost-value {
+    text-align: left;
+  }
+
+  .slots-room-group {
+    padding: var(--slots-space-md);
+  }
+
+  .slots-filter-input,
+  .slots-filter-select {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --slots-modal-width: 98vw;
+    --slots-slot-width: 70px;
+    --slots-slot-height: 60px;
+  }
+
+  .slots-modal-title {
+    font-size: 1.25rem;
+  }
+
+  .slots-grid {
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  }
+
+  .slots-time {
+    font-size: 0.8rem;
+  }
+
+  .slots-cost {
+    font-size: 0.7rem;
+  }
+
+  .slots-slot-button {
+    padding: var(--slots-space-sm) var(--slots-space-xs);
+    gap: var(--slots-space-xs);
+  }
+}

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyJWT, getJWTFromCookie } from '@/lib/auth';
+import { verifyJWT, getJWTFromCookie, type JWTPayload } from '@/lib/auth';
 import { createClient } from '@supabase/supabase-js';
 import * as bcrypt from 'bcryptjs';
+import { logAuditAction } from '@/lib/audit';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,7 +11,12 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 );
 
-async function checkAdminPermission(request: NextRequest) {
+async function checkAdminPermission(
+  request: NextRequest
+): Promise<
+  | { authorized: false; error: string }
+  | { authorized: true; user: JWTPayload }
+> {
   const cookieHeader = request.headers.get('cookie');
   const token = getJWTFromCookie(cookieHeader || undefined);
 
@@ -110,6 +116,15 @@ export async function POST(request: NextRequest) {
       }
       throw error;
     }
+
+    // After successful user creation, log the action
+    await logAuditAction({
+      adminId: auth.user.userId,
+      action: 'create',
+      entityType: 'user',
+      entityId: user.id,
+      entityName: `${user.username} (${user.email || 'no email'})`,
+    });
 
     return NextResponse.json(
       {
