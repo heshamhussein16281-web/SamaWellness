@@ -1130,7 +1130,7 @@ textarea.form-input {
 
 .contact-floating-btn {
   position: fixed;
-  top: 50%;
+  top: 70%;
   right: 24px;
   transform: translateY(-50%);
   z-index: 50;
