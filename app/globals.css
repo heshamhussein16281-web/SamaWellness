@@ -615,8 +615,6 @@ section[id] {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  max-height: 500px;
-  overflow: hidden;
 }
 
 .ask-sama-photo {
