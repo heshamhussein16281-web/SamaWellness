@@ -616,8 +616,7 @@ section[id] {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  min-height: 720px;
-  margin-top: -76px;
+  min-height: 850px;
 }
 
 .ask-sama-photo {
