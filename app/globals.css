@@ -418,6 +418,34 @@ section[id] {
 @media (max-width: 768px) {
   .ask-sama-section {
     padding: 8px 24px 32px;
+    position: relative;
+  }
+
+  .ask-sama-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ask-sama-form-col {
+    position: relative;
+  }
+
+  .ask-sama-photo-col {
+    position: absolute;
+    top: 12px;
+    right: 24px;
+    width: 120px;
+    height: 150px;
+    min-height: auto;
+  }
+
+  .ask-sama-photo {
+    width: 100%;
+    height: 100%;
+    transform: scale(1);
+  }
+
+  .ask-sama-heading {
+    padding-right: 130px;
   }
 }
 
