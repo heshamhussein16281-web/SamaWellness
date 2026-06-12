@@ -967,8 +967,8 @@ textarea.form-input {
   flex-shrink: 0;
 }
 .footer__logo {
-  width: 160px;
-  height: 160px;
+  width: 260px;
+  height: 260px;
   object-fit: contain;
 }
 .footer__brand-name {
