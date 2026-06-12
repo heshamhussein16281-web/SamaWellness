@@ -28,7 +28,7 @@ export default function AskCounselorSama() {
 
       if (response.ok) {
         setStatus("success");
-        setForm({ name: "", email: "", topic: "", question: "", consent: false });
+        setForm({ name: "", email: "", topic: "", question: "" });
       } else {
         setStatus("error");
       }
