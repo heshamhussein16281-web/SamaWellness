@@ -972,6 +972,7 @@ textarea.form-input {
   object-fit: contain;
 }
 .footer__brand-name {
+  display: none;
   font-family: var(--font-display);
   font-size: 2.5rem;
   font-weight: 400;
