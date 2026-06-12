@@ -23,6 +23,9 @@ export default function Footer() {
             <span className="footer__brand-name">Sama Wellness Therapy</span>
           </a>
 
+          {/* Tagline */}
+          <p className="footer__tagline">Your Journey to Healing</p>
+
           {/* Social Links */}
           <div className="footer__socials">
             {socialLinks.map((link) => (
