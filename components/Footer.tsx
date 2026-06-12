@@ -1,12 +1,5 @@
 "use client";
 
-const socialLinks = [
-  { label: "Email", href: "mailto:info@samawellnesstherapy.com", icon: "✉️" },
-  { label: "Phone", href: "tel:+201130946556", icon: "📱" },
-  { label: "WhatsApp", href: "https://api.whatsapp.com/send?phone=201130946556", icon: "💬" },
-  { label: "Instagram", href: "https://www.instagram.com/sama.wellness.therapy/", icon: "📷" },
-];
-
 export default function Footer() {
   return (
     <>
@@ -25,22 +18,6 @@ export default function Footer() {
 
           {/* Tagline */}
           <p className="footer__tagline">Your Journey to Healing</p>
-
-          {/* Social Links */}
-          <div className="footer__socials">
-            {socialLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                title={link.label}
-                className="footer__social-link"
-                target={link.href.startsWith("http") ? "_blank" : undefined}
-                rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
-              >
-                {link.icon}
-              </a>
-            ))}
-          </div>
 
         </div>
 
