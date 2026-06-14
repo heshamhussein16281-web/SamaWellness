@@ -54,6 +54,10 @@ export async function verifyJWT(token: string): Promise<JWTPayload | null> {
  */
 export async function verifyCredentials(username: string, password: string): Promise<JWTPayload | null> {
   try {
+    console.log('verifyCredentials called for user:', username);
+    console.log('Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+    console.log('Using SERVICE_ROLE_KEY:', !!process.env.SUPABASE_SERVICE_ROLE_KEY);
+
     const { data: user, error } = await supabase
       .from('clinic_users')
       .select(`
@@ -73,7 +77,12 @@ export async function verifyCredentials(username: string, password: string): Pro
       .eq('username', username)
       .single();
 
-    if (error || !user) {
+    if (error) {
+      console.log('Query error:', error);
+      return null;
+    }
+
+    if (!user) {
       console.log('User not found:', username);
       return null;
     }
