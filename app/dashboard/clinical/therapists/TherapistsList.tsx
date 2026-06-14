@@ -22,7 +22,7 @@ type SortOrder = 'asc' | 'desc';
 interface TherapistStats {
   appointments: number;
   bookedPercentage: number;
-  rating: number;
+  rating: string;
 }
 
 export default function TherapistsListRefined() {
