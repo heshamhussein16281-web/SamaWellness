@@ -77,16 +77,17 @@ export async function GET(
     // Calculate pagination
     const offset = (page - 1) * limit;
 
-    // Fetch completed sessions with therapist names
+    // Fetch completed sessions with therapist names and session notes
     const { data: sessions, error } = await supabase
       .from('bookings')
       .select(`
+        id,
         session_date,
         duration_minutes,
         booking_status,
         notes,
         therapists:therapist_id (id, name),
-        session_notes
+        session_notes (session_outcome, progress_score, notes)
       `)
       .eq('client_id', clientId)
       .eq('booking_status', 'completed')
