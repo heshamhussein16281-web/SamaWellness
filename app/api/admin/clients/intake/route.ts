@@ -125,6 +125,7 @@ export async function POST(request: NextRequest) {
           preferences: preferences || null,
           status: 'intake',
           client_since: now,
+          intake_date: now,
           notes: intake_notes || null,
           referral_source: referred_by || null,
           created_at: now,
