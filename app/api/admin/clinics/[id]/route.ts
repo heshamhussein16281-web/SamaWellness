@@ -80,13 +80,24 @@ export async function PUT(
 
   try {
     const body = await request.json();
-    const { name, location, phone, email } = body;
+    const { name, location, phone, email, number_of_rooms } = body;
+
+    // Validate number_of_rooms if provided
+    if (number_of_rooms !== undefined && number_of_rooms !== null) {
+      if (typeof number_of_rooms !== 'number' || number_of_rooms < 1) {
+        return NextResponse.json(
+          { error: 'number_of_rooms must be a number >= 1' },
+          { status: 400 }
+        );
+      }
+    }
 
     const updateData: Record<string, unknown> = {};
     if (name !== undefined) updateData.name = name;
     if (location !== undefined) updateData.location = location;
     if (phone !== undefined) updateData.phone = phone;
     if (email !== undefined) updateData.email = email;
+    if (number_of_rooms !== undefined) updateData.number_of_rooms = number_of_rooms;
     updateData.updated_at = new Date().toISOString();
 
     const { data, error } = await supabase
