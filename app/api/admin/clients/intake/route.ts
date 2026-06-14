@@ -164,14 +164,19 @@ export async function POST(request: NextRequest) {
       // Don't fail the request if history creation fails
     }
 
-    // Log audit action
-    await logAuditAction({
-      adminId: auth.user.userId,
-      action: 'create',
-      entityType: 'client',
-      entityId: client.id.toString(),
-      entityName: `${client.name} (Intake submitted)`,
-    });
+    // Log audit action (optional if service role key not available)
+    try {
+      await logAuditAction({
+        adminId: auth.user.userId,
+        action: 'create',
+        entityType: 'client',
+        entityId: client.id.toString(),
+        entityName: `${client.name} (Intake submitted)`,
+      });
+    } catch (auditError) {
+      console.error('Failed to log audit action:', auditError);
+      // Continue anyway - audit logging is not critical
+    }
 
     return NextResponse.json(
       {
