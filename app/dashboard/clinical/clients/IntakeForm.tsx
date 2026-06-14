@@ -53,7 +53,7 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
         });
         if (res.ok) {
           const data = await res.json();
-          setTherapists(data.data || []);
+          setTherapists(data.therapists || data.data || []);
         }
       } catch (err) {
         console.error('Failed to fetch therapists:', err);
