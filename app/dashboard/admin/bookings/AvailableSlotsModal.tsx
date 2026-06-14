@@ -268,6 +268,22 @@ export default function AvailableSlotsModal({
             </div>
           )}
 
+          {/* Available Times Summary */}
+          {!loading && slots.length > 0 && (
+            <div className="slots-summary-message">
+              <span className="slots-summary-icon">✓</span>
+              <span>
+                Free slots available:{' '}
+                {slots
+                  .filter((s) => s.available)
+                  .slice(0, 5)
+                  .map((s) => s.start_time)
+                  .join(', ')}
+                {slots.filter((s) => s.available).length > 5 && ' ...'}
+              </span>
+            </div>
+          )}
+
           {/* Loading State */}
           {loading && (
             <div className="slots-loading-state">

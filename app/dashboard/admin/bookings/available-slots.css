@@ -223,6 +223,26 @@
   font-size: 14px;
 }
 
+/* ── Summary message ── */
+.slots-summary-message {
+  padding: var(--slots-space-md) var(--slots-space-lg);
+  border-radius: var(--slots-border-radius);
+  display: flex;
+  gap: var(--slots-space-md);
+  align-items: flex-start;
+}
+
+.slots-summary-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  font-weight: bold;
+  font-size: 14px;
+}
+
 /* ── Loading state ── */
 .slots-loading-state {
   padding: var(--slots-space-xl) var(--slots-space-lg);
@@ -498,6 +518,19 @@
 .slots-error-icon {
   background-color: var(--slots-color-error);
   color: white;
+}
+
+/* ── Summary message styling ── */
+.slots-summary-message {
+  background-color: rgba(74, 103, 65, 0.08);
+  color: var(--slots-color-success);
+  border: 1px solid rgba(74, 103, 65, 0.2);
+  font-size: 0.875rem;
+}
+
+.slots-summary-icon {
+  color: var(--slots-color-success);
+  font-size: 16px;
 }
 
 /* ── Loading state styling ── */
