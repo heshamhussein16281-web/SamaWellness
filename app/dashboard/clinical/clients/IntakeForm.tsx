@@ -14,6 +14,8 @@ interface FormData {
   referred_by: string;
   preferences: string;
   intake_notes: string;
+  is_referral: boolean;
+  therapist_id?: number;
 }
 
 interface IntakeFormProps {
@@ -33,20 +35,48 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
     referred_by: '',
     preferences: '',
     intake_notes: '',
+    is_referral: false,
   });
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<{ id: number; name: string; status: string } | null>(null);
+  const [therapists, setTherapists] = useState<Array<{ id: number; name: string }>>([]);
+  const [step, setStep] = useState<'intake' | 'therapist' | 'payment' | 'assessment'>('intake');
+
+  // Fetch therapists on mount
+  React.useEffect(() => {
+    const fetchTherapists = async () => {
+      try {
+        const res = await fetch('/api/admin/therapists', {
+          credentials: 'include',
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setTherapists(data.data || []);
+        }
+      } catch (err) {
+        console.error('Failed to fetch therapists:', err);
+      }
+    };
+    fetchTherapists();
+  }, []);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    if (name === 'is_referral') {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: (e.target as HTMLInputElement).checked,
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const validateForm = (): boolean => {
@@ -77,6 +107,13 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
       return;
     }
 
+    // For referrals, require therapist selection before proceeding
+    if (formData.is_referral && !formData.therapist_id) {
+      setError('Please select a therapist for this referral');
+      setStep('therapist');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -97,8 +134,15 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
       const data = await res.json();
       if (data.success && data.data) {
         setSuccess(data.data);
-        if (onSuccess) {
-          onSuccess(data.data.id, data.data.name);
+
+        // If referral, directly show success message
+        if (formData.is_referral) {
+          if (onSuccess) {
+            onSuccess(data.data.id, data.data.name);
+          }
+        } else {
+          // Non-referral: proceed to payment and assessment
+          setStep('payment');
         }
       }
     } catch (err) {
@@ -288,6 +332,55 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
               rows={3}
             />
           </div>
+        </fieldset>
+
+        {/* Referral Status Section */}
+        <fieldset className="intake-form-section">
+          <legend className="intake-form-section-title">Referral Status</legend>
+
+          <div className="intake-form-group">
+            <label className="intake-form-checkbox-label">
+              <input
+                type="checkbox"
+                name="is_referral"
+                checked={formData.is_referral}
+                onChange={handleChange}
+                className="intake-form-checkbox"
+              />
+              <span>This client comes from a referral</span>
+            </label>
+            <p className="intake-form-help-text">
+              {formData.is_referral
+                ? 'Select a therapist to assign to this referral client'
+                : 'This client will need an assessment session with Sama before therapist assignment'
+              }
+            </p>
+          </div>
+
+          {formData.is_referral && (
+            <div className="intake-form-group">
+              <label htmlFor="therapist_id" className="intake-form-label">
+                Assign Therapist <span className="intake-form-required">*</span>
+              </label>
+              <select
+                id="therapist_id"
+                name="therapist_id"
+                value={formData.therapist_id || ''}
+                onChange={(e) => setFormData((prev) => ({
+                  ...prev,
+                  therapist_id: e.target.value ? parseInt(e.target.value, 10) : undefined,
+                }))}
+                className="intake-form-input"
+              >
+                <option value="">Select a therapist</option>
+                {therapists.map((therapist) => (
+                  <option key={therapist.id} value={therapist.id}>
+                    {therapist.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
         </fieldset>
 
         {/* Additional Notes Section */}

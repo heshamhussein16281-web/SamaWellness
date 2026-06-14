@@ -396,3 +396,33 @@
     font-size: 20px;
   }
 }
+
+/* Checkbox styles for referral status */
+.intake-form-checkbox {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  cursor: pointer;
+  accent-color: var(--color-burgundy);
+}
+
+.intake-form-checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--color-charcoal);
+  font-family: var(--font-body);
+}
+
+.intake-form-checkbox-label span {
+  font-weight: 500;
+}
+
+.intake-form-help-text {
+  margin: 8px 0 0 0;
+  font-size: 12px;
+  color: #666;
+  font-family: var(--font-body);
+  font-style: italic;
+}

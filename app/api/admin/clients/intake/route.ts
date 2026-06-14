@@ -80,6 +80,8 @@ export async function POST(request: NextRequest) {
       referred_by,
       preferences,
       intake_notes,
+      is_referral,
+      therapist_id,
     } = body;
 
     // Validate required fields
@@ -109,7 +111,15 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Create client record with initial status='intake'
+    // Determine client status based on referral status
+    let clientStatus = 'intake';
+    if (is_referral) {
+      clientStatus = 'ready_for_booking'; // Referral clients can book immediately
+    } else {
+      clientStatus = 'assessment_pending'; // Non-referral clients need assessment first
+    }
+
+    // Create client record
     const now = new Date().toISOString();
     const { data: client, error: clientError } = await supabase
       .from('clients')
@@ -123,11 +133,12 @@ export async function POST(request: NextRequest) {
           language: language || null,
           concern: concern || null,
           preferences: preferences || null,
-          status: 'intake',
+          status: clientStatus,
           client_since: now,
           intake_date: now,
           notes: intake_notes || null,
           referral_source: referred_by || null,
+          therapist_id: is_referral && therapist_id ? therapist_id : null,
           created_at: now,
           updated_at: now,
         },
