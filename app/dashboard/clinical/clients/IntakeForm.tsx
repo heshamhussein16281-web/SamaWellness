@@ -48,7 +48,7 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
   const [success, setSuccess] = useState<{ id: number; name: string; status: string } | null>(null);
   const [therapists, setTherapists] = useState<Array<{ id: number; name: string }>>([]);
   const [step, setStep] = useState<'intake' | 'therapist' | 'payment' | 'assessment'>('intake');
-  const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
+  const [touchedFields, setTouchedFields] = useState<string[]>([]);
 
   // Fetch therapists on mount
   React.useEffect(() => {
@@ -90,7 +90,12 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
   };
 
   const handleBlur = (fieldName: string, value: any) => {
-    setTouchedFields((prev) => new Set([...prev, fieldName]));
+    setTouchedFields((prev) => {
+      if (!prev.includes(fieldName)) {
+        return [...prev, fieldName];
+      }
+      return prev;
+    });
     const error = validateField(fieldName, value);
     if (error) {
       setFieldErrors((prev) => ({ ...prev, [fieldName]: error }));
@@ -263,7 +268,7 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
               aria-describedby={fieldErrors.name ? 'name-error' : undefined}
               required
             />
-            {fieldErrors.name && touchedFields.has('name') && (
+            {fieldErrors.name && touchedFields.includes('name') && (
               <div id="name-error" className="intake-form-field-error">{fieldErrors.name}</div>
             )}
           </div>
@@ -284,10 +289,10 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
                 aria-describedby={fieldErrors.email ? 'email-error' : 'email-hint'}
                 autoComplete="email"
               />
-              {fieldErrors.email && touchedFields.has('email') && (
+              {fieldErrors.email && touchedFields.includes('email') && (
                 <div id="email-error" className="intake-form-field-error">{fieldErrors.email}</div>
               )}
-              {!fieldErrors.email && !touchedFields.has('email') && (
+              {!fieldErrors.email && !touchedFields.includes('email') && (
                 <p id="email-hint" className="intake-form-help-text">We'll use this for session reminders</p>
               )}
             </div>
@@ -393,7 +398,7 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
               rows={5}
               required
             />
-            {fieldErrors.concern && touchedFields.has('concern') && (
+            {fieldErrors.concern && touchedFields.includes('concern') && (
               <div id="concern-error" className="intake-form-field-error">{fieldErrors.concern}</div>
             )}
             {!fieldErrors.concern && (
