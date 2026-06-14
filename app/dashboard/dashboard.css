@@ -200,8 +200,9 @@
   padding: var(--dashboard-nav-padding);
   padding-left: 0;
   padding-right: 0;
-  margin-left: var(--space-sm);
-  margin-right: var(--space-sm);
+  width: 247px;
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: var(--dashboard-nav-gap);
   border-radius: 0;
   background-color: transparent;
