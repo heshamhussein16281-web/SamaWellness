@@ -25,11 +25,14 @@
   --dashboard-logo-margin:    20px;
   --dashboard-divider-margin: 8px;
   --dashboard-nav-gap:        8px;
-  --dashboard-nav-padding:    10px 12px;
+  --dashboard-nav-padding:    12px 14px;
   --dashboard-nav-margin:     0;
   --dashboard-section-gap:    8px;
   --dashboard-section-margin: 16px 0;
   --dashboard-topbar-gap:     12px;
+
+  /* ─── Dashboard Active State Color ─── */
+  --dashboard-active-bg:      #e8f5e1;
 }
 
 
@@ -205,11 +208,12 @@
 
 /* Navigation item active state */
 .sidebar-nav-item.active {
-  background-color: var(--color-burgundy);
+  background-color: var(--dashboard-active-bg);
+  border-radius: 8px;
 }
 
 .sidebar-nav-item.active .sidebar-label {
-  color: white;
+  color: #2d5a1f;
   font-weight: 600;
 }
 
@@ -218,14 +222,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
-  font-size: 16px;
+  width: 24px;
+  height: 24px;
+  font-size: 18px;
   flex-shrink: 0;
 }
 
 .sidebar-nav-item.active .sidebar-icon {
-  color: white;
+  color: #2d5a1f;
 }
 
 /* Navigation label text */
