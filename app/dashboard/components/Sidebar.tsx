@@ -86,6 +86,14 @@ export default function Sidebar() {
       <div className={`sidebar-section ${isAdminSection ? 'sidebar-section-active' : ''}`}>
         <div className="sidebar-section-label">Admin</div>
 
+        <Link href="/dashboard/admin/clinics">
+          <div className={`sidebar-nav-item ${isActive('/dashboard/admin/clinics') ? 'active' : ''}`}>
+            <span className={`sidebar-nav-link ${isActive('/dashboard/admin/clinics') ? 'active' : ''}`}>
+              🏥 Clinics
+            </span>
+          </div>
+        </Link>
+
         <Link href="/dashboard/admin/users">
           <div className={`sidebar-nav-item ${isActive('/dashboard/admin/users') ? 'active' : ''}`}>
             <span className={`sidebar-nav-link ${isActive('/dashboard/admin/users') ? 'active' : ''}`}>
