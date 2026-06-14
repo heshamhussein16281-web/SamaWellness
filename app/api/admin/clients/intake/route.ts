@@ -62,7 +62,7 @@ async function checkPermission(
  * Status: 201 Created, 400/401/403/500 on error
  */
 export async function POST(request: NextRequest) {
-  const auth = await checkPermission(request, 'manage_clients');
+  const auth = await checkPermission(request, 'create_client');
   if (!auth.authorized) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
   }
