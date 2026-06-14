@@ -184,8 +184,8 @@ export default function ClinicsList() {
       c.location?.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .sort((a, b) => {
-      let aVal: string | number = '';
-      let bVal: string | number = '';
+      let aVal: string = '';
+      let bVal: string = '';
 
       if (sortBy === 'name') {
         aVal = a.name;
@@ -198,10 +198,7 @@ export default function ClinicsList() {
         bVal = b.created_at;
       }
 
-      if (typeof aVal === 'string') {
-        return sortOrder === 'asc' ? aVal.localeCompare(bVal as string) : (bVal as string).localeCompare(aVal);
-      }
-      return sortOrder === 'asc' ? (aVal as number) - (bVal as number) : (bVal as number) - (aVal as number);
+      return sortOrder === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
     });
 
   // Pagination

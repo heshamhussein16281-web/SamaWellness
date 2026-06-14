@@ -194,8 +194,14 @@ export default function TherapistsList() {
       t.email?.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .sort((a, b) => {
-      let aVal: string | number = '';
-      let bVal: string | number = '';
+      if (sortBy === 'hourly_rate') {
+        const aRate = a.hourly_rate || 0;
+        const bRate = b.hourly_rate || 0;
+        return sortOrder === 'asc' ? aRate - bRate : bRate - aRate;
+      }
+
+      let aVal = '';
+      let bVal = '';
 
       if (sortBy === 'name') {
         aVal = a.name;
@@ -203,15 +209,9 @@ export default function TherapistsList() {
       } else if (sortBy === 'email') {
         aVal = a.email || '';
         bVal = b.email || '';
-      } else if (sortBy === 'hourly_rate') {
-        aVal = a.hourly_rate || 0;
-        bVal = b.hourly_rate || 0;
       }
 
-      if (typeof aVal === 'string') {
-        return sortOrder === 'asc' ? aVal.localeCompare(bVal as string) : (bVal as string).localeCompare(aVal);
-      }
-      return sortOrder === 'asc' ? (aVal as number) - (bVal as number) : (bVal as number) - (aVal as number);
+      return sortOrder === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
     });
 
   // Pagination
