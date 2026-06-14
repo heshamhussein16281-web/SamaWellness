@@ -52,6 +52,7 @@ export async function GET(request: NextRequest) {
     const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
     const limit = Math.max(1, Math.min(100, parseInt(searchParams.get('limit') || '20', 10)));
     const statusFilter = searchParams.get('status');
+    const phoneFilter = searchParams.get('phone');
 
     // Calculate pagination
     const offset = (page - 1) * limit;
@@ -63,6 +64,10 @@ export async function GET(request: NextRequest) {
 
     if (statusFilter) {
       countQuery = countQuery.eq('status', statusFilter);
+    }
+
+    if (phoneFilter) {
+      countQuery = countQuery.ilike('phone', `%${phoneFilter}%`);
     }
 
     const { count: totalCount, error: countError } = await countQuery;
@@ -91,6 +96,10 @@ export async function GET(request: NextRequest) {
 
     if (statusFilter) {
       dataQuery = dataQuery.eq('status', statusFilter);
+    }
+
+    if (phoneFilter) {
+      dataQuery = dataQuery.ilike('phone', `%${phoneFilter}%`);
     }
 
     const { data: clients, error } = await dataQuery;
