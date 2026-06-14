@@ -38,13 +38,28 @@ async function checkPermission(
 
 /**
  * POST /api/admin/clients/intake - Create intake form and initialize client
- * Body: {name, email, phone, date_of_birth, gender, language, concern, referred_by?, preferences?, intake_notes?}
+ * Body: {
+ *   name (required),
+ *   email? (optional, validated if provided),
+ *   phone? (optional),
+ *   date_of_birth? (optional, ISO 8601),
+ *   gender? (optional - male, female, other, prefer_not_to_say),
+ *   language? (optional - preferred language for sessions),
+ *   concern (required - primary reason for seeking therapy),
+ *   referred_by? (optional - referral source),
+ *   preferences? (optional - session preferences),
+ *   intake_notes? (optional - clinical observations)
+ * }
  * Logic:
- *   1. Create client record with status='intake'
- *   2. Store intake data in client columns + client_status_history
- *   3. Return client ID with confirmation
- * Response: {success, data: {id, name, status, client_since}}
- * Status: 201, 400/401/403/500 on error
+ *   1. Authenticate user & verify 'manage_clients' permission
+ *   2. Validate required fields (name, concern) & email/date format
+ *   3. Create atomic transaction:
+ *      - INSERT into clients table (all fields saved)
+ *      - INSERT into client_status_history (first status entry)
+ *      - Log audit action
+ *   4. Return client ID with confirmation
+ * Response: {success: true, data: {id, name, status, client_since}}
+ * Status: 201 Created, 400/401/403/500 on error
  */
 export async function POST(request: NextRequest) {
   const auth = await checkPermission(request, 'manage_clients');
@@ -104,6 +119,10 @@ export async function POST(request: NextRequest) {
           email: email || null,
           phone: phone || null,
           date_of_birth: date_of_birth || null,
+          gender: gender || null,
+          language: language || null,
+          concern: concern || null,
+          preferences: preferences || null,
           status: 'intake',
           client_since: now,
           notes: intake_notes || null,
