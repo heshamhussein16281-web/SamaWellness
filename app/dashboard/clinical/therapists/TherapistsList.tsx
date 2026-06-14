@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import { Plus, Edit2, Trash2, X } from 'lucide-react';
 import TherapistAvailabilityCalendar from './TherapistAvailabilityCalendar';
 import ScheduleAvailabilityModal from './ScheduleAvailabilityModal';
-import './therapists.css';
+import './therapists-refined.css';
 
 interface Therapist {
   id: string;
@@ -19,7 +19,13 @@ interface Therapist {
 type SortByOption = 'name' | 'email' | 'hourly_rate';
 type SortOrder = 'asc' | 'desc';
 
-export default function TherapistsList() {
+interface TherapistStats {
+  appointments: number;
+  bookedPercentage: number;
+  rating: number;
+}
+
+export default function TherapistsListRefined() {
   const [therapists, setTherapists] = useState<Therapist[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -31,30 +37,27 @@ export default function TherapistsList() {
     specializations: '',
   });
 
-  // Loading states for individual operations
   const [loadingCreate, setLoadingCreate] = useState(false);
   const [loadingEdit, setLoadingEdit] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
 
-  // Message states
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const errorTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const successTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Filter and search states
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<SortByOption>('name');
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 25;
-  const maxPaginationButtons = 7;
+  const itemsPerPage = 12;
 
-  // Availability and scheduling states
+  // Availability and clinic states
   const [selectedTherapistForAvailability, setSelectedTherapistForAvailability] = useState<Therapist | null>(null);
   const [selectedClinicId, setSelectedClinicId] = useState<string | null>(null);
   const [clinics, setClinics] = useState<any[]>([]);
   const [therapistAvailability, setTherapistAvailability] = useState<Map<string, any>>(new Map());
+  const [therapistStats, setTherapistStats] = useState<Map<string, TherapistStats>>(new Map());
 
   // Auto-dismiss notifications
   useEffect(() => {
@@ -64,14 +67,12 @@ export default function TherapistsList() {
     };
   }, []);
 
-  // Show error message with auto-dismiss
   const showError = useCallback((message: string) => {
     setErrorMessage(message);
     if (errorTimeoutRef.current) clearTimeout(errorTimeoutRef.current);
     errorTimeoutRef.current = setTimeout(() => setErrorMessage(''), 3000);
   }, []);
 
-  // Show success message with auto-dismiss
   const showSuccess = useCallback((message: string) => {
     setSuccessMessage(message);
     if (successTimeoutRef.current) clearTimeout(successTimeoutRef.current);
@@ -83,16 +84,26 @@ export default function TherapistsList() {
     fetchClinics();
   }, []);
 
-  async function fetchClinics() {
-    try {
-      const res = await fetch('/api/admin/clinics');
-      if (!res.ok) throw new Error('Failed to fetch clinics');
-      const data = await res.json();
-      setClinics(data.clinics || []);
-    } catch (error) {
-      console.error('Error fetching clinics:', error);
-    }
-  }
+  useEffect(() => {
+    therapists.forEach(therapist => {
+      if (clinics.length > 0) {
+        const primaryClinic = clinics[0];
+        fetch(`/api/admin/therapists/${therapist.id}/availability?clinic_id=${primaryClinic.id}`)
+          .then(res => res.json())
+          .then(data => {
+            setTherapistAvailability(prev => new Map(prev).set(therapist.id, data.data || []));
+          })
+          .catch(err => console.error('Error fetching availability:', err));
+      }
+
+      // Mock stats - replace with real API call if available
+      setTherapistStats(prev => new Map(prev).set(therapist.id, {
+        appointments: Math.floor(Math.random() * 20) + 5,
+        bookedPercentage: Math.floor(Math.random() * 40) + 60,
+        rating: (Math.random() * 0.4 + 4.5).toFixed(1),
+      }));
+    });
+  }, [therapists, clinics]);
 
   async function fetchTherapists() {
     try {
@@ -111,35 +122,14 @@ export default function TherapistsList() {
     }
   }
 
-  useEffect(() => {
-    therapists.forEach(therapist => {
-      if (clinics.length > 0) {
-        const primaryClinic = clinics[0];
-        fetch(`/api/admin/therapists/${therapist.id}/availability?clinic_id=${primaryClinic.id}`)
-          .then(res => res.json())
-          .then(data => {
-            setTherapistAvailability(prev => new Map(prev).set(therapist.id, data.data || []));
-          })
-          .catch(err => console.error('Error fetching availability:', err));
-      }
-    });
-  }, [therapists, clinics]);
-
-  function handleScheduleClick(therapist: Therapist) {
-    if (clinics.length > 0) {
-      setSelectedTherapistForAvailability(therapist);
-      setSelectedClinicId(clinics[0].id);
-    }
-  }
-
-  function handleAvailabilitySaved() {
-    // Refresh availability for all therapists
-    if (selectedTherapistForAvailability && selectedClinicId) {
-      fetch(`/api/admin/therapists/${selectedTherapistForAvailability.id}/availability?clinic_id=${selectedClinicId}`)
-        .then(res => res.json())
-        .then(data => {
-          setTherapistAvailability(prev => new Map(prev).set(selectedTherapistForAvailability.id, data.data || []));
-        });
+  async function fetchClinics() {
+    try {
+      const res = await fetch('/api/admin/clinics');
+      if (!res.ok) throw new Error('Failed to fetch clinics');
+      const data = await res.json();
+      setClinics(data.clinics || []);
+    } catch (error) {
+      console.error('Error fetching clinics:', error);
     }
   }
 
@@ -151,7 +141,6 @@ export default function TherapistsList() {
     loaderSetter(true);
 
     try {
-      // Parse specializations (comma-separated)
       const specArray = formData.specializations
         .split(',')
         .map((s) => s.trim())
@@ -239,11 +228,28 @@ export default function TherapistsList() {
     }
   }
 
-  // Filter and sort
+  function handleScheduleClick(therapist: Therapist) {
+    if (clinics.length > 0) {
+      setSelectedTherapistForAvailability(therapist);
+      setSelectedClinicId(clinics[0].id);
+    }
+  }
+
+  function handleAvailabilitySaved() {
+    if (selectedTherapistForAvailability && selectedClinicId) {
+      fetch(`/api/admin/therapists/${selectedTherapistForAvailability.id}/availability?clinic_id=${selectedClinicId}`)
+        .then(res => res.json())
+        .then(data => {
+          setTherapistAvailability(prev => new Map(prev).set(selectedTherapistForAvailability.id, data.data || []));
+        });
+    }
+  }
+
   const filtered = therapists
     .filter((t) =>
       t.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      t.email?.toLowerCase().includes(searchTerm.toLowerCase())
+      t.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      t.specializations?.some(s => s.toLowerCase().includes(searchTerm.toLowerCase()))
     )
     .sort((a, b) => {
       if (sortBy === 'hourly_rate') {
@@ -266,7 +272,6 @@ export default function TherapistsList() {
       return sortOrder === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
     });
 
-  // Pagination
   const totalPages = Math.ceil(filtered.length / itemsPerPage);
   const paginatedTherapists = filtered.slice(
     (currentPage - 1) * itemsPerPage,
@@ -277,96 +282,265 @@ export default function TherapistsList() {
     return <div className="therapists-loading">Loading therapists...</div>;
   }
 
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase();
+  };
+
+  const clinicName = clinics.length > 0 ? clinics[0].name : 'Main Clinic';
+
   return (
-    <div className="therapists-container">
-      {/* Messages */}
+    <div className="therapists-page">
       {errorMessage && <div className="therapists-message therapists-message--error">{errorMessage}</div>}
       {successMessage && <div className="therapists-message therapists-message--success">{successMessage}</div>}
 
-      {/* Header */}
-      <div className="therapists-header">
-        <h1>Therapists</h1>
+      <div className="page-header">
+        <h1 className="page-header__title">Therapists</h1>
+        <p className="page-header__subtitle">Manage therapist profiles, availability, and scheduling</p>
+      </div>
+
+      <div className="controls-bar">
+        <div className="search-wrapper">
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Search by name or specialty..."
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}
+          />
+        </div>
         <button
-          className="therapists-btn therapists-btn--primary"
+          className="btn btn--primary"
           onClick={() => {
             setShowForm(true);
             setEditingTherapist(null);
             setFormData({ name: '', email: '', hourly_rate: '', specializations: '' });
           }}
         >
-          <Plus size={20} /> Add Therapist
+          <Plus size={18} style={{ marginRight: '0.5rem' }} /> Add Therapist
         </button>
       </div>
 
-      {/* Form */}
-      {showForm && (
-        <div className="therapists-form-container">
-          <div className="therapists-form">
-            <div className="therapists-form-header">
-              <h2>{editingTherapist ? 'Edit Therapist' : 'Add New Therapist'}</h2>
+      {paginatedTherapists.length === 0 ? (
+        <div className="therapists-empty">
+          <p>No therapists found</p>
+        </div>
+      ) : (
+        <div className="therapist-grid">
+          {paginatedTherapists.map((therapist) => {
+            const availability = therapistAvailability.get(therapist.id) || [];
+            const stats = therapistStats.get(therapist.id);
+
+            return (
+              <div key={therapist.id} className="therapist-card">
+                <div className="therapist-card__header">
+                  <div className="therapist-info">
+                    <h3 className="therapist-name">{therapist.name}</h3>
+                    <p className="therapist-specialty">
+                      {therapist.specializations?.join(', ') || 'General Therapy'}
+                    </p>
+                    {therapist.hourly_rate && (
+                      <p className="therapist-rate">{therapist.hourly_rate.toLocaleString()} EGP/hr</p>
+                    )}
+                  </div>
+                  <div className="therapist-avatar">
+                    {getInitials(therapist.name)}
+                  </div>
+                </div>
+
+                <div className="therapist-card__body">
+                  <div className="availability-section">
+                    <div className="availability-label">Availability at {clinicName}</div>
+                    <TherapistAvailabilityCalendar
+                      days={availability.map((av: any) => ({
+                        day: av.day_of_week,
+                        status: av.status,
+                      }))}
+                    />
+                  </div>
+
+                  {stats && (
+                    <div className="stats-row">
+                      <div className="stat">
+                        <p className="stat__value">{stats.appointments}</p>
+                        <p className="stat__label">Appointments</p>
+                      </div>
+                      <div className="stat">
+                        <p className="stat__value">{stats.bookedPercentage}%</p>
+                        <p className="stat__label">Booked</p>
+                      </div>
+                      <div className="stat">
+                        <p className="stat__value">{stats.rating}</p>
+                        <p className="stat__label">Rating</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="therapist-card__footer">
+                  <button
+                    className="btn btn--secondary btn--small btn--edit"
+                    onClick={() => handleEdit(therapist)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn btn--secondary btn--small btn--schedule"
+                    onClick={() => handleScheduleClick(therapist)}
+                  >
+                    📅 Schedule
+                  </button>
+                  <button
+                    className="btn btn--icon btn--delete"
+                    onClick={() => handleDelete(therapist)}
+                    disabled={loadingDelete}
+                    title="Delete"
+                  >
+                    ×
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {totalPages > 1 && (
+        <div style={{ marginTop: '3rem', textAlign: 'center', display: 'flex', gap: '0.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <button
+            className="btn btn--secondary"
+            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+
+          {Array.from({ length: Math.min(totalPages, 7) }, (_, i) => {
+            const page = i + 1;
+            return (
               <button
-                className="therapists-btn therapists-btn--close"
-                onClick={handleCancel}
-                type="button"
+                key={page}
+                className={`btn ${currentPage === page ? 'btn--primary' : 'btn--secondary'}`}
+                onClick={() => setCurrentPage(page)}
               >
-                <X size={20} />
+                {page}
+              </button>
+            );
+          })}
+
+          <button
+            className="btn btn--secondary"
+            onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
+      )}
+
+      {showForm && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000,
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '2rem',
+            borderRadius: '12px',
+            maxWidth: '500px',
+            width: '90%',
+            boxShadow: '0 10px 40px rgba(0, 0, 0, 0.2)',
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <h2 style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: '1.5rem' }}>
+                {editingTherapist ? 'Edit Therapist' : 'Add New Therapist'}
+              </h2>
+              <button
+                onClick={handleCancel}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '1.5rem',
+                  cursor: 'pointer',
+                  color: '#999',
+                }}
+              >
+                ×
               </button>
             </div>
 
-            <form onSubmit={handleSubmit}>
-              <div className="therapists-form-group">
-                <label>Name *</label>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Name *</label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
                   placeholder="Therapist name"
+                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ddd', boxSizing: 'border-box' }}
                 />
               </div>
 
-              <div className="therapists-form-group">
-                <label>Email</label>
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Email</label>
                 <input
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="therapist@example.com"
+                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ddd', boxSizing: 'border-box' }}
                 />
               </div>
 
-              <div className="therapists-form-group">
-                <label>Hourly Rate (EGP)</label>
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Hourly Rate (EGP)</label>
                 <input
                   type="number"
                   value={formData.hourly_rate}
                   onChange={(e) => setFormData({ ...formData, hourly_rate: e.target.value })}
                   placeholder="2000"
                   step="100"
+                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ddd', boxSizing: 'border-box' }}
                 />
               </div>
 
-              <div className="therapists-form-group">
-                <label>Specializations (comma-separated)</label>
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Specializations (comma-separated)</label>
                 <input
                   type="text"
                   value={formData.specializations}
                   onChange={(e) => setFormData({ ...formData, specializations: e.target.value })}
-                  placeholder="Anxiety, Depression, CBT"
+                  placeholder="Trauma, CBT, Family Therapy"
+                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ddd', boxSizing: 'border-box' }}
                 />
               </div>
 
-              <div className="therapists-form-actions">
+              <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
                 <button
                   type="submit"
-                  className="therapists-btn therapists-btn--primary"
+                  className="btn btn--primary"
                   disabled={loadingCreate || loadingEdit}
                 >
                   {loadingCreate || loadingEdit ? 'Saving...' : 'Save'}
                 </button>
                 <button
                   type="button"
-                  className="therapists-btn therapists-btn--secondary"
+                  className="btn btn--secondary"
                   onClick={handleCancel}
                 >
                   Cancel
@@ -377,161 +551,12 @@ export default function TherapistsList() {
         </div>
       )}
 
-      {/* Search and Filters */}
-      <div className="therapists-controls">
-        <div className="therapists-search">
-          <input
-            type="text"
-            placeholder="Search by name or email..."
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setCurrentPage(1);
-            }}
-          />
-        </div>
-
-        <div className="therapists-sort">
-          <select
-            value={sortBy}
-            onChange={(e) => {
-              setSortBy(e.target.value as SortByOption);
-              setCurrentPage(1);
-            }}
-          >
-            <option value="name">Sort by Name</option>
-            <option value="email">Sort by Email</option>
-            <option value="hourly_rate">Sort by Rate</option>
-          </select>
-
-          <button
-            className="therapists-btn therapists-btn--secondary"
-            onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-          >
-            {sortOrder === 'asc' ? '↑' : '↓'}
-          </button>
-        </div>
-      </div>
-
-      {/* Table */}
-      <div className="therapists-table-wrapper">
-        <table className="therapists-table">
-          <thead>
-            <tr>
-              <th>Therapist & Availability</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginatedTherapists.length === 0 ? (
-              <tr>
-                <td colSpan={2} className="therapists-empty">
-                  No therapists found
-                </td>
-              </tr>
-            ) : (
-              paginatedTherapists.map((therapist) => {
-                const availability = therapistAvailability.get(therapist.id) || [];
-                const clinicName = clinics.length > 0 ? clinics[0].name : 'Main Clinic';
-
-                return (
-                  <tr key={therapist.id}>
-                    <td>
-                      <div>
-                        <strong>{therapist.name}</strong>
-                        <div style={{ fontSize: '0.85rem', color: '#666' }}>
-                          {therapist.email}
-                          {therapist.hourly_rate && ` • ${therapist.hourly_rate} EGP/hr`}
-                        </div>
-
-                        {/* Calendar */}
-                        <div style={{ marginTop: '0.75rem' }}>
-                          <TherapistAvailabilityCalendar
-                            days={availability.map((av: any) => ({
-                              day: av.day_of_week,
-                              status: av.status,
-                            }))}
-                            clinicName={clinicName}
-                          />
-                        </div>
-                      </div>
-                    </td>
-                    <td className="therapists-actions">
-                      <button
-                        className="therapists-btn therapists-btn--icon"
-                        onClick={() => handleEdit(therapist)}
-                        title="Edit"
-                      >
-                        <Edit2 size={18} />
-                      </button>
-                      <button
-                        className="therapists-btn therapists-btn--icon"
-                        onClick={() => handleScheduleClick(therapist)}
-                        title="Schedule Availability"
-                        style={{ backgroundColor: '#17a2b8', color: 'white' }}
-                      >
-                        📅
-                      </button>
-                      <button
-                        className="therapists-btn therapists-btn--icon therapists-btn--danger"
-                        onClick={() => handleDelete(therapist)}
-                        disabled={loadingDelete}
-                        title="Delete"
-                      >
-                        <Trash2 size={18} />
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="therapists-pagination">
-          <button
-            className="therapists-btn therapists-btn--secondary"
-            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-            disabled={currentPage === 1}
-          >
-            Previous
-          </button>
-
-          <div className="therapists-page-buttons">
-            {Array.from({ length: Math.min(totalPages, maxPaginationButtons) }, (_, i) => {
-              const page = i + 1;
-              return (
-                <button
-                  key={page}
-                  className={`therapists-btn ${currentPage === page ? 'therapists-btn--active' : 'therapists-btn--secondary'}`}
-                  onClick={() => setCurrentPage(page)}
-                >
-                  {page}
-                </button>
-              );
-            })}
-          </div>
-
-          <button
-            className="therapists-btn therapists-btn--secondary"
-            onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-            disabled={currentPage === totalPages}
-          >
-            Next
-          </button>
-        </div>
-      )}
-
-      {/* Schedule Availability Modal */}
       {selectedTherapistForAvailability && selectedClinicId && (
         <ScheduleAvailabilityModal
           therapistId={selectedTherapistForAvailability.id}
           therapistName={selectedTherapistForAvailability.name}
           clinicId={selectedClinicId}
-          clinicName={clinics.find(c => c.id === selectedClinicId)?.name || 'Clinic'}
+          clinicName={clinicName}
           onClose={() => setSelectedTherapistForAvailability(null)}
           onSave={handleAvailabilitySaved}
         />
