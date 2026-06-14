@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { Plus, Edit2, Trash2, X } from 'lucide-react';
 import './clinics.css';
+import ClinicRoomsTab from './ClinicRoomsTab';
 
 interface Clinic {
   id: string;
@@ -10,6 +11,7 @@ interface Clinic {
   location: string;
   phone: string;
   email: string;
+  number_of_rooms?: number | null;
   created_at: string;
 }
 
@@ -21,11 +23,13 @@ export default function ClinicsList() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingClinic, setEditingClinic] = useState<Clinic | null>(null);
+  const [activeTab, setActiveTab] = useState<'basic' | 'rooms'>('basic');
   const [formData, setFormData] = useState({
     name: '',
     location: '',
     phone: '',
     email: '',
+    number_of_rooms: null as number | null,
   });
 
   // Loading states for individual operations
@@ -100,6 +104,7 @@ export default function ClinicsList() {
         location: formData.location,
         phone: formData.phone,
         email: formData.email,
+        number_of_rooms: formData.number_of_rooms,
       };
 
       const url = isEditing
@@ -123,7 +128,8 @@ export default function ClinicsList() {
       await fetchClinics();
       setEditingClinic(null);
       setShowForm(false);
-      setFormData({ name: '', location: '', phone: '', email: '' });
+      setFormData({ name: '', location: '', phone: '', email: '', number_of_rooms: null });
+      setActiveTab('basic');
       showSuccess(`Clinic ${isEditing ? 'updated' : 'created'} successfully`);
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : 'Failed to save clinic';
@@ -141,14 +147,17 @@ export default function ClinicsList() {
       location: clinic.location || '',
       phone: clinic.phone || '',
       email: clinic.email || '',
+      number_of_rooms: (clinic as any).number_of_rooms || null,
     });
     setShowForm(true);
+    setActiveTab('basic');
   }
 
   function handleCancel() {
     setShowForm(false);
     setEditingClinic(null);
-    setFormData({ name: '', location: '', phone: '', email: '' });
+    setFormData({ name: '', location: '', phone: '', email: '', number_of_rooms: null });
+    setActiveTab('basic');
   }
 
   async function handleDelete(clinic: Clinic) {
@@ -226,7 +235,8 @@ export default function ClinicsList() {
           onClick={() => {
             setShowForm(true);
             setEditingClinic(null);
-            setFormData({ name: '', location: '', phone: '', email: '' });
+            setFormData({ name: '', location: '', phone: '', email: '', number_of_rooms: null });
+            setActiveTab('basic');
           }}
         >
           <Plus size={20} /> Add Clinic
@@ -248,47 +258,78 @@ export default function ClinicsList() {
               </button>
             </div>
 
+            {/* Tabs */}
+            <div className="clinics-form-tabs">
+              <button
+                type="button"
+                className={`clinics-form-tab ${activeTab === 'basic' ? 'clinics-form-tab--active' : ''}`}
+                onClick={() => setActiveTab('basic')}
+              >
+                Basic Info
+              </button>
+              <button
+                type="button"
+                className={`clinics-form-tab ${activeTab === 'rooms' ? 'clinics-form-tab--active' : ''}`}
+                onClick={() => setActiveTab('rooms')}
+              >
+                Rooms
+              </button>
+            </div>
+
             <form onSubmit={handleSubmit}>
-              <div className="clinics-form-group">
-                <label>Clinic Name *</label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  required
-                  placeholder="e.g., Main Clinic, Branch Clinic"
-                />
-              </div>
+              {/* Basic Info Tab */}
+              {activeTab === 'basic' && (
+                <>
+                  <div className="clinics-form-group">
+                    <label>Clinic Name *</label>
+                    <input
+                      type="text"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      required
+                      placeholder="e.g., Main Clinic, Branch Clinic"
+                    />
+                  </div>
 
-              <div className="clinics-form-group">
-                <label>Location</label>
-                <input
-                  type="text"
-                  value={formData.location}
-                  onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                  placeholder="Cairo, Alexandria, etc."
-                />
-              </div>
+                  <div className="clinics-form-group">
+                    <label>Location</label>
+                    <input
+                      type="text"
+                      value={formData.location}
+                      onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                      placeholder="Cairo, Alexandria, etc."
+                    />
+                  </div>
 
-              <div className="clinics-form-group">
-                <label>Phone</label>
-                <input
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  placeholder="+20 XXX XXXX XXXX"
-                />
-              </div>
+                  <div className="clinics-form-group">
+                    <label>Phone</label>
+                    <input
+                      type="tel"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      placeholder="+20 XXX XXXX XXXX"
+                    />
+                  </div>
 
-              <div className="clinics-form-group">
-                <label>Email</label>
-                <input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="clinic@example.com"
+                  <div className="clinics-form-group">
+                    <label>Email</label>
+                    <input
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      placeholder="clinic@example.com"
+                    />
+                  </div>
+                </>
+              )}
+
+              {/* Rooms Tab */}
+              {activeTab === 'rooms' && (
+                <ClinicRoomsTab
+                  numberOfRooms={formData.number_of_rooms}
+                  onChange={(value) => setFormData({ ...formData, number_of_rooms: value })}
                 />
-              </div>
+              )}
 
               <div className="clinics-form-actions">
                 <button

@@ -158,6 +158,37 @@
   color: #333;
 }
 
+/* Tabs */
+.clinics-form-tabs {
+  display: flex;
+  border-bottom: 1px solid #e9ecef;
+  background-color: #f8f9fa;
+}
+
+.clinics-form-tab {
+  flex: 1;
+  padding: 16px;
+  background-color: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  font-weight: 500;
+  color: #666;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.clinics-form-tab:hover {
+  color: #333;
+  background-color: #f0f1f3;
+}
+
+.clinics-form-tab--active {
+  color: #007bff;
+  border-bottom-color: #007bff;
+  background-color: white;
+}
+
 .clinics-form form {
   padding: 24px;
 }
