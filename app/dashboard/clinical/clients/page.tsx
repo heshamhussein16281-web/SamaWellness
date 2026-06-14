@@ -129,19 +129,20 @@ export default function ClientsPage() {
   };
 
   return (
-    <div className="clients-page">
-      <div className="clients-page-header">
+    <main className="clients-page">
+      <header className="clients-page-header">
         <h1 className="clients-page-title">Clients</h1>
         <button
           className="clients-page-btn clients-page-btn--primary"
           onClick={() => setViewMode('intake')}
+          aria-label="Create new client intake"
         >
           + New Client Intake
         </button>
-      </div>
+      </header>
 
       {viewMode === 'list' && (
-        <div className="clients-search-section">
+        <section className="clients-search-section" aria-label="Client search">
           <div className="clients-search-box">
             <label htmlFor="phone-search" className="clients-search-label">
               Search by Phone:
@@ -153,26 +154,28 @@ export default function ClientsPage() {
               value={searchPhone}
               onChange={(e) => handleSearch(e.target.value)}
               className="clients-search-input"
+              aria-label="Phone number search"
             />
             {searchPhone && (
               <button
                 className="clients-search-clear"
                 onClick={() => handleSearch('')}
+                aria-label="Clear search"
               >
                 ✕ Clear
               </button>
             )}
           </div>
           {searchPhone && (
-            <div className="clients-search-info">
+            <div className="clients-search-info" role="status">
               Found {pagination.total} client{pagination.total !== 1 ? 's' : ''}
             </div>
           )}
-        </div>
+        </section>
       )}
 
-      {loading && <div className="clients-page-loading">Loading clients...</div>}
-      {error && <div className="clients-page-error">Error: {error}</div>}
+      {loading && <div className="clients-page-loading" role="status">Loading clients...</div>}
+      {error && <div className="clients-page-error" role="alert">Error: {error}</div>}
 
       {!loading && clients.length === 0 && (
         <div className="clients-page-empty">
@@ -185,7 +188,7 @@ export default function ClientsPage() {
       )}
 
       {!loading && clients.length > 0 && (
-        <div className="clients-list">
+        <section className="clients-list" aria-label="Clients list">
           <table className="clients-table">
             <thead>
               <tr>
@@ -242,11 +245,12 @@ export default function ClientsPage() {
           </table>
 
           {pagination.pages > 1 && (
-            <div className="clients-pagination">
+            <nav className="clients-pagination" aria-label="Pagination">
               <button
                 className="clients-pagination-btn"
                 onClick={() => handlePageChange(1)}
                 disabled={currentPage === 1}
+                aria-label="First page"
               >
                 ← First
               </button>
@@ -254,11 +258,12 @@ export default function ClientsPage() {
                 className="clients-pagination-btn"
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
+                aria-label="Previous page"
               >
                 ← Previous
               </button>
 
-              <div className="clients-pagination-info">
+              <div className="clients-pagination-info" aria-current="page">
                 Page {pagination.page} of {pagination.pages}
                 <span className="clients-pagination-count">
                   ({pagination.total} total)
@@ -269,6 +274,7 @@ export default function ClientsPage() {
                 className="clients-pagination-btn"
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === pagination.pages}
+                aria-label="Next page"
               >
                 Next →
               </button>
@@ -276,13 +282,14 @@ export default function ClientsPage() {
                 className="clients-pagination-btn"
                 onClick={() => handlePageChange(pagination.pages)}
                 disabled={currentPage === pagination.pages}
+                aria-label="Last page"
               >
                 Last →
               </button>
-            </div>
+            </nav>
           )}
-        </div>
+        </section>
       )}
-    </div>
+    </main>
   );
 }

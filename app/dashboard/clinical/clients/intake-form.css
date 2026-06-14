@@ -1,381 +1,452 @@
 /* ========================================
-   INTAKE FORM STYLES
+   INTAKE FORM DESIGN SYSTEM
 
-   Architecture: 3-Layer CSS System
-   Layer 1: Design Tokens     — CSS variables
-   Layer 2: Layout Containers — display, flex, gap, padding, margin
-   Layer 3: Components        — visual styling
+   Aesthetic: Warm, organic minimalism
+   Fonts: Playfair Display (display) + DM Sans (body)
+   Colors: Warm earth tones with refined accents
    ======================================== */
 
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap');
 
 /* ════════════════════════════════════════════════════════════════
-   LAYER 1: DESIGN TOKENS (Intake Form specific)
+   LAYER 1: DESIGN TOKENS
    ════════════════════════════════════════════════════════════════ */
 :root {
-  /* Form tokens */
-  --form-max-width:         600px;
-  --form-container-padding: 20px;
-  --form-section-gap:       24px;
-  --form-group-gap:         16px;
-  --form-row-gap:           16px;
-  --form-input-padding:     12px 14px;
-  --form-input-height:      40px;
-  --form-input-border-width: 1px;
-  --form-label-margin:      8px;
-  --form-button-padding:    12px 20px;
-  --form-button-height:     40px;
-}
+  /* Colors */
+  --color-bg: #faf8f6;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f5f3f1;
+  --color-accent-primary: #8b6a4f;
+  --color-accent-secondary: #d4a574;
+  --color-accent-light: #e8dcc8;
+  --color-text-primary: #2d2d2d;
+  --color-text-secondary: #666666;
+  --color-text-tertiary: #999999;
+  --color-border: #e8e3dd;
+  --color-focus: #d4a574;
+  --color-success: #6b8e6f;
+  --color-error: #c75c5c;
 
+  /* Typography */
+  --font-display: 'Playfair Display', serif;
+  --font-body: 'DM Sans', sans-serif;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2rem;
+
+  /* Spacing */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.5rem;
+  --space-xl: 4rem;
+  --space-2xl: 6rem;
+
+  /* Effects */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --shadow-soft: 0 2px 8px rgba(45, 45, 45, 0.06);
+  --shadow-card: 0 4px 16px rgba(45, 45, 45, 0.08);
+  --shadow-hover: 0 8px 24px rgba(45, 45, 45, 0.12);
+  --transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --transition-fast: 0.15s ease;
+}
 
 /* ════════════════════════════════════════════════════════════════
    LAYER 2: LAYOUT CONTAINERS
+   Only: display, grid, flex, gap, padding, margin, width, position
    ════════════════════════════════════════════════════════════════ */
 
-/* Main form container */
+body {
+  background-color: var(--color-bg);
+  font-family: var(--font-body);
+  color: var(--color-text-primary);
+}
+
 .intake-form-container {
   display: flex;
   flex-direction: column;
-  gap: var(--form-group-gap);
-  max-width: var(--form-max-width);
+  gap: var(--space-lg);
+  max-width: 700px;
   margin: 0 auto;
-  padding: var(--form-container-padding);
+  padding: var(--space-2xl) var(--space-lg);
+  min-height: 100vh;
 }
 
-/* Form header */
 .intake-form-header {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 16px;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+  text-align: center;
 }
 
-/* Form element */
 .intake-form {
   display: flex;
   flex-direction: column;
-  gap: var(--form-section-gap);
+  gap: var(--space-lg);
 }
 
-/* Form section (fieldset) */
 .intake-form-section {
   display: flex;
   flex-direction: column;
-  gap: var(--form-group-gap);
-  border: none;
-  padding: 0;
-  margin: 0;
+  gap: var(--space-md);
 }
 
-/* Form group (label + input) */
+.intake-form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-md);
+}
+
 .intake-form-group {
   display: flex;
   flex-direction: column;
-  gap: var(--form-label-margin);
+  gap: var(--space-xs);
 }
 
-/* Form row (multiple groups side-by-side) */
-.intake-form-row {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--form-row-gap);
-}
-
-@media (min-width: 600px) {
-  .intake-form-row {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .intake-form-row.three-cols {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-}
-
-/* Form actions (buttons) */
 .intake-form-actions {
   display: flex;
-  gap: 12px;
-  margin-top: 16px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--color-border);
 }
-
 
 /* ════════════════════════════════════════════════════════════════
-   LAYER 3: COMPONENTS — Visual Styling
+   LAYER 3: COMPONENTS
+   Self-contained visual units
    ════════════════════════════════════════════════════════════════ */
 
-/* Form title */
+/* Form Title Component */
 .intake-form-title {
-  margin: 0;
-  font-size: 28px;
-  font-weight: 600;
-  color: var(--color-charcoal);
   font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0;
+  letter-spacing: -0.5px;
 }
 
-/* Form description */
 .intake-form-description {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
   margin: 0;
-  font-size: 14px;
-  color: #666;
-  font-family: var(--font-body);
-}
-
-/* Section title */
-.intake-form-section-title {
-  margin: 0;
-  padding-bottom: 12px;
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--color-nav-text);
-  border-bottom: 2px solid var(--color-sand);
-  font-family: var(--font-ui);
-}
-
-/* Form label */
-.intake-form-label {
-  font-size: 13px;
+  line-height: 1.5;
   font-weight: 500;
-  color: var(--color-nav-text);
-  font-family: var(--font-ui);
 }
 
-/* Required indicator */
-.intake-form-required {
-  color: var(--color-burgundy);
+/* Section Styling */
+.intake-form-section {
+  background: var(--color-surface);
+  padding: var(--space-lg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  transition: box-shadow var(--transition-fast);
+}
+
+.intake-form-section:hover {
+  box-shadow: var(--shadow-soft);
+}
+
+.intake-form-section-title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
   font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: default;
+  letter-spacing: -0.3px;
 }
 
-/* Input styling */
-.intake-form-input {
-  padding: var(--form-input-padding);
-  height: var(--form-input-height);
-  border: var(--form-input-border-width) solid var(--color-sand);
-  border-radius: var(--radius-md);
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--color-charcoal);
-  background-color: #fff;
-  transition: all var(--transition-base);
-}
-
-.intake-form-input:focus {
-  outline: none;
-  border-color: var(--color-burgundy);
-  box-shadow: 0 0 0 3px rgba(123, 45, 62, 0.1);
-}
-
-.intake-form-input:disabled {
-  background-color: #f5f5f5;
-  color: #999;
-  cursor: not-allowed;
-}
-
-/* Textarea styling */
+/* Input Components */
+.intake-form-input,
 .intake-form-textarea {
-  padding: var(--form-input-padding);
-  border: var(--form-input-border-width) solid var(--color-sand);
-  border-radius: var(--radius-md);
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
   font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--color-charcoal);
-  background-color: #fff;
-  resize: vertical;
-  min-height: 100px;
-  transition: all var(--transition-base);
+  font-size: var(--text-base);
+  color: var(--color-text-primary);
+  background-color: var(--color-surface);
+  transition: all var(--transition-fast);
 }
 
+.intake-form-input:focus,
 .intake-form-textarea:focus {
   outline: none;
-  border-color: var(--color-burgundy);
-  box-shadow: 0 0 0 3px rgba(123, 45, 62, 0.1);
+  border-color: var(--color-accent-secondary);
+  box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
 }
 
-.intake-form-textarea:disabled {
-  background-color: #f5f5f5;
-  color: #999;
-  cursor: not-allowed;
+.intake-form-input::placeholder,
+.intake-form-textarea::placeholder {
+  color: var(--color-text-tertiary);
 }
 
-/* Error message */
-.intake-form-error {
-  padding: 12px 14px;
-  background-color: #fff3cd;
-  border: 1px solid #ffc107;
-  border-radius: var(--radius-md);
-  color: #856404;
-  font-size: 13px;
+.intake-form-textarea {
+  resize: vertical;
+  min-height: 100px;
   font-family: var(--font-body);
 }
 
-/* Button styling */
+/* Label Component */
+.intake-form-label {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.intake-form-required {
+  color: var(--color-error);
+  font-weight: 600;
+}
+
+/* Checkbox Component */
+.intake-form-checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: var(--color-accent-primary);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.intake-form-checkbox:hover {
+  transform: scale(1.05);
+}
+
+.intake-form-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  cursor: pointer;
+  font-size: var(--text-base);
+  color: var(--color-text-primary);
+  font-weight: 500;
+  transition: all var(--transition-fast);
+}
+
+.intake-form-checkbox-label:hover {
+  color: var(--color-accent-primary);
+}
+
+.intake-form-help-text {
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  font-style: italic;
+  line-height: 1.4;
+}
+
+/* Error & Message Components */
+.intake-form-error {
+  padding: var(--space-md);
+  background-color: rgba(199, 92, 92, 0.08);
+  border: 1px solid var(--color-error);
+  border-radius: var(--radius-md);
+  color: var(--color-error);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  animation: slideDown 0.3s ease;
+}
+
+/* Button Components */
 .intake-form-button {
-  padding: var(--form-button-padding);
-  height: var(--form-button-height);
+  padding: var(--space-md) var(--space-lg);
   border: none;
   border-radius: var(--radius-md);
-  font-size: 14px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
   font-weight: 600;
-  font-family: var(--font-ui);
   cursor: pointer;
-  transition: all var(--transition-base);
+  transition: all var(--transition);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
 }
 
-.intake-form-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* Primary button */
 .intake-form-button--primary {
-  background-color: var(--color-burgundy);
-  color: #fff;
-  min-width: 140px;
+  background-color: var(--color-accent-primary);
+  color: #ffffff;
+  box-shadow: var(--shadow-soft);
 }
 
 .intake-form-button--primary:hover:not(:disabled) {
-  background-color: #6a1f2e;
+  background-color: #7a5942;
+  box-shadow: var(--shadow-card);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(123, 45, 62, 0.2);
 }
 
-/* Secondary button */
 .intake-form-button--secondary {
-  background-color: transparent;
-  color: var(--color-nav-text);
-  border: 2px solid var(--color-sand);
+  background-color: var(--color-surface-alt);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
 }
 
 .intake-form-button--secondary:hover:not(:disabled) {
-  background-color: var(--color-sand);
-  border-color: var(--color-sand);
-  transform: translateY(-2px);
+  background-color: var(--color-border);
+  border-color: var(--color-text-secondary);
 }
 
+.intake-form-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 
-/* ════════════════════════════════════════════════════════════════
-   SUCCESS STATE
-   ════════════════════════════════════════════════════════════════ */
-
+/* Success Screen Component */
 .intake-success-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 400px;
-  padding: 20px;
+  min-height: 100vh;
+  padding: var(--space-lg);
+  background: linear-gradient(135deg, #faf8f6 0%, #f5f3f1 100%);
 }
 
 .intake-success-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-  max-width: 500px;
-  padding: 40px;
-  background-color: #fff;
+  gap: var(--space-lg);
+  background: var(--color-surface);
+  padding: var(--space-2xl);
   border-radius: var(--radius-lg);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-hover);
+  max-width: 500px;
   text-align: center;
 }
 
 .intake-success-icon {
+  width: 80px;
+  height: 80px;
+  background-color: var(--color-success);
+  color: white;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 80px;
-  height: 80px;
-  background-color: var(--color-olive);
-  color: #fff;
-  border-radius: 50%;
-  font-size: 40px;
-  font-weight: bold;
+  font-size: 2.5rem;
+  animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .intake-success-title {
-  margin: 0;
-  font-size: 24px;
-  font-weight: 600;
-  color: var(--color-charcoal);
   font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0;
+  letter-spacing: -0.5px;
 }
 
 .intake-success-details {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-sm);
   width: 100%;
-  padding: 16px;
-  background-color: var(--color-linen);
+  padding: var(--space-lg);
+  background-color: var(--color-surface-alt);
   border-radius: var(--radius-md);
   text-align: left;
 }
 
 .intake-success-details p {
   margin: 0;
-  font-size: 14px;
-  color: var(--color-charcoal);
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+  line-height: 1.6;
 }
 
 .intake-success-details strong {
-  color: var(--color-nav-text);
+  color: var(--color-accent-primary);
+  font-weight: 600;
 }
 
 .intake-success-message {
   margin: 0;
-  font-size: 14px;
-  color: #666;
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
   line-height: 1.6;
 }
 
 .intake-success-button {
-  padding: 12px 28px;
-  background-color: var(--color-burgundy);
-  color: #fff;
+  padding: var(--space-md) var(--space-lg);
+  background-color: var(--color-accent-primary);
+  color: #ffffff;
   border: none;
   border-radius: var(--radius-md);
-  font-size: 14px;
+  font-size: var(--text-sm);
   font-weight: 600;
-  font-family: var(--font-ui);
+  font-family: var(--font-body);
   cursor: pointer;
-  transition: all var(--transition-base);
+  transition: all var(--transition);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  box-shadow: var(--shadow-soft);
 }
 
 .intake-success-button:hover {
-  background-color: #6a1f2e;
+  background-color: #7a5942;
+  box-shadow: var(--shadow-card);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(123, 45, 62, 0.2);
 }
 
+/* Animations */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-/* ════════════════════════════════════════════════════════════════
-   RESPONSIVE
-   ════════════════════════════════════════════════════════════════ */
+@keyframes popIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
 
-@media (max-width: 600px) {
+/* Responsive Design */
+@media (max-width: 768px) {
   .intake-form-container {
-    max-width: 100%;
-    padding: 16px;
+    padding: var(--space-xl) var(--space-md);
   }
 
   .intake-form-title {
-    font-size: 22px;
+    font-size: var(--text-xl);
   }
 
-  .intake-form-row {
-    grid-template-columns: 1fr;
-  }
-
-  .intake-form-row.three-cols {
-    grid-template-columns: 1fr;
+  .intake-form-section {
+    padding: var(--space-md);
   }
 
   .intake-form-actions {
-    flex-direction: column-reverse;
-    gap: 10px;
+    flex-direction: column;
   }
 
   .intake-form-button {
@@ -383,46 +454,6 @@
   }
 
   .intake-success-content {
-    padding: 24px;
+    padding: var(--space-lg);
   }
-
-  .intake-success-icon {
-    width: 60px;
-    height: 60px;
-    font-size: 32px;
-  }
-
-  .intake-success-title {
-    font-size: 20px;
-  }
-}
-
-/* Checkbox styles for referral status */
-.intake-form-checkbox {
-  width: 18px;
-  height: 18px;
-  margin-right: 8px;
-  cursor: pointer;
-  accent-color: var(--color-burgundy);
-}
-
-.intake-form-checkbox-label {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  font-size: 14px;
-  color: var(--color-charcoal);
-  font-family: var(--font-body);
-}
-
-.intake-form-checkbox-label span {
-  font-weight: 500;
-}
-
-.intake-form-help-text {
-  margin: 8px 0 0 0;
-  font-size: 12px;
-  color: #666;
-  font-family: var(--font-body);
-  font-style: italic;
 }
