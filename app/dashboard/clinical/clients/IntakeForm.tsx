@@ -23,6 +23,10 @@ interface IntakeFormProps {
   onCancel?: () => void;
 }
 
+interface FieldError {
+  [key: string]: string;
+}
+
 export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -40,9 +44,11 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<FieldError>({});
   const [success, setSuccess] = useState<{ id: number; name: string; status: string } | null>(null);
   const [therapists, setTherapists] = useState<Array<{ id: number; name: string }>>([]);
   const [step, setStep] = useState<'intake' | 'therapist' | 'payment' | 'assessment'>('intake');
+  const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
 
   // Fetch therapists on mount
   React.useEffect(() => {
@@ -76,27 +82,61 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
         ...prev,
         [name]: value,
       }));
+      // Clear error when user starts typing (auto-recovery)
+      if (fieldErrors[name]) {
+        setFieldErrors((prev) => ({ ...prev, [name]: '' }));
+      }
+    }
+  };
+
+  const handleBlur = (fieldName: string, value: any) => {
+    setTouchedFields((prev) => new Set([...prev, fieldName]));
+    const error = validateField(fieldName, value);
+    if (error) {
+      setFieldErrors((prev) => ({ ...prev, [fieldName]: error }));
+    } else {
+      setFieldErrors((prev) => ({ ...prev, [fieldName]: '' }));
+    }
+  };
+
+  const validateField = (fieldName: string, value: any): string => {
+    switch (fieldName) {
+      case 'name':
+        if (!value?.trim()) return 'Full name is required';
+        if (value.trim().length < 2) return 'Name must be at least 2 characters';
+        return '';
+      case 'concern':
+        if (!value?.trim()) return 'Primary concern is required';
+        if (value.trim().length < 10) return 'Please provide more detail (at least 10 characters)';
+        return '';
+      case 'email':
+        if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'Invalid email format';
+        return '';
+      case 'date_of_birth':
+        if (value && isNaN(new Date(value).getTime())) return 'Invalid date';
+        return '';
+      case 'therapist_id':
+        if (formData.is_referral && !value) return 'Please select a therapist';
+        return '';
+      default:
+        return '';
     }
   };
 
   const validateForm = (): boolean => {
-    if (!formData.name.trim()) {
-      setError('Name is required');
-      return false;
-    }
-    if (!formData.concern.trim()) {
-      setError('Primary concern is required');
-      return false;
-    }
-    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      setError('Invalid email format');
-      return false;
-    }
-    if (formData.date_of_birth && isNaN(new Date(formData.date_of_birth).getTime())) {
-      setError('Invalid date of birth');
-      return false;
-    }
-    return true;
+    const newErrors: FieldError = {};
+    let hasErrors = false;
+
+    Object.keys(formData).forEach((key) => {
+      const fieldError = validateField(key, (formData as any)[key]);
+      if (fieldError) {
+        newErrors[key] = fieldError;
+        hasErrors = true;
+      }
+    });
+
+    setFieldErrors(newErrors);
+    return !hasErrors;
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -104,13 +144,20 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
     setError(null);
 
     if (!validateForm()) {
+      // Focus on first error field (WCAG accessibility requirement)
+      const firstErrorField = Object.keys(fieldErrors).find((key) => fieldErrors[key]);
+      if (firstErrorField) {
+        const element = document.getElementById(firstErrorField);
+        element?.focus();
+      }
       return;
     }
 
     // For referrals, require therapist selection before proceeding
     if (formData.is_referral && !formData.therapist_id) {
-      setError('Please select a therapist for this referral');
-      setStep('therapist');
+      setError('Please select a therapist for this referral client');
+      const element = document.getElementById('therapist_id');
+      element?.focus();
       return;
     }
 
@@ -147,6 +194,8 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
+      // Scroll to error for visibility
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } finally {
       setLoading(false);
     }
@@ -186,8 +235,12 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
         </p>
       </div>
 
-      <form className="intake-form" onSubmit={handleSubmit}>
-        {error && <div className="intake-form-error">{error}</div>}
+      <form className="intake-form" onSubmit={handleSubmit} noValidate>
+        {error && (
+          <div className="intake-form-error" role="alert">
+            <strong>Please fix the errors below:</strong> {error}
+          </div>
+        )}
 
         {/* Contact Information Section */}
         <fieldset className="intake-form-section">
@@ -195,7 +248,7 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
 
           <div className="intake-form-group">
             <label htmlFor="name" className="intake-form-label">
-              Full Name <span className="intake-form-required">*</span>
+              Full Name <span className="intake-form-required" aria-label="required">*</span>
             </label>
             <input
               type="text"
@@ -203,10 +256,16 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="intake-form-input"
+              onBlur={() => handleBlur('name', formData.name)}
+              className={`intake-form-input ${fieldErrors.name ? 'intake-form-input--error' : ''}`}
               placeholder="Enter full name"
+              aria-label="Full name"
+              aria-describedby={fieldErrors.name ? 'name-error' : undefined}
               required
             />
+            {fieldErrors.name && touchedFields.has('name') && (
+              <div id="name-error" className="intake-form-field-error">{fieldErrors.name}</div>
+            )}
           </div>
 
           <div className="intake-form-row">
@@ -218,9 +277,19 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="intake-form-input"
+                onBlur={() => handleBlur('email', formData.email)}
+                className={`intake-form-input ${fieldErrors.email ? 'intake-form-input--error' : ''}`}
                 placeholder="name@example.com"
+                aria-label="Email address"
+                aria-describedby={fieldErrors.email ? 'email-error' : 'email-hint'}
+                autoComplete="email"
               />
+              {fieldErrors.email && touchedFields.has('email') && (
+                <div id="email-error" className="intake-form-field-error">{fieldErrors.email}</div>
+              )}
+              {!fieldErrors.email && !touchedFields.has('email') && (
+                <p id="email-hint" className="intake-form-help-text">We'll use this for session reminders</p>
+              )}
             </div>
 
             <div className="intake-form-group">
@@ -231,8 +300,11 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
+                onBlur={() => handleBlur('phone', formData.phone)}
                 className="intake-form-input"
                 placeholder="(123) 456-7890"
+                aria-label="Phone number"
+                autoComplete="tel"
               />
             </div>
           </div>
@@ -306,18 +378,29 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
 
           <div className="intake-form-group">
             <label htmlFor="concern" className="intake-form-label">
-              Primary Concern <span className="intake-form-required">*</span>
+              Primary Concern <span className="intake-form-required" aria-label="required">*</span>
             </label>
             <textarea
               id="concern"
               name="concern"
               value={formData.concern}
               onChange={handleChange}
-              className="intake-form-textarea"
+              onBlur={() => handleBlur('concern', formData.concern)}
+              className={`intake-form-textarea ${fieldErrors.concern ? 'intake-form-textarea--error' : ''}`}
               placeholder="Describe the client's primary reason for seeking therapy"
+              aria-label="Primary concern for seeking therapy"
+              aria-describedby={fieldErrors.concern ? 'concern-error' : 'concern-hint'}
               rows={5}
               required
             />
+            {fieldErrors.concern && touchedFields.has('concern') && (
+              <div id="concern-error" className="intake-form-field-error">{fieldErrors.concern}</div>
+            )}
+            {!fieldErrors.concern && (
+              <p id="concern-hint" className="intake-form-help-text">
+                {formData.concern.length}/100 characters • Focus on what brought them to therapy
+              </p>
+            )}
           </div>
 
           <div className="intake-form-group">
