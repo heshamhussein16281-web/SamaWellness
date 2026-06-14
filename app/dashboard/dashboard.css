@@ -13,7 +13,7 @@
    ════════════════════════════════════════════════════════════════ */
 :root {
   /* ─── Dashboard Layout ─── */
-  --dashboard-sidebar-width:   220px;
+  --dashboard-sidebar-width:   280px;
   --dashboard-topbar-height:   48px;
   --dashboard-content-padding: 20px;
 
@@ -22,13 +22,13 @@
 
   /* ─── Dashboard Spacing ─── */
   --dashboard-logo-gap:       10px;
-  --dashboard-logo-margin:    30px;
-  --dashboard-divider-margin: 20px;
-  --dashboard-nav-gap:        4px;
-  --dashboard-nav-padding:    12px 10px;
-  --dashboard-nav-margin:     4px 0;
-  --dashboard-section-gap:    15px;
-  --dashboard-section-margin: 15px 0;
+  --dashboard-logo-margin:    20px;
+  --dashboard-divider-margin: 8px;
+  --dashboard-nav-gap:        8px;
+  --dashboard-nav-padding:    10px 12px;
+  --dashboard-nav-margin:     0;
+  --dashboard-section-gap:    8px;
+  --dashboard-section-margin: 16px 0;
   --dashboard-topbar-gap:     12px;
 }
 
@@ -111,23 +111,24 @@
 
 /* Logo mark badge */
 .sidebar-logo-mark {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   background-color: var(--color-burgundy);
-  border-radius: var(--radius-sm);
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 600;
 }
 
 /* Logo text */
 .sidebar-logo-text {
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--color-nav-text);
+  font-family: var(--font-display);
 }
 
 /* Divider */
@@ -157,42 +158,47 @@
 .sidebar-section-label {
   font-size: 11px;
   font-weight: 600;
-  color: var(--color-nav-text);
+  color: #999;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: var(--dashboard-section-gap);
-  opacity: 0.7;
+  padding: 8px 12px;
   transition: all 0.2s ease;
+  font-family: var(--font-body);
 }
 
 /* Navigation item container */
 .sidebar-nav-item {
   padding: var(--dashboard-nav-padding);
-  border-radius: var(--radius-sm);
+  border-radius: 6px;
   background-color: transparent;
-  border-left: 3px solid transparent;
   cursor: pointer;
   margin-bottom: var(--dashboard-nav-gap);
   transition: all 0.2s ease;
 }
 
+.sidebar-nav-item:hover {
+  background-color: #f5f5f5;
+}
+
 /* Navigation item active state */
 .sidebar-nav-item.active {
-  background-color: rgba(123, 45, 62, 0.08);
-  border-left-color: var(--color-burgundy);
-  padding-left: 7px;
+  background-color: var(--color-burgundy);
 }
 
 /* Navigation link text */
 .sidebar-nav-link {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--color-nav-text);
   text-decoration: none;
+  font-family: var(--font-body);
+  transition: all 0.2s ease;
 }
 
 /* Navigation link active text */
 .sidebar-nav-link.active {
   font-weight: 600;
+  color: white;
 }
 
 /* Topbar styling */
