@@ -47,7 +47,7 @@ export default function ClientsPage() {
 
       const params = new URLSearchParams({
         page: String(page),
-        limit: '20',
+        limit: '10',
       });
 
       if (phone.trim()) {
