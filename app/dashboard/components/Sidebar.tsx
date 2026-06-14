@@ -69,6 +69,14 @@ export default function Sidebar() {
             </span>
           </div>
         </Link>
+
+        <Link href="/dashboard/clinical/therapists">
+          <div className={`sidebar-nav-item ${isActive('/dashboard/clinical/therapists') ? 'active' : ''}`}>
+            <span className={`sidebar-nav-link ${isActive('/dashboard/clinical/therapists') ? 'active' : ''}`}>
+              💼 Therapists
+            </span>
+          </div>
+        </Link>
       </div>
 
       {/* Divider */}
