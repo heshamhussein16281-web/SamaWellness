@@ -198,15 +198,18 @@
   align-items: center;
   gap: var(--space-xs);
   padding: var(--dashboard-nav-padding);
-  padding-left: 16px;
-  padding-right: 16px;
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: var(--space-sm);
+  margin-right: var(--space-sm);
+  margin-bottom: var(--dashboard-nav-gap);
   border-radius: 0;
   background-color: transparent;
   cursor: pointer;
-  margin-bottom: var(--dashboard-nav-gap);
-  margin-left: 0;
-  margin-right: 0;
   transition: all 0.2s ease;
+
+  /* Inner padding for the clickable area */
+  padding-inline: var(--space-sm);
 }
 
 .sidebar-nav-item:hover {
