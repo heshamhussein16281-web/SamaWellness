@@ -2,6 +2,8 @@
 
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { Plus, Edit2, Trash2, X } from 'lucide-react';
+import TherapistAvailabilityCalendar from './TherapistAvailabilityCalendar';
+import ScheduleAvailabilityModal from './ScheduleAvailabilityModal';
 import './therapists.css';
 
 interface Therapist {
@@ -48,6 +50,12 @@ export default function TherapistsList() {
   const itemsPerPage = 25;
   const maxPaginationButtons = 7;
 
+  // Availability and scheduling states
+  const [selectedTherapistForAvailability, setSelectedTherapistForAvailability] = useState<Therapist | null>(null);
+  const [selectedClinicId, setSelectedClinicId] = useState<string | null>(null);
+  const [clinics, setClinics] = useState<any[]>([]);
+  const [therapistAvailability, setTherapistAvailability] = useState<Map<string, any>>(new Map());
+
   // Auto-dismiss notifications
   useEffect(() => {
     return () => {
@@ -72,7 +80,19 @@ export default function TherapistsList() {
 
   useEffect(() => {
     fetchTherapists();
+    fetchClinics();
   }, []);
+
+  async function fetchClinics() {
+    try {
+      const res = await fetch('/api/admin/clinics');
+      if (!res.ok) throw new Error('Failed to fetch clinics');
+      const data = await res.json();
+      setClinics(data.clinics || []);
+    } catch (error) {
+      console.error('Error fetching clinics:', error);
+    }
+  }
 
   async function fetchTherapists() {
     try {
@@ -88,6 +108,38 @@ export default function TherapistsList() {
       showError(errorMsg);
     } finally {
       setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    therapists.forEach(therapist => {
+      if (clinics.length > 0) {
+        const primaryClinic = clinics[0];
+        fetch(`/api/admin/therapists/${therapist.id}/availability?clinic_id=${primaryClinic.id}`)
+          .then(res => res.json())
+          .then(data => {
+            setTherapistAvailability(prev => new Map(prev).set(therapist.id, data.data || []));
+          })
+          .catch(err => console.error('Error fetching availability:', err));
+      }
+    });
+  }, [therapists, clinics]);
+
+  function handleScheduleClick(therapist: Therapist) {
+    if (clinics.length > 0) {
+      setSelectedTherapistForAvailability(therapist);
+      setSelectedClinicId(clinics[0].id);
+    }
+  }
+
+  function handleAvailabilitySaved() {
+    // Refresh availability for all therapists
+    if (selectedTherapistForAvailability && selectedClinicId) {
+      fetch(`/api/admin/therapists/${selectedTherapistForAvailability.id}/availability?clinic_id=${selectedClinicId}`)
+        .then(res => res.json())
+        .then(data => {
+          setTherapistAvailability(prev => new Map(prev).set(selectedTherapistForAvailability.id, data.data || []));
+        });
     }
   }
 
@@ -366,50 +418,72 @@ export default function TherapistsList() {
         <table className="therapists-table">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Hourly Rate</th>
-              <th>Specializations</th>
+              <th>Therapist & Availability</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {paginatedTherapists.length === 0 ? (
               <tr>
-                <td colSpan={5} className="therapists-empty">
+                <td colSpan={2} className="therapists-empty">
                   No therapists found
                 </td>
               </tr>
             ) : (
-              paginatedTherapists.map((therapist) => (
-                <tr key={therapist.id}>
-                  <td>{therapist.name}</td>
-                  <td>{therapist.email || '-'}</td>
-                  <td>{therapist.hourly_rate ? `₦${therapist.hourly_rate.toLocaleString()}` : '-'}</td>
-                  <td className="therapists-specializations">
-                    {therapist.specializations && therapist.specializations.length > 0
-                      ? therapist.specializations.join(', ')
-                      : '-'}
-                  </td>
-                  <td className="therapists-actions">
-                    <button
-                      className="therapists-btn therapists-btn--icon"
-                      onClick={() => handleEdit(therapist)}
-                      title="Edit"
-                    >
-                      <Edit2 size={18} />
-                    </button>
-                    <button
-                      className="therapists-btn therapists-btn--icon therapists-btn--danger"
-                      onClick={() => handleDelete(therapist)}
-                      disabled={loadingDelete}
-                      title="Delete"
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  </td>
-                </tr>
-              ))
+              paginatedTherapists.map((therapist) => {
+                const availability = therapistAvailability.get(therapist.id) || [];
+                const clinicName = clinics.length > 0 ? clinics[0].name : 'Main Clinic';
+
+                return (
+                  <tr key={therapist.id}>
+                    <td>
+                      <div>
+                        <strong>{therapist.name}</strong>
+                        <div style={{ fontSize: '0.85rem', color: '#666' }}>
+                          {therapist.email}
+                          {therapist.hourly_rate && ` • ${therapist.hourly_rate} EGP/hr`}
+                        </div>
+
+                        {/* Calendar */}
+                        <div style={{ marginTop: '0.75rem' }}>
+                          <TherapistAvailabilityCalendar
+                            days={availability.map((av: any) => ({
+                              day: av.day_of_week,
+                              status: av.status,
+                            }))}
+                            clinicName={clinicName}
+                          />
+                        </div>
+                      </div>
+                    </td>
+                    <td className="therapists-actions">
+                      <button
+                        className="therapists-btn therapists-btn--icon"
+                        onClick={() => handleEdit(therapist)}
+                        title="Edit"
+                      >
+                        <Edit2 size={18} />
+                      </button>
+                      <button
+                        className="therapists-btn therapists-btn--icon"
+                        onClick={() => handleScheduleClick(therapist)}
+                        title="Schedule Availability"
+                        style={{ backgroundColor: '#17a2b8', color: 'white' }}
+                      >
+                        📅
+                      </button>
+                      <button
+                        className="therapists-btn therapists-btn--icon therapists-btn--danger"
+                        onClick={() => handleDelete(therapist)}
+                        disabled={loadingDelete}
+                        title="Delete"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>
@@ -449,6 +523,18 @@ export default function TherapistsList() {
             Next
           </button>
         </div>
+      )}
+
+      {/* Schedule Availability Modal */}
+      {selectedTherapistForAvailability && selectedClinicId && (
+        <ScheduleAvailabilityModal
+          therapistId={selectedTherapistForAvailability.id}
+          therapistName={selectedTherapistForAvailability.name}
+          clinicId={selectedClinicId}
+          clinicName={clinics.find(c => c.id === selectedClinicId)?.name || 'Clinic'}
+          onClose={() => setSelectedTherapistForAvailability(null)}
+          onSave={handleAvailabilitySaved}
+        />
       )}
     </div>
   );
