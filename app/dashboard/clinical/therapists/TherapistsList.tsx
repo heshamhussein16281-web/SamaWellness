@@ -76,12 +76,12 @@ export default function TherapistsList() {
 
   async function fetchTherapists() {
     try {
-      const res = await fetch('/api/clinic/therapists');
+      const res = await fetch('/api/admin/therapists');
       if (!res.ok) {
         throw new Error(`Failed to fetch therapists: ${res.statusText}`);
       }
       const data = await res.json();
-      setTherapists(Array.isArray(data) ? data : []);
+      setTherapists(data.therapists || []);
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : 'Failed to load therapists';
       console.error('Error fetching therapists:', error);
@@ -113,8 +113,8 @@ export default function TherapistsList() {
       };
 
       const url = isEditing
-        ? `/api/clinic/therapists/${editingTherapist.id}`
-        : '/api/clinic/therapists';
+        ? `/api/admin/therapists/${editingTherapist.id}`
+        : '/api/admin/therapists';
       const method = isEditing ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
@@ -168,7 +168,7 @@ export default function TherapistsList() {
 
     setLoadingDelete(true);
     try {
-      const res = await fetch(`/api/clinic/therapists/${therapist.id}`, {
+      const res = await fetch(`/api/admin/therapists/${therapist.id}`, {
         method: 'DELETE',
       });
 
