@@ -327,7 +327,10 @@ export default function ClinicsList() {
               {activeTab === 'rooms' && (
                 <ClinicRoomsTab
                   numberOfRooms={formData.number_of_rooms}
-                  onChange={(value) => setFormData({ ...formData, number_of_rooms: value })}
+                  rooms={formData.rooms}
+                  onChange={(numberOfRooms, rooms) =>
+                    setFormData({ ...formData, number_of_rooms: numberOfRooms, rooms: rooms || [] })
+                  }
                 />
               )}
 
