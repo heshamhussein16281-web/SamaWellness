@@ -433,28 +433,28 @@ export default function TherapistsListRefined() {
 
                 <div className="therapist-card__footer">
                   {canManageTherapists && (
-                    <button
-                      className="btn btn--secondary btn--small btn--edit"
-                      onClick={() => handleEdit(therapist)}
-                    >
-                      Edit
-                    </button>
-                  )}
-                  <button
-                    className="btn btn--secondary btn--small btn--schedule"
-                    onClick={() => handleScheduleClick(therapist)}
-                  >
-                    📅 Schedule
-                  </button>
-                  {canManageTherapists && (
-                    <button
-                      className="btn btn--icon btn--delete"
-                      onClick={() => handleDelete(therapist)}
-                      disabled={loadingDelete}
-                      title="Delete"
-                    >
-                      ×
-                    </button>
+                    <>
+                      <button
+                        className="btn btn--secondary btn--small btn--edit"
+                        onClick={() => handleEdit(therapist)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="btn btn--secondary btn--small btn--schedule"
+                        onClick={() => handleScheduleClick(therapist)}
+                      >
+                        📅 Schedule
+                      </button>
+                      <button
+                        className="btn btn--icon btn--delete"
+                        onClick={() => handleDelete(therapist)}
+                        disabled={loadingDelete}
+                        title="Delete"
+                      >
+                        ×
+                      </button>
+                    </>
                   )}
                 </div>
               </div>
