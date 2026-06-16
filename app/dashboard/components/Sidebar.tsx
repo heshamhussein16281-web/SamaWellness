@@ -4,6 +4,23 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+// Permission mapping: each link requires at least one of these permissions
+const linkPermissions = {
+  clients: ['view_clients', 'manage_clients'],
+  bookings: ['view_bookings', 'manage_bookings'],
+  therapists: ['view_therapists', 'manage_therapists'],
+  clinics: ['manage_clinics'],
+  users: ['manage_users'],
+  roles: ['manage_roles'],
+  auditLogs: ['is_super_admin'],
+};
+
+// Helper function to check if user has permission for a link
+const hasPermission = (permissions: string[] | undefined, requiredPerms: string[]): boolean => {
+  if (!permissions) return false;
+  return requiredPerms.some(p => permissions.includes(p));
+};
+
 interface UserData {
   role: string;
   permissions: string[];
