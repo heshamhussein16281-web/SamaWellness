@@ -22,6 +22,34 @@ interface Role {
   }[];
 }
 
+// Permission hierarchy: manage permissions imply view access
+const permissionHierarchy: Record<string, string> = {
+  'manage_clients': 'view_clients',
+  'manage_bookings': 'view_bookings',
+  'manage_therapists': 'view_therapists',
+};
+
+// Auto-enable view permissions when manage permissions are selected
+const getImpliedPermissions = (selectedPermissionIds: string[], allPermissions: Permission[]): string[] => {
+  const result = new Set(selectedPermissionIds);
+
+  selectedPermissionIds.forEach(permId => {
+    const perm = allPermissions.find(p => p.id === permId);
+    if (!perm) return;
+
+    // If manage_* permission is selected, also include view_* permission
+    if (perm.key.startsWith('manage_')) {
+      const viewKey = perm.key.replace('manage_', 'view_');
+      const viewPerm = allPermissions.find(p => p.key === viewKey);
+      if (viewPerm) {
+        result.add(viewPerm.id);
+      }
+    }
+  });
+
+  return Array.from(result);
+};
+
 export default function RolesList() {
   const [roles, setRoles] = useState<Role[]>([]);
   const [permissions, setPermissions] = useState<Permission[]>([]);
@@ -631,11 +659,18 @@ export default function RolesList() {
                           className="permission-item__input"
                           checked={selectedPermissions.includes(perm.id)}
                           onChange={() => {
-                            setSelectedPermissions(
-                              selectedPermissions.includes(perm.id)
-                                ? selectedPermissions.filter((id) => id !== perm.id)
-                                : [...selectedPermissions, perm.id]
-                            );
+                            let updatedPermissions: string[];
+                            if (selectedPermissions.includes(perm.id)) {
+                              // Removing a permission
+                              updatedPermissions = selectedPermissions.filter((id) => id !== perm.id);
+                            } else {
+                              // Adding a permission
+                              updatedPermissions = [...selectedPermissions, perm.id];
+                            }
+
+                            // Apply permission hierarchy (manage implies view)
+                            const withImpliedPerms = getImpliedPermissions(updatedPermissions, permissions);
+                            setSelectedPermissions(withImpliedPerms);
                           }}
                           aria-label={`Assign ${perm.name} permission`}
                           disabled={loadingPermissionsAssign}
