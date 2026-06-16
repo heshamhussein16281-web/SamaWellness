@@ -116,9 +116,7 @@ export default function TherapistsListRefined() {
         throw new Error(`Failed to fetch therapists: ${res.statusText}`);
       }
       const data = await res.json();
-      // The /api/clinic/therapists endpoint returns an array directly, not wrapped in an object
-      const therapistList = Array.isArray(data) ? data : data.therapists || [];
-      setTherapists(therapistList);
+      setTherapists(data.therapists || []);
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : 'Failed to load therapists';
       console.error('Error fetching therapists:', error);

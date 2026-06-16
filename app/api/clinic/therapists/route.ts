@@ -1,14 +1,14 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
 function getServiceClient() {
-  return createClient(supabaseUrl, supabaseAnonKey);
+  return createClient(supabaseUrl, supabaseServiceKey);
 }
 
-// GET all therapists with their schedules
+// GET all therapists
 export async function GET(request: NextRequest) {
   try {
     const supabase = getServiceClient();
@@ -17,26 +17,11 @@ export async function GET(request: NextRequest) {
     const { data: therapists, error: therapistsError } = await supabase
       .from('therapists')
       .select('*')
-      .eq('status', 'active')
       .order('name');
 
     if (therapistsError) throw therapistsError;
 
-    // Fetch schedules for all therapists
-    const { data: schedules, error: schedulesError } = await supabase
-      .from('therapist_schedules')
-      .select('*')
-      .order('therapist_id');
-
-    if (schedulesError) throw schedulesError;
-
-    // Combine therapists with their schedules
-    const therapistsWithSchedules = therapists?.map((therapist) => ({
-      ...therapist,
-      schedules: schedules?.filter((s) => s.therapist_id === therapist.id) || [],
-    })) || [];
-
-    return NextResponse.json(therapistsWithSchedules);
+    return NextResponse.json({ therapists: therapists || [] });
   } catch (error) {
     console.error('Error fetching therapists:', error);
     return NextResponse.json(
