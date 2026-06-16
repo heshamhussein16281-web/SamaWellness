@@ -293,8 +293,15 @@ export default function BookingCalendarModal({
           {step === 'therapist' && (
             <div className="modal-form-group">
               <label htmlFor="therapist" className="modal-label">
-                Select Therapist <span className="modal-required">*</span>
+                {isRecurring ? 'Therapist' : 'Select Therapist'} <span className="modal-required">*</span>
               </label>
+              {isRecurring && therapistName && (
+                <div className="modal-info-box">
+                  <strong>Your Current Therapist:</strong> {therapistName}
+                  <br />
+                  <small>Change below if you'd like a different therapist</small>
+                </div>
+              )}
               <select
                 id="therapist"
                 value={selectedTherapistId || ''}
@@ -302,7 +309,9 @@ export default function BookingCalendarModal({
                 className="modal-input"
                 required
               >
-                <option value="">Choose a therapist</option>
+                <option value="">
+                  {isRecurring ? 'Continue with ' + therapistName : 'Choose a therapist'}
+                </option>
                 {therapists.map((therapist) => (
                   <option key={therapist.id} value={therapist.id}>
                     {therapist.name}

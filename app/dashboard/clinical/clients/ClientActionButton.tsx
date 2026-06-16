@@ -33,65 +33,74 @@ export default function ClientActionButton({
   const [activeModal, setActiveModal] = useState<string | null>(null);
 
   const getNextAction = (): NextAction => {
-    switch (status) {
-      case 'intake':
-      case 'assessment_pending':
-        return {
-          label: 'Assign Therapist',
-          type: 'assessment',
-          color: '#d4a574', // warning/secondary color
-        };
-
-      case 'ready_for_booking':
-        if (isRecurring) {
-          return {
-            label: 'Book Session',
-            type: 'booking',
-            color: '#6b8e6f', // success color
-          };
-        }
-        return {
-          label: 'Verify Payment',
-          type: 'payment',
-          color: '#c75c5c', // error/warning color
-        };
-
-      case 'payment_pending':
-        return {
-          label: 'Verify Payment',
-          type: 'payment',
-          color: '#c75c5c',
-        };
-
-      case 'booking_scheduled':
-        return {
-          label: 'Cancel/Reschedule',
-          type: 'cancel',
-          color: '#666666',
-        };
-
-      case 'active':
-        return {
-          label: 'View Session',
-          type: 'view',
-          color: '#8b6a4f',
-        };
-
-      case 'completed':
-      case 'inactive':
-        return {
-          label: 'View History',
-          type: 'view',
-          color: '#999999',
-        };
-
-      default:
-        return {
-          label: 'No Action',
-          type: 'none',
-          color: '#999999',
-        };
+    // New clients need therapist assignment first
+    if (!isRecurring && !therapistId && (status === 'intake' || status === 'assessment_pending')) {
+      return {
+        label: 'Assign Therapist',
+        type: 'assessment',
+        color: '#d4a574', // warning/secondary color
+      };
     }
+
+    // New clients need payment verification after therapist assignment
+    if (!isRecurring && therapistId && status === 'ready_for_booking') {
+      return {
+        label: 'Verify Payment',
+        type: 'payment',
+        color: '#c75c5c', // error/warning color
+      };
+    }
+
+    // Recurring clients go straight to booking
+    if (isRecurring && therapistId && (status === 'ready_for_booking' || status === 'intake')) {
+      return {
+        label: 'Book Session',
+        type: 'booking',
+        color: '#6b8e6f', // success color
+      };
+    }
+
+    // Payment pending - new clients waiting for payment
+    if (status === 'payment_pending') {
+      return {
+        label: 'Verify Payment',
+        type: 'payment',
+        color: '#c75c5c',
+      };
+    }
+
+    // Booked sessions can be cancelled/rescheduled
+    if (status === 'booking_scheduled') {
+      return {
+        label: 'Cancel/Reschedule',
+        type: 'cancel',
+        color: '#666666',
+      };
+    }
+
+    // Active sessions
+    if (status === 'active') {
+      return {
+        label: 'View Session',
+        type: 'view',
+        color: '#8b6a4f',
+      };
+    }
+
+    // Completed/inactive
+    if (status === 'completed' || status === 'inactive') {
+      return {
+        label: 'View History',
+        type: 'view',
+        color: '#999999',
+      };
+    }
+
+    return {
+      label: 'No Action',
+      type: 'none',
+      color: '#999999',
+    };
   };
 
   const nextAction = getNextAction();
