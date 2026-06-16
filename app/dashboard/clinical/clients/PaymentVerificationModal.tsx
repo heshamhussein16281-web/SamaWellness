@@ -82,7 +82,7 @@ export default function PaymentVerificationModal({
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({
-          status: 'ready_for_booking',
+          status: 'payment_verified',
           payment_verified: true,
           payment_date: paymentDate,
           payment_method: paymentMethod,
@@ -114,9 +114,9 @@ export default function PaymentVerificationModal({
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
           <div className="modal-success">
             <div className="modal-success-icon">✓</div>
-            <h2 className="modal-success-title">Payment Verified</h2>
+            <h2 className="modal-success-title">Payment Verified ✓</h2>
             <p className="modal-success-message">
-              Payment from {clientName} has been verified. They can now book a session.
+              Payment from {clientName} has been confirmed. They can now proceed to book their session.
             </p>
           </div>
         </div>

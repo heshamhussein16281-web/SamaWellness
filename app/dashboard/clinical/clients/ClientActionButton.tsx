@@ -33,7 +33,8 @@ export default function ClientActionButton({
   const [activeModal, setActiveModal] = useState<string | null>(null);
 
   const getNextAction = (): NextAction => {
-    // New clients need therapist assignment first
+    // ========== NEW CLIENTS FLOW ==========
+    // Step 1: New client needs therapist assignment
     if (!isRecurring && !therapistId && (status === 'intake' || status === 'assessment_pending')) {
       return {
         label: 'Assign Therapist',
@@ -42,17 +43,18 @@ export default function ClientActionButton({
       };
     }
 
-    // New clients need payment verification after therapist assignment
+    // Step 2: New client has therapist but MUST verify payment BEFORE booking
+    // This is BLOCKING - they cannot book without payment verification
     if (!isRecurring && therapistId && status === 'ready_for_booking') {
       return {
         label: 'Verify Payment',
         type: 'payment',
-        color: '#c75c5c', // error/warning color
+        color: '#c75c5c', // error/warning color - blocking requirement
       };
     }
 
-    // Recurring clients go straight to booking
-    if (isRecurring && therapistId && (status === 'ready_for_booking' || status === 'intake')) {
+    // Step 3: New client has paid and can now book
+    if (!isRecurring && therapistId && status === 'payment_verified') {
       return {
         label: 'Book Session',
         type: 'booking',
@@ -60,16 +62,19 @@ export default function ClientActionButton({
       };
     }
 
-    // Payment pending - new clients waiting for payment
-    if (status === 'payment_pending') {
+    // ========== RECURRING CLIENTS FLOW ==========
+    // Recurring clients skip payment verification and go straight to booking
+    // Payment must be made by 24hrs BEFORE session (not blocking booking)
+    if (isRecurring && therapistId && (status === 'ready_for_booking' || status === 'intake' || status === 'assessment_pending')) {
       return {
-        label: 'Verify Payment',
-        type: 'payment',
-        color: '#c75c5c',
+        label: 'Book Session',
+        type: 'booking',
+        color: '#6b8e6f', // success color
       };
     }
 
-    // Booked sessions can be cancelled/rescheduled
+    // ========== POST-BOOKING ACTIONS ==========
+    // Booked sessions can be cancelled/rescheduled (within 24hrs)
     if (status === 'booking_scheduled') {
       return {
         label: 'Cancel/Reschedule',

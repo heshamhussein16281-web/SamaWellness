@@ -237,8 +237,8 @@ export default function BookingCalendarModal({
             <h2 className="modal-success-title">Booking Confirmed</h2>
             <p className="modal-success-message">
               Session scheduled for {clientName} on {selectedDate} at {selectedTime}.
-              {!isRecurring && (
-                <span> Please verify payment before the session.</span>
+              {isRecurring && (
+                <span> Payment due within 24 hours before the session.</span>
               )}
             </p>
           </div>
@@ -442,6 +442,13 @@ export default function BookingCalendarModal({
                 <span className="modal-detail-label">Duration:</span>
                 <span className="modal-detail-value">{duration} minutes</span>
               </div>
+
+              {isRecurring && (
+                <div className="modal-info-box" style={{ marginTop: '1rem' }}>
+                  <strong>Payment Reminder:</strong>
+                  <p>Payment must be received by 24 hours before this session.</p>
+                </div>
+              )}
             </div>
           )}
         </div>
