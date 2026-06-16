@@ -95,18 +95,18 @@
 .clinics-btn--icon {
   padding: 8px;
   background-color: transparent;
-  border: 1px solid #dee2e6;
+  border: none;
   border-radius: 4px;
   color: #666;
 }
 
 .clinics-btn--icon:hover:not(:disabled) {
   background-color: #f0f0f0;
-  border-color: #bbb;
+  border-color: transparent;
 }
 
 .clinics-btn--icon.clinics-btn--danger {
-  border-color: #ffcccc;
+  border: 1px solid #ffcccc;
   color: #dc3545;
 }
 
