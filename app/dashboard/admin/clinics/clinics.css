@@ -405,13 +405,8 @@
 }
 
 .clinics-card:hover {
-  border-color: #7b2d3e;
-  box-shadow: 0 12px 32px rgba(123, 45, 62, 0.12);
-  transform: translateY(-4px);
-}
-
-.clinics-card--clickable {
-  cursor: pointer;
+  border-color: #e8e3da;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
 .clinics-card__header {
