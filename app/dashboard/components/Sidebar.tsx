@@ -10,7 +10,7 @@ const linkPermissions = {
   clients: ['view_clients', 'manage_clients'],
   bookings: ['view_bookings', 'manage_bookings'],
   therapists: ['view_therapists', 'manage_therapists'],
-  clinics: ['manage_clinics'],
+  clinics: ['view_clinics', 'manage_clinics'],
   users: ['manage_users'],
   roles: ['manage_roles'],
   auditLogs: ['is_super_admin'],
