@@ -24,6 +24,7 @@ export default function ClinicsList() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingClinic, setEditingClinic] = useState<Clinic | null>(null);
+  const [viewingClinic, setViewingClinic] = useState<Clinic | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     location: '',
@@ -251,7 +252,91 @@ export default function ClinicsList() {
   return (
     <div className="clinics-container">
       {/* Success/Error Messages - only show outside modal when not editing */}
-      {!showForm && successMessage && <div className="clinics-message clinics-message--success">{successMessage}</div>}
+      {!showForm && !viewingClinic && successMessage && <div className="clinics-message clinics-message--success">{successMessage}</div>}
+
+      {/* View Clinic Modal */}
+      {viewingClinic && (
+        <div className="clinics-form-container">
+          <div className="clinics-form clinics-form--view">
+            <div className="clinics-form-header">
+              <h2>{viewingClinic.name}</h2>
+              <button
+                className="clinics-btn clinics-btn--close"
+                onClick={() => setViewingClinic(null)}
+                type="button"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="clinics-view-content">
+              <div className="clinics-form-section">
+                <h3 className="clinics-form-section__title">Clinic Details</h3>
+
+                <div className="clinics-view-field">
+                  <label className="clinics-view-label">Clinic Name</label>
+                  <p className="clinics-view-value">{viewingClinic.name}</p>
+                </div>
+
+                {viewingClinic.location && (
+                  <div className="clinics-view-field">
+                    <label className="clinics-view-label">Location</label>
+                    <p className="clinics-view-value">{viewingClinic.location}</p>
+                  </div>
+                )}
+
+                {viewingClinic.phone && (
+                  <div className="clinics-view-field">
+                    <label className="clinics-view-label">Phone</label>
+                    <p className="clinics-view-value">{viewingClinic.phone}</p>
+                  </div>
+                )}
+
+                {viewingClinic.email && (
+                  <div className="clinics-view-field">
+                    <label className="clinics-view-label">Email</label>
+                    <p className="clinics-view-value">{viewingClinic.email}</p>
+                  </div>
+                )}
+              </div>
+
+              {viewingClinic.rooms && viewingClinic.rooms.length > 0 && (
+                <div className="clinics-form-section">
+                  <h3 className="clinics-form-section__title">Clinic Rooms</h3>
+
+                  <div className="clinics-view-rooms">
+                    {viewingClinic.rooms.map((room: string, idx: number) => (
+                      <span key={idx} className="clinics-room-badge">
+                        {room}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="clinics-view-actions">
+              {canManageClinics && (
+                <button
+                  className="clinics-btn clinics-btn--primary"
+                  onClick={() => {
+                    setViewingClinic(null);
+                    handleEdit(viewingClinic);
+                  }}
+                >
+                  Edit Clinic
+                </button>
+              )}
+              <button
+                className="clinics-btn clinics-btn--secondary"
+                onClick={() => setViewingClinic(null)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Header */}
       <div className="clinics-header">
@@ -410,13 +495,18 @@ export default function ClinicsList() {
       ) : (
         <div className="clinics-grid">
           {paginatedClinics.map((clinic) => (
-            <article key={clinic.id} className="clinics-card">
+            <article key={clinic.id} className="clinics-card clinics-card--clickable" onClick={() => setViewingClinic(clinic)}>
               <div className="clinics-card__header">
                 <h3 className="clinics-card__name">{clinic.name}</h3>
-                {clinic.location && <p className="clinics-card__location">{clinic.location}</p>}
               </div>
 
               <div className="clinics-card__info">
+                {clinic.location && (
+                  <div className="clinics-card__info-row">
+                    <span className="clinics-card__info-label">Location</span>
+                    <span className="clinics-card__info-value">{clinic.location}</span>
+                  </div>
+                )}
                 {clinic.phone && (
                   <div className="clinics-card__info-row">
                     <span className="clinics-card__info-label">Phone</span>

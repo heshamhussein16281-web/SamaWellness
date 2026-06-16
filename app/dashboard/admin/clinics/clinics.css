@@ -410,6 +410,10 @@
   transform: translateY(-4px);
 }
 
+.clinics-card--clickable {
+  cursor: pointer;
+}
+
 .clinics-card__header {
   margin-bottom: 16px;
 }
@@ -418,12 +422,6 @@
   font-size: 16px;
   font-weight: 700;
   color: #2d4a46;
-  margin: 0 0 6px 0;
-}
-
-.clinics-card__location {
-  font-size: 13px;
-  color: #8b7f75;
   margin: 0;
 }
 
