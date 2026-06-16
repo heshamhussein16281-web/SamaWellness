@@ -43,6 +43,12 @@ export default function Sidebar() {
         const res = await fetch('/api/auth/verify', { credentials: 'include' });
         if (res.ok) {
           const data = await res.json();
+          console.log('Sidebar - Auth verify response:', data);
+          console.log('Sidebar - Checking clinics permission:', {
+            hasViewClinics: data.permissions?.includes('view_clinics'),
+            hasManageClinics: data.permissions?.includes('manage_clinics'),
+            allPermissions: data.permissions,
+          });
           setUser(data);
         }
       } catch (err) {
