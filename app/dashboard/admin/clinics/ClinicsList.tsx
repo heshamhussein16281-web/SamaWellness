@@ -402,13 +402,14 @@ export default function ClinicsList() {
               <th>Location</th>
               <th>Phone</th>
               <th>Email</th>
+              <th>Rooms</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {paginatedClinics.length === 0 ? (
               <tr>
-                <td colSpan={5} className="clinics-empty">
+                <td colSpan={6} className="clinics-empty">
                   No clinics found
                 </td>
               </tr>
@@ -419,6 +420,29 @@ export default function ClinicsList() {
                   <td>{clinic.location || '-'}</td>
                   <td>{clinic.phone || '-'}</td>
                   <td>{clinic.email || '-'}</td>
+                  <td>
+                    {(clinic as any).rooms && (clinic as any).rooms.length > 0 ? (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        {(clinic as any).rooms.map((room: string, idx: number) => (
+                          <span
+                            key={idx}
+                            style={{
+                              padding: '4px 8px',
+                              backgroundColor: '#e8f5e9',
+                              borderRadius: '4px',
+                              fontSize: '13px',
+                              fontWeight: '500',
+                              color: '#2e7d32',
+                            }}
+                          >
+                            {room}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <span style={{ color: '#999', fontSize: '13px' }}>-</span>
+                    )}
+                  </td>
                   <td className="clinics-actions">
                     <button
                       className="clinics-btn clinics-btn--icon"
