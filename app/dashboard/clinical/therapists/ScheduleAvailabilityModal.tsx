@@ -5,7 +5,11 @@ import { X } from 'lucide-react';
 import AddExceptionForm from './AddExceptionForm';
 
 interface AvailabilityData {
-  [day: string]: boolean; // true = working, false = off
+  [day: string]: {
+    working: boolean;
+    start_time: string;
+    end_time: string;
+  };
 }
 
 interface ExceptionData {
@@ -47,7 +51,8 @@ export default function ScheduleAvailabilityModal({
       try {
         // Fetch availability
         const availRes = await fetch(
-          `/api/admin/therapists/${therapistId}/availability?clinic_id=${clinicId}`
+          `/api/admin/therapists/${therapistId}/availability?clinic_id=${clinicId}`,
+          { credentials: 'include' }
         );
         if (!availRes.ok) throw new Error('Failed to fetch availability');
         const availData = await availRes.json();
@@ -55,22 +60,29 @@ export default function ScheduleAvailabilityModal({
         // Initialize availability object
         const availMap: AvailabilityData = {};
         DAYS.forEach(day => {
-          availMap[day] = false;
+          availMap[day] = {
+            working: false,
+            start_time: '09:00',
+            end_time: '17:00',
+          };
         });
 
-        // Set working days
+        // Set working days with times
         if (availData.data) {
           availData.data.forEach((record: any) => {
-            if (record.status === 'working') {
-              availMap[record.day_of_week] = true;
-            }
+            availMap[record.day_of_week] = {
+              working: record.status === 'working',
+              start_time: record.start_time || '09:00',
+              end_time: record.end_time || '17:00',
+            };
           });
         }
         setAvailability(availMap);
 
         // Fetch exceptions
         const excRes = await fetch(
-          `/api/admin/therapists/${therapistId}/exceptions?clinic_id=${clinicId}`
+          `/api/admin/therapists/${therapistId}/exceptions?clinic_id=${clinicId}`,
+          { credentials: 'include' }
         );
         if (!excRes.ok) throw new Error('Failed to fetch exceptions');
         const excData = await excRes.json();
@@ -89,7 +101,20 @@ export default function ScheduleAvailabilityModal({
   const handleToggleDay = (day: string) => {
     setAvailability(prev => ({
       ...prev,
-      [day]: !prev[day],
+      [day]: {
+        ...prev[day],
+        working: !prev[day].working,
+      },
+    }));
+  };
+
+  const handleTimeChange = (day: string, field: 'start_time' | 'end_time', value: string) => {
+    setAvailability(prev => ({
+      ...prev,
+      [day]: {
+        ...prev[day],
+        [field]: value,
+      },
     }));
   };
 
@@ -132,20 +157,25 @@ export default function ScheduleAvailabilityModal({
     setError('');
 
     try {
-      // Build availability array
-      const availArray = DAYS.map(day => ({
+      // Build availability array - only include working days
+      const availArray = DAYS.filter(day => availability[day].working).map(day => ({
         day_of_week: day,
         clinic_id: clinicId,
-        status: availability[day] ? 'working' : 'off',
+        start_time: availability[day].start_time,
+        end_time: availability[day].end_time,
       }));
 
       const res = await fetch(`/api/admin/therapists/${therapistId}/availability`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(availArray),
       });
 
-      if (!res.ok) throw new Error('Failed to save availability');
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || 'Failed to save availability');
+      }
 
       setSaving(false);
       onSave();
@@ -233,16 +263,40 @@ export default function ScheduleAvailabilityModal({
           {/* Working Days */}
           <div style={{ marginBottom: '2rem' }}>
             <h4 style={{ marginTop: 0 }}>Select Working Days:</h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {DAYS.map(day => (
-                <label key={day} style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                  <input
-                    type="checkbox"
-                    checked={availability[day] || false}
-                    onChange={() => handleToggleDay(day)}
-                  />
-                  {day}
-                </label>
+                <div key={day} style={{ borderLeft: '3px solid #eee', paddingLeft: '1rem' }}>
+                  <label style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.5rem' }}>
+                    <input
+                      type="checkbox"
+                      checked={availability[day]?.working || false}
+                      onChange={() => handleToggleDay(day)}
+                    />
+                    <strong>{day}</strong>
+                  </label>
+                  {availability[day]?.working && (
+                    <div style={{ display: 'flex', gap: '1rem', paddingLeft: '1.5rem' }}>
+                      <div>
+                        <label style={{ fontSize: '0.85rem', display: 'block', marginBottom: '0.25rem' }}>Start:</label>
+                        <input
+                          type="time"
+                          value={availability[day]?.start_time || '09:00'}
+                          onChange={(e) => handleTimeChange(day, 'start_time', e.target.value)}
+                          style={{ padding: '0.4rem', borderRadius: '4px', border: '1px solid #ddd' }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ fontSize: '0.85rem', display: 'block', marginBottom: '0.25rem' }}>End:</label>
+                        <input
+                          type="time"
+                          value={availability[day]?.end_time || '17:00'}
+                          onChange={(e) => handleTimeChange(day, 'end_time', e.target.value)}
+                          style={{ padding: '0.4rem', borderRadius: '4px', border: '1px solid #ddd' }}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
           </div>
