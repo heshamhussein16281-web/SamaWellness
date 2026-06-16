@@ -106,26 +106,32 @@ export default function Sidebar() {
       <div className={`sidebar-section ${isAdminSection ? 'sidebar-section-active' : ''}`}>
         <div className="sidebar-section-label">Admin</div>
 
-        <Link href="/dashboard/admin/clinics" className={`sidebar-nav-link ${isActive('/dashboard/admin/clinics') ? 'active' : ''}`}>
-          <div className={`sidebar-nav-item ${isActive('/dashboard/admin/clinics') ? 'active' : ''}`}>
-            <span className="sidebar-icon">🏥</span>
-            <span className="sidebar-label">Clinics</span>
-          </div>
-        </Link>
+        {user && hasPermission(user.permissions, linkPermissions.clinics) && (
+          <Link href="/dashboard/admin/clinics" className={`sidebar-nav-link ${isActive('/dashboard/admin/clinics') ? 'active' : ''}`}>
+            <div className={`sidebar-nav-item ${isActive('/dashboard/admin/clinics') ? 'active' : ''}`}>
+              <span className="sidebar-icon">🏥</span>
+              <span className="sidebar-label">Clinics</span>
+            </div>
+          </Link>
+        )}
 
-        <Link href="/dashboard/admin/users" className={`sidebar-nav-link ${isActive('/dashboard/admin/users') ? 'active' : ''}`}>
-          <div className={`sidebar-nav-item ${isActive('/dashboard/admin/users') ? 'active' : ''}`}>
-            <span className="sidebar-icon">👥</span>
-            <span className="sidebar-label">Users</span>
-          </div>
-        </Link>
+        {user && hasPermission(user.permissions, linkPermissions.users) && (
+          <Link href="/dashboard/admin/users" className={`sidebar-nav-link ${isActive('/dashboard/admin/users') ? 'active' : ''}`}>
+            <div className={`sidebar-nav-item ${isActive('/dashboard/admin/users') ? 'active' : ''}`}>
+              <span className="sidebar-icon">👥</span>
+              <span className="sidebar-label">Users</span>
+            </div>
+          </Link>
+        )}
 
-        <Link href="/dashboard/admin/roles" className={`sidebar-nav-link ${isActive('/dashboard/admin/roles') ? 'active' : ''}`}>
-          <div className={`sidebar-nav-item ${isActive('/dashboard/admin/roles') ? 'active' : ''}`}>
-            <span className="sidebar-icon">🔐</span>
-            <span className="sidebar-label">Roles</span>
-          </div>
-        </Link>
+        {user && hasPermission(user.permissions, linkPermissions.roles) && (
+          <Link href="/dashboard/admin/roles" className={`sidebar-nav-link ${isActive('/dashboard/admin/roles') ? 'active' : ''}`}>
+            <div className={`sidebar-nav-item ${isActive('/dashboard/admin/roles') ? 'active' : ''}`}>
+              <span className="sidebar-icon">🔐</span>
+              <span className="sidebar-label">Roles</span>
+            </div>
+          </Link>
+        )}
 
         {!loading && isSuperAdmin && (
           <Link href="/dashboard/admin/audit-logs" className={`sidebar-nav-link ${isActive('/dashboard/admin/audit-logs') ? 'active' : ''}`}>
