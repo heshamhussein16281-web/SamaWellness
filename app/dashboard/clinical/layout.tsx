@@ -31,12 +31,12 @@ export default function ClinicalLayout({ children }: ClinicalLayoutProps) {
         const data = await res.json();
         console.log('Auth data received:', { username: data.username, role: data.role, permissions: data.permissions });
 
-        // Check for clinical access permissions
-        if (
-          !data.permissions?.includes('manage_users') &&
-          !data.permissions?.includes('view_therapists') &&
-          !data.permissions?.includes('manage_therapists')
-        ) {
+        // Check for clinical access permissions (any of these allows access)
+        const hasClinicialAccess = data.permissions?.some((p: string) =>
+          ['view_therapists', 'manage_therapists', 'view_clients', 'view_bookings'].includes(p)
+        );
+
+        if (!hasClinicialAccess) {
           console.log('User lacks required permissions for clinical section');
           router.push('/app/login');
           return;

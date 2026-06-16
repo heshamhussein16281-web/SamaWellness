@@ -109,14 +109,16 @@ export async function verifyCredentials(username: string, password: string): Pro
       'admin': [
         'create_client', 'view_clients', 'view_bookings', 'view_payments',
         'view_assessments', 'view_satisfaction', 'view_expenses', 'view_reports',
-        'view_payouts', 'manage_users', 'manage_roles', 'view_change_log'
+        'view_payouts', 'manage_users', 'manage_roles', 'view_change_log',
+        'view_therapists', 'manage_therapists', 'create_therapist'
       ],
       'reception': [
         'create_client', 'view_clients', 'view_bookings', 'view_payments',
-        'view_assessments', 'view_satisfaction'
+        'view_assessments', 'view_satisfaction', 'view_therapists'
       ],
       'clinician': [
-        'view_clients', 'view_bookings', 'view_assessments', 'view_satisfaction'
+        'view_clients', 'view_bookings', 'view_assessments', 'view_satisfaction',
+        'view_therapists', 'manage_therapists'
       ]
     };
 
