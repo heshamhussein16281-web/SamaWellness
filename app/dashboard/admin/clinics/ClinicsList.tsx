@@ -402,73 +402,71 @@ export default function ClinicsList() {
         </div>
       </div>
 
-      {/* Table */}
-      <div className="clinics-table-wrapper">
-        <table className="clinics-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Location</th>
-              <th>Phone</th>
-              <th>Email</th>
-              <th>Rooms</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginatedClinics.length === 0 ? (
-              <tr>
-                <td colSpan={6} className="clinics-empty">
-                  No clinics found
-                </td>
-              </tr>
-            ) : (
-              paginatedClinics.map((clinic) => (
-                <tr key={clinic.id}>
-                  <td><strong>{clinic.name}</strong></td>
-                  <td>{clinic.location || '-'}</td>
-                  <td>{clinic.phone || '-'}</td>
-                  <td>{clinic.email || '-'}</td>
-                  <td>
-                    {clinic.rooms && clinic.rooms.length > 0 ? (
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                        {clinic.rooms.map((room: string, idx: number) => (
-                          <span key={idx} className="clinics-room-badge">
-                            {room}
-                          </span>
-                        ))}
-                      </div>
-                    ) : (
-                      <span style={{ color: '#999', fontSize: '13px' }}>-</span>
-                    )}
-                  </td>
-                  <td className="clinics-actions">
-                    {canManageClinics && (
-                      <>
-                        <button
-                          className="clinics-btn clinics-btn--icon"
-                          onClick={() => handleEdit(clinic)}
-                          title="Edit"
-                        >
-                          <Edit2 size={18} />
-                        </button>
-                        <button
-                          className="clinics-btn clinics-btn--icon clinics-btn--danger"
-                          onClick={() => handleDelete(clinic)}
-                          disabled={loadingDelete}
-                          title="Delete"
-                        >
-                          <Trash2 size={18} />
-                        </button>
-                      </>
-                    )}
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+      {/* Clinics Grid */}
+      {paginatedClinics.length === 0 ? (
+        <div className="clinics-empty">
+          No clinics found
+        </div>
+      ) : (
+        <div className="clinics-grid">
+          {paginatedClinics.map((clinic) => (
+            <article key={clinic.id} className="clinics-card">
+              <div className="clinics-card__header">
+                <h3 className="clinics-card__name">{clinic.name}</h3>
+                {clinic.location && <p className="clinics-card__location">{clinic.location}</p>}
+              </div>
+
+              <div className="clinics-card__info">
+                {clinic.phone && (
+                  <div className="clinics-card__info-row">
+                    <span className="clinics-card__info-label">Phone</span>
+                    <span className="clinics-card__info-value">{clinic.phone}</span>
+                  </div>
+                )}
+                {clinic.email && (
+                  <div className="clinics-card__info-row">
+                    <span className="clinics-card__info-label">Email</span>
+                    <span className="clinics-card__info-value">{clinic.email}</span>
+                  </div>
+                )}
+              </div>
+
+              {clinic.rooms && clinic.rooms.length > 0 && (
+                <div className="clinics-card__rooms">
+                  <span className="clinics-card__rooms-label">Rooms ({clinic.rooms.length})</span>
+                  <div className="clinics-card__rooms-list">
+                    {clinic.rooms.map((room: string, idx: number) => (
+                      <span key={idx} className="clinics-room-badge">
+                        {room}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {canManageClinics && (
+                <div className="clinics-card__actions">
+                  <button
+                    className="clinics-btn clinics-btn--icon"
+                    onClick={() => handleEdit(clinic)}
+                    title="Edit clinic"
+                  >
+                    <Edit2 size={18} />
+                  </button>
+                  <button
+                    className="clinics-btn clinics-btn--icon clinics-btn--danger"
+                    onClick={() => handleDelete(clinic)}
+                    disabled={loadingDelete}
+                    title="Delete clinic"
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                </div>
+              )}
+            </article>
+          ))}
+        </div>
+      )}
 
       {/* Pagination */}
       {totalPages > 1 && (
