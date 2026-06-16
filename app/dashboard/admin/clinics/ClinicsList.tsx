@@ -12,6 +12,7 @@ interface Clinic {
   phone: string;
   email: string;
   number_of_rooms?: number | null;
+  rooms?: string[];
   created_at: string;
 }
 
@@ -439,9 +440,9 @@ export default function ClinicsList() {
                   <td>{clinic.phone || '-'}</td>
                   <td>{clinic.email || '-'}</td>
                   <td>
-                    {(clinic as any).rooms && (clinic as any).rooms.length > 0 ? (
+                    {clinic.rooms && clinic.rooms.length > 0 ? (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                        {(clinic as any).rooms.map((room: string, idx: number) => (
+                        {clinic.rooms.map((room: string, idx: number) => (
                           <span
                             key={idx}
                             style={{

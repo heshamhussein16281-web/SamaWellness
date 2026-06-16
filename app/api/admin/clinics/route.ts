@@ -44,12 +44,21 @@ export async function GET(request: NextRequest) {
   try {
     const { data: clinics, error } = await supabase
       .from('clinics')
-      .select('*')
+      .select(`
+        *,
+        clinic_rooms(room_name)
+      `)
       .order('name');
 
     if (error) throw error;
 
-    return NextResponse.json({ clinics: clinics || [] });
+    // Transform clinic_rooms array to rooms array with just names
+    const transformedClinics = (clinics || []).map((clinic: any) => ({
+      ...clinic,
+      rooms: clinic.clinic_rooms ? clinic.clinic_rooms.map((r: any) => r.room_name) : []
+    }));
+
+    return NextResponse.json({ clinics: transformedClinics });
   } catch (error) {
     console.error('Error fetching clinics:', error);
     return NextResponse.json(
