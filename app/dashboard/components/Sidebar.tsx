@@ -5,11 +5,12 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 // Permission mapping: each link requires at least one of these permissions
+// These keys must match the permission 'key' values in the Supabase 'permissions' table
 const linkPermissions = {
   clients: ['view_clients', 'manage_clients'],
   bookings: ['view_bookings', 'manage_bookings'],
   therapists: ['view_therapists', 'manage_therapists'],
-  clinics: ['manage_clinics'],
+  clinics: ['manage_users'], // Clinics are managed via the manage_users permission
   users: ['manage_users'],
   roles: ['manage_roles'],
   auditLogs: ['is_super_admin'],
