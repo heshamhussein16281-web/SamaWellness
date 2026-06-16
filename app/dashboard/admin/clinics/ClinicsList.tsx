@@ -261,9 +261,8 @@ export default function ClinicsList() {
 
   return (
     <div className="clinics-container">
-      {/* Messages */}
-      {errorMessage && <div className="clinics-message clinics-message--error">{errorMessage}</div>}
-      {successMessage && <div className="clinics-message clinics-message--success">{successMessage}</div>}
+      {/* Success/Error Messages - only show outside modal when not editing */}
+      {!showForm && successMessage && <div className="clinics-message clinics-message--success">{successMessage}</div>}
 
       {/* Header */}
       <div className="clinics-header">
@@ -297,6 +296,9 @@ export default function ClinicsList() {
                 <X size={20} />
               </button>
             </div>
+
+            {/* Error Message in Modal */}
+            {errorMessage && <div className="clinics-message clinics-message--error" style={{ margin: '0 0 15px 0' }}>{errorMessage}</div>}
 
             {/* Tabs */}
             <div className="clinics-form-tabs">
