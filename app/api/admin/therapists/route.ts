@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyJWT, getJWTFromCookie, type JWTPayload } from '@/lib/auth';
+import { checkUserPermissions } from '@/lib/permission-check';
 import { createClient } from '@supabase/supabase-js';
 
 export const dynamic = 'force-dynamic';
@@ -28,8 +29,13 @@ async function checkTherapistPermission(
     return { authorized: false, error: 'Invalid or expired token' };
   }
 
-  // Check for required permission or admin access
-  if (!payload.permissions.includes(requiredPermission) && !payload.permissions.includes('manage_users')) {
+  // Check permissions dynamically from database (real-time)
+  const hasPermission = await checkUserPermissions(
+    payload.userId,
+    [requiredPermission, 'manage_users']
+  );
+
+  if (!hasPermission) {
     return { authorized: false, error: 'Insufficient permissions for therapist management' };
   }
 
