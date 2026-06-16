@@ -31,44 +31,45 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Fetch fresh permissions from database (real-time)
+    // Fetch fresh permissions from database (real-time) - use join for reliability
     let permissions = payload.permissions;
 
     try {
-      // Step 1: Get user's role
-      const { data: user, error: userError } = await supabase
+      // Get permissions through a join query
+      const { data: permData, error: permError } = await supabase
         .from('clinic_users')
-        .select('role_id')
+        .select(`
+          id,
+          roles!inner (
+            id,
+            role_permissions!inner (
+              permissions!inner (key)
+            )
+          )
+        `)
         .eq('id', payload.userId)
         .single();
 
-      if (userError) {
-        console.log('Auth verify - User query failed:', userError);
-      } else if (user?.role_id) {
-        // Step 2: Get all permissions for this role
-        const { data: rolePerms, error: rpError } = await supabase
-          .from('role_permissions')
-          .select('permission_id')
-          .eq('role_id', user.role_id);
+      if (!permError && permData?.roles) {
+        const roleData = Array.isArray(permData.roles) ? permData.roles[0] : permData.roles;
+        if (roleData?.role_permissions) {
+          const dbPermissions = roleData.role_permissions
+            .map((rp: any) => {
+              // Handle both nested object and array formats
+              const perm = Array.isArray(rp.permissions) ? rp.permissions[0] : rp.permissions;
+              return perm?.key;
+            })
+            .filter(Boolean);
 
-        if (!rpError && rolePerms && rolePerms.length > 0) {
-          // Step 3: Get permission keys for these IDs
-          const permissionIds = rolePerms.map((rp: any) => rp.permission_id);
-          const { data: perms, error: permError } = await supabase
-            .from('permissions')
-            .select('key')
-            .in('id', permissionIds);
-
-          if (!permError && perms) {
-            const dbPermissions = perms.map((p: any) => p.key).filter(Boolean);
+          if (dbPermissions.length > 0) {
             console.log('Auth verify - Extracted permissions from DB:', { permCount: dbPermissions.length, permissions: dbPermissions });
             permissions = dbPermissions;
           } else {
-            console.log('Auth verify - Permission fetch failed:', permError);
+            console.log('Auth verify - No permissions found in nested query');
           }
-        } else {
-          console.log('Auth verify - Role permissions not found:', rpError);
         }
+      } else {
+        console.log('Auth verify - Nested query failed:', permError);
       }
     } catch (dbError) {
       console.log('Auth verify - Database query error, using JWT permissions:', dbError);
