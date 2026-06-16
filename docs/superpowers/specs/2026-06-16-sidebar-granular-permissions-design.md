@@ -28,18 +28,23 @@ Example: User with `view_therapists` sees the Therapists link and can view the p
 
 ### Permission Mapping
 
-Each navigation link requires a set of permissions (user needs at least one):
+Each navigation link requires a set of permissions. **Important:** Manage permissions imply view access — you cannot have `manage_*` without `view_*`.
 
 **Clinical Section:**
-- **Clients** → `view_clients`
-- **Bookings** → `view_bookings`
-- **Therapists** → `view_therapists` OR `manage_therapists`
+- **Clients** → `view_clients` (also shown if user has `manage_clients`)
+- **Bookings** → `view_bookings` (also shown if user has `manage_bookings`)
+- **Therapists** → `view_therapists` OR `manage_therapists` (manage implies view)
 
 **Admin Section:**
-- **Clinics** → `manage_clinics` (or fallback to existing admin check)
-- **Users** → `manage_users`
-- **Roles** → `manage_roles`
+- **Clinics** → `manage_clinics` (viewing clinics is an admin-only feature, no separate view permission)
+- **Users** → `manage_users` (managing users requires this permission)
+- **Roles** → `manage_roles` (managing roles requires this permission)
 - **Audit Logs** → `is_super_admin` (already implemented)
+
+**Permission Hierarchy:**
+- `view_*` permission = can access the section, view-only mode
+- `manage_*` permission = implies `view_*`, plus edit/delete/create actions
+- Check for `view_*` OR `manage_*` to show the link (both grant access)
 
 ### Data Flow
 
@@ -55,18 +60,18 @@ Each navigation link requires a set of permissions (user needs at least one):
 **File:** `app/dashboard/components/Sidebar.tsx`
 
 ```typescript
-// Add permission mapping
+// Add permission mapping (manage permissions imply view access)
 const linkPermissions = {
-  clients: ['view_clients'],
-  bookings: ['view_bookings'],
+  clients: ['view_clients', 'manage_clients'], // show if either permission exists
+  bookings: ['view_bookings', 'manage_bookings'],
   therapists: ['view_therapists', 'manage_therapists'],
-  clinics: ['manage_clinics', 'manage_roles', 'manage_users'], // fallback to existing admin perms
+  clinics: ['manage_clinics'],
   users: ['manage_users'],
   roles: ['manage_roles'],
   auditLogs: ['is_super_admin'],
 };
 
-// Helper to check if user has permission for a link
+// Helper to check if user has any of the required permissions
 const hasPermission = (permissions: string[], requiredPerms: string[]) => 
   requiredPerms.some(p => permissions?.includes(p));
 
@@ -77,10 +82,10 @@ const hasPermission = (permissions: string[], requiredPerms: string[]) =>
 
 // Optional: hide section if no links are visible
 const visibleClinicalLinks = [
-  hasPermission(...clinicalLink),
-  hasPermission(...therapistsLink),
-  hasPermission(...bookingsLink),
-].filter(Boolean).length > 0;
+  hasPermission(user.permissions, linkPermissions.clients),
+  hasPermission(user.permissions, linkPermissions.bookings),
+  hasPermission(user.permissions, linkPermissions.therapists),
+].some(Boolean);
 
 {visibleClinicalLinks && (
   <div className="sidebar-section">...</div>
@@ -92,10 +97,12 @@ const visibleClinicalLinks = [
 ## Behavior & Edge Cases
 
 ### Normal Cases
-- **Super Admin** → sees all links (has all permissions)
-- **Admin** → sees Clinics, Users, Roles links
-- **Reception** → sees Clients, Bookings links
-- **Clinician** → sees Clients, Bookings, Therapists links
+- **Super Admin** → sees all links (has all permissions including is_super_admin)
+- **Admin** → sees Clinics, Users, Roles links (has manage_* permissions)
+- **Reception** → sees Clients, Bookings links (has view_clients, view_bookings)
+- **Clinician** → sees Clients, Bookings, Therapists links (has view_clients, view_bookings, manage_therapists)
+
+**Note:** A user with `manage_therapists` will see the Therapists link even without explicit `view_therapists` permission, because manage implies view.
 
 ### Edge Cases
 1. **User permissions change in database** → Next sidebar render fetches fresh permissions, links update immediately (no logout needed)
