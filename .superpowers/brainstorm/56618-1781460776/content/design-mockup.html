@@ -1,0 +1,136 @@
+<h2>Proposed Design Mockup</h2>
+<p class="subtitle">Clinic rooms tab + therapist availability with calendar preview</p>
+
+<div class="mockup" style="margin-bottom: 2rem;">
+  <div class="mockup-header">Clinic Edit Modal — Rooms Tab</div>
+  <div class="mockup-body" style="padding: 1.5rem;">
+    <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 2px solid #eee; padding-bottom: 0.75rem;">
+      <button class="mock-button" style="border-bottom: 3px solid transparent; border-radius: 0;">Basic Info</button>
+      <button class="mock-button" style="border-bottom: 3px solid #007bff; border-radius: 0; font-weight: bold;">Rooms</button>
+    </div>
+
+    <div style="margin-bottom: 1.5rem;">
+      <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Single Session Rooms</label>
+      <p style="font-size: 0.85rem; color: #666; margin: 0 0 0.5rem 0;">For individual therapy (1 person)</p>
+      <input class="mock-input" type="number" value="3" min="0" style="width: 100px;">
+    </div>
+
+    <div style="margin-bottom: 1.5rem;">
+      <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Couple Session Rooms</label>
+      <p style="font-size: 0.85rem; color: #666; margin: 0 0 0.5rem 0;">For couples/pairs (2 people)</p>
+      <input class="mock-input" type="number" value="2" min="0" style="width: 100px;">
+    </div>
+
+    <div style="margin-bottom: 1.5rem;">
+      <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Group Session Rooms</label>
+      <p style="font-size: 0.85rem; color: #666; margin: 0 0 0.5rem 0;">For groups (3+ people)</p>
+      <input class="mock-input" type="number" value="1" min="0" style="width: 100px;">
+    </div>
+
+    <div style="display: flex; gap: 0.5rem; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #eee;">
+      <button class="mock-button" style="background: #007bff; color: white; padding: 0.75rem 1.5rem;">Save</button>
+      <button class="mock-button" style="padding: 0.75rem 1.5rem;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="mockup" style="margin-bottom: 2rem;">
+  <div class="mockup-header">Therapist List — With Availability Calendar</div>
+  <div class="mockup-body" style="padding: 1rem;">
+    <div style="padding: 1rem; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 1rem; background: #fafafa;">
+      <div style="display: flex; justify-content: space-between; align-items: start;">
+        <div style="flex: 1;">
+          <h4 style="margin: 0 0 0.25rem 0;">Dr. Sarah</h4>
+          <p style="margin: 0; font-size: 0.85rem; color: #666;">sarah@clinic.com</p>
+
+          <div style="margin-top: 0.75rem;">
+            <p style="margin: 0 0 0.5rem 0; font-size: 0.85rem; font-weight: 600;">Availability at Main Clinic:</p>
+            <div style="display: flex; gap: 0.25rem; align-items: center;">
+              <span style="display: inline-block; width: 2rem; height: 2rem; background: #4CAF50; border-radius: 4px; text-align: center; line-height: 2rem; font-size: 0.7rem; color: white; font-weight: bold;">M</span>
+              <span style="display: inline-block; width: 2rem; height: 2rem; background: #4CAF50; border-radius: 4px; text-align: center; line-height: 2rem; font-size: 0.7rem; color: white; font-weight: bold;">T</span>
+              <span style="display: inline-block; width: 2rem; height: 2rem; background: #4CAF50; border-radius: 4px; text-align: center; line-height: 2rem; font-size: 0.7rem; color: white; font-weight: bold;">W</span>
+              <span style="display: inline-block; width: 2rem; height: 2rem; background: #4CAF50; border-radius: 4px; text-align: center; line-height: 2rem; font-size: 0.7rem; color: white; font-weight: bold;">T</span>
+              <span style="display: inline-block; width: 2rem; height: 2rem; background: #4CAF50; border-radius: 4px; text-align: center; line-height: 2rem; font-size: 0.7rem; color: white; font-weight: bold;">F</span>
+              <span style="display: inline-block; width: 2rem; height: 2rem; background: #f0f0f0; border-radius: 4px; text-align: center; line-height: 2rem; font-size: 0.7rem; color: #999; border: 1px solid #ddd; font-weight: bold;">S</span>
+              <span style="display: inline-block; width: 2rem; height: 2rem; background: #f0f0f0; border-radius: 4px; text-align: center; line-height: 2rem; font-size: 0.7rem; color: #999; border: 1px solid #ddd; font-weight: bold;">S</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="mock-button" style="padding: 0.5rem 1rem; font-size: 0.85rem;">✎ Edit</button>
+          <button class="mock-button" style="padding: 0.5rem 1rem; font-size: 0.85rem; background: #17a2b8; color: white;">📅 Schedule</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding: 1rem; border: 1px solid #ddd; border-radius: 6px; background: #fafafa;">
+      <div style="display: flex; justify-content: space-between; align-items: start;">
+        <div style="flex: 1;">
+          <h4 style="margin: 0 0 0.25rem 0;">Dr. Ahmed</h4>
+          <p style="margin: 0; font-size: 0.85rem; color: #666;">ahmed@clinic.com</p>
+
+          <div style="margin-top: 0.75rem;">
+            <p style="margin: 0 0 0.5rem 0; font-size: 0.85rem; font-weight: 600;">Availability at Main Clinic:</p>
+            <div style="display: flex; gap: 0.25rem; align-items: center;">
+              <span style="display: inline-block; width: 2rem; height: 2rem; background: #4CAF50; border-radius: 4px; text-align: center; line-height: 2rem; font-size: 0.7rem; color: white; font-weight: bold;">M</span>
+              <span style="display: inline-block; width: 2rem; height: 2rem; background: #f0f0f0; border-radius: 4px; text-align: center; line-height: 2rem; font-size: 0.7rem; color: #999; border: 1px solid #ddd; font-weight: bold;">T</span>
+              <span style="display: inline-block; width: 2rem; height: 2rem; background: #4CAF50; border-radius: 4px; text-align: center; line-height: 2rem; font-size: 0.7rem; color: white; font-weight: bold;">W</span>
+              <span style="display: inline-block; width: 2rem; height: 2rem; background: #4CAF50; border-radius: 4px; text-align: center; line-height: 2rem; font-size: 0.7rem; color: white; font-weight: bold;">T</span>
+              <span style="display: inline-block; width: 2rem; height: 2rem; background: #4CAF50; border-radius: 4px; text-align: center; line-height: 2rem; font-size: 0.7rem; color: white; font-weight: bold;">F</span>
+              <span style="display: inline-block; width: 2rem; height: 2rem; background: #f0f0f0; border-radius: 4px; text-align: center; line-height: 2rem; font-size: 0.7rem; color: #999; border: 1px solid #ddd; font-weight: bold;">S</span>
+              <span style="display: inline-block; width: 2rem; height: 2rem; background: #f0f0f0; border-radius: 4px; text-align: center; line-height: 2rem; font-size: 0.7rem; color: #999; border: 1px solid #ddd; font-weight: bold;">S</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="mock-button" style="padding: 0.5rem 1rem; font-size: 0.85rem;">✎ Edit</button>
+          <button class="mock-button" style="padding: 0.5rem 1rem; font-size: 0.85rem; background: #17a2b8; color: white;">📅 Schedule</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mockup">
+  <div class="mockup-header">Schedule Availability Modal (opens when clicking 📅 button)</div>
+  <div class="mockup-body" style="padding: 1.5rem;">
+    <h4 style="margin: 0 0 1rem 0;">Set Availability for Dr. Sarah at Main Clinic</h4>
+
+    <div style="margin-bottom: 1.5rem;">
+      <p style="margin: 0 0 0.75rem 0; font-weight: 600;">Working Days:</p>
+      <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+        <label style="display: flex; gap: 0.5rem;"><input type="checkbox" checked> Monday</label>
+        <label style="display: flex; gap: 0.5rem;"><input type="checkbox" checked> Tuesday</label>
+        <label style="display: flex; gap: 0.5rem;"><input type="checkbox" checked> Wednesday</label>
+        <label style="display: flex; gap: 0.5rem;"><input type="checkbox" checked> Thursday</label>
+        <label style="display: flex; gap: 0.5rem;"><input type="checkbox" checked> Friday</label>
+        <label style="display: flex; gap: 0.5rem;"><input type="checkbox"> Saturday</label>
+        <label style="display: flex; gap: 0.5rem;"><input type="checkbox"> Sunday</label>
+      </div>
+    </div>
+
+    <hr style="margin: 1.5rem 0;">
+
+    <div style="margin-bottom: 1.5rem;">
+      <p style="margin: 0 0 0.75rem 0; font-weight: 600;">Exceptions (Vacation, Days Off):</p>
+      <div style="background: #f9f9f9; padding: 0.75rem; border-radius: 4px; margin-bottom: 0.75rem; font-size: 0.85rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span>Vacation: June 15-25, 2026</span>
+          <button style="font-size: 0.8rem; padding: 0.25rem 0.75rem;">Remove</button>
+        </div>
+      </div>
+      <button class="mock-button" style="padding: 0.5rem 1rem; font-size: 0.85rem;">+ Add Exception</button>
+    </div>
+
+    <div style="display: flex; gap: 0.5rem; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #eee;">
+      <button class="mock-button" style="background: #007bff; color: white; padding: 0.75rem 1.5rem;">Save</button>
+      <button class="mock-button" style="padding: 0.75rem 1.5rem;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<p style="margin-top: 2rem; padding: 1rem; background: #f0f4f8; border-radius: 6px; font-size: 0.9rem;">
+  This shows: (1) clinic room setup as a tab, (2) therapist list with 7-day calendar preview, (3) modal to edit availability with working days + exceptions.
+</p>

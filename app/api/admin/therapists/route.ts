@@ -38,17 +38,23 @@ async function checkAdminPermission(
 export async function GET(request: NextRequest) {
   const auth = await checkAdminPermission(request);
   if (!auth.authorized) {
+    console.warn('Unauthorized therapist fetch attempt:', auth.error);
     return NextResponse.json({ error: auth.error }, { status: 403 });
   }
 
   try {
+    console.log('Fetching therapists for user:', auth.user.username);
     const { data: therapists, error } = await supabase
       .from('therapists')
       .select('*')
       .order('name');
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase query error:', error);
+      throw error;
+    }
 
+    console.log('Successfully fetched therapists:', therapists?.length || 0);
     return NextResponse.json({ therapists: therapists || [] });
   } catch (error) {
     console.error('Error fetching therapists:', error);
