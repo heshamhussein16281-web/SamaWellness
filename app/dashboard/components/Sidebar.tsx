@@ -56,6 +56,20 @@ export default function Sidebar() {
 
   const isSuperAdmin = user && (user.role === 'Super Admin' || user.permissions?.includes('is_super_admin'));
 
+  // Calculate visible links for each section
+  const visibleClinicalLinks = [
+    user && hasPermission(user.permissions, linkPermissions.clients),
+    user && hasPermission(user.permissions, linkPermissions.bookings),
+    user && hasPermission(user.permissions, linkPermissions.therapists),
+  ].some(Boolean);
+
+  const visibleAdminLinks = [
+    user && hasPermission(user.permissions, linkPermissions.clinics),
+    user && hasPermission(user.permissions, linkPermissions.users),
+    user && hasPermission(user.permissions, linkPermissions.roles),
+    isSuperAdmin, // Audit Logs visibility
+  ].some(Boolean);
+
   return (
     <aside className="dashboard-sidebar">
       {/* Logo */}
@@ -64,11 +78,11 @@ export default function Sidebar() {
         <span className="sidebar-logo-text">SWT Clinic</span>
       </div>
 
-      {/* Divider */}
-      <div className="sidebar-divider" />
-
       {/* Clinical Section */}
-      <div className={`sidebar-section ${isClinicalSection ? 'sidebar-section-active' : ''}`}>
+      {visibleClinicalLinks && (
+        <>
+          <div className="sidebar-divider" />
+          <div className={`sidebar-section ${isClinicalSection ? 'sidebar-section-active' : ''}`}>
         <div className="sidebar-section-label">Clinical</div>
 
         {user && hasPermission(user.permissions, linkPermissions.clients) && (
@@ -97,13 +111,15 @@ export default function Sidebar() {
             </div>
           </Link>
         )}
-      </div>
-
-      {/* Divider */}
-      <div className="sidebar-divider" />
+          </div>
+        </>
+      )}
 
       {/* Admin Section */}
-      <div className={`sidebar-section ${isAdminSection ? 'sidebar-section-active' : ''}`}>
+      {visibleAdminLinks && (
+        <>
+          <div className="sidebar-divider" />
+          <div className={`sidebar-section ${isAdminSection ? 'sidebar-section-active' : ''}`}>
         <div className="sidebar-section-label">Admin</div>
 
         {user && hasPermission(user.permissions, linkPermissions.clinics) && (
@@ -141,7 +157,9 @@ export default function Sidebar() {
             </div>
           </Link>
         )}
-      </div>
+          </div>
+        </>
+      )}
     </aside>
   );
 }
