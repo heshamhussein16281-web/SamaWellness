@@ -109,13 +109,19 @@ export default function TherapistsListRefined() {
 
   async function fetchTherapists() {
     try {
+      console.log('Fetching therapists...');
       const res = await fetch('/api/admin/therapists', {
         credentials: 'include',
       });
+      console.log('Therapists response status:', res.status);
+
       if (!res.ok) {
-        throw new Error(`Failed to fetch therapists: ${res.statusText}`);
+        const errorData = await res.json();
+        console.error('API error response:', errorData);
+        throw new Error(`Failed to fetch therapists: ${res.statusText} - ${errorData.error || ''}`);
       }
       const data = await res.json();
+      console.log('Therapists data received:', data);
       setTherapists(data.therapists || []);
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : 'Failed to load therapists';
@@ -128,11 +134,14 @@ export default function TherapistsListRefined() {
 
   async function fetchClinics() {
     try {
+      console.log('Fetching clinics...');
       const res = await fetch('/api/admin/clinics', {
         credentials: 'include',
       });
+      console.log('Clinics response status:', res.status);
       if (!res.ok) throw new Error('Failed to fetch clinics');
       const data = await res.json();
+      console.log('Clinics data received:', data);
       setClinics(data.clinics || []);
     } catch (error) {
       console.error('Error fetching clinics:', error);

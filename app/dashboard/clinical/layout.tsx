@@ -15,16 +15,21 @@ export default function ClinicalLayout({ children }: ClinicalLayoutProps) {
   useEffect(() => {
     const checkAuth = async () => {
       try {
+        console.log('Checking clinical section authentication...');
         const res = await fetch('/api/auth/verify', {
           credentials: 'include',
         });
 
+        console.log('Auth verify response status:', res.status);
+
         if (!res.ok) {
+          console.log('Authentication failed, redirecting to login');
           router.push('/app/login');
           return;
         }
 
         const data = await res.json();
+        console.log('Auth data received:', { username: data.username, role: data.role, permissions: data.permissions });
 
         // Check for clinical access permissions
         if (
@@ -32,10 +37,12 @@ export default function ClinicalLayout({ children }: ClinicalLayoutProps) {
           !data.permissions?.includes('view_therapists') &&
           !data.permissions?.includes('manage_therapists')
         ) {
+          console.log('User lacks required permissions for clinical section');
           router.push('/app/login');
           return;
         }
 
+        console.log('Clinical section authorization successful');
         setIsAuthorized(true);
       } catch (err) {
         console.error('Auth check failed:', err);
