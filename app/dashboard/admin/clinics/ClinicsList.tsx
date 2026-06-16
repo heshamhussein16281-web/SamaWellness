@@ -38,6 +38,9 @@ export default function ClinicsList() {
   const [loadingEdit, setLoadingEdit] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
 
+  // Permission state
+  const [canManageClinics, setCanManageClinics] = useState(false);
+
   // Message states
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -73,7 +76,20 @@ export default function ClinicsList() {
 
   useEffect(() => {
     fetchClinics();
+    fetchUserPermissions();
   }, []);
+
+  async function fetchUserPermissions() {
+    try {
+      const res = await fetch('/api/auth/verify', { credentials: 'include' });
+      if (res.ok) {
+        const data = await res.json();
+        setCanManageClinics(data.permissions?.includes('manage_clinics') || false);
+      }
+    } catch (error) {
+      console.error('Failed to fetch permissions:', error);
+    }
+  }
 
   async function fetchClinics() {
     try {
@@ -232,17 +248,19 @@ export default function ClinicsList() {
       {/* Header */}
       <div className="clinics-header">
         <h1>Clinic Management</h1>
-        <button
-          className="clinics-btn clinics-btn--primary"
-          onClick={() => {
-            setShowForm(true);
-            setEditingClinic(null);
-            setFormData({ name: '', location: '', phone: '', email: '', number_of_rooms: null, rooms: [] });
-            setActiveTab('basic');
-          }}
-        >
-          <Plus size={20} /> Add Clinic
-        </button>
+        {canManageClinics && (
+          <button
+            className="clinics-btn clinics-btn--primary"
+            onClick={() => {
+              setShowForm(true);
+              setEditingClinic(null);
+              setFormData({ name: '', location: '', phone: '', email: '', number_of_rooms: null, rooms: [] });
+              setActiveTab('basic');
+            }}
+          >
+            <Plus size={20} /> Add Clinic
+          </button>
+        )}
       </div>
 
       {/* Form */}
@@ -444,21 +462,25 @@ export default function ClinicsList() {
                     )}
                   </td>
                   <td className="clinics-actions">
-                    <button
-                      className="clinics-btn clinics-btn--icon"
-                      onClick={() => handleEdit(clinic)}
-                      title="Edit"
-                    >
-                      <Edit2 size={18} />
-                    </button>
-                    <button
-                      className="clinics-btn clinics-btn--icon clinics-btn--danger"
-                      onClick={() => handleDelete(clinic)}
-                      disabled={loadingDelete}
-                      title="Delete"
-                    >
-                      <Trash2 size={18} />
-                    </button>
+                    {canManageClinics && (
+                      <>
+                        <button
+                          className="clinics-btn clinics-btn--icon"
+                          onClick={() => handleEdit(clinic)}
+                          title="Edit"
+                        >
+                          <Edit2 size={18} />
+                        </button>
+                        <button
+                          className="clinics-btn clinics-btn--icon clinics-btn--danger"
+                          onClick={() => handleDelete(clinic)}
+                          disabled={loadingDelete}
+                          title="Delete"
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      </>
+                    )}
                   </td>
                 </tr>
               ))
