@@ -469,11 +469,11 @@ body {
   transform: translateY(-1px);
 }
 
-/* Next Action Button */
+/* Next Action Button - Uniform Style */
 .client-next-action-btn {
   display: inline-block;
   padding: var(--space-xs) var(--space-sm);
-  background-color: var(--color-accent-secondary);
+  background-color: var(--color-accent-primary);
   color: #ffffff;
   border: none;
   border-radius: var(--radius-sm);
@@ -487,13 +487,15 @@ body {
   white-space: nowrap;
 }
 
-.client-next-action-btn:hover:not(:disabled) {
+.client-next-action-btn.active:hover {
+  background-color: #7a5942;
   transform: translateY(-2px);
   box-shadow: var(--shadow-soft);
 }
 
-.client-next-action-btn:disabled {
-  opacity: 0.5;
+.client-next-action-btn.disabled {
+  background-color: var(--color-text-tertiary);
+  opacity: 0.6;
   cursor: not-allowed;
 }
 

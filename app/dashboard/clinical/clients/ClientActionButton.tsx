@@ -18,7 +18,6 @@ interface ClientActionButtonProps {
 interface NextAction {
   label: string;
   type: 'assessment' | 'payment' | 'booking' | 'cancel' | 'view' | 'none';
-  color: string;
 }
 
 export default function ClientActionButton({
@@ -33,78 +32,60 @@ export default function ClientActionButton({
   const [activeModal, setActiveModal] = useState<string | null>(null);
 
   const getNextAction = (): NextAction => {
-    // ========== NEW CLIENTS FLOW ==========
-    // Step 1: New client needs therapist assignment
-    if (!isRecurring && !therapistId && (status === 'intake' || status === 'assessment_pending')) {
+    // Every route has a next action based on current status
+
+    // Step 1: Select Therapist (Assessment or Client Selection)
+    if (!therapistId && (status === 'intake' || status === 'assessment_pending')) {
       return {
-        label: 'Assign Therapist',
+        label: 'Select Therapist',
         type: 'assessment',
-        color: '#d4a574', // warning/secondary color
       };
     }
 
-    // Step 2: New client has therapist but MUST verify payment BEFORE booking
-    // This is BLOCKING - they cannot book without payment verification
+    // Step 2: Verify Payment (New Clients ONLY - blocking requirement)
     if (!isRecurring && therapistId && status === 'ready_for_booking') {
       return {
         label: 'Verify Payment',
         type: 'payment',
-        color: '#c75c5c', // error/warning color - blocking requirement
       };
     }
 
-    // Step 3: New client has paid and can now book
-    if (!isRecurring && therapistId && status === 'payment_verified') {
+    // Step 3: Book Session
+    if (therapistId && (status === 'payment_verified' || (isRecurring && status === 'ready_for_booking'))) {
       return {
         label: 'Book Session',
         type: 'booking',
-        color: '#6b8e6f', // success color
       };
     }
 
-    // ========== RECURRING CLIENTS FLOW ==========
-    // Recurring clients skip payment verification and go straight to booking
-    // Payment must be made by 24hrs BEFORE session (not blocking booking)
-    if (isRecurring && therapistId && (status === 'ready_for_booking' || status === 'intake' || status === 'assessment_pending')) {
-      return {
-        label: 'Book Session',
-        type: 'booking',
-        color: '#6b8e6f', // success color
-      };
-    }
-
-    // ========== POST-BOOKING ACTIONS ==========
-    // Booked sessions can be cancelled/rescheduled (within 24hrs)
+    // Step 4: Reschedule or Cancel (within 24hrs of session)
     if (status === 'booking_scheduled') {
       return {
-        label: 'Cancel/Reschedule',
+        label: 'Reschedule or Cancel',
         type: 'cancel',
-        color: '#666666',
       };
     }
 
-    // Active sessions
+    // View session details
     if (status === 'active') {
       return {
         label: 'View Session',
         type: 'view',
-        color: '#8b6a4f',
       };
     }
 
-    // Completed/inactive
+    // View history
     if (status === 'completed' || status === 'inactive') {
       return {
         label: 'View History',
         type: 'view',
-        color: '#999999',
       };
     }
 
+    // Fallback (should rarely occur)
     return {
       label: 'No Action',
       type: 'none',
-      color: '#999999',
     };
   };
 
@@ -127,12 +108,7 @@ export default function ClientActionButton({
   return (
     <>
       <button
-        className="client-next-action-btn"
-        style={{
-          backgroundColor: nextAction.color,
-          opacity: nextAction.type === 'none' ? 0.5 : 1,
-          cursor: nextAction.type === 'none' ? 'default' : 'pointer',
-        }}
+        className={`client-next-action-btn ${nextAction.type !== 'none' ? 'active' : 'disabled'}`}
         onClick={handleActionClick}
         title={`Next action: ${nextAction.label}`}
         disabled={nextAction.type === 'none'}
