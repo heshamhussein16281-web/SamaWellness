@@ -88,7 +88,9 @@ export default function TherapistsListRefined() {
     therapists.forEach(therapist => {
       if (clinics.length > 0) {
         const primaryClinic = clinics[0];
-        fetch(`/api/admin/therapists/${therapist.id}/availability?clinic_id=${primaryClinic.id}`)
+        fetch(`/api/admin/therapists/${therapist.id}/availability?clinic_id=${primaryClinic.id}`, {
+          credentials: 'include',
+        })
           .then(res => res.json())
           .then(data => {
             setTherapistAvailability(prev => new Map(prev).set(therapist.id, data.data || []));
@@ -107,7 +109,9 @@ export default function TherapistsListRefined() {
 
   async function fetchTherapists() {
     try {
-      const res = await fetch('/api/admin/therapists');
+      const res = await fetch('/api/admin/therapists', {
+        credentials: 'include',
+      });
       if (!res.ok) {
         throw new Error(`Failed to fetch therapists: ${res.statusText}`);
       }
@@ -124,7 +128,9 @@ export default function TherapistsListRefined() {
 
   async function fetchClinics() {
     try {
-      const res = await fetch('/api/admin/clinics');
+      const res = await fetch('/api/admin/clinics', {
+        credentials: 'include',
+      });
       if (!res.ok) throw new Error('Failed to fetch clinics');
       const data = await res.json();
       setClinics(data.clinics || []);
@@ -161,6 +167,7 @@ export default function TherapistsListRefined() {
       const res = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(therapistData),
       });
 
@@ -211,6 +218,7 @@ export default function TherapistsListRefined() {
     try {
       const res = await fetch(`/api/admin/therapists/${therapist.id}`, {
         method: 'DELETE',
+        credentials: 'include',
       });
 
       if (!res.ok) {
@@ -237,7 +245,9 @@ export default function TherapistsListRefined() {
 
   function handleAvailabilitySaved() {
     if (selectedTherapistForAvailability && selectedClinicId) {
-      fetch(`/api/admin/therapists/${selectedTherapistForAvailability.id}/availability?clinic_id=${selectedClinicId}`)
+      fetch(`/api/admin/therapists/${selectedTherapistForAvailability.id}/availability?clinic_id=${selectedClinicId}`, {
+        credentials: 'include',
+      })
         .then(res => res.json())
         .then(data => {
           setTherapistAvailability(prev => new Map(prev).set(selectedTherapistForAvailability.id, data.data || []));
