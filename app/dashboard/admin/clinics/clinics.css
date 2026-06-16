@@ -217,38 +217,26 @@
   letter-spacing: -0.5px;
 }
 
-/* Tabs */
-.clinics-form-tabs {
-  display: flex;
-  border-bottom: 1px solid #eae8e3;
-  background-color: #faf9f7;
-  padding: 0 28px;
+/* Form Sections */
+.clinics-form-section {
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid #f5f2ee;
 }
 
-.clinics-form-tab {
-  flex: 1;
-  padding: 14px 16px;
-  background-color: transparent;
-  border: none;
-  border-bottom: 3px solid transparent;
-  cursor: pointer;
-  font-weight: 600;
-  color: #8b7f75;
-  font-size: 14px;
-  transition: all 0.25s ease;
+.clinics-form-section:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.clinics-form-section__title {
+  margin: 0 0 16px 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #2d4a46;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  position: relative;
-}
-
-.clinics-form-tab:hover {
-  color: #5a5047;
-}
-
-.clinics-form-tab--active {
-  color: #7b2d3e;
-  border-bottom-color: #7b2d3e;
-  background-color: transparent;
 }
 
 .clinics-form form {
@@ -408,7 +396,7 @@
   gap: 8px;
 }
 
-/* Room badges */
+/* Room badges (in table view) */
 .clinics-room-badge {
   display: inline-block;
   padding: 6px 12px;
@@ -419,6 +407,90 @@
   font-weight: 600;
   box-shadow: 0 2px 8px rgba(30, 170, 96, 0.2);
   border: 1px solid #15803d;
+}
+
+/* Room input in form */
+.clinics-room-input-wrapper {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.clinics-room-number {
+  min-width: 70px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #5a5047;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.clinics-room-input {
+  flex: 1;
+  padding: 12px 14px;
+  border: 2px solid #e8e3da;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: #fafaf9;
+  transition: all 0.2s ease;
+}
+
+.clinics-room-input:focus {
+  outline: none;
+  border-color: #7b2d3e;
+  background-color: white;
+  box-shadow: 0 0 0 4px rgba(123, 45, 62, 0.08);
+}
+
+.clinics-room-delete-btn {
+  padding: 10px;
+  background-color: transparent;
+  border: 1px solid #ffcccc;
+  border-radius: 6px;
+  color: #dc3545;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clinics-room-delete-btn:hover {
+  background-color: #ffe6e6;
+  border-color: #ff9999;
+}
+
+.clinics-add-room-btn {
+  padding: 12px 20px;
+  background-color: #f5f2ee;
+  border: 2px solid #e8e3da;
+  border-radius: 8px;
+  color: #5a5047;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.clinics-add-room-btn:hover {
+  background-color: #ede8e0;
+  border-color: #d9cfc5;
+  color: #3d352f;
 }
 
 /* Pagination */

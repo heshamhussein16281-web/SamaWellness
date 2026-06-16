@@ -24,13 +24,11 @@ export default function ClinicsList() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingClinic, setEditingClinic] = useState<Clinic | null>(null);
-  const [activeTab, setActiveTab] = useState<'basic' | 'rooms'>('basic');
   const [formData, setFormData] = useState({
     name: '',
     location: '',
     phone: '',
     email: '',
-    number_of_rooms: null as number | null,
     rooms: [] as any[],
   });
 
@@ -118,15 +116,10 @@ export default function ClinicsList() {
       return;
     }
 
-    if (!formData.number_of_rooms || formData.number_of_rooms < 1) {
-      showError('Number of rooms is required');
-      return;
-    }
-
-    // Validate that all room names are filled
+    // Validate that at least one room is added
     const filledRooms = formData.rooms.filter((r: string) => r && r.trim());
-    if (filledRooms.length !== formData.number_of_rooms) {
-      showError(`Please fill in all ${formData.number_of_rooms} room names`);
+    if (filledRooms.length === 0) {
+      showError('Please add at least one room');
       return;
     }
 
@@ -140,7 +133,7 @@ export default function ClinicsList() {
         location: formData.location,
         phone: formData.phone,
         email: formData.email,
-        number_of_rooms: formData.number_of_rooms,
+        number_of_rooms: filledRooms.length,
         rooms: filledRooms,
       };
 
@@ -165,8 +158,7 @@ export default function ClinicsList() {
       await fetchClinics();
       setEditingClinic(null);
       setShowForm(false);
-      setFormData({ name: '', location: '', phone: '', email: '', number_of_rooms: null, rooms: [] });
-      setActiveTab('basic');
+      setFormData({ name: '', location: '', phone: '', email: '', rooms: [] });
       showSuccess(`Clinic ${isEditing ? 'updated' : 'created'} successfully`);
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : 'Failed to save clinic';
@@ -184,18 +176,15 @@ export default function ClinicsList() {
       location: clinic.location || '',
       phone: clinic.phone || '',
       email: clinic.email || '',
-      number_of_rooms: (clinic as any).number_of_rooms || null,
       rooms: clinic.rooms || [],
     });
     setShowForm(true);
-    setActiveTab('basic');
   }
 
   function handleCancel() {
     setShowForm(false);
     setEditingClinic(null);
-    setFormData({ name: '', location: '', phone: '', email: '', number_of_rooms: null, rooms: [] });
-    setActiveTab('basic');
+    setFormData({ name: '', location: '', phone: '', email: '', rooms: [] });
   }
 
   async function handleDelete(clinic: Clinic) {
@@ -273,8 +262,7 @@ export default function ClinicsList() {
             onClick={() => {
               setShowForm(true);
               setEditingClinic(null);
-              setFormData({ name: '', location: '', phone: '', email: '', number_of_rooms: null, rooms: [] });
-              setActiveTab('basic');
+              setFormData({ name: '', location: '', phone: '', email: '', rooms: [] });
             }}
           >
             <Plus size={20} /> Add Clinic
@@ -300,81 +288,62 @@ export default function ClinicsList() {
             {/* Error Message in Modal */}
             {errorMessage && <div className="clinics-message clinics-message--error" style={{ margin: '0 0 15px 0' }}>{errorMessage}</div>}
 
-            {/* Tabs */}
-            <div className="clinics-form-tabs">
-              <button
-                type="button"
-                className={`clinics-form-tab ${activeTab === 'basic' ? 'clinics-form-tab--active' : ''}`}
-                onClick={() => setActiveTab('basic')}
-              >
-                Basic Info
-              </button>
-              <button
-                type="button"
-                className={`clinics-form-tab ${activeTab === 'rooms' ? 'clinics-form-tab--active' : ''}`}
-                onClick={() => setActiveTab('rooms')}
-              >
-                Rooms
-              </button>
-            </div>
-
             <form onSubmit={handleSubmit}>
-              {/* Basic Info Tab */}
-              {activeTab === 'basic' && (
-                <>
-                  <div className="clinics-form-group">
-                    <label>Clinic Name *</label>
-                    <input
-                      type="text"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      required
-                      placeholder="e.g., Main Clinic, Branch Clinic"
-                    />
-                  </div>
+              {/* Clinic Details Section */}
+              <div className="clinics-form-section">
+                <h3 className="clinics-form-section__title">Clinic Details</h3>
 
-                  <div className="clinics-form-group">
-                    <label>Location</label>
-                    <input
-                      type="text"
-                      value={formData.location}
-                      onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                      placeholder="Cairo, Alexandria, etc."
-                    />
-                  </div>
+                <div className="clinics-form-group">
+                  <label>Clinic Name *</label>
+                  <input
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    required
+                    placeholder="e.g., Main Clinic, Branch Clinic"
+                  />
+                </div>
 
-                  <div className="clinics-form-group">
-                    <label>Phone</label>
-                    <input
-                      type="tel"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      placeholder="+20 XXX XXXX XXXX"
-                    />
-                  </div>
+                <div className="clinics-form-group">
+                  <label>Location</label>
+                  <input
+                    type="text"
+                    value={formData.location}
+                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    placeholder="Cairo, Alexandria, etc."
+                  />
+                </div>
 
-                  <div className="clinics-form-group">
-                    <label>Email</label>
-                    <input
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      placeholder="clinic@example.com"
-                    />
-                  </div>
-                </>
-              )}
+                <div className="clinics-form-group">
+                  <label>Phone</label>
+                  <input
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    placeholder="+20 XXX XXXX XXXX"
+                  />
+                </div>
 
-              {/* Rooms Tab */}
-              {activeTab === 'rooms' && (
+                <div className="clinics-form-group">
+                  <label>Email</label>
+                  <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    placeholder="clinic@example.com"
+                  />
+                </div>
+              </div>
+
+              {/* Clinic Rooms Section */}
+              <div className="clinics-form-section">
                 <ClinicRoomsTab
-                  numberOfRooms={formData.number_of_rooms}
                   rooms={formData.rooms}
-                  onChange={(numberOfRooms, rooms) =>
-                    setFormData({ ...formData, number_of_rooms: numberOfRooms, rooms: rooms || [] })
+                  onChange={(rooms) =>
+                    setFormData({ ...formData, rooms: rooms || [] })
                   }
                 />
-              )}
+              </div>
 
               <div className="clinics-form-actions">
                 <button
