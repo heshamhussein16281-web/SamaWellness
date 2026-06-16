@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyJWT, getJWTFromCookie, type JWTPayload } from '@/lib/auth';
+import { checkUserPermission } from '@/lib/permission-check';
 import { createClient } from '@supabase/supabase-js';
 
 export const dynamic = 'force-dynamic';
@@ -28,7 +29,9 @@ async function checkPermission(
     return { authorized: false, error: 'Invalid or expired token', status: 401 };
   }
 
-  if (!payload.permissions.includes(requiredPermission)) {
+  // Check permission dynamically from database (real-time)
+  const hasPermission = await checkUserPermission(payload.userId, requiredPermission);
+  if (!hasPermission) {
     return { authorized: false, error: 'Insufficient permissions', status: 403 };
   }
 
