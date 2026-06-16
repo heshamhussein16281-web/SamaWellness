@@ -30,7 +30,7 @@ export default function ClinicsList() {
     phone: '',
     email: '',
     number_of_rooms: null as number | null,
-    rooms: [] as string[],
+    rooms: [] as any[],
   });
 
   // Loading states for individual operations
@@ -149,7 +149,7 @@ export default function ClinicsList() {
       phone: clinic.phone || '',
       email: clinic.email || '',
       number_of_rooms: (clinic as any).number_of_rooms || null,
-      rooms: (clinic as any).rooms || [],
+      rooms: [],
     });
     setShowForm(true);
     setActiveTab('basic');
