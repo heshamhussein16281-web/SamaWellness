@@ -462,19 +462,9 @@ export default function ClinicsList() {
                   <td>{clinic.email || '-'}</td>
                   <td>
                     {clinic.rooms && clinic.rooms.length > 0 ? (
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                         {clinic.rooms.map((room: string, idx: number) => (
-                          <span
-                            key={idx}
-                            style={{
-                              padding: '4px 8px',
-                              backgroundColor: '#e8f5e9',
-                              borderRadius: '4px',
-                              fontSize: '13px',
-                              fontWeight: '500',
-                              color: '#2e7d32',
-                            }}
-                          >
+                          <span key={idx} className="clinics-room-badge">
                             {room}
                           </span>
                         ))}

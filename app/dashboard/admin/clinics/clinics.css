@@ -93,14 +93,26 @@
 }
 
 .clinics-btn--icon {
-  padding: 6px 8px;
+  padding: 8px;
   background-color: transparent;
   border: 1px solid #dee2e6;
   border-radius: 4px;
+  color: #666;
 }
 
 .clinics-btn--icon:hover:not(:disabled) {
-  background-color: #f8f9fa;
+  background-color: #f0f0f0;
+  border-color: #bbb;
+}
+
+.clinics-btn--icon.clinics-btn--danger {
+  border-color: #ffcccc;
+  color: #dc3545;
+}
+
+.clinics-btn--icon.clinics-btn--danger:hover:not(:disabled) {
+  background-color: #ffe6e6;
+  border-color: #ff9999;
 }
 
 .clinics-btn--close {
@@ -262,11 +274,18 @@
 }
 
 .clinics-sort select {
-  padding: 10px 12px;
+  padding: 10px 12px 10px 12px;
   border: 1px solid #dee2e6;
   border-radius: 6px;
   font-size: 14px;
   background-color: white;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 20px;
+  padding-right: 36px;
+  cursor: pointer;
 }
 
 /* Table */
@@ -315,6 +334,19 @@
 .clinics-actions {
   display: flex;
   gap: 8px;
+}
+
+/* Room badges */
+.clinics-room-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #1eaa60 0%, #16a34a 100%);
+  color: white;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(30, 170, 96, 0.2);
+  border: 1px solid #15803d;
 }
 
 /* Pagination */
