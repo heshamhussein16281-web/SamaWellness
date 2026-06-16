@@ -32,30 +32,46 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch fresh permissions from database (real-time)
-    const { data: user, error: userError } = await supabase
-      .from('clinic_users')
-      .select('id, role_id')
-      .eq('id', payload.userId)
-      .single();
-
     let permissions = payload.permissions;
 
-    if (!userError && user?.role_id) {
-      // Query permissions through role
-      const { data: rolePerms, error: permError } = await supabase
-        .from('role_permissions')
-        .select('permissions(key)')
-        .eq('role_id', user.role_id);
+    try {
+      // Step 1: Get user's role
+      const { data: user, error: userError } = await supabase
+        .from('clinic_users')
+        .select('role_id')
+        .eq('id', payload.userId)
+        .single();
 
-      if (!permError && rolePerms) {
-        const dbPermissions = rolePerms.map((rp: any) => rp.permissions?.key).filter(Boolean);
-        console.log('Auth verify - Extracted permissions from DB:', { permCount: dbPermissions.length, permissions: dbPermissions });
-        permissions = dbPermissions;
-      } else {
-        console.log('Auth verify - Permission query failed, using JWT permissions:', { permError });
+      if (userError) {
+        console.log('Auth verify - User query failed:', userError);
+      } else if (user?.role_id) {
+        // Step 2: Get all permissions for this role
+        const { data: rolePerms, error: rpError } = await supabase
+          .from('role_permissions')
+          .select('permission_id')
+          .eq('role_id', user.role_id);
+
+        if (!rpError && rolePerms && rolePerms.length > 0) {
+          // Step 3: Get permission keys for these IDs
+          const permissionIds = rolePerms.map((rp: any) => rp.permission_id);
+          const { data: perms, error: permError } = await supabase
+            .from('permissions')
+            .select('key')
+            .in('id', permissionIds);
+
+          if (!permError && perms) {
+            const dbPermissions = perms.map((p: any) => p.key).filter(Boolean);
+            console.log('Auth verify - Extracted permissions from DB:', { permCount: dbPermissions.length, permissions: dbPermissions });
+            permissions = dbPermissions;
+          } else {
+            console.log('Auth verify - Permission fetch failed:', permError);
+          }
+        } else {
+          console.log('Auth verify - Role permissions not found:', rpError);
+        }
       }
-    } else {
-      console.log('Auth verify - User query failed, using JWT permissions:', { userError });
+    } catch (dbError) {
+      console.log('Auth verify - Database query error, using JWT permissions:', dbError);
     }
 
     return NextResponse.json(
