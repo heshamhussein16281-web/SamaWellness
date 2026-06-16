@@ -135,12 +135,23 @@ This means even if someone navigates directly to a hidden URL, they're protected
 
 ---
 
-## Implementation Order
+## Implementation Scope
 
+### Part 1: Sidebar Permission Display (Primary)
 1. Update Sidebar component with permission mapping and conditional rendering
 2. Add helper function `hasPermission()` for reusability
-3. Test with different user roles
-4. Add optional section-hiding logic if needed for cleaner UI
+3. Conditionally hide links based on user permissions
+4. Hide empty sections if no links are visible
+5. Test with different user roles
+
+### Part 2: Permission Assignment Enforcement (Related)
+When assigning permissions to a role (in the Roles/Users management pages):
+- If `manage_therapists` is selected → automatically also enable `view_therapists`
+- If `manage_clients` is selected → automatically also enable `view_clients`
+- If `manage_bookings` is selected → automatically also enable `view_bookings`
+- Similar enforcement for all manage/view permission pairs
+
+This ensures invalid permission combinations cannot exist at the source.
 
 ---
 
@@ -156,4 +167,9 @@ This means even if someone navigates directly to a hidden URL, they're protected
 
 ## Files Modified
 
+**Part 1 (Primary):**
 - `app/dashboard/components/Sidebar.tsx` — add permission mapping and conditional rendering
+
+**Part 2 (Related):**
+- `app/dashboard/admin/roles/[id]/page.tsx` or roles form component — add logic to auto-grant view permissions when manage permissions are selected
+- `app/dashboard/admin/users/[id]/page.tsx` or users form component — similar enforcement when assigning permissions to users
