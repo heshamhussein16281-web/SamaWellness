@@ -47,10 +47,17 @@ export async function GET(request: NextRequest) {
       .eq('id', payload.userId)
       .single();
 
+    console.log('Auth verify - DB query result:', { userError, hasUser: !!user, hasRoles: !!user?.roles });
+
     let permissions = payload.permissions;
     if (!userError && user) {
       const role = Array.isArray(user.roles) ? user.roles[0] : user.roles;
-      permissions = role?.role_permissions?.map((rp: any) => rp.permissions.key) || payload.permissions;
+      const dbPermissions = role?.role_permissions?.map((rp: any) => rp.permissions.key) || [];
+      console.log('Auth verify - Extracted permissions from DB:', { role: role?.name, dbPermissions });
+      // Use database permissions if query succeeded, even if empty
+      permissions = dbPermissions;
+    } else {
+      console.log('Auth verify - DB query failed, using JWT permissions:', { userError, payload: payload.permissions });
     }
 
     return NextResponse.json(

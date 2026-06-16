@@ -59,6 +59,10 @@ export default function TherapistsListRefined() {
   const [therapistAvailability, setTherapistAvailability] = useState<Map<string, any>>(new Map());
   const [therapistStats, setTherapistStats] = useState<Map<string, TherapistStats>>(new Map());
 
+  // Permission states
+  const [canManageTherapists, setCanManageTherapists] = useState(false);
+  const [permissionsLoading, setPermissionsLoading] = useState(true);
+
   // Auto-dismiss notifications
   useEffect(() => {
     return () => {
@@ -82,7 +86,30 @@ export default function TherapistsListRefined() {
   useEffect(() => {
     fetchTherapists();
     fetchClinics();
+    fetchPermissions();
   }, []);
+
+  async function fetchPermissions() {
+    try {
+      const res = await fetch('/api/auth/verify', {
+        credentials: 'include',
+      });
+      if (!res.ok) throw new Error('Failed to fetch permissions');
+      const data = await res.json();
+      const hasPermission = Array.isArray(data.permissions) && data.permissions.includes('manage_therapists');
+      console.log('TherapistsList - Permissions check:', {
+        permissions: data.permissions,
+        hasPermission,
+        isArray: Array.isArray(data.permissions)
+      });
+      setCanManageTherapists(hasPermission);
+    } catch (error) {
+      console.error('Error fetching permissions:', error);
+      setCanManageTherapists(false);
+    } finally {
+      setPermissionsLoading(false);
+    }
+  }
 
   useEffect(() => {
     therapists.forEach(therapist => {
@@ -334,16 +361,18 @@ export default function TherapistsListRefined() {
             }}
           />
         </div>
-        <button
-          className="btn btn--primary"
-          onClick={() => {
-            setShowForm(true);
-            setEditingTherapist(null);
-            setFormData({ name: '', email: '', hourly_rate: '', specializations: '' });
-          }}
-        >
-          <Plus size={18} style={{ marginRight: '0.5rem' }} /> Add Therapist
-        </button>
+        {canManageTherapists && (
+          <button
+            className="btn btn--primary"
+            onClick={() => {
+              setShowForm(true);
+              setEditingTherapist(null);
+              setFormData({ name: '', email: '', hourly_rate: '', specializations: '' });
+            }}
+          >
+            <Plus size={18} style={{ marginRight: '0.5rem' }} /> Add Therapist
+          </button>
+        )}
       </div>
 
       {paginatedTherapists.length === 0 ? (
@@ -403,26 +432,30 @@ export default function TherapistsListRefined() {
                 </div>
 
                 <div className="therapist-card__footer">
-                  <button
-                    className="btn btn--secondary btn--small btn--edit"
-                    onClick={() => handleEdit(therapist)}
-                  >
-                    Edit
-                  </button>
+                  {canManageTherapists && (
+                    <button
+                      className="btn btn--secondary btn--small btn--edit"
+                      onClick={() => handleEdit(therapist)}
+                    >
+                      Edit
+                    </button>
+                  )}
                   <button
                     className="btn btn--secondary btn--small btn--schedule"
                     onClick={() => handleScheduleClick(therapist)}
                   >
                     📅 Schedule
                   </button>
-                  <button
-                    className="btn btn--icon btn--delete"
-                    onClick={() => handleDelete(therapist)}
-                    disabled={loadingDelete}
-                    title="Delete"
-                  >
-                    ×
-                  </button>
+                  {canManageTherapists && (
+                    <button
+                      className="btn btn--icon btn--delete"
+                      onClick={() => handleDelete(therapist)}
+                      disabled={loadingDelete}
+                      title="Delete"
+                    >
+                      ×
+                    </button>
+                  )}
                 </div>
               </div>
             );
