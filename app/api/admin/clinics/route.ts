@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { name, location, phone, email } = body;
+    const { name, location, phone, email, rooms } = body;
 
     if (!name) {
       return NextResponse.json(
@@ -108,7 +108,32 @@ export async function POST(request: NextRequest) {
       throw error;
     }
 
-    return NextResponse.json(data[0], { status: 201 });
+    const clinic = data[0];
+
+    // Save rooms if provided
+    if (rooms && Array.isArray(rooms) && rooms.length > 0) {
+      const roomsToInsert = rooms
+        .filter((name: string) => name && name.trim()) // Only save non-empty room names
+        .map((name: string) => ({
+          clinic_id: clinic.id,
+          room_name: name.trim(),
+          room_type: 'standard',
+          capacity: 1,
+        }));
+
+      if (roomsToInsert.length > 0) {
+        const { error: roomError } = await supabase
+          .from('clinic_rooms')
+          .insert(roomsToInsert);
+
+        if (roomError) {
+          console.error('Error saving rooms:', roomError);
+          // Don't fail the clinic creation if rooms fail
+        }
+      }
+    }
+
+    return NextResponse.json(clinic, { status: 201 });
   } catch (error) {
     console.error('Error creating clinic:', error);
     return NextResponse.json(

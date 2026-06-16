@@ -123,6 +123,7 @@ export default function ClinicsList() {
         phone: formData.phone,
         email: formData.email,
         number_of_rooms: formData.number_of_rooms,
+        rooms: formData.rooms && formData.rooms.length > 0 ? formData.rooms : [],
       };
 
       const url = isEditing
