@@ -1,0 +1,102 @@
+<h2>UI Layout Options</h2>
+<p class="subtitle">How should we show the rooms and availability forms?</p>
+
+<h3 style="margin-top: 2rem; margin-bottom: 1rem;">Clinic Rooms — Where to put it?</h3>
+
+<div class="cards">
+  <div class="card" data-choice="rooms-tab" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mockup">
+        <div class="mockup-body" style="padding: 1rem;">
+          <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; border-bottom: 2px solid #eee;">
+            <button class="mock-button" style="border-bottom: 3px solid #007bff; border-radius: 0;">Basic Info</button>
+            <button class="mock-button" style="border-bottom: 3px solid transparent; border-radius: 0;">Rooms</button>
+          </div>
+          <div style="opacity: 0.5; font-size: 0.85rem;">
+            <p>Name, Location, Phone, Email fields...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Option A: Tab in the Modal</h3>
+      <p>Click "Rooms" tab to switch between basic info and room management</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="rooms-section" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mockup">
+        <div class="mockup-body" style="padding: 1rem;">
+          <h4 style="margin: 0 0 0.75rem 0;">Basic Info</h4>
+          <div style="opacity: 0.5; font-size: 0.85rem; margin-bottom: 1.5rem;">
+            <p style="margin: 0.25rem 0;">Name field...</p>
+            <p style="margin: 0.25rem 0;">Location field...</p>
+          </div>
+          <hr style="margin: 1rem 0;">
+          <h4 style="margin: 0 0 0.75rem 0;">Clinic Rooms</h4>
+          <div style="font-size: 0.85rem; color: #666;">
+            <p>Single rooms: 3</p>
+            <p>Couple rooms: 2</p>
+            <p>Group rooms: 1</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Option B: Section Below Form</h3>
+      <p>Rooms section visible right below the clinic info fields</p>
+    </div>
+  </div>
+</div>
+
+<h3 style="margin-top: 2rem; margin-bottom: 1rem;">Therapist Availability — Where to put it?</h3>
+
+<div class="cards">
+  <div class="card" data-choice="avail-modal" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mockup">
+        <div class="mockup-body" style="padding: 1rem;">
+          <div style="margin-bottom: 1rem; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px;">
+            <strong>Dr. Sarah</strong>
+            <div style="font-size: 0.85rem; color: #666; margin-top: 0.25rem;">sarah@clinic.com</div>
+            <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+              <button class="mock-button" style="padding: 0.5rem 1rem; font-size: 0.85rem;">✎ Edit</button>
+              <button class="mock-button" style="padding: 0.5rem 1rem; font-size: 0.85rem;">📅 Schedule</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Option A: Modal Dialog</h3>
+      <p>Click "Schedule" button → popup appears to set availability</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="avail-page" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mockup">
+        <div class="mockup-body" style="padding: 1rem;">
+          <div style="margin-bottom: 1rem; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px;">
+            <strong>Dr. Sarah</strong>
+            <div style="font-size: 0.85rem; color: #666; margin-top: 0.25rem;">sarah@clinic.com</div>
+            <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+              <button class="mock-button" style="padding: 0.5rem 1rem; font-size: 0.85rem;">✎ Edit</button>
+              <button class="mock-button" style="padding: 0.5rem 1rem; font-size: 0.85rem;">📅 Schedule</button>
+            </div>
+          </div>
+          <p style="color: #666; font-size: 0.85rem; margin-top: 1rem;">Click "Schedule" → goes to new page</p>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Option B: Separate Page</h3>
+      <p>Click "Schedule" button → navigate to dedicated availability page for that therapist</p>
+    </div>
+  </div>
+</div>
+
+<p style="margin-top: 2rem; padding: 1rem; background: #f0f4f8; border-radius: 6px; font-size: 0.9rem;">
+  <strong>Click the options above</strong> to show your preference for each. You can pick one for rooms and one for availability.
+</p>

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyJWT, getJWTFromCookie, type JWTPayload } from '@/lib/auth';
+import { checkUserPermissions } from '@/lib/permission-check';
 import { createClient } from '@supabase/supabase-js';
 
 export const dynamic = 'force-dynamic';
@@ -9,8 +10,9 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 );
 
-async function checkAdminPermission(
-  request: NextRequest
+async function checkTherapistPermission(
+  request: NextRequest,
+  requiredPermission: 'view_therapists' | 'manage_therapists' = 'view_therapists'
 ): Promise<
   | { authorized: false; error: string }
   | { authorized: true; user: JWTPayload }
@@ -27,8 +29,14 @@ async function checkAdminPermission(
     return { authorized: false, error: 'Invalid or expired token' };
   }
 
-  if (!payload.permissions.includes('manage_users')) {
-    return { authorized: false, error: 'Insufficient permissions' };
+  // Check permissions dynamically from database (real-time)
+  const hasPermission = await checkUserPermissions(
+    payload.userId,
+    [requiredPermission, 'manage_users']
+  );
+
+  if (!hasPermission) {
+    return { authorized: false, error: 'Insufficient permissions for therapist management' };
   }
 
   return { authorized: true, user: payload };
@@ -36,19 +44,25 @@ async function checkAdminPermission(
 
 // GET: List all therapists
 export async function GET(request: NextRequest) {
-  const auth = await checkAdminPermission(request);
+  const auth = await checkTherapistPermission(request, 'view_therapists');
   if (!auth.authorized) {
+    console.warn('Unauthorized therapist fetch attempt:', auth.error);
     return NextResponse.json({ error: auth.error }, { status: 403 });
   }
 
   try {
+    console.log('Fetching therapists for user:', auth.user.username);
     const { data: therapists, error } = await supabase
       .from('therapists')
       .select('*')
       .order('name');
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase query error:', error);
+      throw error;
+    }
 
+    console.log('Successfully fetched therapists:', therapists?.length || 0);
     return NextResponse.json({ therapists: therapists || [] });
   } catch (error) {
     console.error('Error fetching therapists:', error);
@@ -61,7 +75,7 @@ export async function GET(request: NextRequest) {
 
 // POST: Create new therapist
 export async function POST(request: NextRequest) {
-  const auth = await checkAdminPermission(request);
+  const auth = await checkTherapistPermission(request, 'manage_therapists');
   if (!auth.authorized) {
     return NextResponse.json({ error: auth.error }, { status: 403 });
   }

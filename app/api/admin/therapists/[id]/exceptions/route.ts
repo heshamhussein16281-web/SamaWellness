@@ -27,7 +27,7 @@ async function checkAdminPermission(
     return { authorized: false, error: 'Invalid or expired token', statusCode: 401 };
   }
 
-  if (!payload.permissions.includes('manage_users')) {
+  if (!payload.permissions.includes('manage_therapists') && !payload.permissions.includes('manage_users')) {
     return { authorized: false, error: 'Insufficient permissions', statusCode: 403 };
   }
 

@@ -9,8 +9,9 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 );
 
-async function checkAdminPermission(
-  request: NextRequest
+async function checkTherapistPermission(
+  request: NextRequest,
+  requiredPermission: 'view_therapists' | 'manage_therapists' = 'view_therapists'
 ): Promise<
   | { authorized: false; error: string }
   | { authorized: true; user: JWTPayload }
@@ -27,8 +28,9 @@ async function checkAdminPermission(
     return { authorized: false, error: 'Invalid or expired token' };
   }
 
-  if (!payload.permissions.includes('manage_users')) {
-    return { authorized: false, error: 'Insufficient permissions' };
+  // Check for required permission or admin access
+  if (!payload.permissions.includes(requiredPermission) && !payload.permissions.includes('manage_users')) {
+    return { authorized: false, error: 'Insufficient permissions for therapist management' };
   }
 
   return { authorized: true, user: payload };
@@ -39,7 +41,7 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const auth = await checkAdminPermission(request);
+  const auth = await checkTherapistPermission(request, 'view_therapists');
   if (!auth.authorized) {
     return NextResponse.json({ error: auth.error }, { status: 403 });
   }
@@ -73,7 +75,7 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const auth = await checkAdminPermission(request);
+  const auth = await checkTherapistPermission(request, 'manage_therapists');
   if (!auth.authorized) {
     return NextResponse.json({ error: auth.error }, { status: 403 });
   }
@@ -119,7 +121,7 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const auth = await checkAdminPermission(request);
+  const auth = await checkTherapistPermission(request, 'manage_therapists');
   if (!auth.authorized) {
     return NextResponse.json({ error: auth.error }, { status: 403 });
   }

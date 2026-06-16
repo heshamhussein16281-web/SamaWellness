@@ -1,0 +1,10 @@
+{"type":"server-started","port":65215,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:65215","screen_dir":"/Users/haythamhussein/Downloads/sama-wellness/.superpowers/brainstorm/56618-1781460776/content","state_dir":"/Users/haythamhussein/Downloads/sama-wellness/.superpowers/brainstorm/56618-1781460776/state"}
+{"type":"screen-added","file":"/Users/haythamhussein/Downloads/sama-wellness/.superpowers/brainstorm/56618-1781460776/content/current-state.html"}
+{"type":"screen-added","file":"/Users/haythamhussein/Downloads/sama-wellness/.superpowers/brainstorm/56618-1781460776/content/waiting-1.html"}
+{"type":"screen-added","file":"/Users/haythamhussein/Downloads/sama-wellness/.superpowers/brainstorm/56618-1781460776/content/waiting-2.html"}
+{"type":"screen-added","file":"/Users/haythamhussein/Downloads/sama-wellness/.superpowers/brainstorm/56618-1781460776/content/ui-layout-options.html"}
+{"source":"user-event","type":"click","text":"Dr. Sarah\n            sarah@clinic.com\n            \n              ✎ Edit\n              📅 Schedule\n            \n          \n        \n      \n    \n    \n      Option A: Modal Dialog\n      Click \"Schedule\" button → popup appears to set availability","choice":"avail-modal","id":null,"timestamp":1781461003723}
+{"source":"user-event","type":"click","text":"Dr. Sarah\n            sarah@clinic.com\n            \n              ✎ Edit\n              📅 Schedule\n            \n          \n        \n      \n    \n    \n      Option A: Modal Dialog\n      Click \"Schedule\" button → popup appears to set availability","choice":"avail-modal","id":null,"timestamp":1781461006004}
+{"type":"screen-added","file":"/Users/haythamhussein/Downloads/sama-wellness/.superpowers/brainstorm/56618-1781460776/content/design-mockup.html"}
+{"type":"screen-added","file":"/Users/haythamhussein/Downloads/sama-wellness/.superpowers/brainstorm/56618-1781460776/content/design-mockup-final.html"}
+{"type":"server-stopped","reason":"idle timeout"}
