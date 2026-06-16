@@ -112,6 +112,24 @@ export default function ClinicsList() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
+    // Validate required fields
+    if (!formData.name.trim()) {
+      showError('Clinic name is required');
+      return;
+    }
+
+    if (!formData.number_of_rooms || formData.number_of_rooms < 1) {
+      showError('Number of rooms is required');
+      return;
+    }
+
+    // Validate that all room names are filled
+    const filledRooms = formData.rooms.filter((r: string) => r && r.trim());
+    if (filledRooms.length !== formData.number_of_rooms) {
+      showError(`Please fill in all ${formData.number_of_rooms} room names`);
+      return;
+    }
+
     const isEditing = !!editingClinic;
     const loaderSetter = isEditing ? setLoadingEdit : setLoadingCreate;
     loaderSetter(true);
@@ -123,7 +141,7 @@ export default function ClinicsList() {
         phone: formData.phone,
         email: formData.email,
         number_of_rooms: formData.number_of_rooms,
-        rooms: formData.rooms && formData.rooms.length > 0 ? formData.rooms : [],
+        rooms: filledRooms,
       };
 
       const url = isEditing
@@ -167,7 +185,7 @@ export default function ClinicsList() {
       phone: clinic.phone || '',
       email: clinic.email || '',
       number_of_rooms: (clinic as any).number_of_rooms || null,
-      rooms: [],
+      rooms: clinic.rooms || [],
     });
     setShowForm(true);
     setActiveTab('basic');
