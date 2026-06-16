@@ -30,6 +30,7 @@ export default function ClinicsList() {
     phone: '',
     email: '',
     number_of_rooms: null as number | null,
+    rooms: [] as string[],
   });
 
   // Loading states for individual operations
@@ -128,7 +129,7 @@ export default function ClinicsList() {
       await fetchClinics();
       setEditingClinic(null);
       setShowForm(false);
-      setFormData({ name: '', location: '', phone: '', email: '', number_of_rooms: null });
+      setFormData({ name: '', location: '', phone: '', email: '', number_of_rooms: null, rooms: [] });
       setActiveTab('basic');
       showSuccess(`Clinic ${isEditing ? 'updated' : 'created'} successfully`);
     } catch (error) {
@@ -148,6 +149,7 @@ export default function ClinicsList() {
       phone: clinic.phone || '',
       email: clinic.email || '',
       number_of_rooms: (clinic as any).number_of_rooms || null,
+      rooms: (clinic as any).rooms || [],
     });
     setShowForm(true);
     setActiveTab('basic');
@@ -156,7 +158,7 @@ export default function ClinicsList() {
   function handleCancel() {
     setShowForm(false);
     setEditingClinic(null);
-    setFormData({ name: '', location: '', phone: '', email: '', number_of_rooms: null });
+    setFormData({ name: '', location: '', phone: '', email: '', number_of_rooms: null, rooms: [] });
     setActiveTab('basic');
   }
 
@@ -235,7 +237,7 @@ export default function ClinicsList() {
           onClick={() => {
             setShowForm(true);
             setEditingClinic(null);
-            setFormData({ name: '', location: '', phone: '', email: '', number_of_rooms: null });
+            setFormData({ name: '', location: '', phone: '', email: '', number_of_rooms: null, rooms: [] });
             setActiveTab('basic');
           }}
         >
