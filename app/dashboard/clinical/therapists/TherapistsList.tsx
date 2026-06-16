@@ -109,7 +109,7 @@ export default function TherapistsListRefined() {
 
   async function fetchTherapists() {
     try {
-      const res = await fetch('/api/clinic/therapists', {
+      const res = await fetch('/api/admin/therapists', {
         credentials: 'include',
       });
       if (!res.ok) {
