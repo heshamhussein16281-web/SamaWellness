@@ -90,6 +90,7 @@ export async function GET(request: NextRequest) {
         phone,
         status,
         client_since,
+        therapist_id,
         is_recurring,
         total_sessions_completed,
         therapists:therapist_id (id, name)
@@ -123,6 +124,7 @@ export async function GET(request: NextRequest) {
         phone: client.phone,
         status: client.status,
         client_since: client.client_since,
+        therapist_id: client.therapist_id || null,
         is_recurring: client.is_recurring || false,
         total_sessions_completed: client.total_sessions_completed || 0,
         therapist_name: therapist?.name || null,

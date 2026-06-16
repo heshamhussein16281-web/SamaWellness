@@ -124,7 +124,7 @@ body {
 
 .clients-table tr {
   display: grid;
-  grid-template-columns: repeat(9, 1fr);
+  grid-template-columns: repeat(10, 1fr);
   gap: var(--space-sm);
   padding: var(--space-md);
 }
@@ -291,7 +291,7 @@ body {
   background: var(--color-surface-alt);
   border-bottom: 2px solid var(--color-border);
   display: grid;
-  grid-template-columns: repeat(9, 1fr);
+  grid-template-columns: repeat(10, 1fr);
   gap: var(--space-sm);
   padding: var(--space-md);
 }
@@ -313,7 +313,7 @@ body {
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
   display: grid;
-  grid-template-columns: repeat(9, 1fr);
+  grid-template-columns: repeat(10, 1fr);
   gap: var(--space-sm);
   padding: var(--space-md);
   transition: all var(--transition-fast);
@@ -444,7 +444,7 @@ body {
   letter-spacing: 0.3px;
 }
 
-/* Action Button Component */
+/* Action Button Components */
 .client-action-btn {
   display: inline-block;
   padding: var(--space-xs) var(--space-sm);
@@ -467,6 +467,34 @@ body {
   color: #ffffff;
   border-color: var(--color-accent-primary);
   transform: translateY(-1px);
+}
+
+/* Next Action Button */
+.client-next-action-btn {
+  display: inline-block;
+  padding: var(--space-xs) var(--space-sm);
+  background-color: var(--color-accent-secondary);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.client-next-action-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-soft);
+}
+
+.client-next-action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Pagination Components */

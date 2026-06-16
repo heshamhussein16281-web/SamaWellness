@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import IntakeForm from './IntakeForm';
+import ClientActionButton from './ClientActionButton';
 import './clients-list.css';
 
 interface Client {
@@ -12,7 +13,8 @@ interface Client {
   phone: string;
   status: string;
   client_since: string;
-  therapist_name: string;
+  therapist_id?: number | null;
+  therapist_name?: string | null;
   is_recurring?: boolean;
   total_sessions_completed?: number;
 }
@@ -199,7 +201,7 @@ export default function ClientsPage() {
                 <th>Recurring</th>
                 <th>Sessions</th>
                 <th>Therapist</th>
-                <th>Client Since</th>
+                <th>Next Action</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -231,8 +233,16 @@ export default function ClientsPage() {
                     </span>
                   </td>
                   <td>{client.therapist_name || 'Not assigned'}</td>
-                  <td className="client-since-date">
-                    {formatClientSince(client.client_since)}
+                  <td>
+                    <ClientActionButton
+                      clientId={client.id}
+                      clientName={client.name}
+                      status={client.status}
+                      therapistId={client.therapist_id || undefined}
+                      therapistName={client.therapist_name || undefined}
+                      isRecurring={client.is_recurring || false}
+                      onActionComplete={() => fetchClients(currentPage, searchPhone)}
+                    />
                   </td>
                   <td>
                     <Link href={`/dashboard/clinical/clients/${client.id}`}>
