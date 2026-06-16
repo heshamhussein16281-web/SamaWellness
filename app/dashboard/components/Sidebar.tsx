@@ -71,26 +71,32 @@ export default function Sidebar() {
       <div className={`sidebar-section ${isClinicalSection ? 'sidebar-section-active' : ''}`}>
         <div className="sidebar-section-label">Clinical</div>
 
-        <Link href="/dashboard/clinical/clients" className={`sidebar-nav-link ${isActive('/dashboard/clinical/clients') ? 'active' : ''}`}>
-          <div className={`sidebar-nav-item ${isActive('/dashboard/clinical/clients') ? 'active' : ''}`}>
-            <span className="sidebar-icon">👤</span>
-            <span className="sidebar-label">Clients</span>
-          </div>
-        </Link>
+        {user && hasPermission(user.permissions, linkPermissions.clients) && (
+          <Link href="/dashboard/clinical/clients" className={`sidebar-nav-link ${isActive('/dashboard/clinical/clients') ? 'active' : ''}`}>
+            <div className={`sidebar-nav-item ${isActive('/dashboard/clinical/clients') ? 'active' : ''}`}>
+              <span className="sidebar-icon">👤</span>
+              <span className="sidebar-label">Clients</span>
+            </div>
+          </Link>
+        )}
 
-        <Link href="/dashboard/clinical/bookings" className={`sidebar-nav-link ${isActive('/dashboard/clinical/bookings') ? 'active' : ''}`}>
-          <div className={`sidebar-nav-item ${isActive('/dashboard/clinical/bookings') ? 'active' : ''}`}>
-            <span className="sidebar-icon">📅</span>
-            <span className="sidebar-label">Bookings</span>
-          </div>
-        </Link>
+        {user && hasPermission(user.permissions, linkPermissions.bookings) && (
+          <Link href="/dashboard/clinical/bookings" className={`sidebar-nav-link ${isActive('/dashboard/clinical/bookings') ? 'active' : ''}`}>
+            <div className={`sidebar-nav-item ${isActive('/dashboard/clinical/bookings') ? 'active' : ''}`}>
+              <span className="sidebar-icon">📅</span>
+              <span className="sidebar-label">Bookings</span>
+            </div>
+          </Link>
+        )}
 
-        <Link href="/dashboard/clinical/therapists" className={`sidebar-nav-link ${isActive('/dashboard/clinical/therapists') ? 'active' : ''}`}>
-          <div className={`sidebar-nav-item ${isActive('/dashboard/clinical/therapists') ? 'active' : ''}`}>
-            <span className="sidebar-icon">💼</span>
-            <span className="sidebar-label">Therapists</span>
-          </div>
-        </Link>
+        {user && hasPermission(user.permissions, linkPermissions.therapists) && (
+          <Link href="/dashboard/clinical/therapists" className={`sidebar-nav-link ${isActive('/dashboard/clinical/therapists') ? 'active' : ''}`}>
+            <div className={`sidebar-nav-item ${isActive('/dashboard/clinical/therapists') ? 'active' : ''}`}>
+              <span className="sidebar-icon">💼</span>
+              <span className="sidebar-label">Therapists</span>
+            </div>
+          </Link>
+        )}
       </div>
 
       {/* Divider */}
