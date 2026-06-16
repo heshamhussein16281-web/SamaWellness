@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
       referred_by,
       preferences,
       intake_notes,
-      is_referral,
+      therapist_selection_route,
       therapist_id,
     } = body;
 
@@ -111,12 +111,14 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Determine client status based on referral status
+    // Determine client status based on therapist selection route
     let clientStatus = 'intake';
-    if (is_referral) {
-      clientStatus = 'ready_for_booking'; // Referral clients can book immediately
-    } else {
-      clientStatus = 'assessment_pending'; // Non-referral clients need assessment first
+    if (therapist_selection_route === 'direct_selection' && therapist_id) {
+      // Client chose therapist directly → ready for booking (new client will need payment verification)
+      clientStatus = 'ready_for_booking';
+    } else if (therapist_selection_route === 'assessment') {
+      // Client chose assessment → Sama will assess and assign therapist
+      clientStatus = 'assessment_pending';
     }
 
     // Create client record
@@ -138,7 +140,7 @@ export async function POST(request: NextRequest) {
           intake_date: now,
           notes: intake_notes || null,
           referral_source: referred_by || null,
-          therapist_id: is_referral && therapist_id ? therapist_id : null,
+          therapist_id: therapist_selection_route === 'direct_selection' && therapist_id ? therapist_id : null,
           created_at: now,
           updated_at: now,
         },

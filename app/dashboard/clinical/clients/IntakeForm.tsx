@@ -14,7 +14,7 @@ interface FormData {
   referred_by: string;
   preferences: string;
   intake_notes: string;
-  is_referral: boolean;
+  therapist_selection_route: 'assessment' | 'direct_selection'; // Assessment or Choose Therapist
   therapist_id?: number;
 }
 
@@ -39,7 +39,7 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
     referred_by: '',
     preferences: '',
     intake_notes: '',
-    is_referral: false,
+    therapist_selection_route: 'direct_selection',
   });
 
   const [loading, setLoading] = useState(false);
@@ -72,20 +72,13 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    if (name === 'is_referral') {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: (e.target as HTMLInputElement).checked,
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-      // Clear error when user starts typing (auto-recovery)
-      if (fieldErrors[name]) {
-        setFieldErrors((prev) => ({ ...prev, [name]: '' }));
-      }
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    // Clear error when user starts typing (auto-recovery)
+    if (fieldErrors[name]) {
+      setFieldErrors((prev) => ({ ...prev, [name]: '' }));
     }
   };
 
@@ -121,7 +114,9 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
         if (value && isNaN(new Date(value).getTime())) return 'Invalid date';
         return '';
       case 'therapist_id':
-        if (formData.is_referral && !value) return 'Please select a therapist';
+        if (formData.therapist_selection_route === 'direct_selection' && !value) {
+          return 'Please select a therapist';
+        }
         return '';
       default:
         return '';
@@ -158,9 +153,9 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
       return;
     }
 
-    // For referrals, require therapist selection before proceeding
-    if (formData.is_referral && !formData.therapist_id) {
-      setError('Please select a therapist for this referral client');
+    // For direct therapist selection, require therapist selection before proceeding
+    if (formData.therapist_selection_route === 'direct_selection' && !formData.therapist_id) {
+      setError('Please select a therapist');
       const element = document.getElementById('therapist_id');
       element?.focus();
       return;
@@ -186,15 +181,8 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
       const data = await res.json();
       if (data.success && data.data) {
         setSuccess(data.data);
-
-        // If referral, directly show success message
-        if (formData.is_referral) {
-          if (onSuccess) {
-            onSuccess(data.data.id, data.data.name);
-          }
-        } else {
-          // Non-referral: proceed to payment and assessment
-          setStep('payment');
+        if (onSuccess) {
+          onSuccess(data.data.id, data.data.name);
         }
       }
     } catch (err) {
@@ -422,33 +410,52 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
           </div>
         </fieldset>
 
-        {/* Referral Status Section */}
+        {/* Therapist Route Selection Section */}
         <fieldset className="intake-form-section">
-          <legend className="intake-form-section-title">Referral Status</legend>
+          <legend className="intake-form-section-title">Therapist Assignment Route</legend>
+
+          <p className="intake-form-help-text">
+            How would you like to select a therapist for this client?
+          </p>
 
           <div className="intake-form-group">
-            <label className="intake-form-checkbox-label">
+            <label className="intake-form-radio-label">
               <input
-                type="checkbox"
-                name="is_referral"
-                checked={formData.is_referral}
+                type="radio"
+                name="therapist_selection_route"
+                value="assessment"
+                checked={formData.therapist_selection_route === 'assessment'}
                 onChange={handleChange}
-                className="intake-form-checkbox"
+                className="intake-form-radio"
               />
-              <span>This client comes from a referral</span>
+              <span className="radio-label-text">
+                <strong>Do Assessment</strong>
+                <small>Sama will conduct an assessment and assign the best-fit therapist</small>
+              </span>
             </label>
-            <p className="intake-form-help-text">
-              {formData.is_referral
-                ? 'Select a therapist to assign to this referral client'
-                : 'This client will need an assessment session with Sama before therapist assignment'
-              }
-            </p>
           </div>
 
-          {formData.is_referral && (
-            <div className="intake-form-group">
+          <div className="intake-form-group">
+            <label className="intake-form-radio-label">
+              <input
+                type="radio"
+                name="therapist_selection_route"
+                value="direct_selection"
+                checked={formData.therapist_selection_route === 'direct_selection'}
+                onChange={handleChange}
+                className="intake-form-radio"
+              />
+              <span className="radio-label-text">
+                <strong>Choose Therapist</strong>
+                <small>Client selects their preferred therapist from the list</small>
+              </span>
+            </label>
+          </div>
+
+          {formData.therapist_selection_route === 'direct_selection' && (
+            <div className="intake-form-group" style={{ marginTop: '1.5rem' }}>
               <label htmlFor="therapist_id" className="intake-form-label">
-                Assign Therapist <span className="intake-form-required">*</span>
+                Select Therapist <span className="intake-form-required">*</span>
               </label>
               <select
                 id="therapist_id"
@@ -460,7 +467,7 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
                 }))}
                 className="intake-form-input"
               >
-                <option value="">Select a therapist</option>
+                <option value="">Choose a therapist</option>
                 {therapists.map((therapist) => (
                   <option key={therapist.id} value={therapist.id}>
                     {therapist.name}

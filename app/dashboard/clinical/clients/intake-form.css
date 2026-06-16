@@ -259,6 +259,65 @@ body {
   color: var(--color-accent-primary);
 }
 
+/* Radio Button Component */
+.intake-form-radio {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: var(--color-accent-primary);
+  transition: all var(--transition-fast);
+}
+
+.intake-form-radio:hover {
+  transform: scale(1.05);
+}
+
+.intake-form-radio-label {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  cursor: pointer;
+  padding: var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface-alt);
+  transition: all var(--transition-fast);
+  margin-bottom: var(--space-sm);
+}
+
+.intake-form-radio-label:hover {
+  border-color: var(--color-accent-primary);
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.intake-form-radio-label input:checked ~ .radio-label-text {
+  color: var(--color-accent-primary);
+  font-weight: 600;
+}
+
+.intake-form-radio-label input:checked {
+  accent-color: var(--color-accent-primary);
+}
+
+.radio-label-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-top: 0.2rem;
+}
+
+.radio-label-text strong {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.radio-label-text small {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  font-weight: 400;
+}
+
 .intake-form-help-text {
   margin: 0;
   font-size: var(--text-xs);
