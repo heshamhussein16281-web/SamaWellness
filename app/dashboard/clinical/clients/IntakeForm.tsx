@@ -39,7 +39,7 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
     referred_by: '',
     preferences: '',
     intake_notes: '',
-    therapist_selection_route: 'direct_selection',
+    therapist_selection_route: '' as any,
   });
 
   const [loading, setLoading] = useState(false);
@@ -119,6 +119,11 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
           return 'Please select a therapist';
         }
         return '';
+      case 'therapist_selection_route':
+        if (!value) {
+          return 'Please select Assessment or Personal Preference';
+        }
+        return '';
       default:
         return '';
     }
@@ -151,6 +156,14 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
         const element = document.getElementById(firstErrorField);
         element?.focus();
       }
+      return;
+    }
+
+    // Check if therapist selection route is chosen
+    if (!formData.therapist_selection_route) {
+      setError('Please select a therapist assignment route (Assessment or Personal Preference)');
+      const element = document.getElementById('assessment');
+      element?.focus();
       return;
     }
 
@@ -346,6 +359,7 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
           <div className="intake-form-group">
             <label className="intake-form-radio-label">
               <input
+                id="assessment"
                 type="radio"
                 name="therapist_selection_route"
                 value="assessment"
