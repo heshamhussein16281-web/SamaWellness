@@ -189,13 +189,13 @@ export default function BookingCalendarModal({
         throw new Error(data.error || 'Failed to create booking');
       }
 
-      // Update client status based on recurring status
+      // Update client status to booking_scheduled (both new and recurring)
       const clientStatusRes = await fetch(`/api/admin/clients/${clientId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({
-          status: isRecurring ? 'booking_scheduled' : 'payment_pending',
+          status: 'booking_scheduled',
         }),
       });
 

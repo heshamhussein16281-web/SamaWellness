@@ -103,6 +103,10 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Calculate session timing for auto-completion
+    const sessionStartTime = new Date(session_date);
+    const sessionEndTime = new Date(sessionStartTime.getTime() + duration_minutes * 60 * 1000);
+
     // Calculate payment deadline (24 hours from now)
     const now = new Date();
     const paymentDeadline = new Date(now.getTime() + 24 * 60 * 60 * 1000);
@@ -118,6 +122,8 @@ export async function POST(request: NextRequest) {
           client_id,
           therapist_id,
           session_date,
+          session_start_time: sessionStartTime.toISOString(),
+          session_end_time: sessionEndTime.toISOString(),
           duration_minutes,
           session_type: session_type || 'single',
           clinic_id,
