@@ -303,6 +303,106 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
           </div>
         </fieldset>
 
+        {/* Primary Concern Section */}
+        <fieldset className="intake-form-section">
+          <legend className="intake-form-section-title">Primary Concern</legend>
+
+          <div className="intake-form-group">
+            <label htmlFor="concern" className="intake-form-label">
+              What brings the client to therapy? <span className="intake-form-required" aria-label="required">*</span>
+            </label>
+            <textarea
+              id="concern"
+              name="concern"
+              value={formData.concern}
+              onChange={handleChange}
+              onBlur={() => handleBlur('concern', formData.concern)}
+              className={`intake-form-textarea ${fieldErrors.concern ? 'intake-form-textarea--error' : ''}`}
+              placeholder="Describe the client's primary reason for seeking therapy"
+              aria-label="Primary concern for seeking therapy"
+              aria-describedby={fieldErrors.concern ? 'concern-error' : 'concern-hint'}
+              rows={4}
+              required
+            />
+            {fieldErrors.concern && touchedFields.includes('concern') && (
+              <div id="concern-error" className="intake-form-field-error">{fieldErrors.concern}</div>
+            )}
+            {!fieldErrors.concern && (
+              <p id="concern-hint" className="intake-form-help-text">
+                Focus on what brought them to therapy
+              </p>
+            )}
+          </div>
+        </fieldset>
+
+        {/* Therapist Route Selection Section */}
+        <fieldset className="intake-form-section">
+          <legend className="intake-form-section-title">Therapist Selection</legend>
+
+          <p className="intake-form-help-text">
+            How would you like to assign a therapist for this client?
+          </p>
+
+          <div className="intake-form-group">
+            <label className="intake-form-radio-label">
+              <input
+                type="radio"
+                name="therapist_selection_route"
+                value="assessment"
+                checked={formData.therapist_selection_route === 'assessment'}
+                onChange={handleChange}
+                className="intake-form-radio"
+              />
+              <span className="radio-label-text">
+                <strong>Assessment</strong>
+                <small>Sama will conduct an assessment and assign the best-fit therapist</small>
+              </span>
+            </label>
+          </div>
+
+          <div className="intake-form-group">
+            <label className="intake-form-radio-label">
+              <input
+                type="radio"
+                name="therapist_selection_route"
+                value="direct_selection"
+                checked={formData.therapist_selection_route === 'direct_selection'}
+                onChange={handleChange}
+                className="intake-form-radio"
+              />
+              <span className="radio-label-text">
+                <strong>Personal Preference</strong>
+                <small>Client selects their preferred therapist from the available list</small>
+              </span>
+            </label>
+          </div>
+
+          {formData.therapist_selection_route === 'direct_selection' && (
+            <div className="intake-form-group" style={{ marginTop: '1.5rem' }}>
+              <label htmlFor="therapist_id" className="intake-form-label">
+                Select Therapist <span className="intake-form-required">*</span>
+              </label>
+              <select
+                id="therapist_id"
+                name="therapist_id"
+                value={formData.therapist_id || ''}
+                onChange={(e) => setFormData((prev) => ({
+                  ...prev,
+                  therapist_id: e.target.value ? parseInt(e.target.value, 10) : undefined,
+                }))}
+                className="intake-form-input"
+              >
+                <option value="">Choose a therapist</option>
+                {therapists.map((therapist) => (
+                  <option key={therapist.id} value={therapist.id}>
+                    {therapist.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+        </fieldset>
+
         {/* Personal Information Section */}
         <fieldset className="intake-form-section">
           <legend className="intake-form-section-title">Personal Information</legend>
@@ -352,49 +452,9 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
           </div>
         </fieldset>
 
-        {/* Referral & Concern Section */}
+        {/* Client Preferences Section */}
         <fieldset className="intake-form-section">
-          <legend className="intake-form-section-title">Referral & Concerns</legend>
-
-          <div className="intake-form-group">
-            <label htmlFor="referred_by" className="intake-form-label">Referred By</label>
-            <input
-              type="text"
-              id="referred_by"
-              name="referred_by"
-              value={formData.referred_by}
-              onChange={handleChange}
-              className="intake-form-input"
-              placeholder="e.g., Friend, Google Search, Therapist"
-            />
-          </div>
-
-          <div className="intake-form-group">
-            <label htmlFor="concern" className="intake-form-label">
-              Primary Concern <span className="intake-form-required" aria-label="required">*</span>
-            </label>
-            <textarea
-              id="concern"
-              name="concern"
-              value={formData.concern}
-              onChange={handleChange}
-              onBlur={() => handleBlur('concern', formData.concern)}
-              className={`intake-form-textarea ${fieldErrors.concern ? 'intake-form-textarea--error' : ''}`}
-              placeholder="Describe the client's primary reason for seeking therapy"
-              aria-label="Primary concern for seeking therapy"
-              aria-describedby={fieldErrors.concern ? 'concern-error' : 'concern-hint'}
-              rows={5}
-              required
-            />
-            {fieldErrors.concern && touchedFields.includes('concern') && (
-              <div id="concern-error" className="intake-form-field-error">{fieldErrors.concern}</div>
-            )}
-            {!fieldErrors.concern && (
-              <p id="concern-hint" className="intake-form-help-text">
-                {formData.concern.length}/100 characters • Focus on what brought them to therapy
-              </p>
-            )}
-          </div>
+          <legend className="intake-form-section-title">Preferences & Referral</legend>
 
           <div className="intake-form-group">
             <label htmlFor="preferences" className="intake-form-label">Client Preferences</label>
@@ -408,74 +468,19 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
               rows={3}
             />
           </div>
-        </fieldset>
-
-        {/* Therapist Route Selection Section */}
-        <fieldset className="intake-form-section">
-          <legend className="intake-form-section-title">Therapist Assignment Route</legend>
-
-          <p className="intake-form-help-text">
-            How would you like to select a therapist for this client?
-          </p>
 
           <div className="intake-form-group">
-            <label className="intake-form-radio-label">
-              <input
-                type="radio"
-                name="therapist_selection_route"
-                value="assessment"
-                checked={formData.therapist_selection_route === 'assessment'}
-                onChange={handleChange}
-                className="intake-form-radio"
-              />
-              <span className="radio-label-text">
-                <strong>Do Assessment</strong>
-                <small>Sama will conduct an assessment and assign the best-fit therapist</small>
-              </span>
-            </label>
+            <label htmlFor="referred_by" className="intake-form-label">Referred By</label>
+            <input
+              type="text"
+              id="referred_by"
+              name="referred_by"
+              value={formData.referred_by}
+              onChange={handleChange}
+              className="intake-form-input"
+              placeholder="e.g., Friend, Google Search, Therapist"
+            />
           </div>
-
-          <div className="intake-form-group">
-            <label className="intake-form-radio-label">
-              <input
-                type="radio"
-                name="therapist_selection_route"
-                value="direct_selection"
-                checked={formData.therapist_selection_route === 'direct_selection'}
-                onChange={handleChange}
-                className="intake-form-radio"
-              />
-              <span className="radio-label-text">
-                <strong>Choose Therapist</strong>
-                <small>Client selects their preferred therapist from the list</small>
-              </span>
-            </label>
-          </div>
-
-          {formData.therapist_selection_route === 'direct_selection' && (
-            <div className="intake-form-group" style={{ marginTop: '1.5rem' }}>
-              <label htmlFor="therapist_id" className="intake-form-label">
-                Select Therapist <span className="intake-form-required">*</span>
-              </label>
-              <select
-                id="therapist_id"
-                name="therapist_id"
-                value={formData.therapist_id || ''}
-                onChange={(e) => setFormData((prev) => ({
-                  ...prev,
-                  therapist_id: e.target.value ? parseInt(e.target.value, 10) : undefined,
-                }))}
-                className="intake-form-input"
-              >
-                <option value="">Choose a therapist</option>
-                {therapists.map((therapist) => (
-                  <option key={therapist.id} value={therapist.id}>
-                    {therapist.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
         </fieldset>
 
         {/* Additional Notes Section */}
