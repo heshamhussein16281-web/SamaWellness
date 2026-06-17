@@ -104,8 +104,9 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
         if (value.trim().length < 2) return 'Name must be at least 2 characters';
         return '';
       case 'concern':
-        if (!value?.trim()) return 'Primary concern is required';
-        if (value.trim().length < 10) return 'Please provide more detail (at least 10 characters)';
+        if (value && value.trim().length > 0 && value.trim().length < 10) {
+          return 'Please provide more detail (at least 10 characters)';
+        }
         return '';
       case 'email':
         if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'Invalid email format';
@@ -309,7 +310,7 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
 
           <div className="intake-form-group">
             <label htmlFor="concern" className="intake-form-label">
-              What brings the client to therapy? <span className="intake-form-required" aria-label="required">*</span>
+              What brings the client to therapy?
             </label>
             <textarea
               id="concern"
@@ -318,11 +319,10 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
               onChange={handleChange}
               onBlur={() => handleBlur('concern', formData.concern)}
               className={`intake-form-textarea ${fieldErrors.concern ? 'intake-form-textarea--error' : ''}`}
-              placeholder="Describe the client's primary reason for seeking therapy"
+              placeholder="Describe the client's primary reason for seeking therapy (optional)"
               aria-label="Primary concern for seeking therapy"
               aria-describedby={fieldErrors.concern ? 'concern-error' : 'concern-hint'}
               rows={4}
-              required
             />
             {fieldErrors.concern && touchedFields.includes('concern') && (
               <div id="concern-error" className="intake-form-field-error">{fieldErrors.concern}</div>
