@@ -112,14 +112,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Determine client status based on therapist selection route
+    // NOTE: NEW CLIENTS always start with status 'intake' to show "Verify Payment" first
+    // This ensures payment is confirmed BEFORE assessment or booking
     let clientStatus = 'intake';
-    if (therapist_selection_route === 'direct_selection' && therapist_id) {
-      // Client chose therapist directly → ready for booking (new client will need payment verification)
-      clientStatus = 'ready_for_booking';
-    } else if (therapist_selection_route === 'assessment') {
-      // Client chose assessment → Sama will assess and assign therapist
-      clientStatus = 'assessment_pending';
-    }
+
+    // For recurring clients, skip to appropriate status
+    // (but for new clients, always start at intake to enforce payment first)
 
     // Create client record
     const now = new Date().toISOString();
@@ -140,7 +138,9 @@ export async function POST(request: NextRequest) {
           intake_date: now,
           notes: intake_notes || null,
           referral_source: referred_by || null,
-          therapist_id: therapist_selection_route === 'direct_selection' && therapist_id ? therapist_id : null,
+          // Only set therapist_id if they chose direct selection and selected a therapist
+          // For assessment route, therapist_id will be set after Sama assesses
+          therapist_id: therapist_selection_route === 'direct_selection' ? (therapist_id || null) : null,
           created_at: now,
           updated_at: now,
         },

@@ -6,6 +6,7 @@ import './modal.css';
 interface PaymentVerificationModalProps {
   clientId: number;
   clientName: string;
+  hasTherapist?: boolean; // true if therapist already assigned (direct selection)
   amount?: number;
   onSuccess: () => void;
   onClose: () => void;
@@ -14,6 +15,7 @@ interface PaymentVerificationModalProps {
 export default function PaymentVerificationModal({
   clientId,
   clientName,
+  hasTherapist = false,
   amount,
   onSuccess,
   onClose,
@@ -77,12 +79,15 @@ export default function PaymentVerificationModal({
 
     try {
       // For now, we'll submit without the file. In a real app, you'd upload to a file storage service
+      // Determine next status based on whether therapist is already assigned
+      const nextStatus = hasTherapist ? 'payment_verified' : 'assessment_pending';
+
       const res = await fetch(`/api/admin/clients/${clientId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({
-          status: 'payment_verified',
+          status: nextStatus,
           payment_verified: true,
           payment_date: paymentDate,
           payment_method: paymentMethod,
@@ -116,7 +121,9 @@ export default function PaymentVerificationModal({
             <div className="modal-success-icon">✓</div>
             <h2 className="modal-success-title">Payment Verified ✓</h2>
             <p className="modal-success-message">
-              Payment from {clientName} has been confirmed. They can now proceed to book their session.
+              {hasTherapist
+                ? `Payment from ${clientName} confirmed. They can now proceed to book their session.`
+                : `Payment from ${clientName} confirmed. Awaiting assessment from Sama to assign a therapist.`}
             </p>
           </div>
         </div>

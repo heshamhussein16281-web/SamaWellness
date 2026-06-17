@@ -34,31 +34,50 @@ export default function ClientActionButton({
   const getNextAction = (): NextAction => {
     // Every route has a next action based on current status
 
-    // Step 1: Select Therapist (Assessment or Client Selection)
-    if (!therapistId && (status === 'intake' || status === 'assessment_pending')) {
-      return {
-        label: 'Select Therapist',
-        type: 'assessment',
-      };
-    }
-
-    // Step 2: Verify Payment (New Clients ONLY - blocking requirement)
-    if (!isRecurring && therapistId && status === 'ready_for_booking') {
+    // ========== NEW CLIENTS: PAYMENT COMES FIRST ==========
+    // Step 1: New clients must verify payment BEFORE any action (assessment or booking)
+    if (!isRecurring && status === 'intake') {
       return {
         label: 'Verify Payment',
         type: 'payment',
       };
     }
 
-    // Step 3: Book Session
-    if (therapistId && (status === 'payment_verified' || (isRecurring && status === 'ready_for_booking'))) {
+    // Step 2: After payment verified, new clients proceed based on their chosen route
+    if (!isRecurring && status === 'assessment_pending') {
+      return {
+        label: 'Awaiting Assessment',
+        type: 'view', // View only - Sama will assess
+      };
+    }
+
+    // Step 3: After Sama completes assessment and assigns therapist
+    if (!isRecurring && therapistId && status === 'ready_for_booking') {
       return {
         label: 'Book Session',
         type: 'booking',
       };
     }
 
-    // Step 4: Reschedule or Cancel (within 24hrs of session)
+    // Step 3 Alternative: If client chose direct selection (skips assessment)
+    if (!isRecurring && therapistId && status === 'payment_verified') {
+      return {
+        label: 'Book Session',
+        type: 'booking',
+      };
+    }
+
+    // ========== RECURRING CLIENTS: SKIP PAYMENT VERIFICATION ==========
+    // Recurring clients go straight to booking (no payment check needed)
+    if (isRecurring && therapistId && (status === 'ready_for_booking' || status === 'intake')) {
+      return {
+        label: 'Book Session',
+        type: 'booking',
+      };
+    }
+
+    // ========== POST-BOOKING ACTIONS ==========
+    // Reschedule or Cancel (within 24hrs of session)
     if (status === 'booking_scheduled') {
       return {
         label: 'Reschedule or Cancel',
@@ -131,6 +150,7 @@ export default function ClientActionButton({
         <PaymentVerificationModal
           clientId={clientId}
           clientName={clientName}
+          hasTherapist={therapistId ? true : false}
           onSuccess={handleModalSuccess}
           onClose={handleModalClose}
         />
