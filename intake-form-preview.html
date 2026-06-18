@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Intake Form - Professional Design</title>
+  <style>
+    /* ========================================
+       CLIENT INTAKE FORM - PREMIUM PROFESSIONAL
+       Aesthetic: Healthcare/Law firm elegance
+       ======================================== */
+
+    @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital@0;1&family=Source+Sans+Pro:wght@400;500;600&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --color-bg: #fafbfc;
+      --color-surface: #ffffff;
+      --color-text-primary: #1a2942;
+      --color-text-secondary: #4a5f7f;
+      --color-accent-primary: #1a5f7a;
+      --color-accent-secondary: #c9a961;
+      --color-border: #e0e5ec;
+      --color-error: #d66d6d;
+    }
+
+    body {
+      font-family: 'Source Sans Pro', sans-serif;
+      background-color: var(--color-bg);
+      color: var(--color-text-primary);
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .header h1 {
+      font-family: 'Crimson Text', serif;
+      font-size: 2.75rem;
+      font-weight: 600;
+      color: var(--color-accent-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .header p {
+      color: var(--color-text-secondary);
+      font-size: 1.125rem;
+    }
+
+    .form-section {
+      background: var(--color-surface);
+      border-radius: 12px;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .section-title {
+      font-family: 'Crimson Text', serif;
+      font-size: 1.5rem;
+      color: var(--color-accent-primary);
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--color-accent-secondary);
+    }
+
+    .form-group {
+      margin-bottom: 1.75rem;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--color-text-primary);
+      margin-bottom: 0.6rem;
+    }
+
+    .required {
+      color: var(--color-error);
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.9rem 1.2rem;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      font-family: 'Source Sans Pro', sans-serif;
+      font-size: 1rem;
+      color: var(--color-text-primary);
+      transition: all 0.2s ease;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--color-accent-primary);
+      box-shadow: 0 0 0 3px rgba(26, 95, 122, 0.1);
+      background-color: #f9fcfd;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .help-text {
+      font-size: 0.85rem;
+      color: var(--color-text-secondary);
+      margin-top: 0.4rem;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+    }
+
+    .radio-option input[type="radio"] {
+      width: auto;
+      margin-top: 0.4rem;
+      cursor: pointer;
+    }
+
+    .radio-label-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .radio-label-text strong {
+      color: var(--color-text-primary);
+    }
+
+    .radio-label-text small {
+      color: var(--color-text-secondary);
+      font-size: 0.85rem;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 3rem;
+      justify-content: flex-end;
+    }
+
+    button {
+      padding: 0.95rem 2.25rem;
+      border-radius: 8px;
+      font-family: 'Source Sans Pro', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+    }
+
+    .btn-primary {
+      background-color: var(--color-accent-primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #154d63;
+      box-shadow: 0 4px 12px rgba(26, 95, 122, 0.3);
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      color: var(--color-accent-primary);
+      border: 1px solid var(--color-border);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--color-bg);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Client Intake Form</h1>
+      <p>Create a new client record by filling out this form</p>
+    </div>
+
+    <form>
+      <!-- Contact Information -->
+      <div class="form-section">
+        <h2 class="section-title">Contact Information</h2>
+
+        <div class="form-group">
+          <label for="name">Full Name <span class="required">*</span></label>
+          <input type="text" id="name" placeholder="Enter full name" required>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="name@example.com">
+            <p class="help-text">We'll use this for session reminders</p>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Phone <span class="required">*</span></label>
+            <input type="tel" id="phone" placeholder="Enter 11 digits (e.g., 01001234567)" required>
+            <p class="help-text">11 digits required (e.g., 01001234567)</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Primary Concern -->
+      <div class="form-section">
+        <h2 class="section-title">Primary Concern</h2>
+
+        <div class="form-group">
+          <label for="concern">What brings the client to therapy?</label>
+          <textarea id="concern" placeholder="Describe the client's primary reason for seeking therapy (optional)"></textarea>
+          <p class="help-text">Focus on what brought them to therapy</p>
+        </div>
+      </div>
+
+      <!-- Therapist Selection -->
+      <div class="form-section">
+        <h2 class="section-title">Therapist Selection</h2>
+
+        <p style="color: var(--color-text-secondary); margin-bottom: 1.5rem;">How would you like to assign a therapist for this client?</p>
+
+        <div class="form-group">
+          <div class="radio-option">
+            <input type="radio" id="assessment" name="therapist-route" value="assessment">
+            <div class="radio-label-text">
+              <strong>Assessment</strong>
+              <small>Sama will conduct an assessment and assign the best-fit therapist</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="radio-option">
+            <input type="radio" id="direct" name="therapist-route" value="direct_selection">
+            <div class="radio-label-text">
+              <strong>Personal Preference</strong>
+              <small>Client selects their preferred therapist from the available list</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Personal Information -->
+      <div class="form-section">
+        <h2 class="section-title">Personal Information</h2>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem;">
+          <div class="form-group">
+            <label for="dob">Date of Birth</label>
+            <input type="date" id="dob">
+          </div>
+
+          <div class="form-group">
+            <label for="gender">Gender</label>
+            <select id="gender">
+              <option value="">Select gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+              <option value="prefer_not_to_say">Prefer not to say</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="language">Preferred Language</label>
+            <input type="text" id="language" placeholder="e.g., English, Arabic">
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Notes -->
+      <div class="form-section">
+        <h2 class="section-title">Additional Notes</h2>
+
+        <div class="form-group">
+          <label for="notes">Intake Notes</label>
+          <textarea id="notes" placeholder="Any additional information or observations"></textarea>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="form-section" style="display: flex; justify-content: flex-end; gap: 1.5rem;">
+        <button type="button" class="btn-secondary">Cancel</button>
+        <button type="submit" class="btn-primary">Submit Intake</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>
