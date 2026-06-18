@@ -137,13 +137,23 @@ export default function ClientsPage() {
     <main className="clients-page">
       <header className="clients-page-header">
         <h1 className="clients-page-title">Clients</h1>
-        <button
-          className="clients-page-btn clients-page-btn--primary"
-          onClick={() => setViewMode('intake')}
-          aria-label="Create new client intake"
-        >
-          + New Client Intake
-        </button>
+        <div style={{ display: 'flex', gap: '12px' }}>
+          <button
+            className="clients-page-btn clients-page-btn--primary"
+            onClick={() => setViewMode('intake')}
+            aria-label="Create new client intake"
+          >
+            + New Client Intake
+          </button>
+          <button
+            className="clients-page-btn clients-page-btn--secondary"
+            onClick={() => window.location.href = '/app'}
+            aria-label="Go to legacy dashboard"
+            style={{ backgroundColor: '#f0f0f0', color: '#666' }}
+          >
+            ← Legacy Dashboard
+          </button>
+        </div>
       </header>
 
       {viewMode === 'list' && (
