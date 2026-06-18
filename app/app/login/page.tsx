@@ -61,7 +61,7 @@ export default function LoginPage() {
         </div>
 
         <h1 style={{ fontSize: '24px', textAlign: 'center', margin: '0 0 10px 0', color: '#2d4a46' }}>Sama Wellness</h1>
-        <p style={{ textAlign: 'center', color: '#999', margin: '0 0 30px 0', fontSize: '14px' }}>Clinic Management</p>
+        <p style={{ textAlign: 'center', color: '#999', margin: '0 0 30px 0', fontSize: '14px' }}>New Clinical Dashboard</p>
 
         {error && (
           <div style={{ background: '#fee', color: '#c33', padding: '12px', borderRadius: '4px', marginBottom: '15px', fontSize: '14px', border: '1px solid #fcc' }}>
