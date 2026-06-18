@@ -80,7 +80,7 @@ export async function PUT(
 
   try {
     const body = await request.json();
-    const { name, location, phone, email, number_of_rooms } = body;
+    const { name, location, phone, email, number_of_rooms, rooms } = body;
 
     // Validate number_of_rooms if provided
     if (number_of_rooms !== undefined && number_of_rooms !== null) {
@@ -113,6 +113,35 @@ export async function PUT(
         { error: 'Clinic not found' },
         { status: 404 }
       );
+    }
+
+    // Update rooms if provided
+    if (rooms && Array.isArray(rooms)) {
+      // Delete existing rooms
+      await supabase
+        .from('clinic_rooms')
+        .delete()
+        .eq('clinic_id', params.id);
+
+      // Insert new rooms
+      const roomsToInsert = rooms
+        .filter((name: string) => name && name.trim())
+        .map((name: string) => ({
+          clinic_id: params.id,
+          room_name: name.trim(),
+          room_type: 'standard',
+          capacity: 1,
+        }));
+
+      if (roomsToInsert.length > 0) {
+        const { error: roomError } = await supabase
+          .from('clinic_rooms')
+          .insert(roomsToInsert);
+
+        if (roomError) {
+          console.error('Error saving rooms:', roomError);
+        }
+      }
     }
 
     return NextResponse.json(data[0]);

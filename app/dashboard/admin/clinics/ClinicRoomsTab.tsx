@@ -4,116 +4,79 @@ import { useState, useEffect } from 'react';
 import { X, Plus } from 'lucide-react';
 
 interface ClinicRoomsTabProps {
-  numberOfRooms: number | null | undefined;
   rooms?: string[] | null;
-  onChange: (numberOfRooms: number | null, rooms?: string[]) => void;
+  onChange: (rooms: string[]) => void;
 }
 
-export default function ClinicRoomsTab({ numberOfRooms, rooms = [], onChange }: ClinicRoomsTabProps) {
+export default function ClinicRoomsTab({ rooms = [], onChange }: ClinicRoomsTabProps) {
   const [roomNames, setRoomNames] = useState<string[]>(rooms || []);
 
+  // Sync with initial rooms data when editing
   useEffect(() => {
-    setRoomNames(rooms || []);
+    if (rooms && rooms.length > 0) {
+      setRoomNames(rooms);
+    }
   }, [rooms]);
 
   const handleAddRoom = () => {
     const newRooms = [...roomNames, ''];
     setRoomNames(newRooms);
-    onChange(numberOfRooms || null, newRooms);
+    onChange(newRooms);
   };
 
   const handleRemoveRoom = (index: number) => {
     const newRooms = roomNames.filter((_, i) => i !== index);
     setRoomNames(newRooms);
-    onChange(numberOfRooms || null, newRooms);
+    onChange(newRooms);
   };
 
   const handleRoomNameChange = (index: number, value: string) => {
     const newRooms = [...roomNames];
     newRooms[index] = value;
     setRoomNames(newRooms);
-    onChange(numberOfRooms || null, newRooms);
+    onChange(newRooms);
   };
 
   return (
-    <div className="clinics-form-group">
-      <label>Total Number of Rooms</label>
-      <p style={{ fontSize: '0.85rem', color: '#666', marginBottom: '0.75rem' }}>
-        How many therapy rooms does this clinic have?
-      </p>
-      <input
-        type="number"
-        min="1"
-        value={numberOfRooms || ''}
-        onChange={(e) => {
-          const value = e.target.value ? parseInt(e.target.value, 10) : null;
-          onChange(value, roomNames);
-        }}
-        placeholder="e.g., 5"
-        style={{ width: '120px', marginBottom: '20px' }}
-      />
-
-      <label style={{ marginTop: '20px', display: 'block', marginBottom: '10px' }}>Room Names</label>
-      <p style={{ fontSize: '0.85rem', color: '#666', marginBottom: '15px' }}>
-        Enter the name for each room (e.g., "Room A", "Consultation Room", etc.)
-      </p>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '15px' }}>
-        {roomNames.map((roomName, index) => (
-          <div key={index} style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-            <input
-              type="text"
-              value={roomName}
-              onChange={(e) => handleRoomNameChange(index, e.target.value)}
-              placeholder={`Room ${index + 1}`}
-              style={{
-                flex: 1,
-                padding: '8px 12px',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                fontSize: '14px',
-              }}
-            />
-            <button
-              onClick={() => handleRemoveRoom(index)}
-              type="button"
-              style={{
-                padding: '8px',
-                background: '#ff6b6b',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              title="Remove room"
-            >
-              <X size={16} />
-            </button>
-          </div>
-        ))}
+    <div>
+      <div style={{ marginBottom: '20px' }}>
+        <h3 className="clinics-form-section__title">Clinic Rooms</h3>
+        <p style={{ fontSize: '0.875rem', color: '#8b7f75', marginBottom: '16px' }}>
+          Add the names of therapy rooms available at this clinic (e.g., "Consultation Room", "Private Session Room", etc.)
+        </p>
       </div>
+
+      {roomNames.length > 0 ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '16px' }}>
+          {roomNames.map((roomName, index) => (
+            <div key={index} className="clinics-room-input-wrapper">
+              <span className="clinics-room-number">Room {index + 1}</span>
+              <input
+                type="text"
+                value={roomName}
+                onChange={(e) => handleRoomNameChange(index, e.target.value)}
+                placeholder={`Enter name for room ${index + 1}`}
+                className="clinics-room-input"
+              />
+              <button
+                onClick={() => handleRemoveRoom(index)}
+                type="button"
+                className="clinics-room-delete-btn"
+                title="Remove this room"
+              >
+                <X size={18} />
+              </button>
+            </div>
+          ))}
+        </div>
+      ) : null}
 
       <button
         onClick={handleAddRoom}
         type="button"
-        style={{
-          padding: '8px 16px',
-          background: '#4caf50',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '6px',
-          fontSize: '14px',
-          fontWeight: '500',
-        }}
+        className="clinics-add-room-btn"
       >
-        <Plus size={16} /> Add Room
+        <Plus size={18} /> Add Room
       </button>
     </div>
   );

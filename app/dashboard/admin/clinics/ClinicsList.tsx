@@ -12,6 +12,7 @@ interface Clinic {
   phone: string;
   email: string;
   number_of_rooms?: number | null;
+  rooms?: string[];
   created_at: string;
 }
 
@@ -23,13 +24,11 @@ export default function ClinicsList() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingClinic, setEditingClinic] = useState<Clinic | null>(null);
-  const [activeTab, setActiveTab] = useState<'basic' | 'rooms'>('basic');
   const [formData, setFormData] = useState({
     name: '',
     location: '',
     phone: '',
     email: '',
-    number_of_rooms: null as number | null,
     rooms: [] as any[],
   });
 
@@ -37,6 +36,9 @@ export default function ClinicsList() {
   const [loadingCreate, setLoadingCreate] = useState(false);
   const [loadingEdit, setLoadingEdit] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
+
+  // Permission state
+  const [canManageClinics, setCanManageClinics] = useState(false);
 
   // Message states
   const [errorMessage, setErrorMessage] = useState('');
@@ -73,7 +75,20 @@ export default function ClinicsList() {
 
   useEffect(() => {
     fetchClinics();
+    fetchUserPermissions();
   }, []);
+
+  async function fetchUserPermissions() {
+    try {
+      const res = await fetch('/api/auth/verify', { credentials: 'include' });
+      if (res.ok) {
+        const data = await res.json();
+        setCanManageClinics(data.permissions?.includes('manage_clinics') || false);
+      }
+    } catch (error) {
+      console.error('Failed to fetch permissions:', error);
+    }
+  }
 
   async function fetchClinics() {
     try {
@@ -95,6 +110,19 @@ export default function ClinicsList() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
+    // Validate required fields
+    if (!formData.name.trim()) {
+      showError('Clinic name is required');
+      return;
+    }
+
+    // Validate that at least one room is added
+    const filledRooms = formData.rooms.filter((r: string) => r && r.trim());
+    if (filledRooms.length === 0) {
+      showError('Please add at least one room');
+      return;
+    }
+
     const isEditing = !!editingClinic;
     const loaderSetter = isEditing ? setLoadingEdit : setLoadingCreate;
     loaderSetter(true);
@@ -105,7 +133,8 @@ export default function ClinicsList() {
         location: formData.location,
         phone: formData.phone,
         email: formData.email,
-        number_of_rooms: formData.number_of_rooms,
+        number_of_rooms: filledRooms.length,
+        rooms: filledRooms,
       };
 
       const url = isEditing
@@ -129,8 +158,7 @@ export default function ClinicsList() {
       await fetchClinics();
       setEditingClinic(null);
       setShowForm(false);
-      setFormData({ name: '', location: '', phone: '', email: '', number_of_rooms: null, rooms: [] });
-      setActiveTab('basic');
+      setFormData({ name: '', location: '', phone: '', email: '', rooms: [] });
       showSuccess(`Clinic ${isEditing ? 'updated' : 'created'} successfully`);
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : 'Failed to save clinic';
@@ -148,18 +176,15 @@ export default function ClinicsList() {
       location: clinic.location || '',
       phone: clinic.phone || '',
       email: clinic.email || '',
-      number_of_rooms: (clinic as any).number_of_rooms || null,
-      rooms: [],
+      rooms: clinic.rooms || [],
     });
     setShowForm(true);
-    setActiveTab('basic');
   }
 
   function handleCancel() {
     setShowForm(false);
     setEditingClinic(null);
-    setFormData({ name: '', location: '', phone: '', email: '', number_of_rooms: null, rooms: [] });
-    setActiveTab('basic');
+    setFormData({ name: '', location: '', phone: '', email: '', rooms: [] });
   }
 
   async function handleDelete(clinic: Clinic) {
@@ -225,24 +250,24 @@ export default function ClinicsList() {
 
   return (
     <div className="clinics-container">
-      {/* Messages */}
-      {errorMessage && <div className="clinics-message clinics-message--error">{errorMessage}</div>}
-      {successMessage && <div className="clinics-message clinics-message--success">{successMessage}</div>}
+      {/* Success/Error Messages - only show outside modal when not editing */}
+      {!showForm && successMessage && <div className="clinics-message clinics-message--success">{successMessage}</div>}
 
       {/* Header */}
       <div className="clinics-header">
         <h1>Clinic Management</h1>
-        <button
-          className="clinics-btn clinics-btn--primary"
-          onClick={() => {
-            setShowForm(true);
-            setEditingClinic(null);
-            setFormData({ name: '', location: '', phone: '', email: '', number_of_rooms: null, rooms: [] });
-            setActiveTab('basic');
-          }}
-        >
-          <Plus size={20} /> Add Clinic
-        </button>
+        {canManageClinics && (
+          <button
+            className="clinics-btn clinics-btn--primary"
+            onClick={() => {
+              setShowForm(true);
+              setEditingClinic(null);
+              setFormData({ name: '', location: '', phone: '', email: '', rooms: [] });
+            }}
+          >
+            <Plus size={20} /> Add Clinic
+          </button>
+        )}
       </div>
 
       {/* Form */}
@@ -260,81 +285,65 @@ export default function ClinicsList() {
               </button>
             </div>
 
-            {/* Tabs */}
-            <div className="clinics-form-tabs">
-              <button
-                type="button"
-                className={`clinics-form-tab ${activeTab === 'basic' ? 'clinics-form-tab--active' : ''}`}
-                onClick={() => setActiveTab('basic')}
-              >
-                Basic Info
-              </button>
-              <button
-                type="button"
-                className={`clinics-form-tab ${activeTab === 'rooms' ? 'clinics-form-tab--active' : ''}`}
-                onClick={() => setActiveTab('rooms')}
-              >
-                Rooms
-              </button>
-            </div>
+            {/* Error Message in Modal */}
+            {errorMessage && <div className="clinics-message clinics-message--error" style={{ margin: '0 0 15px 0' }}>{errorMessage}</div>}
 
             <form onSubmit={handleSubmit}>
-              {/* Basic Info Tab */}
-              {activeTab === 'basic' && (
-                <>
-                  <div className="clinics-form-group">
-                    <label>Clinic Name *</label>
-                    <input
-                      type="text"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      required
-                      placeholder="e.g., Main Clinic, Branch Clinic"
-                    />
-                  </div>
+              {/* Clinic Details Section */}
+              <div className="clinics-form-section">
+                <h3 className="clinics-form-section__title">Clinic Details</h3>
 
-                  <div className="clinics-form-group">
-                    <label>Location</label>
-                    <input
-                      type="text"
-                      value={formData.location}
-                      onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                      placeholder="Cairo, Alexandria, etc."
-                    />
-                  </div>
+                <div className="clinics-form-group">
+                  <label>Clinic Name *</label>
+                  <input
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    required
+                    placeholder="e.g., Main Clinic, Branch Clinic"
+                  />
+                </div>
 
-                  <div className="clinics-form-group">
-                    <label>Phone</label>
-                    <input
-                      type="tel"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      placeholder="+20 XXX XXXX XXXX"
-                    />
-                  </div>
+                <div className="clinics-form-group">
+                  <label>Location</label>
+                  <input
+                    type="text"
+                    value={formData.location}
+                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    placeholder="Cairo, Alexandria, etc."
+                  />
+                </div>
 
-                  <div className="clinics-form-group">
-                    <label>Email</label>
-                    <input
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      placeholder="clinic@example.com"
-                    />
-                  </div>
-                </>
-              )}
+                <div className="clinics-form-group">
+                  <label>Phone</label>
+                  <input
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    placeholder="+20 XXX XXXX XXXX"
+                  />
+                </div>
 
-              {/* Rooms Tab */}
-              {activeTab === 'rooms' && (
+                <div className="clinics-form-group">
+                  <label>Email</label>
+                  <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    placeholder="clinic@example.com"
+                  />
+                </div>
+              </div>
+
+              {/* Clinic Rooms Section */}
+              <div className="clinics-form-section">
                 <ClinicRoomsTab
-                  numberOfRooms={formData.number_of_rooms}
                   rooms={formData.rooms}
-                  onChange={(numberOfRooms, rooms) =>
-                    setFormData({ ...formData, number_of_rooms: numberOfRooms, rooms: rooms || [] })
+                  onChange={(rooms) =>
+                    setFormData({ ...formData, rooms: rooms || [] })
                   }
                 />
-              )}
+              </div>
 
               <div className="clinics-form-actions">
                 <button
@@ -393,79 +402,76 @@ export default function ClinicsList() {
         </div>
       </div>
 
-      {/* Table */}
-      <div className="clinics-table-wrapper">
-        <table className="clinics-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Location</th>
-              <th>Phone</th>
-              <th>Email</th>
-              <th>Rooms</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginatedClinics.length === 0 ? (
-              <tr>
-                <td colSpan={6} className="clinics-empty">
-                  No clinics found
-                </td>
-              </tr>
-            ) : (
-              paginatedClinics.map((clinic) => (
-                <tr key={clinic.id}>
-                  <td><strong>{clinic.name}</strong></td>
-                  <td>{clinic.location || '-'}</td>
-                  <td>{clinic.phone || '-'}</td>
-                  <td>{clinic.email || '-'}</td>
-                  <td>
-                    {(clinic as any).rooms && (clinic as any).rooms.length > 0 ? (
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                        {(clinic as any).rooms.map((room: string, idx: number) => (
-                          <span
-                            key={idx}
-                            style={{
-                              padding: '4px 8px',
-                              backgroundColor: '#e8f5e9',
-                              borderRadius: '4px',
-                              fontSize: '13px',
-                              fontWeight: '500',
-                              color: '#2e7d32',
-                            }}
-                          >
-                            {room}
-                          </span>
-                        ))}
-                      </div>
-                    ) : (
-                      <span style={{ color: '#999', fontSize: '13px' }}>-</span>
-                    )}
-                  </td>
-                  <td className="clinics-actions">
-                    <button
-                      className="clinics-btn clinics-btn--icon"
-                      onClick={() => handleEdit(clinic)}
-                      title="Edit"
-                    >
-                      <Edit2 size={18} />
-                    </button>
-                    <button
-                      className="clinics-btn clinics-btn--icon clinics-btn--danger"
-                      onClick={() => handleDelete(clinic)}
-                      disabled={loadingDelete}
-                      title="Delete"
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+      {/* Clinics Grid */}
+      {paginatedClinics.length === 0 ? (
+        <div className="clinics-empty">
+          No clinics found
+        </div>
+      ) : (
+        <div className="clinics-grid">
+          {paginatedClinics.map((clinic) => (
+            <article key={clinic.id} className="clinics-card">
+              <div className="clinics-card__header">
+                <h3 className="clinics-card__name">{clinic.name}</h3>
+              </div>
+
+              <div className="clinics-card__info">
+                {clinic.location && (
+                  <div className="clinics-card__info-row">
+                    <span className="clinics-card__info-label">Location</span>
+                    <span className="clinics-card__info-value">{clinic.location}</span>
+                  </div>
+                )}
+                {clinic.phone && (
+                  <div className="clinics-card__info-row">
+                    <span className="clinics-card__info-label">Phone</span>
+                    <span className="clinics-card__info-value">{clinic.phone}</span>
+                  </div>
+                )}
+                {clinic.email && (
+                  <div className="clinics-card__info-row">
+                    <span className="clinics-card__info-label">Email</span>
+                    <span className="clinics-card__info-value">{clinic.email}</span>
+                  </div>
+                )}
+              </div>
+
+              {clinic.rooms && clinic.rooms.length > 0 && (
+                <div className="clinics-card__rooms">
+                  <span className="clinics-card__rooms-label">Rooms ({clinic.rooms.length})</span>
+                  <div className="clinics-card__rooms-list">
+                    {clinic.rooms.map((room: string, idx: number) => (
+                      <span key={idx} className="clinics-room-badge">
+                        {room}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {canManageClinics && (
+                <div className="clinics-card__actions">
+                  <button
+                    className="clinics-btn clinics-btn--icon"
+                    onClick={() => handleEdit(clinic)}
+                    title="Edit clinic"
+                  >
+                    <Edit2 size={18} />
+                  </button>
+                  <button
+                    className="clinics-btn clinics-btn--icon clinics-btn--danger"
+                    onClick={() => handleDelete(clinic)}
+                    disabled={loadingDelete}
+                    title="Delete clinic"
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                </div>
+              )}
+            </article>
+          ))}
+        </div>
+      )}
 
       {/* Pagination */}
       {totalPages > 1 && (

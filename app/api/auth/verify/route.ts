@@ -32,32 +32,52 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch fresh permissions from database (real-time)
-    const { data: user, error: userError } = await supabase
-      .from('clinic_users')
-      .select(`
-        roles (
-          id,
-          name,
-          is_super_admin,
-          role_permissions (
-            permissions (key, name)
-          )
-        )
-      `)
-      .eq('id', payload.userId)
-      .single();
-
-    console.log('Auth verify - DB query result:', { userError, hasUser: !!user, hasRoles: !!user?.roles });
-
     let permissions = payload.permissions;
-    if (!userError && user) {
-      const role = Array.isArray(user.roles) ? user.roles[0] : user.roles;
-      const dbPermissions = role?.role_permissions?.map((rp: any) => rp.permissions.key) || [];
-      console.log('Auth verify - Extracted permissions from DB:', { role: role?.name, dbPermissions });
-      // Use database permissions if query succeeded, even if empty
-      permissions = dbPermissions;
-    } else {
-      console.log('Auth verify - DB query failed, using JWT permissions:', { userError, payload: payload.permissions });
+
+    try {
+      // Step 1: Get user's role_id
+      const { data: userData, error: userError } = await supabase
+        .from('clinic_users')
+        .select('role_id')
+        .eq('id', payload.userId)
+        .single();
+
+      if (userError) {
+        console.log('Auth verify - Step 1 (user query) failed:', userError);
+      } else if (userData?.role_id) {
+        // Step 2: Get permission_ids for this role
+        const { data: rolePerms, error: rolePermsError } = await supabase
+          .from('role_permissions')
+          .select('permission_id')
+          .eq('role_id', userData.role_id);
+
+        if (rolePermsError) {
+          console.log('Auth verify - Step 2 (role_permissions query) failed:', rolePermsError);
+        } else if (rolePerms && rolePerms.length > 0) {
+          const permissionIds = rolePerms.map((rp: any) => rp.permission_id);
+          console.log('Auth verify - Found permission IDs:', permissionIds);
+
+          // Step 3: Get permission keys
+          const { data: perms, error: permsError } = await supabase
+            .from('permissions')
+            .select('key')
+            .in('id', permissionIds);
+
+          if (permsError) {
+            console.log('Auth verify - Step 3 (permissions query) failed:', permsError);
+          } else if (perms && perms.length > 0) {
+            const dbPermissions = perms.map((p: any) => p.key).filter(Boolean);
+            console.log('Auth verify - Successfully fetched permissions from DB:', { count: dbPermissions.length, permissions: dbPermissions });
+            permissions = dbPermissions;
+          } else {
+            console.log('Auth verify - Step 3 returned no permissions');
+          }
+        } else {
+          console.log('Auth verify - Step 2 returned no role permissions');
+        }
+      }
+    } catch (dbError) {
+      console.log('Auth verify - Database query error, using JWT permissions:', dbError);
     }
 
     return NextResponse.json(
