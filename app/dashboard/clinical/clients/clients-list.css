@@ -124,7 +124,7 @@ body {
 
 .clients-table tr {
   display: grid;
-  grid-template-columns: repeat(10, 1fr);
+  grid-template-columns: repeat(9, 1fr);
   gap: var(--space-sm);
   padding: var(--space-md);
 }
@@ -291,7 +291,7 @@ body {
   background: var(--color-surface-alt);
   border-bottom: 2px solid var(--color-border);
   display: grid;
-  grid-template-columns: repeat(10, 1fr);
+  grid-template-columns: repeat(9, 1fr);
   gap: var(--space-sm);
   padding: var(--space-md);
 }
@@ -313,7 +313,7 @@ body {
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
   display: grid;
-  grid-template-columns: repeat(10, 1fr);
+  grid-template-columns: repeat(9, 1fr);
   gap: var(--space-sm);
   padding: var(--space-md);
   transition: all var(--transition-fast);
