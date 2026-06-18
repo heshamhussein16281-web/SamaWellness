@@ -112,6 +112,26 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to fetch clients' }, { status: 500 });
     }
 
+    // Get therapist IDs for lookup
+    const therapistIds = (clients || [])
+      .map((c: any) => c.therapist_id)
+      .filter((id: any) => id !== null && id !== undefined);
+
+    // Fetch therapist names if needed
+    let therapistMap: Record<number, string> = {};
+    if (therapistIds.length > 0) {
+      const { data: therapists } = await supabase
+        .from('therapists')
+        .select('id, name')
+        .in('id', therapistIds);
+
+      if (therapists) {
+        therapistMap = Object.fromEntries(
+          therapists.map((t: any) => [t.id, t.name])
+        );
+      }
+    }
+
     // Format response
     const formattedClients = (clients || []).map((client: any) => {
       return {
@@ -124,7 +144,7 @@ export async function GET(request: NextRequest) {
         therapist_id: client.therapist_id || null,
         is_recurring: client.is_recurring || false,
         total_sessions_completed: client.total_sessions_completed || 0,
-        therapist_name: null,
+        therapist_name: client.therapist_id ? (therapistMap[client.therapist_id] || null) : null,
       };
     });
 
