@@ -11,8 +11,6 @@ interface FormData {
   gender: string;
   language: string;
   concern: string;
-  referred_by: string;
-  preferences: string;
   intake_notes: string;
   therapist_selection_route: 'assessment' | 'direct_selection'; // Assessment or Choose Therapist
   therapist_id?: number;
@@ -36,8 +34,6 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
     gender: '',
     language: '',
     concern: '',
-    referred_by: '',
-    preferences: '',
     intake_notes: '',
     therapist_selection_route: '' as any,
   });
@@ -104,9 +100,12 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
         if (value.trim().length < 2) return 'Name must be at least 2 characters';
         return '';
       case 'concern':
-        if (value && value.trim().length > 0 && value.trim().length < 10) {
-          return 'Please provide more detail (at least 10 characters)';
-        }
+        // Concern is optional - no validation needed
+        return '';
+      case 'phone':
+        if (!value?.trim()) return 'Phone number is required';
+        const phoneDigits = value.replace(/\D/g, '');
+        if (phoneDigits.length !== 11) return 'Phone number must be exactly 11 digits';
         return '';
       case 'email':
         if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'Invalid email format';
@@ -300,7 +299,9 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
             </div>
 
             <div className="intake-form-group">
-              <label htmlFor="phone" className="intake-form-label">Phone</label>
+              <label htmlFor="phone" className="intake-form-label">
+                Phone <span className="intake-form-required" aria-label="required">*</span>
+              </label>
               <input
                 type="tel"
                 id="phone"
@@ -308,11 +309,18 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
                 value={formData.phone}
                 onChange={handleChange}
                 onBlur={() => handleBlur('phone', formData.phone)}
-                className="intake-form-input"
-                placeholder="(123) 456-7890"
+                className={`intake-form-input ${fieldErrors.phone ? 'intake-form-input--error' : ''}`}
+                placeholder="Enter 11 digits (e.g., 01001234567)"
                 aria-label="Phone number"
+                aria-describedby={fieldErrors.phone ? 'phone-error' : 'phone-hint'}
                 autoComplete="tel"
               />
+              {fieldErrors.phone && touchedFields.includes('phone') && (
+                <div id="phone-error" className="intake-form-field-error">{fieldErrors.phone}</div>
+              )}
+              {!fieldErrors.phone && !touchedFields.includes('phone') && (
+                <p id="phone-hint" className="intake-form-help-text">11 digits required (e.g., 01001234567)</p>
+              )}
             </div>
           </div>
         </fieldset>
@@ -463,37 +471,6 @@ export default function IntakeForm({ onSuccess, onCancel }: IntakeFormProps) {
                 placeholder="e.g., English, Arabic"
               />
             </div>
-          </div>
-        </fieldset>
-
-        {/* Client Preferences Section */}
-        <fieldset className="intake-form-section">
-          <legend className="intake-form-section-title">Preferences & Referral</legend>
-
-          <div className="intake-form-group">
-            <label htmlFor="preferences" className="intake-form-label">Client Preferences</label>
-            <textarea
-              id="preferences"
-              name="preferences"
-              value={formData.preferences}
-              onChange={handleChange}
-              className="intake-form-textarea"
-              placeholder="Any specific preferences or requirements (e.g., therapist gender, session time preferences)"
-              rows={3}
-            />
-          </div>
-
-          <div className="intake-form-group">
-            <label htmlFor="referred_by" className="intake-form-label">Referred By</label>
-            <input
-              type="text"
-              id="referred_by"
-              name="referred_by"
-              value={formData.referred_by}
-              onChange={handleChange}
-              className="intake-form-input"
-              placeholder="e.g., Friend, Google Search, Therapist"
-            />
           </div>
         </fieldset>
 

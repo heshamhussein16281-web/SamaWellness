@@ -92,10 +92,13 @@ export default function ClientsPage() {
   };
 
   const handleIntakeSuccess = (clientId: number, clientName: string) => {
-    // After successful intake, show a success message and go back to list
+    // After successful intake, refresh the client list and go back to list view
+    setSearchPhone('');
+    setViewMode('list');
+    // Wait a bit longer for database to commit, then refresh
     setTimeout(() => {
-      setViewMode('list');
-    }, 2000);
+      fetchClients(1, '');
+    }, 3000);
   };
 
   if (viewMode === 'intake') {

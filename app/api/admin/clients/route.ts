@@ -92,10 +92,9 @@ export async function GET(request: NextRequest) {
         client_since,
         therapist_id,
         is_recurring,
-        total_sessions_completed,
-        therapists:therapist_id (id, name)
+        total_sessions_completed
       `)
-      .order('client_since', { ascending: false })
+      .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1);
 
     if (statusFilter) {
@@ -113,10 +112,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to fetch clients' }, { status: 500 });
     }
 
-    // Format response with therapist names
+    // Format response
     const formattedClients = (clients || []).map((client: any) => {
-      const therapist = Array.isArray(client.therapists) ? client.therapists[0] : client.therapists;
-
       return {
         id: client.id,
         name: client.name,
@@ -127,7 +124,7 @@ export async function GET(request: NextRequest) {
         therapist_id: client.therapist_id || null,
         is_recurring: client.is_recurring || false,
         total_sessions_completed: client.total_sessions_completed || 0,
-        therapist_name: therapist?.name || null,
+        therapist_name: null,
       };
     });
 

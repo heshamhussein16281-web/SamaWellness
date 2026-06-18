@@ -41,18 +41,18 @@ async function checkPermission(
  * Body: {
  *   name (required),
  *   email? (optional, validated if provided),
- *   phone? (optional),
+ *   phone (required - must be exactly 11 digits),
  *   date_of_birth? (optional, ISO 8601),
  *   gender? (optional - male, female, other, prefer_not_to_say),
  *   language? (optional - preferred language for sessions),
- *   concern (required - primary reason for seeking therapy),
- *   referred_by? (optional - referral source),
- *   preferences? (optional - session preferences),
- *   intake_notes? (optional - clinical observations)
+ *   concern? (optional - primary reason for seeking therapy),
+ *   intake_notes? (optional - clinical observations),
+ *   therapist_selection_route (required - 'assessment' or 'direct_selection'),
+ *   therapist_id? (optional - required if therapist_selection_route is 'direct_selection')
  * }
  * Logic:
- *   1. Authenticate user & verify 'manage_clients' permission
- *   2. Validate required fields (name, concern) & email/date format
+ *   1. Authenticate user & verify 'create_client' permission
+ *   2. Validate required fields (name, phone with 11 digits)
  *   3. Create atomic transaction:
  *      - INSERT into clients table (all fields saved)
  *      - INSERT into client_status_history (first status entry)
@@ -69,6 +69,8 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
+    console.log('Intake request body:', JSON.stringify(body, null, 2));
+
     const {
       name,
       email,
@@ -77,17 +79,32 @@ export async function POST(request: NextRequest) {
       gender,
       language,
       concern,
-      referred_by,
-      preferences,
       intake_notes,
       therapist_selection_route,
       therapist_id,
     } = body;
 
     // Validate required fields
-    if (!name || !concern) {
+    if (!name) {
       return NextResponse.json(
-        { error: 'name and concern are required' },
+        { error: 'Full name is required' },
+        { status: 400 }
+      );
+    }
+
+    // Validate phone is 11 digits if provided
+    if (phone) {
+      const phoneDigits = phone.replace(/\D/g, '');
+      if (phoneDigits.length !== 11) {
+        return NextResponse.json(
+          { error: 'Phone number must be exactly 11 digits' },
+          { status: 400 }
+        );
+      }
+    } else {
+      // Phone is required
+      return NextResponse.json(
+        { error: 'Phone number is required' },
         { status: 400 }
       );
     }
@@ -132,31 +149,35 @@ export async function POST(request: NextRequest) {
           gender: gender || null,
           language: language || null,
           concern: concern || null,
-          preferences: preferences || null,
+          preferences: null,
           status: clientStatus,
-          client_since: now,
-          intake_date: now,
-          notes: intake_notes || null,
-          referral_source: referred_by || null,
-          // Only set therapist_id if they chose direct selection and selected a therapist
-          // For assessment route, therapist_id will be set after Sama assesses
           therapist_id: therapist_selection_route === 'direct_selection' ? (therapist_id || null) : null,
-          created_at: now,
-          updated_at: now,
         },
       ])
       .select()
       .single();
 
     if (clientError) {
-      console.error('Error creating client:', clientError);
+      console.error('Error creating client:', {
+        code: clientError.code,
+        message: clientError.message,
+        details: clientError.details,
+        hint: clientError.hint,
+      });
       if (clientError.code === '23505') {
         return NextResponse.json(
           { error: 'Client with this email or phone already exists' },
           { status: 400 }
         );
       }
-      return NextResponse.json({ error: 'Failed to create client' }, { status: 500 });
+      return NextResponse.json(
+        {
+          error: 'Failed to create client',
+          details: clientError.message,
+          code: clientError.code
+        },
+        { status: 500 }
+      );
     }
 
     // Create initial status history entry
