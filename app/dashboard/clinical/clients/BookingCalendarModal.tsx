@@ -103,24 +103,32 @@ export default function BookingCalendarModal({
   });
 
   // Helper functions for therapist schedule
-  const getDayStart = (dayName: string): number => {
+  const getDayStart = (dayAbbr: string): number => {
     // If no schedule data, use default hours (9 AM)
-    if (!therapistSchedule?.schedule || !therapistSchedule.schedule[dayName]) return HOUR_START;
-    return therapistSchedule.schedule[dayName].start;
+    if (!therapistSchedule?.schedule) return HOUR_START;
+    // Convert abbreviated day name (Mon) to full name (Monday) to match schedule format
+    const fullDayName = matchDayInSchedule(dayAbbr);
+    if (!therapistSchedule.schedule[fullDayName]) return HOUR_START;
+    return therapistSchedule.schedule[fullDayName].start;
   };
 
-  const getDayEnd = (dayName: string): number => {
+  const getDayEnd = (dayAbbr: string): number => {
     // If no schedule data, use default hours (5 PM)
-    if (!therapistSchedule?.schedule || !therapistSchedule.schedule[dayName]) return HOUR_END;
-    return therapistSchedule.schedule[dayName].end;
+    if (!therapistSchedule?.schedule) return HOUR_END;
+    // Convert abbreviated day name (Mon) to full name (Monday) to match schedule format
+    const fullDayName = matchDayInSchedule(dayAbbr);
+    if (!therapistSchedule.schedule[fullDayName]) return HOUR_END;
+    return therapistSchedule.schedule[fullDayName].end;
   };
 
-  const isTherapistWorking = (dayName: string): boolean => {
+  const isTherapistWorking = (dayAbbr: string): boolean => {
     // If no schedule data, assume all days are working (fallback)
     if (!therapistSchedule || therapistSchedule.days.length === 0) {
       return true;
     }
-    return therapistSchedule.days.includes(dayName);
+    // Convert abbreviated day name (Mon) to full name (Monday) to match schedule format
+    const fullDayName = matchDayInSchedule(dayAbbr);
+    return therapistSchedule.days.includes(fullDayName);
   };
 
   // Get week days
@@ -138,6 +146,24 @@ export default function BookingCalendarModal({
 
   const getDayName = (date: Date) => {
     return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][date.getDay()];
+  };
+
+  const getFullDayName = (date: Date) => {
+    return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][date.getDay()];
+  };
+
+  // Convert day name to match format in schedule (full name like "Monday" vs "Mon")
+  const matchDayInSchedule = (dayAbbr: string): string => {
+    const fullNames: Record<string, string> = {
+      'Sun': 'Sunday',
+      'Mon': 'Monday',
+      'Tue': 'Tuesday',
+      'Wed': 'Wednesday',
+      'Thu': 'Thursday',
+      'Fri': 'Friday',
+      'Sat': 'Saturday'
+    };
+    return fullNames[dayAbbr] || dayAbbr;
   };
 
   const weekDays = getWeekDays();
