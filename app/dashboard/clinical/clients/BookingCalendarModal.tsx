@@ -92,10 +92,10 @@ export default function BookingCalendarModal({
     fetchSchedule();
   }, [therapistId]);
 
-  // Time slots (9am to 5pm)
+  // Time slots (9am to 10pm) - full day view
   const HOUR_START = 9;
-  const HOUR_END = 17;
-  const HOURS = Array.from({ length: HOUR_END - HOUR_START }, (_, i) => HOUR_START + i);
+  const HOUR_END = 22; // 10 PM - shows full day range
+  const HOURS = Array.from({ length: HOUR_END - HOUR_START + 1 }, (_, i) => HOUR_START + i);
   const HOUR_LABELS = HOURS.map((h) => {
     const period = h >= 12 ? 'PM' : 'AM';
     const displayH = h > 12 ? h - 12 : h === 0 ? 12 : h;
@@ -113,7 +113,7 @@ export default function BookingCalendarModal({
   };
 
   const getDayEnd = (dayAbbr: string): number => {
-    // If no schedule data, use default hours (5 PM)
+    // If no schedule data, use default hours (10 PM)
     if (!therapistSchedule?.schedule) return HOUR_END;
     // Convert abbreviated day name (Mon) to full name (Monday) to match schedule format
     const fullDayName = matchDayInSchedule(dayAbbr);
