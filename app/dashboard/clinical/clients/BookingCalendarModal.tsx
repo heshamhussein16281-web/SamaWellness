@@ -42,6 +42,7 @@ export default function BookingCalendarModal({
   const [submitting, setSubmitting] = useState(false);
   const [therapistSchedule, setTherapistSchedule] = useState<TherapistSchedule | null>(null);
   const [loadingSchedule, setLoadingSchedule] = useState(true);
+  const [scheduleError, setScheduleError] = useState<string | null>(null);
 
   // Fetch therapist schedule
   useEffect(() => {
@@ -52,21 +53,37 @@ export default function BookingCalendarModal({
 
     const fetchSchedule = async () => {
       try {
+        setScheduleError(null);
+        console.log('Fetching schedule for therapist:', therapistId);
         const res = await fetch(`/api/admin/therapists/${therapistId}`, {
           credentials: 'include',
         });
+
+        console.log('Schedule API response status:', res.status);
+
         if (res.ok) {
           const data = await res.json();
+          console.log('Schedule data received:', data);
           const therapist = data.therapist;
-          if (therapist) {
+          if (therapist && therapist.days && therapist.days.length > 0) {
+            console.log('Setting therapist schedule:', therapist.days, therapist.schedule);
             setTherapistSchedule({
               days: therapist.days || [],
               schedule: therapist.schedule || {},
             });
+          } else {
+            console.warn('No schedule data in therapist object');
+            setScheduleError('No schedule data found for this therapist');
           }
+        } else {
+          const errorData = await res.json().catch(() => ({}));
+          console.error('Failed to fetch schedule:', res.status, errorData);
+          setScheduleError(`Failed to load schedule (Status: ${res.status})`);
         }
       } catch (err) {
+        const message = err instanceof Error ? err.message : 'Unknown error';
         console.error('Failed to fetch therapist schedule:', err);
+        setScheduleError(`Error: ${message}`);
       } finally {
         setLoadingSchedule(false);
       }
@@ -265,7 +282,19 @@ export default function BookingCalendarModal({
         </div>
 
         {/* Therapist Schedule Info */}
-        {therapistSchedule && (
+        {loadingSchedule && (
+          <div className="therapist-schedule-info loading">
+            <p style={{ margin: 0, fontSize: '0.875rem', color: '#666' }}>Loading therapist schedule...</p>
+          </div>
+        )}
+
+        {scheduleError && (
+          <div className="therapist-schedule-info error">
+            <p style={{ margin: 0, fontSize: '0.875rem', color: '#c75c5c' }}>⚠ {scheduleError}</p>
+          </div>
+        )}
+
+        {therapistSchedule && therapistSchedule.days.length > 0 && (
           <div className="therapist-schedule-info">
             <h4>Working Schedule</h4>
             <div className="schedule-grid">
