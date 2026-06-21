@@ -189,13 +189,14 @@ export default function BookingCalendarModal({
         throw new Error(data.error || 'Failed to create booking');
       }
 
-      // Update client status to booking_scheduled (both new and recurring)
+      // Update client status and therapist assignment to booking_scheduled (both new and recurring)
       const clientStatusRes = await fetch(`/api/admin/clients/${clientId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({
           status: 'booking_scheduled',
+          therapist_id: selectedTherapistId,
         }),
       });
 

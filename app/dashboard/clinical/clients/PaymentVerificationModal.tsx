@@ -38,7 +38,7 @@ export default function PaymentVerificationModal({
 
     try {
       // Determine next status based on whether therapist is already assigned
-      const nextStatus = hasTherapist ? 'ready_for_booking' : 'payment_pending';
+      const nextStatus = hasTherapist ? 'ready_for_booking' : 'assessment_pending';
 
       const res = await fetch(`/api/admin/clients/${clientId}`, {
         method: 'PUT',
