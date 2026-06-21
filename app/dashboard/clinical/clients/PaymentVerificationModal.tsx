@@ -38,7 +38,7 @@ export default function PaymentVerificationModal({
 
     try {
       // Determine next status based on whether therapist is already assigned
-      const nextStatus = hasTherapist ? 'payment_verified' : 'assessment_pending';
+      const nextStatus = hasTherapist ? 'ready_for_booking' : 'payment_pending';
 
       const res = await fetch(`/api/admin/clients/${clientId}`, {
         method: 'PUT',
@@ -57,10 +57,12 @@ export default function PaymentVerificationModal({
       }
 
       setSuccess(true);
+      // Wait 2 seconds to show success message and allow data refresh to complete
+      // Then close modal so user sees updated Next Action
       setTimeout(() => {
-        onSuccess();
-        onClose();
-      }, 1500);
+        onSuccess(); // Triggers fetchClients on parent
+        onClose();   // Close modal after refetch is initiated
+      }, 2000);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {

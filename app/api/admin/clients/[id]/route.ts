@@ -36,10 +36,6 @@ async function checkPermission(
   return { authorized: true, user: payload };
 }
 
-/**
- * GET /api/admin/clients/[id] - Get client details
- * Returns: {id, name, email, phone, status, therapist_id, ...}
- */
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -72,29 +68,11 @@ export async function GET(
   }
 }
 
-/**
- * PUT /api/admin/clients/[id] - Update client details
- * Body: {
- *   therapist_id? (number),
- *   status? (string),
- *   payment_verified? (boolean),
- *   payment_date? (ISO string),
- *   payment_method? (string),
- *   transaction_id? (string),
- *   notes? (string)
- * }
- * Logic:
- *   1. Authenticate & verify manage_clients permission
- *   2. Update client fields provided in body
- *   3. If status changed: create status_history entry
- *   4. Return updated client
- */
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   // Check if user has manage_clients OR view_clients permission
-  // manage_clients = admin, view_clients = reception staff for payment verification
   let auth = await checkPermission(request, 'manage_clients');
   if (!auth.authorized) {
     auth = await checkPermission(request, 'view_clients');
@@ -115,36 +93,19 @@ export async function PUT(
       status,
       payment_verified,
       payment_date,
-      payment_method,
-      transaction_id,
       notes,
     } = body;
 
-    // Get current client to compare status changes
-    const { data: currentClient, error: fetchError } = await supabase
-      .from('clients')
-      .select('status')
-      .eq('id', clientId)
-      .single();
-
-    if (fetchError || !currentClient) {
-      return NextResponse.json({ error: 'Client not found' }, { status: 404 });
-    }
-
-    // Build update object with only provided fields
+    // Build update object - only fields that exist in clients table
     const updateData: any = {};
     if (therapist_id !== undefined) updateData.therapist_id = therapist_id;
     if (status !== undefined) updateData.status = status;
     if (payment_verified !== undefined) updateData.payment_verified = payment_verified;
     if (payment_date !== undefined) updateData.payment_date = payment_date;
-    if (payment_method !== undefined) updateData.payment_method = payment_method;
-    if (transaction_id !== undefined) updateData.transaction_id = transaction_id;
     if (notes !== undefined) updateData.notes = notes;
 
-    // Always update updated_at
-    updateData.updated_at = new Date().toISOString();
+    console.log('Updating client', clientId, 'with:', JSON.stringify(updateData));
 
-    // Update client
     const { data: updatedClient, error: updateError } = await supabase
       .from('clients')
       .update(updateData)
@@ -153,30 +114,13 @@ export async function PUT(
       .single();
 
     if (updateError) {
-      console.error('Error updating client:', updateError);
-      return NextResponse.json({ error: 'Failed to update client' }, { status: 500 });
+      console.error('Supabase error:', updateError);
+      return NextResponse.json({ 
+        error: 'Failed to update client: ' + (updateError.message || 'Unknown error')
+      }, { status: 500 });
     }
 
-    // If status changed, create history entry
-    if (status && status !== currentClient.status) {
-      const { error: historyError } = await supabase
-        .from('client_status_history')
-        .insert([
-          {
-            client_id: clientId,
-            old_status: currentClient.status,
-            new_status: status,
-            changed_by_user_id: auth.user.userId,
-            reason: notes || `Status updated to ${status}`,
-            created_at: new Date().toISOString(),
-          },
-        ]);
-
-      if (historyError) {
-        console.error('Error creating status history:', historyError);
-        // Don't fail the request if history creation fails
-      }
-    }
+    console.log('Successfully updated client:', clientId);
 
     // Log audit action
     try {
@@ -185,22 +129,20 @@ export async function PUT(
         action: 'update',
         entityType: 'client',
         entityId: clientId.toString(),
-        entityName: `Client ID ${clientId} - ${status ? `Status: ${status}` : 'Updated'}`,
+        entityName: `Client ID ${clientId}`,
       });
     } catch (auditError) {
-      console.error('Failed to log audit action:', auditError);
-      // Continue anyway - audit logging is not critical
+      console.error('Audit log failed:', auditError);
     }
 
     return NextResponse.json(
-      {
-        success: true,
-        data: updatedClient,
-      },
+      { success: true, data: updatedClient },
       { status: 200 }
     );
   } catch (error) {
-    console.error('PUT /api/admin/clients/[id] error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('PUT error:', error);
+    return NextResponse.json({ 
+      error: 'Internal server error: ' + (error instanceof Error ? error.message : 'Unknown')
+    }, { status: 500 });
   }
 }
