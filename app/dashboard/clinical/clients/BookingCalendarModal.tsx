@@ -3,6 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import './modal.css';
 
+interface TherapistSchedule {
+  days: string[];
+  schedule: Record<string, { start: number; end: number }>;
+}
+
 interface BookingCalendarModalProps {
   clientId: number;
   clientName: string;
@@ -35,6 +40,40 @@ export default function BookingCalendarModal({
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [therapistSchedule, setTherapistSchedule] = useState<TherapistSchedule | null>(null);
+  const [loadingSchedule, setLoadingSchedule] = useState(true);
+
+  // Fetch therapist schedule
+  useEffect(() => {
+    if (!therapistId) {
+      setLoadingSchedule(false);
+      return;
+    }
+
+    const fetchSchedule = async () => {
+      try {
+        const res = await fetch(`/api/admin/therapists/${therapistId}`, {
+          credentials: 'include',
+        });
+        if (res.ok) {
+          const data = await res.json();
+          const therapist = data.therapist;
+          if (therapist) {
+            setTherapistSchedule({
+              days: therapist.days || [],
+              schedule: therapist.schedule || {},
+            });
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch therapist schedule:', err);
+      } finally {
+        setLoadingSchedule(false);
+      }
+    };
+
+    fetchSchedule();
+  }, [therapistId]);
 
   // Time slots (9am to 5pm)
   const HOUR_START = 9;
@@ -45,6 +84,21 @@ export default function BookingCalendarModal({
     const displayH = h > 12 ? h - 12 : h === 0 ? 12 : h;
     return `${displayH} ${period}`;
   });
+
+  // Helper functions for therapist schedule
+  const getDayStart = (dayName: string): number => {
+    if (!therapistSchedule?.schedule?.[dayName]) return HOUR_START;
+    return therapistSchedule.schedule[dayName].start;
+  };
+
+  const getDayEnd = (dayName: string): number => {
+    if (!therapistSchedule?.schedule?.[dayName]) return HOUR_END;
+    return therapistSchedule.schedule[dayName].end;
+  };
+
+  const isTherapistWorking = (dayName: string): boolean => {
+    return therapistSchedule?.days.includes(dayName) ?? false;
+  };
 
   // Get week days
   const getWeekDays = () => {
@@ -210,50 +264,114 @@ export default function BookingCalendarModal({
           </span>
         </div>
 
+        {/* Therapist Schedule Info */}
+        {therapistSchedule && (
+          <div className="therapist-schedule-info">
+            <h4>Working Schedule</h4>
+            <div className="schedule-grid">
+              {therapistSchedule.days.map((day) => {
+                const dayStart = getDayStart(day);
+                const dayEnd = getDayEnd(day);
+                const formatHour = (h: number) => {
+                  const period = h >= 12 ? 'PM' : 'AM';
+                  const displayH = h > 12 ? h - 12 : h === 0 ? 12 : h;
+                  return `${displayH}${period}`;
+                };
+                return (
+                  <div key={day} className="schedule-day">
+                    <span className="day-name">{day}</span>
+                    <span className="day-hours">{formatHour(dayStart)}–{formatHour(dayEnd)}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* Calendar Grid */}
         <div className="legacy-calendar-wrapper">
           <div className="legacy-calendar-grid">
             {/* Header Row - Days */}
             <div className="legacy-grid-cell legacy-header-cell"></div>
-            {weekDays.map((date) => (
-              <div key={formatDate(date)} className="legacy-header-cell">
-                <div className="legacy-day-abbr">{getDayName(date)}</div>
-                <div className="legacy-day-num">{date.getDate()}</div>
-              </div>
-            ))}
+            {weekDays.map((date) => {
+              const dayName = getDayName(date);
+              const isWorking = isTherapistWorking(dayName);
+              const dayStart = getDayStart(dayName);
+              const dayEnd = getDayEnd(dayName);
+              const formatHour = (h: number) => {
+                const period = h >= 12 ? 'PM' : 'AM';
+                const displayH = h > 12 ? h - 12 : h === 0 ? 12 : h;
+                return `${displayH}${period}`;
+              };
+
+              return (
+                <div key={formatDate(date)} className={`legacy-header-cell ${isWorking ? 'working' : 'off'}`}>
+                  <div className="legacy-day-abbr">{dayName}</div>
+                  <div className="legacy-day-num">{date.getDate()}</div>
+                  <div className="legacy-day-hours">
+                    {isWorking ? `${formatHour(dayStart)}–${formatHour(dayEnd)}` : 'Off'}
+                  </div>
+                </div>
+              );
+            })}
 
             {/* Time Rows */}
-            {HOURS.map((hour, hourIdx) => (
-              <React.Fragment key={hour}>
-                {/* Time Label */}
-                <div className="legacy-time-label">{HOUR_LABELS[hourIdx]}</div>
+            {HOURS.map((hour, hourIdx) => {
+              // Check if this hour is in any of the therapist's working days
+              const isRelevantHour = weekDays.some((date) => {
+                const dayName = getDayName(date);
+                return isTherapistWorking(dayName) && hour >= getDayStart(dayName) && hour < getDayEnd(dayName);
+              });
 
-                {/* Room Slots for each day */}
-                {weekDays.map((date) => {
-                  const dateStr = formatDate(date);
-                  const isSelected = selectedDate === dateStr && selectedTime === hour;
+              if (!isRelevantHour) {
+                return null; // Skip hours outside working range
+              }
 
-                  return (
-                    <div key={`${dateStr}-${hour}`} className="legacy-slot-cell">
-                      <button
-                        type="button"
-                        className={`legacy-room-btn ${isSelected && selectedRoom === 'Room 1' ? 'selected' : 'free'}`}
-                        onClick={() => handleSlotClick(dateStr, hour, 'Room 1')}
-                      >
-                        R1
-                      </button>
-                      <button
-                        type="button"
-                        className={`legacy-room-btn ${isSelected && selectedRoom === 'Room 2' ? 'selected' : 'free'}`}
-                        onClick={() => handleSlotClick(dateStr, hour, 'Room 2')}
-                      >
-                        R2
-                      </button>
-                    </div>
-                  );
-                })}
-              </React.Fragment>
-            ))}
+              return (
+                <React.Fragment key={hour}>
+                  {/* Time Label */}
+                  <div className="legacy-time-label">{HOUR_LABELS[hourIdx]}</div>
+
+                  {/* Room Slots for each day */}
+                  {weekDays.map((date) => {
+                    const dayName = getDayName(date);
+                    const dateStr = formatDate(date);
+                    const isWorking = isTherapistWorking(dayName);
+                    const isInWorkingHours =
+                      isWorking && hour >= getDayStart(dayName) && hour < getDayEnd(dayName);
+                    const isSelected = selectedDate === dateStr && selectedTime === hour;
+
+                    if (!isInWorkingHours) {
+                      return (
+                        <div key={`${dateStr}-${hour}`} className="legacy-slot-cell unavailable">
+                          <div className="legacy-room-btn disabled">—</div>
+                          <div className="legacy-room-btn disabled">—</div>
+                        </div>
+                      );
+                    }
+
+                    return (
+                      <div key={`${dateStr}-${hour}`} className="legacy-slot-cell">
+                        <button
+                          type="button"
+                          className={`legacy-room-btn ${isSelected && selectedRoom === 'Room 1' ? 'selected' : 'free'}`}
+                          onClick={() => handleSlotClick(dateStr, hour, 'Room 1')}
+                        >
+                          R1
+                        </button>
+                        <button
+                          type="button"
+                          className={`legacy-room-btn ${isSelected && selectedRoom === 'Room 2' ? 'selected' : 'free'}`}
+                          onClick={() => handleSlotClick(dateStr, hour, 'Room 2')}
+                        >
+                          R2
+                        </button>
+                      </div>
+                    );
+                  })}
+                </React.Fragment>
+              );
+            })}
           </div>
         </div>
 

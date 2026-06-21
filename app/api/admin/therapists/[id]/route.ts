@@ -60,7 +60,40 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(therapist);
+    // Fetch therapist's schedule
+    const { data: schedules, error: schedulesError } = await supabase
+      .from('therapist_schedules')
+      .select('*')
+      .eq('therapist_id', params.id)
+      .order('day_of_week');
+
+    if (schedulesError) {
+      console.error('Error fetching therapist schedules:', schedulesError);
+    }
+
+    // Transform schedules into the format used by the calendar
+    const days: string[] = [];
+    const schedule: Record<string, { start: number; end: number }> = {};
+
+    if (schedules && schedules.length > 0) {
+      schedules.forEach((s: any) => {
+        const dayName = s.day_of_week;
+        days.push(dayName);
+        schedule[dayName] = {
+          start: s.start_hour,
+          end: s.end_hour,
+        };
+      });
+    }
+
+    return NextResponse.json({
+      therapist: {
+        ...therapist,
+        days,
+        schedule,
+        schedules: schedules || [],
+      },
+    });
   } catch (error) {
     console.error('Error fetching therapist:', error);
     return NextResponse.json(
