@@ -13,11 +13,15 @@ interface BookingCalendarModalProps {
   onClose: () => void;
 }
 
-interface AvailableSlot {
+interface TherapistAvailability {
+  day_of_week: string;
+  status: 'working' | 'vacation' | 'off';
+}
+
+interface BookingSlot {
   date: string;
   time: string;
   room: string;
-  available: boolean;
 }
 
 export default function BookingCalendarModal({
@@ -30,17 +34,21 @@ export default function BookingCalendarModal({
   onClose,
 }: BookingCalendarModalProps) {
   const [weekStart, setWeekStart] = useState<Date>(new Date());
-  const [selectedDay, setSelectedDay] = useState(0); // 0-6 for Mon-Sun
-  const [selectedSlot, setSelectedSlot] = useState<AvailableSlot | null>(null);
-  const [availableSlots, setAvailableSlots] = useState<AvailableSlot[]>([]);
-  const [rooms] = useState(['Room 1', 'Room 2']);
+  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedTime, setSelectedTime] = useState('');
+  const [selectedRoom, setSelectedRoom] = useState('');
+
+  const [therapistAvailability, setTherapistAvailability] = useState<TherapistAvailability[]>([]);
+  const [workingDays, setWorkingDays] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  // Time slots
   const timeSlots = ['09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00'];
+  const rooms = ['Room 1', 'Room 2'];
+  const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const dayAbbrev = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
   // Get week start (Monday)
   useEffect(() => {
@@ -49,10 +57,9 @@ export default function BookingCalendarModal({
     const diff = today.getDate() - day + (day === 0 ? -6 : 1);
     const monday = new Date(today.setDate(diff));
     setWeekStart(new Date(monday));
-    setSelectedDay(0);
   }, []);
 
-  // Fetch therapist availability for current week
+  // Fetch therapist availability schedule
   useEffect(() => {
     const fetchAvailability = async () => {
       setLoading(true);
@@ -63,64 +70,36 @@ export default function BookingCalendarModal({
           throw new Error('Therapist not assigned');
         }
 
-        // Fetch therapist availability for the week
-        const weekEnd = new Date(weekStart);
-        weekEnd.setDate(weekEnd.getDate() + 6);
-
-        const params = new URLSearchParams({
-          therapist_id: String(therapistId),
-          start_date: formatDate(weekStart),
-          end_date: formatDate(weekEnd),
-        });
-
-        const res = await fetch(`/api/admin/therapist-availability?${params}`, {
+        // Fetch therapist availability - which days they work
+        const res = await fetch(`/api/admin/therapists/${therapistId}/availability`, {
           credentials: 'include',
         });
 
-        if (!res.ok) {
-          // If API doesn't exist yet, use mock data
-          setAvailableSlots(generateMockAvailability());
-        } else {
+        if (res.ok) {
           const data = await res.json();
-          setAvailableSlots(data.slots || generateMockAvailability());
-        }
+          setTherapistAvailability(data.availability || []);
 
-        setSelectedSlot(null);
+          // Extract working days (days where status = 'working')
+          const working = data.availability
+            ?.filter((a: TherapistAvailability) => a.status === 'working')
+            .map((a: TherapistAvailability) => a.day_of_week) || [];
+          setWorkingDays(working);
+        } else {
+          // Default to Mon-Fri if API fails
+          setWorkingDays(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']);
+        }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load availability');
         console.error(err);
+        setWorkingDays(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchAvailability();
-  }, [weekStart, therapistId]);
-
-  // Generate mock availability (remove when API is ready)
-  const generateMockAvailability = (): AvailableSlot[] => {
-    const slots: AvailableSlot[] = [];
-    const days = getWeekDays();
-
-    days.forEach((date, dayIndex) => {
-      // Skip weekends
-      if (dayIndex === 5 || dayIndex === 6) return;
-
-      // Add slots for each room
-      timeSlots.forEach((time) => {
-        rooms.forEach((room) => {
-          slots.push({
-            date: formatDate(date),
-            time,
-            room,
-            available: true, // All slots available for now
-          });
-        });
-      });
-    });
-
-    return slots;
-  };
+    if (therapistId) {
+      fetchAvailability();
+    }
+  }, [therapistId]);
 
   const getWeekDays = () => {
     const days = [];
@@ -135,41 +114,26 @@ export default function BookingCalendarModal({
 
   const formatDate = (date: Date) => date.toISOString().split('T')[0];
 
-  const formatDayName = (date: Date) => {
-    return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+  const getDayName = (date: Date) => {
+    const dayIndex = date.getDay();
+    const dayName = daysOfWeek[(dayIndex + 6) % 7]; // Convert JS day (0=Sun) to our order (0=Mon)
+    return dayName;
   };
 
-  const getSelectedDayDate = () => {
-    const days = getWeekDays();
-    return days[selectedDay];
+  const isTherapistWorkingDay = (dayName: string) => {
+    return workingDays.includes(dayName);
   };
 
-  const getSlotsForDayAndRoom = (date: string, room: string) => {
-    return availableSlots.find(
-      (slot) => slot.date === date && slot.room === room && slot.time === timeSlots[0]
-    );
+  // Get available days this week (only days therapist works)
+  const getAvailableDaysThisWeek = () => {
+    return getWeekDays().filter((date) => isTherapistWorkingDay(getDayName(date)));
   };
 
-  const isSlotSelected = (date: string, time: string, room: string) => {
-    return (
-      selectedSlot?.date === date &&
-      selectedSlot?.time === time &&
-      selectedSlot?.room === room
-    );
-  };
-
-  const handleSlotClick = (date: string, time: string, room: string) => {
-    const slot = availableSlots.find(
-      (s) => s.date === date && s.time === time && s.room === room
-    );
-    if (slot?.available) {
-      setSelectedSlot(slot);
-    }
-  };
+  const isDateSelected = (date: string) => selectedDate === date;
 
   const handleSubmit = async () => {
-    if (!selectedSlot) {
-      setError('Please select a time slot and room');
+    if (!selectedDate || !selectedTime || !selectedRoom) {
+      setError('Please select a date, time, and room');
       return;
     }
 
@@ -185,11 +149,11 @@ export default function BookingCalendarModal({
         body: JSON.stringify({
           client_id: clientId,
           therapist_id: therapistId,
-          session_date: `${selectedSlot.date}T${selectedSlot.time}:00`,
+          session_date: `${selectedDate}T${selectedTime}:00`,
           duration_minutes: 60,
           session_type: isRecurring ? 'recurring' : 'single',
-          room: selectedSlot.room,
-          notes: `Booked for ${selectedSlot.room}`,
+          room: selectedRoom,
+          notes: `Booked for ${selectedRoom}`,
         }),
       });
 
@@ -232,8 +196,7 @@ export default function BookingCalendarModal({
             <div className="modal-success-icon">✓</div>
             <h2 className="modal-success-title">Session Booked</h2>
             <p className="modal-success-message">
-              Session scheduled for {clientName} on {selectedSlot?.date} at {selectedSlot?.time} in{' '}
-              {selectedSlot?.room}.
+              Session scheduled for {clientName} on {selectedDate} at {selectedTime} in {selectedRoom}.
               {isRecurring && (
                 <span> Payment due within 24 hours before the session.</span>
               )}
@@ -244,8 +207,7 @@ export default function BookingCalendarModal({
     );
   }
 
-  const selectedDayDate = getSelectedDayDate();
-  const selectedDayFormatted = formatDayName(selectedDayDate);
+  const availableDaysThisWeek = getAvailableDaysThisWeek();
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -254,7 +216,7 @@ export default function BookingCalendarModal({
           <div>
             <h2 className="modal-title">Book Session - {clientName}</h2>
             <p className="modal-subtitle">
-              {therapistName} • Select available slot
+              {therapistName} • Available time slots
             </p>
           </div>
           <button
@@ -284,6 +246,7 @@ export default function BookingCalendarModal({
                   const newStart = new Date(weekStart);
                   newStart.setDate(newStart.getDate() - 7);
                   setWeekStart(newStart);
+                  setSelectedDate('');
                 }}
               >
                 ← Previous Week
@@ -298,79 +261,85 @@ export default function BookingCalendarModal({
                   const newStart = new Date(weekStart);
                   newStart.setDate(newStart.getDate() + 7);
                   setWeekStart(newStart);
+                  setSelectedDate('');
                 }}
               >
                 Next Week →
               </button>
             </div>
 
-            {/* Day Selector */}
+            {/* Day Selector - Only show working days */}
             <div className="modal-day-selector">
-              {getWeekDays().map((date, idx) => {
-                const dayName = formatDayName(date);
-                const isWeekend = idx === 5 || idx === 6;
-                return (
-                  <button
-                    key={idx}
-                    type="button"
-                    className={`modal-day-tab ${selectedDay === idx ? 'active' : ''} ${
-                      isWeekend ? 'disabled' : ''
-                    }`}
-                    onClick={() => !isWeekend && setSelectedDay(idx)}
-                    disabled={isWeekend}
-                  >
-                    {dayName}
-                  </button>
-                );
-              })}
+              {availableDaysThisWeek.length === 0 ? (
+                <p className="modal-empty-state">No available days this week</p>
+              ) : (
+                availableDaysThisWeek.map((date, idx) => {
+                  const dayName = getDayName(date);
+                  const dayIndex = date.getDay();
+                  const dateStr = formatDate(date);
+                  const isSelected = isDateSelected(dateStr);
+
+                  return (
+                    <button
+                      key={dateStr}
+                      type="button"
+                      className={`modal-day-tab ${isSelected ? 'active' : ''}`}
+                      onClick={() => setSelectedDate(dateStr)}
+                    >
+                      <div className="modal-day-tab-day">
+                        {dayAbbrev[(dayIndex + 6) % 7]}
+                      </div>
+                      <div className="modal-day-tab-date">
+                        {date.getDate()}
+                      </div>
+                    </button>
+                  );
+                })
+              )}
             </div>
 
-            {/* Calendar Grid */}
-            <div className="modal-calendar-grid">
-              {/* Header Row - Room Names */}
-              <div className="modal-calendar-header">
-                <div className="modal-time-column"></div>
-                {rooms.map((room) => (
-                  <div key={room} className="modal-room-column-header">
-                    {room}
+            {/* Weekly Calendar Grid - Time slots by room */}
+            {selectedDate && (
+              <>
+                <h3 className="modal-section-title">Select Time & Room</h3>
+                <div className="modal-calendar-grid">
+                  {/* Header Row - Room Names */}
+                  <div className="modal-calendar-header">
+                    <div className="modal-time-column"></div>
+                    {rooms.map((room) => (
+                      <div key={room} className="modal-room-column-header">
+                        {room}
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
 
-              {/* Time Slots Grid */}
-              {timeSlots.map((time) => (
-                <div key={time} className="modal-calendar-row">
-                  <div className="modal-time-slot-label">{time}</div>
-                  {rooms.map((room) => {
-                    const selectedDayStr = formatDate(selectedDayDate);
-                    const slot = availableSlots.find(
-                      (s) => s.date === selectedDayStr && s.time === time && s.room === room
-                    );
-                    const isSelected = isSlotSelected(selectedDayStr, time, room);
-
-                    return (
-                      <button
-                        key={`${time}-${room}`}
-                        type="button"
-                        className={`modal-calendar-slot ${isSelected ? 'selected' : ''} ${
-                          slot?.available ? 'available' : 'booked'
-                        }`}
-                        onClick={() =>
-                          slot?.available && handleSlotClick(selectedDayStr, time, room)
-                        }
-                        disabled={!slot?.available}
-                        title={slot?.available ? `${time} - ${room}` : `${time} - ${room} (Booked)`}
-                      >
-                        {slot?.available ? '✓' : '✕'}
-                      </button>
-                    );
-                  })}
+                  {/* Time Slots Grid */}
+                  {timeSlots.map((time) => (
+                    <div key={time} className="modal-calendar-row">
+                      <div className="modal-time-slot-label">{time}</div>
+                      {rooms.map((room) => (
+                        <button
+                          key={`${time}-${room}`}
+                          type="button"
+                          className={`modal-calendar-slot ${
+                            selectedTime === time && selectedRoom === room ? 'selected' : ''
+                          }`}
+                          onClick={() => {
+                            setSelectedTime(time);
+                            setSelectedRoom(room);
+                          }}
+                        >
+                          ✓
+                        </button>
+                      ))}
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </>
+            )}
 
             {/* Selected Slot Summary */}
-            {selectedSlot && (
+            {selectedDate && selectedTime && selectedRoom && (
               <div className="modal-booking-summary">
                 <h3 className="modal-summary-title">Booking Details</h3>
                 <div className="modal-summary-grid">
@@ -384,15 +353,21 @@ export default function BookingCalendarModal({
                   </div>
                   <div className="modal-summary-item">
                     <span className="modal-summary-label">Date:</span>
-                    <span className="modal-summary-value">{selectedDayFormatted}</span>
+                    <span className="modal-summary-value">
+                      {new Date(selectedDate).toLocaleDateString('en-US', {
+                        weekday: 'long',
+                        month: 'long',
+                        day: 'numeric',
+                      })}
+                    </span>
                   </div>
                   <div className="modal-summary-item">
                     <span className="modal-summary-label">Time:</span>
-                    <span className="modal-summary-value">{selectedSlot.time}</span>
+                    <span className="modal-summary-value">{selectedTime}</span>
                   </div>
                   <div className="modal-summary-item">
                     <span className="modal-summary-label">Room:</span>
-                    <span className="modal-summary-value">{selectedSlot.room}</span>
+                    <span className="modal-summary-value">{selectedRoom}</span>
                   </div>
                   <div className="modal-summary-item">
                     <span className="modal-summary-label">Duration:</span>
@@ -423,7 +398,7 @@ export default function BookingCalendarModal({
                 type="button"
                 className="modal-btn modal-btn--primary"
                 onClick={handleSubmit}
-                disabled={!selectedSlot || submitting}
+                disabled={!selectedDate || !selectedTime || !selectedRoom || submitting}
               >
                 {submitting ? 'Booking...' : 'Confirm Booking'}
               </button>
