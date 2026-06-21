@@ -43,11 +43,12 @@ export default function ClientActionButton({
       };
     }
 
-    // Step 2: After payment verified, new clients proceed based on their chosen route
+    // Step 2: After payment verified, if client chose assessment route, Sama assesses
+    // Then reception needs to select the recommended therapist
     if (!isRecurring && status === 'assessment_pending') {
       return {
-        label: 'Awaiting Assessment',
-        type: 'view', // View only - Sama will assess
+        label: 'Select Therapist',
+        type: 'booking', // Opens therapist selection modal
       };
     }
 
