@@ -60,28 +60,34 @@ export async function GET(
       );
     }
 
-    // Fetch therapist's schedule
-    const { data: schedules, error: schedulesError } = await supabase
-      .from('therapist_schedules')
+    // Fetch therapist's availability (from therapist_availability table)
+    // This is the main schedule table that stores working hours
+    const { data: availability, error: availabilityError } = await supabase
+      .from('therapist_availability')
       .select('*')
       .eq('therapist_id', params.id)
       .order('day_of_week');
 
-    if (schedulesError) {
-      console.error('Error fetching therapist schedules:', schedulesError);
+    if (availabilityError) {
+      console.error('Error fetching therapist availability:', availabilityError);
     }
 
-    // Transform schedules into the format used by the calendar
+    // Transform availability into the format used by the calendar
     const days: string[] = [];
     const schedule: Record<string, { start: number; end: number }> = {};
 
-    if (schedules && schedules.length > 0) {
-      schedules.forEach((s: any) => {
-        const dayName = s.day_of_week;
+    if (availability && availability.length > 0) {
+      availability.forEach((a: any) => {
+        const dayName = a.day_of_week;
         days.push(dayName);
+
+        // Convert time string (HH:MM) to hours
+        const [startHour] = a.start_time.split(':').map(Number);
+        const [endHour] = a.end_time.split(':').map(Number);
+
         schedule[dayName] = {
-          start: s.start_hour,
-          end: s.end_hour,
+          start: startHour,
+          end: endHour,
         };
       });
     }
@@ -91,7 +97,7 @@ export async function GET(
         ...therapist,
         days,
         schedule,
-        schedules: schedules || [],
+        availability: availability || [],
       },
     });
   } catch (error) {
