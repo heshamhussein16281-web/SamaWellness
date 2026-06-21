@@ -208,7 +208,6 @@ export default function ClientsPage() {
             <thead>
               <tr>
                 <th>Name</th>
-                <th>Email</th>
                 <th>Phone</th>
                 <th>Status</th>
                 <th>Recurring</th>
@@ -224,7 +223,6 @@ export default function ClientsPage() {
                   <td>
                     <span className="client-name">{client.name}</span>
                   </td>
-                  <td className="client-email">{client.email || '-'}</td>
                   <td className="client-phone">{client.phone || '-'}</td>
                   <td>
                     <span className={`client-status-badge client-status-badge--${client.status}`}>

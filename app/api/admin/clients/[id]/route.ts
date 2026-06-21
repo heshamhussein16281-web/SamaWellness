@@ -93,7 +93,12 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const auth = await checkPermission(request, 'manage_clients');
+  // Check if user has manage_clients OR view_clients permission
+  // manage_clients = admin, view_clients = reception staff for payment verification
+  let auth = await checkPermission(request, 'manage_clients');
+  if (!auth.authorized) {
+    auth = await checkPermission(request, 'view_clients');
+  }
   if (!auth.authorized) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
   }
