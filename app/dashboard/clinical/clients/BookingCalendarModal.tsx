@@ -104,17 +104,23 @@ export default function BookingCalendarModal({
 
   // Helper functions for therapist schedule
   const getDayStart = (dayName: string): number => {
-    if (!therapistSchedule?.schedule?.[dayName]) return HOUR_START;
+    // If no schedule data, use default hours (9 AM)
+    if (!therapistSchedule?.schedule || !therapistSchedule.schedule[dayName]) return HOUR_START;
     return therapistSchedule.schedule[dayName].start;
   };
 
   const getDayEnd = (dayName: string): number => {
-    if (!therapistSchedule?.schedule?.[dayName]) return HOUR_END;
+    // If no schedule data, use default hours (5 PM)
+    if (!therapistSchedule?.schedule || !therapistSchedule.schedule[dayName]) return HOUR_END;
     return therapistSchedule.schedule[dayName].end;
   };
 
   const isTherapistWorking = (dayName: string): boolean => {
-    return therapistSchedule?.days.includes(dayName) ?? false;
+    // If no schedule data, assume all days are working (fallback)
+    if (!therapistSchedule || therapistSchedule.days.length === 0) {
+      return true;
+    }
+    return therapistSchedule.days.includes(dayName);
   };
 
   // Get week days
@@ -291,6 +297,16 @@ export default function BookingCalendarModal({
         {scheduleError && (
           <div className="therapist-schedule-info error">
             <p style={{ margin: 0, fontSize: '0.875rem', color: '#c75c5c' }}>⚠ {scheduleError}</p>
+          </div>
+        )}
+
+        {!loadingSchedule && !scheduleError && (!therapistSchedule || therapistSchedule.days.length === 0) && (
+          <div className="therapist-schedule-info warning">
+            <p style={{ margin: 0, fontSize: '0.875rem', color: '#856404' }}>
+              ℹ No specific schedule set. Showing default hours (9 AM – 5 PM).
+              <br />
+              <span style={{ fontSize: '0.75rem', opacity: 0.8 }}>Contact admin to set up therapist working schedule</span>
+            </p>
           </div>
         )}
 

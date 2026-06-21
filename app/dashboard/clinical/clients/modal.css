@@ -929,6 +929,21 @@
   border: 1px solid var(--modal-border);
 }
 
+.therapist-schedule-info.loading {
+  background: #f0f8ff;
+  border-color: #aecbf5;
+}
+
+.therapist-schedule-info.error {
+  background: #fff5f5;
+  border-color: #f7c1c1;
+}
+
+.therapist-schedule-info.warning {
+  background: #fffbf0;
+  border-color: #ffecb5;
+}
+
 .therapist-schedule-info h4 {
   margin: 0 0 0.75rem 0;
   font-size: 0.875rem;
