@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import AssessmentEntryModal from './AssessmentEntryModal';
 import PaymentVerificationModal from './PaymentVerificationModal';
+import TherapistSelectionModal from './TherapistSelectionModal';
 import BookingCalendarModal from './BookingCalendarModal';
 
 interface ClientActionButtonProps {
@@ -17,7 +18,7 @@ interface ClientActionButtonProps {
 
 interface NextAction {
   label: string;
-  type: 'assessment' | 'payment' | 'booking' | 'cancel' | 'view' | 'none';
+  type: 'assessment' | 'payment' | 'therapist' | 'booking' | 'cancel' | 'view' | 'none';
 }
 
 export default function ClientActionButton({
@@ -48,7 +49,7 @@ export default function ClientActionButton({
     if (!isRecurring && status === 'assessment_pending') {
       return {
         label: 'Select Therapist',
-        type: 'booking', // Opens therapist selection modal
+        type: 'therapist', // Opens therapist selection modal
       };
     }
 
@@ -152,6 +153,16 @@ export default function ClientActionButton({
           clientId={clientId}
           clientName={clientName}
           hasTherapist={therapistId ? true : false}
+          onSuccess={handleModalSuccess}
+          onClose={handleModalClose}
+        />
+      )}
+
+      {/* Therapist Selection Modal */}
+      {activeModal === 'therapist' && (
+        <TherapistSelectionModal
+          clientId={clientId}
+          clientName={clientName}
           onSuccess={handleModalSuccess}
           onClose={handleModalClose}
         />

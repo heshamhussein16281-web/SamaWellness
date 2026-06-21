@@ -554,6 +554,124 @@
   cursor: not-allowed;
 }
 
+/* Week Grid - Day Selection */
+.modal-week-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.modal-day-button {
+  padding: 1rem 0.5rem;
+  border: 2px solid var(--modal-border);
+  border-radius: 8px;
+  background: #f9f7f5;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  font-family: var(--modal-font-body);
+  color: var(--modal-text-primary);
+}
+
+.modal-day-button:hover {
+  border-color: #7b2d3e;
+  background: #fffaf7;
+}
+
+.modal-day-button.selected {
+  background: #7b2d3e;
+  border-color: #7b2d3e;
+  color: white;
+}
+
+.modal-day-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.7;
+}
+
+.modal-day-button.selected .modal-day-label {
+  opacity: 1;
+}
+
+.modal-day-date {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
+
+/* Navigation Arrows */
+.modal-navigation-arrows {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.modal-arrow-btn {
+  padding: 0.75rem 1.25rem;
+  border: 1px solid var(--modal-border);
+  border-radius: 6px;
+  background: white;
+  color: var(--modal-text-primary);
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  font-family: var(--modal-font-body);
+}
+
+.modal-arrow-btn:hover {
+  border-color: #7b2d3e;
+  background: #fffaf7;
+  color: #7b2d3e;
+}
+
+/* Room Grid */
+.modal-room-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.modal-room-button {
+  padding: 1.5rem;
+  border: 2px solid var(--modal-border);
+  border-radius: 8px;
+  background: #f9f7f5;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  font-family: var(--modal-font-body);
+  color: var(--modal-text-primary);
+}
+
+.modal-room-button:hover {
+  border-color: #7b2d3e;
+  background: #fffaf7;
+}
+
+.modal-room-button.selected {
+  background: #7b2d3e;
+  border-color: #7b2d3e;
+  color: white;
+}
+
+.modal-room-name {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.modal-room-status {
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
 /* Responsive */
 @media (max-width: 600px) {
   .modal-content {
@@ -585,6 +703,32 @@
 
   .modal-time-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .modal-week-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+  }
+
+  .modal-day-button {
+    padding: 0.75rem 0.25rem;
+  }
+
+  .modal-day-date {
+    font-size: 1rem;
+  }
+
+  .modal-room-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-navigation-arrows {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .modal-arrow-btn {
+    width: 100%;
   }
 
   .modal-steps {

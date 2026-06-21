@@ -13,17 +13,6 @@ interface BookingCalendarModalProps {
   onClose: () => void;
 }
 
-interface Therapist {
-  id: number;
-  name: string;
-}
-
-interface Clinic {
-  id: string;
-  name: string;
-  rooms: string[];
-}
-
 interface TimeSlot {
   time: string;
   available: boolean;
@@ -38,17 +27,13 @@ export default function BookingCalendarModal({
   onSuccess,
   onClose,
 }: BookingCalendarModalProps) {
-  const [step, setStep] = useState<'therapist' | 'date' | 'time' | 'room' | 'confirm'>('therapist');
-  const [therapists, setTherapists] = useState<Therapist[]>([]);
-  const [selectedTherapistId, setSelectedTherapistId] = useState<number | null>(therapistId || null);
-  const [clinics, setClinics] = useState<Clinic[]>([]);
-  const [selectedClinicId, setSelectedClinicId] = useState<string>('');
-  const [selectedRoom, setSelectedRoom] = useState<string>('');
+  const [step, setStep] = useState<'date' | 'time-room' | 'confirm'>('date');
+  const [weekStart, setWeekStart] = useState<Date>(new Date());
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
-  const [duration, setDuration] = useState(60);
+  const [selectedRoom, setSelectedRoom] = useState('');
+  const [duration] = useState(60);
   const [loading, setLoading] = useState(false);
-  const [fetchingData, setFetchingData] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
@@ -63,84 +48,52 @@ export default function BookingCalendarModal({
     { time: '17:00', available: true },
   ];
 
+  // Available rooms
+  const rooms = ['Room 1', 'Room 2'];
+
+  // Get week start (Monday)
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Fetch therapists
-        const therapistsRes = await fetch('/api/admin/therapists', {
-          credentials: 'include',
-        });
-        if (therapistsRes.ok) {
-          const data = await therapistsRes.json();
-          setTherapists(data.therapists || data.data || []);
-        }
-
-        // Fetch clinics
-        const clinicsRes = await fetch('/api/admin/clinics', {
-          credentials: 'include',
-        });
-        if (clinicsRes.ok) {
-          const data = await clinicsRes.json();
-          setClinics(data.clinics || data.data || []);
-          if (data.clinics?.[0]) {
-            setSelectedClinicId(data.clinics[0].id);
-          }
-        }
-      } catch (err) {
-        setError('Failed to fetch booking data');
-        console.error(err);
-      } finally {
-        setFetchingData(false);
-      }
-    };
-
-    fetchData();
+    const today = new Date();
+    const day = today.getDay();
+    const diff = today.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
+    const monday = new Date(today.setDate(diff));
+    setWeekStart(new Date(monday));
   }, []);
 
-  const getAvailableRooms = (): string[] => {
-    const clinic = clinics.find((c) => c.id === selectedClinicId);
-    return clinic?.rooms || [];
-  };
-
-  const getTodayAndFuture = (): string[] => {
-    const dates = [];
-    const today = new Date();
-    for (let i = 0; i < 14; i++) {
-      const date = new Date(today);
+  // Get days of current week
+  const getWeekDays = () => {
+    const days = [];
+    const start = new Date(weekStart);
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(start);
       date.setDate(date.getDate() + i);
-      dates.push(date.toISOString().split('T')[0]);
+      days.push(date);
     }
-    return dates;
+    return days;
   };
 
-  const canProceedToNext = (): boolean => {
+  const formatDate = (date: Date) => date.toISOString().split('T')[0];
+  const formatDateDisplay = (date: Date) =>
+    date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+
+  const canProceed = (): boolean => {
     switch (step) {
-      case 'therapist':
-        return selectedTherapistId !== null;
       case 'date':
         return selectedDate !== '';
-      case 'time':
-        return selectedTime !== '';
-      case 'room':
-        return selectedRoom !== '';
+      case 'time-room':
+        return selectedTime !== '' && selectedRoom !== '';
       default:
         return false;
     }
   };
 
   const handleNext = () => {
-    if (!canProceedToNext()) {
-      setError('Please complete this step');
+    if (!canProceed()) {
+      setError(`Please complete this step`);
       return;
     }
 
-    const steps: Array<'therapist' | 'date' | 'time' | 'room' | 'confirm'> = [
-      'therapist',
-      'date',
-      'time',
-      'room',
-      'confirm',
-    ];
+    const steps: Array<'date' | 'time-room' | 'confirm'> = ['date', 'time-room', 'confirm'];
     const currentIndex = steps.indexOf(step);
     if (currentIndex < steps.length - 1) {
       setStep(steps[currentIndex + 1]);
@@ -149,13 +102,7 @@ export default function BookingCalendarModal({
   };
 
   const handleBack = () => {
-    const steps: Array<'therapist' | 'date' | 'time' | 'room' | 'confirm'> = [
-      'therapist',
-      'date',
-      'time',
-      'room',
-      'confirm',
-    ];
+    const steps: Array<'date' | 'time-room' | 'confirm'> = ['date', 'time-room', 'confirm'];
     const currentIndex = steps.indexOf(step);
     if (currentIndex > 0) {
       setStep(steps[currentIndex - 1]);
@@ -168,18 +115,18 @@ export default function BookingCalendarModal({
     setLoading(true);
 
     try {
+      // Create booking
       const res = await fetch('/api/admin/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({
           client_id: clientId,
-          therapist_id: selectedTherapistId,
+          therapist_id: therapistId,
           session_date: `${selectedDate}T${selectedTime}:00`,
           duration_minutes: duration,
-          session_type: 'single',
-          clinic_id: selectedClinicId,
-          room_id: null,
+          session_type: isRecurring ? 'recurring' : 'single',
+          room: selectedRoom,
           notes: `Booked for ${selectedRoom}`,
         }),
       });
@@ -189,20 +136,18 @@ export default function BookingCalendarModal({
         throw new Error(data.error || 'Failed to create booking');
       }
 
-      // Update client status and therapist assignment to booking_scheduled (both new and recurring)
+      // Update client status to booking_scheduled
       const clientStatusRes = await fetch(`/api/admin/clients/${clientId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({
           status: 'booking_scheduled',
-          therapist_id: selectedTherapistId,
         }),
       });
 
       if (!clientStatusRes.ok) {
         console.error('Failed to update client status');
-        // Don't fail the whole request just because status update failed
       }
 
       setSuccess(true);
@@ -217,27 +162,15 @@ export default function BookingCalendarModal({
     }
   };
 
-  if (fetchingData) {
-    return (
-      <div className="modal-overlay" onClick={onClose}>
-        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          <div className="modal-loading-container">
-            <div className="modal-loading">Loading booking calendar...</div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   if (success) {
     return (
       <div className="modal-overlay" onClick={onClose}>
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
           <div className="modal-success">
             <div className="modal-success-icon">✓</div>
-            <h2 className="modal-success-title">Booking Confirmed</h2>
+            <h2 className="modal-success-title">Session Booked</h2>
             <p className="modal-success-message">
-              Session scheduled for {clientName} on {selectedDate} at {selectedTime}.
+              Session scheduled for {clientName} on {selectedDate} at {selectedTime} in {selectedRoom}.
               {isRecurring && (
                 <span> Payment due within 24 hours before the session.</span>
               )}
@@ -267,148 +200,111 @@ export default function BookingCalendarModal({
 
         {/* Progress Indicator */}
         <div className="modal-steps">
-          <div className={`modal-step ${step === 'therapist' ? 'active' : ['date', 'time', 'room', 'confirm'].includes(step) ? 'done' : ''}`}>
+          <div className={`modal-step ${step === 'date' ? 'active' : ['time-room', 'confirm'].includes(step) ? 'done' : ''}`}>
             <div className="modal-step-number">1</div>
-            <div className="modal-step-label">Therapist</div>
+            <div className="modal-step-label">Select Date</div>
           </div>
-          <div className={`modal-step ${step === 'date' ? 'active' : ['time', 'room', 'confirm'].includes(step) ? 'done' : ''}`}>
+          <div className={`modal-step ${step === 'time-room' ? 'active' : step === 'confirm' ? 'done' : ''}`}>
             <div className="modal-step-number">2</div>
-            <div className="modal-step-label">Date</div>
-          </div>
-          <div className={`modal-step ${step === 'time' ? 'active' : ['room', 'confirm'].includes(step) ? 'done' : ''}`}>
-            <div className="modal-step-number">3</div>
-            <div className="modal-step-label">Time</div>
-          </div>
-          <div className={`modal-step ${step === 'room' ? 'active' : step === 'confirm' ? 'done' : ''}`}>
-            <div className="modal-step-number">4</div>
-            <div className="modal-step-label">Room</div>
+            <div className="modal-step-label">Time & Room</div>
           </div>
           <div className={`modal-step ${step === 'confirm' ? 'active' : ''}`}>
-            <div className="modal-step-number">5</div>
+            <div className="modal-step-number">3</div>
             <div className="modal-step-label">Confirm</div>
           </div>
         </div>
 
         {/* Step Content */}
         <div className="modal-step-content">
-          {step === 'therapist' && (
-            <div className="modal-form-group">
-              <label htmlFor="therapist" className="modal-label">
-                {isRecurring ? 'Therapist' : 'Select Therapist'} <span className="modal-required">*</span>
-              </label>
-              {isRecurring && therapistName && (
-                <div className="modal-info-box">
-                  <strong>Your Current Therapist:</strong> {therapistName}
-                  <br />
-                  <small>Change below if you'd like a different therapist</small>
-                </div>
-              )}
-              <select
-                id="therapist"
-                value={selectedTherapistId || ''}
-                onChange={(e) => setSelectedTherapistId(parseInt(e.target.value, 10))}
-                className="modal-input"
-                required
-              >
-                <option value="">
-                  {isRecurring ? 'Continue with ' + therapistName : 'Choose a therapist'}
-                </option>
-                {therapists.map((therapist) => (
-                  <option key={therapist.id} value={therapist.id}>
-                    {therapist.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-
           {step === 'date' && (
             <div className="modal-form-group">
-              <label htmlFor="date" className="modal-label">
+              <label className="modal-label">
                 Select Date <span className="modal-required">*</span>
               </label>
-              <select
-                id="date"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
-                className="modal-input"
-              >
-                <option value="">Choose a date</option>
-                {getTodayAndFuture().map((date) => (
-                  <option key={date} value={date}>
-                    {new Date(date).toLocaleDateString('en-US', {
-                      weekday: 'short',
-                      month: 'short',
-                      day: 'numeric',
-                    })}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-
-          {step === 'time' && (
-            <div className="modal-form-group">
-              <label className="modal-label">
-                Select Time <span className="modal-required">*</span>
-              </label>
-              <div className="modal-time-grid">
-                {timeSlots.map((slot) => (
+              <div className="modal-info-box">
+                <p>Therapist: <strong>{therapistName}</strong></p>
+                <p>Select a date from this week</p>
+              </div>
+              <div className="modal-week-grid">
+                {getWeekDays().map((date, idx) => (
                   <button
-                    key={slot.time}
+                    key={idx}
                     type="button"
-                    className={`modal-time-slot ${selectedTime === slot.time ? 'selected' : ''} ${!slot.available ? 'disabled' : ''}`}
-                    onClick={() => slot.available && setSelectedTime(slot.time)}
-                    disabled={!slot.available}
+                    className={`modal-day-button ${formatDate(date) === selectedDate ? 'selected' : ''}`}
+                    onClick={() => setSelectedDate(formatDate(date))}
                   >
-                    {slot.time}
+                    <div className="modal-day-label">{['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][date.getDay()]}</div>
+                    <div className="modal-day-date">{date.getDate()}</div>
                   </button>
                 ))}
               </div>
+              <div className="modal-navigation-arrows">
+                <button
+                  type="button"
+                  className="modal-arrow-btn"
+                  onClick={() => {
+                    const newStart = new Date(weekStart);
+                    newStart.setDate(newStart.getDate() - 7);
+                    setWeekStart(newStart);
+                    setSelectedDate('');
+                  }}
+                >
+                  ← Previous Week
+                </button>
+                <button
+                  type="button"
+                  className="modal-arrow-btn"
+                  onClick={() => {
+                    const newStart = new Date(weekStart);
+                    newStart.setDate(newStart.getDate() + 7);
+                    setWeekStart(newStart);
+                    setSelectedDate('');
+                  }}
+                >
+                  Next Week →
+                </button>
+              </div>
             </div>
           )}
 
-          {step === 'room' && (
+          {step === 'time-room' && (
             <>
               <div className="modal-form-group">
-                <label htmlFor="clinic" className="modal-label">
-                  Select Clinic <span className="modal-required">*</span>
+                <label className="modal-label">
+                  Select Time <span className="modal-required">*</span>
                 </label>
-                <select
-                  id="clinic"
-                  value={selectedClinicId}
-                  onChange={(e) => setSelectedClinicId(e.target.value)}
-                  className="modal-input"
-                >
-                  {clinics.map((clinic) => (
-                    <option key={clinic.id} value={clinic.id}>
-                      {clinic.name}
-                    </option>
+                <div className="modal-time-grid">
+                  {timeSlots.map((slot) => (
+                    <button
+                      key={slot.time}
+                      type="button"
+                      className={`modal-time-slot ${selectedTime === slot.time ? 'selected' : ''} ${!slot.available ? 'disabled' : ''}`}
+                      onClick={() => slot.available && setSelectedTime(slot.time)}
+                      disabled={!slot.available}
+                    >
+                      {slot.time}
+                    </button>
                   ))}
-                </select>
+                </div>
               </div>
 
               <div className="modal-form-group">
-                <label htmlFor="room" className="modal-label">
+                <label className="modal-label">
                   Select Room <span className="modal-required">*</span>
                 </label>
-                {getAvailableRooms().length > 0 ? (
-                  <select
-                    id="room"
-                    value={selectedRoom}
-                    onChange={(e) => setSelectedRoom(e.target.value)}
-                    className="modal-input"
-                  >
-                    <option value="">Choose a room</option>
-                    {getAvailableRooms().map((room) => (
-                      <option key={room} value={room}>
-                        {room}
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  <p className="modal-warning">No rooms available for this clinic</p>
-                )}
+                <div className="modal-room-grid">
+                  {rooms.map((room) => (
+                    <button
+                      key={room}
+                      type="button"
+                      className={`modal-room-button ${selectedRoom === room ? 'selected' : ''}`}
+                      onClick={() => setSelectedRoom(room)}
+                    >
+                      <div className="modal-room-name">{room}</div>
+                      <div className="modal-room-status">Available</div>
+                    </button>
+                  ))}
+                </div>
               </div>
             </>
           )}
@@ -416,10 +312,12 @@ export default function BookingCalendarModal({
           {step === 'confirm' && (
             <div className="modal-confirm-details">
               <div className="modal-detail-row">
+                <span className="modal-detail-label">Client:</span>
+                <span className="modal-detail-value">{clientName}</span>
+              </div>
+              <div className="modal-detail-row">
                 <span className="modal-detail-label">Therapist:</span>
-                <span className="modal-detail-value">
-                  {therapists.find((t) => t.id === selectedTherapistId)?.name}
-                </span>
+                <span className="modal-detail-value">{therapistName}</span>
               </div>
               <div className="modal-detail-row">
                 <span className="modal-detail-label">Date:</span>
@@ -446,7 +344,7 @@ export default function BookingCalendarModal({
 
               {isRecurring && (
                 <div className="modal-info-box" style={{ marginTop: '1rem' }}>
-                  <strong>Payment Reminder:</strong>
+                  <strong>Recurring Session:</strong>
                   <p>Payment must be received by 24 hours before this session.</p>
                 </div>
               )}
@@ -456,7 +354,7 @@ export default function BookingCalendarModal({
 
         {/* Navigation Buttons */}
         <div className="modal-actions">
-          {step !== 'therapist' && (
+          {step !== 'date' && (
             <button
               type="button"
               className="modal-btn modal-btn--secondary"
@@ -470,7 +368,7 @@ export default function BookingCalendarModal({
               type="button"
               className="modal-btn modal-btn--primary"
               onClick={handleNext}
-              disabled={!canProceedToNext()}
+              disabled={!canProceed()}
             >
               Next →
             </button>
