@@ -265,8 +265,8 @@ export default function ScheduleAvailabilityModal({
             <h4 style={{ marginTop: 0 }}>Select Working Days:</h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {DAYS.map(day => (
-                <div key={day} style={{ borderLeft: '3px solid #eee', paddingLeft: '1rem' }}>
-                  <label style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.5rem' }}>
+                <div key={day} style={{ borderLeft: `3px solid ${availability[day]?.working ? '#007bff' : '#eee'}`, paddingLeft: '1rem' }}>
+                  <label style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.75rem' }}>
                     <input
                       type="checkbox"
                       checked={availability[day]?.working || false}
@@ -274,28 +274,40 @@ export default function ScheduleAvailabilityModal({
                     />
                     <strong>{day}</strong>
                   </label>
-                  {availability[day]?.working && (
-                    <div style={{ display: 'flex', gap: '1rem', paddingLeft: '1.5rem' }}>
-                      <div>
-                        <label style={{ fontSize: '0.85rem', display: 'block', marginBottom: '0.25rem' }}>Start:</label>
-                        <input
-                          type="time"
-                          value={availability[day]?.start_time || '09:00'}
-                          onChange={(e) => handleTimeChange(day, 'start_time', e.target.value)}
-                          style={{ padding: '0.4rem', borderRadius: '4px', border: '1px solid #ddd' }}
-                        />
-                      </div>
-                      <div>
-                        <label style={{ fontSize: '0.85rem', display: 'block', marginBottom: '0.25rem' }}>End:</label>
-                        <input
-                          type="time"
-                          value={availability[day]?.end_time || '17:00'}
-                          onChange={(e) => handleTimeChange(day, 'end_time', e.target.value)}
-                          style={{ padding: '0.4rem', borderRadius: '4px', border: '1px solid #ddd' }}
-                        />
-                      </div>
+                  <div style={{ display: 'flex', gap: '1rem', paddingLeft: '1.5rem', opacity: availability[day]?.working ? 1 : 0.6 }}>
+                    <div>
+                      <label style={{ fontSize: '0.85rem', display: 'block', marginBottom: '0.25rem', fontWeight: '600' }}>From:</label>
+                      <input
+                        type="time"
+                        value={availability[day]?.start_time || '09:00'}
+                        onChange={(e) => handleTimeChange(day, 'start_time', e.target.value)}
+                        disabled={!availability[day]?.working}
+                        style={{
+                          padding: '0.4rem',
+                          borderRadius: '4px',
+                          border: '1px solid #ddd',
+                          opacity: availability[day]?.working ? 1 : 0.5,
+                          cursor: availability[day]?.working ? 'text' : 'not-allowed',
+                        }}
+                      />
                     </div>
-                  )}
+                    <div>
+                      <label style={{ fontSize: '0.85rem', display: 'block', marginBottom: '0.25rem', fontWeight: '600' }}>To:</label>
+                      <input
+                        type="time"
+                        value={availability[day]?.end_time || '17:00'}
+                        onChange={(e) => handleTimeChange(day, 'end_time', e.target.value)}
+                        disabled={!availability[day]?.working}
+                        style={{
+                          padding: '0.4rem',
+                          borderRadius: '4px',
+                          border: '1px solid #ddd',
+                          opacity: availability[day]?.working ? 1 : 0.5,
+                          cursor: availability[day]?.working ? 'text' : 'not-allowed',
+                        }}
+                      />
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
