@@ -104,7 +104,7 @@ export async function PUT(
     if (payment_date !== undefined) updateData.payment_date = payment_date;
     if (notes !== undefined) updateData.notes = notes;
 
-    console.log('Updating client', clientId, 'with:', JSON.stringify(updateData));
+    console.log('[PUT /api/admin/clients/[id]] Updating client', clientId, 'with:', JSON.stringify(updateData));
 
     const { data: updatedClient, error: updateError } = await supabase
       .from('clients')
@@ -114,13 +114,20 @@ export async function PUT(
       .single();
 
     if (updateError) {
-      console.error('Supabase error:', updateError);
-      return NextResponse.json({ 
-        error: 'Failed to update client: ' + (updateError.message || 'Unknown error')
+      console.error('[PUT /api/admin/clients/[id]] Supabase error:', {
+        message: updateError.message,
+        code: updateError.code,
+        details: updateError.details,
+        hint: updateError.hint,
+      });
+      return NextResponse.json({
+        error: 'Failed to update client: ' + (updateError.message || 'Unknown error'),
+        code: updateError.code,
+        details: updateError.details
       }, { status: 500 });
     }
 
-    console.log('Successfully updated client:', clientId);
+    console.log('[PUT /api/admin/clients/[id]] Successfully updated client:', clientId, 'with data:', JSON.stringify(updatedClient));
 
     // Log audit action
     try {

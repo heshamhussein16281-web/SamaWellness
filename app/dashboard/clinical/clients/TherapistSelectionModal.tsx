@@ -62,6 +62,8 @@ export default function TherapistSelectionModal({
 
     try {
       // Assign therapist and update status to ready_for_booking
+      console.log('[TherapistSelectionModal] Assigning therapist', selectedTherapistId, 'to client', clientId);
+
       const res = await fetch(`/api/admin/clients/${clientId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -72,18 +74,27 @@ export default function TherapistSelectionModal({
         }),
       });
 
+      console.log('[TherapistSelectionModal] API response status:', res.status);
+
       if (!res.ok) {
         const data = await res.json();
+        console.error('[TherapistSelectionModal] API error:', data);
         throw new Error(data.error || 'Failed to assign therapist');
       }
 
+      const data = await res.json();
+      console.log('[TherapistSelectionModal] Successfully updated client:', data);
+
       setSuccess(true);
       setTimeout(() => {
+        console.log('[TherapistSelectionModal] Calling onSuccess and onClose');
         onSuccess();
         onClose();
       }, 1500);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      const errorMsg = err instanceof Error ? err.message : 'An error occurred';
+      console.error('[TherapistSelectionModal] Error:', errorMsg);
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }
