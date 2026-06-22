@@ -13,7 +13,8 @@ interface ClientActionButtonProps {
   therapistId?: number;
   therapistName?: string | null;
   isRecurring: boolean;
-  clinicId: string;
+  clinicId: number;
+  clinicLoading?: boolean;
   onActionComplete: () => Promise<void> | void;
 }
 
@@ -30,6 +31,7 @@ export default function ClientActionButton({
   therapistName,
   isRecurring,
   clinicId,
+  clinicLoading = false,
   onActionComplete,
 }: ClientActionButtonProps) {
   const [activeModal, setActiveModal] = useState<string | null>(null);
@@ -131,15 +133,18 @@ export default function ClientActionButton({
     setActiveModal(null);
   };
 
+  // Disable button if clinic is loading or clinic ID is not set
+  const isDisabled = nextAction.type === 'none' || clinicLoading || !clinicId;
+
   return (
     <>
       <button
-        className={`client-next-action-btn ${nextAction.type !== 'none' ? 'active' : 'disabled'}`}
+        className={`client-next-action-btn ${!isDisabled ? 'active' : 'disabled'}`}
         onClick={handleActionClick}
-        title={`Next action: ${nextAction.label}`}
-        disabled={nextAction.type === 'none'}
+        title={clinicLoading ? 'Loading clinic data...' : (clinicId ? `Next action: ${nextAction.label}` : 'Clinic data unavailable')}
+        disabled={isDisabled}
       >
-        {nextAction.label}
+        {clinicLoading ? 'Loading...' : nextAction.label}
       </button>
 
       {/* Assessment Entry Modal */}

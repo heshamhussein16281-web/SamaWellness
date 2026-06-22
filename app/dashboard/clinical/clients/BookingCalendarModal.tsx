@@ -14,7 +14,7 @@ interface BookingCalendarModalProps {
   therapistId?: number;
   therapistName?: string;
   isRecurring: boolean;
-  clinicId: string;
+  clinicId: number;
   onSuccess: () => void;
   onClose: () => void;
 }

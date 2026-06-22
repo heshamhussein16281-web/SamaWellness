@@ -35,7 +35,8 @@ export default function ClientsPage() {
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [searchPhone, setSearchPhone] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [clinicId, setClinicId] = useState<string | null>(null);
+  const [clinicId, setClinicId] = useState<number | null>(null);
+  const [clinicLoading, setClinicLoading] = useState(true);
   const [pagination, setPagination] = useState<PaginationInfo>({
     page: 1,
     limit: 20,
@@ -80,17 +81,22 @@ export default function ClientsPage() {
   useEffect(() => {
     const fetchPrimaryClinic = async () => {
       try {
+        setClinicLoading(true);
         const res = await fetch('/api/admin/clinics', {
           credentials: 'include',
         });
         if (res.ok) {
           const data = await res.json();
           if (data.data && data.data.length > 0) {
-            setClinicId(data.data[0].id);
+            // clinic_id should be a number
+            const id = data.data[0].id;
+            setClinicId(typeof id === 'string' ? parseInt(id, 10) : id);
           }
         }
       } catch (err) {
         console.error('Failed to fetch clinics:', err);
+      } finally {
+        setClinicLoading(false);
       }
     };
     fetchPrimaryClinic();
@@ -273,7 +279,8 @@ export default function ClientsPage() {
                       therapistId={client.therapist_id || undefined}
                       therapistName={client.therapist_name || undefined}
                       isRecurring={client.is_recurring || false}
-                      clinicId={clinicId || ''}
+                      clinicId={clinicId || 0}
+                      clinicLoading={clinicLoading}
                       onActionComplete={() => fetchClients(currentPage, searchPhone)}
                     />
                   </td>
