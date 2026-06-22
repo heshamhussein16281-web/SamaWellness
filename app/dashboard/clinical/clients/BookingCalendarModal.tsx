@@ -38,7 +38,7 @@ export default function BookingCalendarModal({
 
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<number | null>(null);
-  const [selectedRoom, setSelectedRoom] = useState<{ id: number; name: string } | null>(null);
+  const [selectedRoom, setSelectedRoom] = useState<{ id: number; room_name: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -239,7 +239,7 @@ export default function BookingCalendarModal({
           session_type: isRecurring ? 'recurring' : 'single',
           clinic_id: clinicId,
           room_id: selectedRoom?.id || null,
-          notes: selectedRoom ? `Booked for ${selectedRoom.name}` : null,
+          notes: selectedRoom ? `Booked for ${selectedRoom.room_name}` : null,
         }),
       });
 
@@ -281,7 +281,7 @@ export default function BookingCalendarModal({
             <div className="modal-success-icon">✓</div>
             <h2 className="modal-success-title">Session Booked</h2>
             <p className="modal-success-message">
-              Session scheduled for {clientName} on {selectedDate} at {HOUR_LABELS[HOURS.indexOf(selectedTime || 0)]} in {selectedRoom?.name || 'selected room'}.
+              Session scheduled for {clientName} on {selectedDate} at {HOUR_LABELS[HOURS.indexOf(selectedTime || 0)]} in {selectedRoom?.room_name || 'selected room'}.
               {isRecurring && <span> Payment due within 24 hours before the session.</span>}
             </p>
           </div>
@@ -509,7 +509,7 @@ export default function BookingCalendarModal({
               </div>
               <div>
                 <span>Room:</span>
-                <strong>{selectedRoom}</strong>
+                <strong>{selectedRoom?.room_name}</strong>
               </div>
               <div>
                 <span>Duration:</span>
