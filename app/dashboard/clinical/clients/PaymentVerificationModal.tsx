@@ -8,7 +8,7 @@ interface PaymentVerificationModalProps {
   clientName: string;
   hasTherapist?: boolean; // true if therapist already assigned (direct selection)
   amount?: number;
-  onSuccess: () => void;
+  onSuccess: () => Promise<void> | void;
   onClose: () => void;
 }
 
@@ -57,12 +57,12 @@ export default function PaymentVerificationModal({
       }
 
       setSuccess(true);
-      // Wait 2 seconds to show success message and allow data refresh to complete
-      // Then close modal so user sees updated Next Action
-      setTimeout(() => {
-        onSuccess(); // Triggers fetchClients on parent
-        onClose();   // Close modal after refetch is initiated
-      }, 2000);
+      // Wait 1.5 seconds to show success message, then trigger parent refresh
+      setTimeout(async () => {
+        await Promise.resolve(onSuccess()); // Triggers fetchClients on parent and waits for it
+        // Note: onClose will be called after onSuccess completes its async work
+        // because handleModalSuccess in parent awaits the data refresh
+      }, 1500);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {

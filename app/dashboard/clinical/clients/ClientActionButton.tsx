@@ -13,7 +13,7 @@ interface ClientActionButtonProps {
   therapistId?: number;
   therapistName?: string | null;
   isRecurring: boolean;
-  onActionComplete: () => void;
+  onActionComplete: () => Promise<void> | void;
 }
 
 interface NextAction {
@@ -121,9 +121,12 @@ export default function ClientActionButton({
     setActiveModal(null);
   };
 
-  const handleModalSuccess = () => {
+  const handleModalSuccess = async () => {
+    // Call onActionComplete (which fetches fresh data) before closing the modal
+    // This ensures the parent component updates with the new status
+    await Promise.resolve(onActionComplete());
+    // Close modal after data refresh completes
     setActiveModal(null);
-    onActionComplete();
   };
 
   return (
