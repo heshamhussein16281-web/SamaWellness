@@ -34,14 +34,22 @@ async function checkAdminPermission(
   return { authorized: true, user: payload };
 }
 
-// GET: Fetch single clinic
+// GET: Fetch single clinic with rooms (for booking workflow)
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const auth = await checkAdminPermission(request);
-  if (!auth.authorized) {
-    return NextResponse.json({ error: auth.error }, { status: 403 });
+  // For GET, just verify user is authenticated (needed for booking workflow)
+  const cookieHeader = request.headers.get('cookie');
+  const token = getJWTFromCookie(cookieHeader || undefined);
+
+  if (!token) {
+    return NextResponse.json({ error: 'No authentication token found' }, { status: 401 });
+  }
+
+  const payload = await verifyJWT(token);
+  if (!payload) {
+    return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 });
   }
 
   try {
@@ -58,7 +66,21 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(clinic);
+    // Fetch clinic rooms
+    const { data: rooms, error: roomsError } = await supabase
+      .from('clinic_rooms')
+      .select('*')
+      .eq('clinic_id', params.id)
+      .order('room_name');
+
+    if (roomsError) {
+      console.error('Error fetching clinic rooms:', roomsError);
+    }
+
+    return NextResponse.json({
+      ...clinic,
+      clinic_rooms: rooms || []
+    });
   } catch (error) {
     console.error('Error fetching clinic:', error);
     return NextResponse.json(

@@ -458,8 +458,9 @@ export default function BookingCalendarModal({
                     if (!isInWorkingHours) {
                       return (
                         <div key={`${dateStr}-${hour}`} className="legacy-slot-cell unavailable">
-                          <div className="legacy-room-btn disabled">—</div>
-                          <div className="legacy-room-btn disabled">—</div>
+                          {clinicRooms.map((room) => (
+                            <div key={room.id} className="legacy-room-btn disabled">—</div>
+                          ))}
                         </div>
                       );
                     }
