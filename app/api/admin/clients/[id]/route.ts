@@ -122,14 +122,31 @@ export async function PUT(
 
     console.log('[PUT /api/admin/clients/[id]] Client before update:', JSON.stringify(clientBefore));
 
-    const { data: updatedClient, error: updateError, count } = await supabase
-      .from('clients')
-      .update(updateData)
-      .eq('id', clientId)
-      .select()
-      .single();
+    console.log('[PUT /api/admin/clients/[id]] About to execute UPDATE with:', JSON.stringify(updateData));
 
-    console.log('[PUT /api/admin/clients/[id]] Update result:', { count, error: updateError?.message });
+    try {
+      const { data: updatedClient, error: updateError, count } = await supabase
+        .from('clients')
+        .update(updateData)
+        .eq('id', clientId)
+        .select()
+        .single();
+
+      console.log('[PUT /api/admin/clients/[id]] Update result:', { count, error: updateError?.message });
+      console.log('[PUT /api/admin/clients/[id]] Updated client data:', JSON.stringify(updatedClient));
+
+      if (updateError) {
+        console.error('[PUT /api/admin/clients/[id]] Supabase UPDATE error:', {
+          message: updateError.message,
+          code: updateError.code,
+          details: updateError.details,
+          hint: updateError.hint,
+        });
+      }
+    } catch (updateQueryError) {
+      console.error('[PUT /api/admin/clients/[id]] UPDATE query crashed:', updateQueryError);
+      throw updateQueryError;
+    }
 
     if (updateError) {
       console.error('[PUT /api/admin/clients/[id]] Supabase error:', {
