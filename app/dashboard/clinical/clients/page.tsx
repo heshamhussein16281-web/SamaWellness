@@ -69,9 +69,19 @@ export default function ClientsPage() {
 
       const data = await res.json();
       console.log('[ClientsPage] fetchClients completed - got', data.data?.length, 'clients');
+      console.log('[ClientsPage] Pagination from API:', data.pagination);
       console.log('[ClientsPage] First client status:', data.data?.[0]?.status);
       setClients(data.data || []);
-      setPagination(data.pagination || {});
+
+      // Ensure pagination is set correctly
+      const paginationData = data.pagination || {
+        page: page,
+        limit: 10,
+        total: data.data?.length || 0,
+        pages: Math.ceil((data.data?.length || 0) / 10),
+      };
+      console.log('[ClientsPage] Setting pagination to:', paginationData);
+      setPagination(paginationData);
       setCurrentPage(page);
     } catch (err) {
       console.error('[ClientsPage] fetchClients error:', err);
