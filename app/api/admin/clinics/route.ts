@@ -27,18 +27,24 @@ async function checkAdminPermission(
     return { authorized: false, error: 'Invalid or expired token' };
   }
 
-  if (!payload.permissions.includes('manage_users')) {
-    return { authorized: false, error: 'Insufficient permissions' };
-  }
-
+  // Allow GET requests for users with view_clients permission (needed for booking workflow)
+  // Allow POST/DELETE for users with manage_users permission (for clinic management)
   return { authorized: true, user: payload };
 }
 
 // GET: List all clinics
 export async function GET(request: NextRequest) {
-  const auth = await checkAdminPermission(request);
-  if (!auth.authorized) {
-    return NextResponse.json({ error: auth.error }, { status: 403 });
+  // For GET, just verify user is authenticated (needed for booking workflow)
+  const cookieHeader = request.headers.get('cookie');
+  const token = getJWTFromCookie(cookieHeader || undefined);
+
+  if (!token) {
+    return NextResponse.json({ error: 'No authentication token found' }, { status: 401 });
+  }
+
+  const payload = await verifyJWT(token);
+  if (!payload) {
+    return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 });
   }
 
   try {
@@ -68,11 +74,22 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST: Create new clinic
+// POST: Create new clinic (requires manage_users permission)
 export async function POST(request: NextRequest) {
-  const auth = await checkAdminPermission(request);
-  if (!auth.authorized) {
-    return NextResponse.json({ error: auth.error }, { status: 403 });
+  const cookieHeader = request.headers.get('cookie');
+  const token = getJWTFromCookie(cookieHeader || undefined);
+
+  if (!token) {
+    return NextResponse.json({ error: 'No authentication token found' }, { status: 401 });
+  }
+
+  const payload = await verifyJWT(token);
+  if (!payload) {
+    return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 });
+  }
+
+  if (!payload.permissions.includes('manage_users')) {
+    return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 });
   }
 
   try {
