@@ -304,50 +304,48 @@ export default function ClientsPage() {
             </tbody>
           </table>
 
-          {pagination.pages > 1 && (
-            <nav className="clients-pagination" aria-label="Pagination">
-              <button
-                className="clients-pagination-btn"
-                onClick={() => handlePageChange(1)}
-                disabled={currentPage === 1}
-                aria-label="First page"
-              >
-                ← First
-              </button>
-              <button
-                className="clients-pagination-btn"
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                aria-label="Previous page"
-              >
-                ← Previous
-              </button>
+          <nav className="clients-pagination" aria-label="Pagination">
+            <button
+              className="clients-pagination-btn"
+              onClick={() => handlePageChange(1)}
+              disabled={currentPage === 1 || pagination.pages <= 1}
+              aria-label="First page"
+            >
+              ← First
+            </button>
+            <button
+              className="clients-pagination-btn"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1 || pagination.pages <= 1}
+              aria-label="Previous page"
+            >
+              ← Previous
+            </button>
 
-              <div className="clients-pagination-info" aria-current="page">
-                Page {pagination.page} of {pagination.pages}
-                <span className="clients-pagination-count">
-                  ({pagination.total} total)
-                </span>
-              </div>
+            <div className="clients-pagination-info" aria-current="page">
+              Page {pagination.page} of {pagination.pages}
+              <span className="clients-pagination-count">
+                ({pagination.total} total)
+              </span>
+            </div>
 
-              <button
-                className="clients-pagination-btn"
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === pagination.pages}
-                aria-label="Next page"
-              >
-                Next →
-              </button>
-              <button
-                className="clients-pagination-btn"
-                onClick={() => handlePageChange(pagination.pages)}
-                disabled={currentPage === pagination.pages}
-                aria-label="Last page"
-              >
-                Last →
-              </button>
-            </nav>
-          )}
+            <button
+              className="clients-pagination-btn"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === pagination.pages || pagination.pages <= 1}
+              aria-label="Next page"
+            >
+              Next →
+            </button>
+            <button
+              className="clients-pagination-btn"
+              onClick={() => handlePageChange(pagination.pages)}
+              disabled={currentPage === pagination.pages || pagination.pages <= 1}
+              aria-label="Last page"
+            >
+              Last →
+            </button>
+          </nav>
         </section>
       )}
     </main>
