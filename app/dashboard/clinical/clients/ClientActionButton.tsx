@@ -73,6 +73,14 @@ export default function ClientActionButton({
       };
     }
 
+    // Payment has been received, waiting for session booking
+    if (therapistId && status === 'payment_pending') {
+      return {
+        label: 'Book Session',
+        type: 'booking',
+      };
+    }
+
     // ========== RECURRING CLIENTS: SKIP PAYMENT VERIFICATION ==========
     // Recurring clients go straight to booking (no payment check needed)
     if (isRecurring && therapistId && (status === 'ready_for_booking' || status === 'intake')) {
