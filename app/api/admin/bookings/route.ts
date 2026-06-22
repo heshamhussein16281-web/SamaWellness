@@ -138,8 +138,6 @@ export async function POST(request: NextRequest) {
         details: bookingError.details,
         hint: bookingError.hint,
         code: bookingError.code,
-        status: bookingError.status,
-        statusText: bookingError.statusText,
         body: {
           client_id,
           therapist_id,
