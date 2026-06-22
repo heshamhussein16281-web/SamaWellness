@@ -107,16 +107,9 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Calculate session timing for auto-completion
-    const sessionStartTime = new Date(session_date);
-    const sessionEndTime = new Date(sessionStartTime.getTime() + duration_minutes * 60 * 1000);
-
     // Calculate payment deadline (24 hours from now)
     const now = new Date();
     const paymentDeadline = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-
-    // Fixed payment amount: 2000 EGP
-    const paymentAmount = 2000;
 
     // Create the booking
     const { data: booking, error: bookingError } = await supabase
@@ -126,16 +119,14 @@ export async function POST(request: NextRequest) {
           client_id,
           therapist_id,
           session_date,
-          session_start_time: sessionStartTime.toISOString(),
-          session_end_time: sessionEndTime.toISOString(),
           duration_minutes,
           session_type: session_type || 'single',
-          clinic_id,
           room_id: room_id || null,
           notes: notes || null,
           payment_status: 'pending',
           booking_status: 'scheduled',
           payment_deadline: paymentDeadline.toISOString(),
+          status: 'scheduled', // Maintain backwards compatibility with original status field
         },
       ])
       .select()
@@ -183,7 +174,6 @@ export async function POST(request: NextRequest) {
           booking_status: booking.booking_status,
           payment_status: booking.payment_status,
           payment_deadline: booking.payment_deadline,
-          payment_amount: paymentAmount,
           room_id: booking.room_id,
           notes: booking.notes,
           created_at: booking.created_at,
