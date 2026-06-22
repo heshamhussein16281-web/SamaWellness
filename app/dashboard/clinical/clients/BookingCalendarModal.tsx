@@ -251,7 +251,8 @@ export default function BookingCalendarModal({
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || 'Failed to create booking');
+        console.error('Booking creation error:', res.status, data);
+        throw new Error(data.details || data.error || 'Failed to create booking');
       }
 
       const clientStatusRes = await fetch(`/api/admin/clients/${clientId}`, {

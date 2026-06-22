@@ -43,7 +43,11 @@ async function checkPermission(
  * Status: 201 on success, 400/401/403/404/500 on error
  */
 export async function POST(request: NextRequest) {
-  const auth = await checkPermission(request, 'create_booking');
+  // Check if user has create_booking OR manage_clients permission
+  let auth = await checkPermission(request, 'create_booking');
+  if (!auth.authorized) {
+    auth = await checkPermission(request, 'manage_clients');
+  }
   if (!auth.authorized) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
   }
@@ -138,8 +142,23 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (bookingError) {
-      console.error('Error creating booking:', bookingError);
-      return NextResponse.json({ error: 'Failed to create booking' }, { status: 500 });
+      console.error('Error creating booking:', {
+        message: bookingError.message,
+        details: bookingError.details,
+        hint: bookingError.hint,
+        code: bookingError.code,
+        body: {
+          client_id,
+          therapist_id,
+          session_date,
+          clinic_id,
+          room_id,
+        },
+      });
+      return NextResponse.json({
+        error: 'Failed to create booking',
+        details: bookingError.message || 'Database error'
+      }, { status: 500 });
     }
 
     // Log audit action

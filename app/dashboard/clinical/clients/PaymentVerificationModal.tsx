@@ -53,7 +53,8 @@ export default function PaymentVerificationModal({
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || 'Failed to verify payment');
+        console.error('Payment verification error:', res.status, data);
+        throw new Error(data.details || data.error || 'Failed to verify payment');
       }
 
       setSuccess(true);
