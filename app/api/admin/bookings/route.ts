@@ -138,17 +138,23 @@ export async function POST(request: NextRequest) {
         details: bookingError.details,
         hint: bookingError.hint,
         code: bookingError.code,
+        status: bookingError.status,
+        statusText: bookingError.statusText,
         body: {
           client_id,
           therapist_id,
           session_date,
-          clinic_id,
+          duration_minutes,
+          session_type,
           room_id,
+          clinic_id,
         },
       });
       return NextResponse.json({
         error: 'Failed to create booking',
-        details: bookingError.message || 'Database error'
+        details: bookingError.message || 'Database error',
+        hint: bookingError.hint || 'Check if all columns exist in bookings table',
+        code: bookingError.code
       }, { status: 500 });
     }
 
