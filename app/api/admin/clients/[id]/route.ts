@@ -104,6 +104,9 @@ export async function PUT(
     if (payment_date !== undefined) updateData.payment_date = payment_date;
     if (notes !== undefined) updateData.notes = notes;
 
+    // Always update the updated_at timestamp when any field changes
+    updateData.updated_at = new Date().toISOString();
+
     console.log('[PUT /api/admin/clients/[id]] Updating client', clientId, 'with:', JSON.stringify(updateData));
     console.log('[PUT /api/admin/clients/[id]] Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
     console.log('[PUT /api/admin/clients/[id]] Using service role key:', !!process.env.SUPABASE_SERVICE_ROLE_KEY);
