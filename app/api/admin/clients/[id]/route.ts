@@ -165,15 +165,6 @@ export async function PUT(
     console.log('[PUT /api/admin/clients/[id]] Successfully updated client:', clientId);
     console.log('[PUT /api/admin/clients/[id]] Updated data:', JSON.stringify(updatedClient));
 
-    // Verify the update actually persisted
-    const { data: clientAfter } = await supabase
-      .from('clients')
-      .select('*')
-      .eq('id', clientId)
-      .single();
-
-    console.log('[PUT /api/admin/clients/[id]] Client after update (verification):', JSON.stringify(clientAfter));
-
     // Log audit action
     try {
       await logAuditAction({
