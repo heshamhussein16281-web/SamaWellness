@@ -75,6 +75,13 @@ export async function GET(request: NextRequest) {
 
     const { count: totalCount, error: countError } = await countQuery;
 
+    console.log('[GET /api/admin/clients] Count query result:', {
+      totalCount,
+      countError: countError?.message,
+      statusFilter,
+      phoneFilter,
+    });
+
     if (countError) {
       console.error('Error counting clients:', countError);
       return NextResponse.json({ error: 'Failed to fetch clients count' }, { status: 500 });
