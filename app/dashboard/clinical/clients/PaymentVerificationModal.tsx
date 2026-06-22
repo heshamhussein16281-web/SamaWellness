@@ -40,22 +40,32 @@ export default function PaymentVerificationModal({
       // Determine next status based on whether therapist is already assigned
       const nextStatus = hasTherapist ? 'ready_for_booking' : 'assessment_pending';
 
+      const payload = {
+        status: nextStatus,
+        payment_verified: true,
+        payment_date: paymentDate,
+      };
+
+      console.log('[PaymentVerificationModal] Sending payment verification for client:', clientId);
+      console.log('[PaymentVerificationModal] Payload:', payload);
+
       const res = await fetch(`/api/admin/clients/${clientId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({
-          status: nextStatus,
-          payment_verified: true,
-          payment_date: paymentDate,
-        }),
+        body: JSON.stringify(payload),
       });
+
+      console.log('[PaymentVerificationModal] API response status:', res.status);
 
       if (!res.ok) {
         const data = await res.json();
-        console.error('Payment verification error:', res.status, data);
+        console.error('[PaymentVerificationModal] API error:', res.status, data);
         throw new Error(data.details || data.error || 'Failed to verify payment');
       }
+
+      const responseData = await res.json();
+      console.log('[PaymentVerificationModal] API success response:', responseData);
 
       setSuccess(true);
       // Wait 1.5 seconds to show success message, then trigger parent refresh
