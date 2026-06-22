@@ -47,6 +47,7 @@ export default function BookingCalendarModal({
   const [scheduleError, setScheduleError] = useState<string | null>(null);
   const [clinicRooms, setClinicRooms] = useState<Array<{ id: number; room_name: string }>>([]);
   const [loadingRooms, setLoadingRooms] = useState(true);
+  const [clinicName, setClinicName] = useState<string | null>(null);
 
   // Fetch therapist schedule
   useEffect(() => {
@@ -112,6 +113,11 @@ export default function BookingCalendarModal({
 
         if (res.ok) {
           const data = await res.json();
+          // Store clinic name
+          if (data.name) {
+            setClinicName(data.name);
+          }
+          // Store clinic rooms
           if (data.clinic_rooms && Array.isArray(data.clinic_rooms)) {
             setClinicRooms(data.clinic_rooms);
             // Auto-select first room
@@ -236,7 +242,7 @@ export default function BookingCalendarModal({
           therapist_id: therapistId,
           session_date: `${selectedDate}T${String(selectedTime).padStart(2, '0')}:00:00`,
           duration_minutes: 60,
-          session_type: isRecurring ? 'recurring' : 'single',
+          session_type: 'single',
           clinic_id: clinicId,
           room_id: selectedRoom?.id || null,
           notes: selectedRoom ? `Booked for ${selectedRoom.room_name}` : null,
@@ -296,7 +302,7 @@ export default function BookingCalendarModal({
         <div className="modal-header">
           <div>
             <h2 className="modal-title">Book Session - {clientName}</h2>
-            <p className="modal-subtitle">{therapistName} • Select time slot</p>
+            <p className="modal-subtitle">{clinicName} • {therapistName} • Select time slot</p>
           </div>
           <button className="modal-close-btn" onClick={onClose} type="button" aria-label="Close modal">
             ✕
