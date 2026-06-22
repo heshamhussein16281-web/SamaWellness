@@ -105,13 +105,31 @@ export async function PUT(
     if (notes !== undefined) updateData.notes = notes;
 
     console.log('[PUT /api/admin/clients/[id]] Updating client', clientId, 'with:', JSON.stringify(updateData));
+    console.log('[PUT /api/admin/clients/[id]] Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+    console.log('[PUT /api/admin/clients/[id]] Using service role key:', !!process.env.SUPABASE_SERVICE_ROLE_KEY);
 
-    const { data: updatedClient, error: updateError } = await supabase
+    // First, verify client exists before update
+    const { data: clientBefore, error: fetchError } = await supabase
+      .from('clients')
+      .select('*')
+      .eq('id', clientId)
+      .single();
+
+    if (fetchError || !clientBefore) {
+      console.error('[PUT /api/admin/clients/[id]] Client not found before update:', clientId);
+      return NextResponse.json({ error: 'Client not found' }, { status: 404 });
+    }
+
+    console.log('[PUT /api/admin/clients/[id]] Client before update:', JSON.stringify(clientBefore));
+
+    const { data: updatedClient, error: updateError, count } = await supabase
       .from('clients')
       .update(updateData)
       .eq('id', clientId)
       .select()
       .single();
+
+    console.log('[PUT /api/admin/clients/[id]] Update result:', { count, error: updateError?.message });
 
     if (updateError) {
       console.error('[PUT /api/admin/clients/[id]] Supabase error:', {
@@ -127,7 +145,17 @@ export async function PUT(
       }, { status: 500 });
     }
 
-    console.log('[PUT /api/admin/clients/[id]] Successfully updated client:', clientId, 'with data:', JSON.stringify(updatedClient));
+    console.log('[PUT /api/admin/clients/[id]] Successfully updated client:', clientId);
+    console.log('[PUT /api/admin/clients/[id]] Updated data:', JSON.stringify(updatedClient));
+
+    // Verify the update actually persisted
+    const { data: clientAfter } = await supabase
+      .from('clients')
+      .select('*')
+      .eq('id', clientId)
+      .single();
+
+    console.log('[PUT /api/admin/clients/[id]] Client after update (verification):', JSON.stringify(clientAfter));
 
     // Log audit action
     try {
