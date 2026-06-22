@@ -128,7 +128,13 @@ export default function ClientActionButton({
   const handleModalSuccess = async () => {
     // Call onActionComplete (which fetches fresh data) before closing the modal
     // This ensures the parent component updates with the new status
-    await Promise.resolve(onActionComplete());
+    console.log('[ClientActionButton] Modal success - calling onActionComplete');
+    try {
+      await Promise.resolve(onActionComplete());
+      console.log('[ClientActionButton] onActionComplete finished - closing modal');
+    } catch (err) {
+      console.error('[ClientActionButton] Error during onActionComplete:', err);
+    }
     // Close modal after data refresh completes
     setActiveModal(null);
   };

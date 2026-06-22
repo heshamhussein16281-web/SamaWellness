@@ -46,6 +46,7 @@ export default function ClientsPage() {
 
   const fetchClients = async (page: number = 1, phone: string = '') => {
     try {
+      console.log('[ClientsPage] fetchClients called with page:', page, 'phone:', phone);
       setLoading(true);
       setError(null);
 
@@ -67,10 +68,13 @@ export default function ClientsPage() {
       }
 
       const data = await res.json();
+      console.log('[ClientsPage] fetchClients completed - got', data.data?.length, 'clients');
+      console.log('[ClientsPage] First client status:', data.data?.[0]?.status);
       setClients(data.data || []);
       setPagination(data.pagination || {});
       setCurrentPage(page);
     } catch (err) {
+      console.error('[ClientsPage] fetchClients error:', err);
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
