@@ -255,6 +255,8 @@ export default function BookingCalendarModal({
         throw new Error(data.details || data.error || 'Failed to create booking');
       }
 
+      console.log('[BookingCalendarModal] Updating client status to booking_scheduled');
+
       const clientStatusRes = await fetch(`/api/admin/clients/${clientId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -264,8 +266,14 @@ export default function BookingCalendarModal({
         }),
       });
 
+      console.log('[BookingCalendarModal] Client status update response:', clientStatusRes.status);
+
       if (!clientStatusRes.ok) {
-        console.error('Failed to update client status');
+        const errorData = await clientStatusRes.json();
+        console.error('[BookingCalendarModal] Failed to update client status:', clientStatusRes.status, errorData);
+      } else {
+        const statusData = await clientStatusRes.json();
+        console.log('[BookingCalendarModal] Client status updated successfully:', statusData);
       }
 
       setSuccess(true);
