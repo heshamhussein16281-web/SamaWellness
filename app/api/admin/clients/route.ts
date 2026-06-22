@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { unstable_noStore } from 'next/cache';
 import { verifyJWT, getJWTFromCookie, type JWTPayload } from '@/lib/auth';
 import { checkUserPermission } from '@/lib/permission-check';
 import { createClient } from '@supabase/supabase-js';
@@ -45,6 +46,8 @@ async function checkPermission(
  * Status: 200, 401/403/500 on error
  */
 export async function GET(request: NextRequest) {
+  unstable_noStore();
+
   const auth = await checkPermission(request, 'view_clients');
   if (!auth.authorized) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });

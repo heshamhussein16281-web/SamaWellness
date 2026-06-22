@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { unstable_noStore } from 'next/cache';
 import { verifyJWT, getJWTFromCookie, type JWTPayload } from '@/lib/auth';
 import { createClient } from '@supabase/supabase-js';
 import { logAuditAction } from '@/lib/audit';
@@ -72,6 +73,8 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  unstable_noStore();
+
   // Check if user has manage_clients OR view_clients permission
   let auth = await checkPermission(request, 'manage_clients');
   if (!auth.authorized) {
