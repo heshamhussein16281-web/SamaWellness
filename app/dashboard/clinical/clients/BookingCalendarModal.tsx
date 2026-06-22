@@ -276,9 +276,12 @@ export default function BookingCalendarModal({
         console.log('[BookingCalendarModal] Client status updated successfully:', statusData);
       }
 
+      // Trigger parent refresh immediately
+      await Promise.resolve(onSuccess());
+
+      // Then show success message for 1.5 seconds before closing
       setSuccess(true);
       setTimeout(() => {
-        onSuccess();
         onClose();
       }, 1500);
     } catch (err) {

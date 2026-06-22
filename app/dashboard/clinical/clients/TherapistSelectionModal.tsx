@@ -85,10 +85,14 @@ export default function TherapistSelectionModal({
       const data = await res.json();
       console.log('[TherapistSelectionModal] Successfully updated client:', data);
 
+      // Trigger parent refresh immediately
+      console.log('[TherapistSelectionModal] Calling onSuccess');
+      await Promise.resolve(onSuccess());
+
+      // Then show success message for 1.5 seconds before closing
       setSuccess(true);
       setTimeout(() => {
-        console.log('[TherapistSelectionModal] Calling onSuccess and onClose');
-        onSuccess();
+        console.log('[TherapistSelectionModal] Calling onClose');
         onClose();
       }, 1500);
     } catch (err) {
