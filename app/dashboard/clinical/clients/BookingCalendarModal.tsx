@@ -38,13 +38,15 @@ export default function BookingCalendarModal({
 
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<number | null>(null);
-  const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
+  const [selectedRoom, setSelectedRoom] = useState<{ id: number; name: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [therapistSchedule, setTherapistSchedule] = useState<TherapistSchedule | null>(null);
   const [loadingSchedule, setLoadingSchedule] = useState(true);
   const [scheduleError, setScheduleError] = useState<string | null>(null);
+  const [clinicRooms, setClinicRooms] = useState<Array<{ id: number; room_name: string }>>([]);
+  const [loadingRooms, setLoadingRooms] = useState(true);
 
   // Fetch therapist schedule
   useEffect(() => {
@@ -93,6 +95,40 @@ export default function BookingCalendarModal({
 
     fetchSchedule();
   }, [therapistId]);
+
+  // Fetch clinic rooms
+  useEffect(() => {
+    if (!clinicId) {
+      setLoadingRooms(false);
+      return;
+    }
+
+    const fetchRooms = async () => {
+      try {
+        setLoadingRooms(true);
+        const res = await fetch(`/api/admin/clinics/${clinicId}`, {
+          credentials: 'include',
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.clinic_rooms && Array.isArray(data.clinic_rooms)) {
+            setClinicRooms(data.clinic_rooms);
+            // Auto-select first room
+            if (data.clinic_rooms.length > 0) {
+              setSelectedRoom(data.clinic_rooms[0]);
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch clinic rooms:', err);
+      } finally {
+        setLoadingRooms(false);
+      }
+    };
+
+    fetchRooms();
+  }, [clinicId]);
 
   // Time slots (10am to 10pm) - full day view
   const HOUR_START = 10;
@@ -170,11 +206,15 @@ export default function BookingCalendarModal({
 
   const weekDays = getWeekDays();
 
-  const handleSlotClick = async (date: string, hour: number, room: string) => {
+  const handleSlotClick = async (date: string, hour: number, roomName: string) => {
     setError(null);
     setSelectedDate(date);
     setSelectedTime(hour);
-    setSelectedRoom(room);
+    // Find the room object by name
+    const room = clinicRooms.find(r => r.room_name === roomName);
+    if (room) {
+      setSelectedRoom(room);
+    }
   };
 
   const handleSubmit = async () => {
@@ -198,8 +238,8 @@ export default function BookingCalendarModal({
           duration_minutes: 60,
           session_type: isRecurring ? 'recurring' : 'single',
           clinic_id: clinicId,
-          room: selectedRoom,
-          notes: `Booked for ${selectedRoom}`,
+          room_id: selectedRoom?.id || null,
+          notes: selectedRoom ? `Booked for ${selectedRoom.name}` : null,
         }),
       });
 
@@ -241,7 +281,7 @@ export default function BookingCalendarModal({
             <div className="modal-success-icon">✓</div>
             <h2 className="modal-success-title">Session Booked</h2>
             <p className="modal-success-message">
-              Session scheduled for {clientName} on {selectedDate} at {HOUR_LABELS[HOURS.indexOf(selectedTime || 0)]} in {selectedRoom}.
+              Session scheduled for {clientName} on {selectedDate} at {HOUR_LABELS[HOURS.indexOf(selectedTime || 0)]} in {selectedRoom?.name || 'selected room'}.
               {isRecurring && <span> Payment due within 24 hours before the session.</span>}
             </p>
           </div>
@@ -426,20 +466,17 @@ export default function BookingCalendarModal({
 
                     return (
                       <div key={`${dateStr}-${hour}`} className="legacy-slot-cell">
-                        <button
-                          type="button"
-                          className={`legacy-room-btn ${isSelected && selectedRoom === 'Room 1' ? 'selected' : 'free'}`}
-                          onClick={() => handleSlotClick(dateStr, hour, 'Room 1')}
-                        >
-                          R1
-                        </button>
-                        <button
-                          type="button"
-                          className={`legacy-room-btn ${isSelected && selectedRoom === 'Room 2' ? 'selected' : 'free'}`}
-                          onClick={() => handleSlotClick(dateStr, hour, 'Room 2')}
-                        >
-                          R2
-                        </button>
+                        {clinicRooms.map((room) => (
+                          <button
+                            key={room.id}
+                            type="button"
+                            className={`legacy-room-btn ${isSelected && selectedRoom?.id === room.id ? 'selected' : 'free'}`}
+                            onClick={() => handleSlotClick(dateStr, hour, room.room_name)}
+                            title={room.room_name}
+                          >
+                            {room.room_name.charAt(0).toUpperCase()}
+                          </button>
+                        ))}
                       </div>
                     );
                   })}
