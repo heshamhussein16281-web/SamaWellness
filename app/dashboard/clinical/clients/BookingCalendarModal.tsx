@@ -14,6 +14,7 @@ interface BookingCalendarModalProps {
   therapistId?: number;
   therapistName?: string;
   isRecurring: boolean;
+  clinicId: string;
   onSuccess: () => void;
   onClose: () => void;
 }
@@ -24,6 +25,7 @@ export default function BookingCalendarModal({
   therapistId,
   therapistName,
   isRecurring,
+  clinicId,
   onSuccess,
   onClose,
 }: BookingCalendarModalProps) {
@@ -195,6 +197,7 @@ export default function BookingCalendarModal({
           session_date: `${selectedDate}T${String(selectedTime).padStart(2, '0')}:00:00`,
           duration_minutes: 60,
           session_type: isRecurring ? 'recurring' : 'single',
+          clinic_id: clinicId,
           room: selectedRoom,
           notes: `Booked for ${selectedRoom}`,
         }),

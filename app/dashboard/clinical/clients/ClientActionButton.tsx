@@ -13,6 +13,7 @@ interface ClientActionButtonProps {
   therapistId?: number;
   therapistName?: string | null;
   isRecurring: boolean;
+  clinicId: string;
   onActionComplete: () => Promise<void> | void;
 }
 
@@ -28,6 +29,7 @@ export default function ClientActionButton({
   therapistId,
   therapistName,
   isRecurring,
+  clinicId,
   onActionComplete,
 }: ClientActionButtonProps) {
   const [activeModal, setActiveModal] = useState<string | null>(null);
@@ -179,6 +181,7 @@ export default function ClientActionButton({
           therapistId={therapistId}
           therapistName={therapistName || undefined}
           isRecurring={isRecurring}
+          clinicId={clinicId}
           onSuccess={handleModalSuccess}
           onClose={handleModalClose}
         />

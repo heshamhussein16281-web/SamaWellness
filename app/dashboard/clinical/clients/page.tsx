@@ -35,6 +35,7 @@ export default function ClientsPage() {
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [searchPhone, setSearchPhone] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [clinicId, setClinicId] = useState<string | null>(null);
   const [pagination, setPagination] = useState<PaginationInfo>({
     page: 1,
     limit: 20,
@@ -74,6 +75,26 @@ export default function ClientsPage() {
       setLoading(false);
     }
   };
+
+  // Fetch primary clinic on component mount
+  useEffect(() => {
+    const fetchPrimaryClinic = async () => {
+      try {
+        const res = await fetch('/api/admin/clinics', {
+          credentials: 'include',
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.data && data.data.length > 0) {
+            setClinicId(data.data[0].id);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch clinics:', err);
+      }
+    };
+    fetchPrimaryClinic();
+  }, []);
 
   useEffect(() => {
     if (viewMode === 'list') {
@@ -252,6 +273,7 @@ export default function ClientsPage() {
                       therapistId={client.therapist_id || undefined}
                       therapistName={client.therapist_name || undefined}
                       isRecurring={client.is_recurring || false}
+                      clinicId={clinicId || ''}
                       onActionComplete={() => fetchClients(currentPage, searchPhone)}
                     />
                   </td>
