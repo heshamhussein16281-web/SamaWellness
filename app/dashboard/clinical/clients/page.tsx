@@ -91,14 +91,20 @@ export default function ClientsPage() {
         });
         if (res.ok) {
           const data = await res.json();
-          if (data.data && data.data.length > 0) {
-            // clinic_id should be a number
-            const id = data.data[0].id;
+          // API returns { clinics: [...] }, not { data: [...] }
+          if (data.clinics && data.clinics.length > 0) {
+            const id = data.clinics[0].id;
+            console.log('[ClientsPage] Primary clinic ID:', id);
             setClinicId(typeof id === 'string' ? parseInt(id, 10) : id);
+          } else {
+            console.warn('[ClientsPage] No clinics found in response');
           }
+        } else {
+          const errorData = await res.json().catch(() => ({}));
+          console.error('[ClientsPage] Failed to fetch clinics:', res.status, errorData);
         }
       } catch (err) {
-        console.error('Failed to fetch clinics:', err);
+        console.error('[ClientsPage] Failed to fetch clinics:', err);
       } finally {
         setClinicLoading(false);
       }
