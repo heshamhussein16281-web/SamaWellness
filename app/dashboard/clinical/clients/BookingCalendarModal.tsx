@@ -92,8 +92,8 @@ export default function BookingCalendarModal({
     fetchSchedule();
   }, [therapistId]);
 
-  // Time slots (9am to 10pm) - full day view
-  const HOUR_START = 9;
+  // Time slots (10am to 10pm) - full day view
+  const HOUR_START = 10;
   const HOUR_END = 22; // 10 PM - shows full day range
   const HOURS = Array.from({ length: HOUR_END - HOUR_START + 1 }, (_, i) => HOUR_START + i);
   const HOUR_LABELS = HOURS.map((h) => {
