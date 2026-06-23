@@ -11,6 +11,37 @@ export default function ClientProfilePage() {
   const clientId = parseInt(params.id as string, 10);
 
   const [error, setError] = useState<string | null>(null);
+  const [clinicId, setClinicId] = useState<number | null>(null);
+  const [clinicLoading, setClinicLoading] = useState(true);
+
+  // Fetch primary clinic on mount
+  useEffect(() => {
+    const fetchPrimaryClinic = async () => {
+      try {
+        setClinicLoading(true);
+        const res = await fetch('/api/admin/clinics', {
+          credentials: 'include',
+        });
+
+        if (!res.ok) {
+          throw new Error('Failed to fetch clinics');
+        }
+
+        const data = await res.json();
+        const primaryClinic = data[0];
+        if (primaryClinic) {
+          setClinicId(primaryClinic.id);
+        }
+      } catch (err) {
+        console.error('Error fetching clinic:', err);
+        setError(err instanceof Error ? err.message : 'Failed to fetch clinic');
+      } finally {
+        setClinicLoading(false);
+      }
+    };
+
+    fetchPrimaryClinic();
+  }, []);
 
   if (isNaN(clientId)) {
     return (
@@ -40,7 +71,7 @@ export default function ClientProfilePage() {
           </button>
         </Link>
       </div>
-      <ClientProfile clientId={clientId} />
+      <ClientProfile clientId={clientId} clinicId={clinicId} clinicLoading={clinicLoading} />
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { HeaderSkeleton, StatsSkeleton, TabSkeleton } from './SkeletonLoader';
+import ClientActionButton from './ClientActionButton';
 import './client-profile.css';
 import './skeleton-loader.css';
 
@@ -95,11 +96,13 @@ interface StatusHistoryResponse {
 
 interface ClientProfileProps {
   clientId: number;
+  clinicId?: number | null;
+  clinicLoading?: boolean;
 }
 
 type TabType = 'information' | 'sessions' | 'bookings' | 'payments' | 'history';
 
-export default function ClientProfile({ clientId }: ClientProfileProps) {
+export default function ClientProfile({ clientId, clinicId, clinicLoading = false }: ClientProfileProps) {
   const [activeTab, setActiveTab] = useState<TabType>('information');
   const [profile, setProfile] = useState<ClientData | null>(null);
   const [sessions, setSessions] = useState<Session[]>([]);
@@ -109,6 +112,24 @@ export default function ClientProfile({ clientId }: ClientProfileProps) {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Refetch profile function for action button callback
+  const refetchProfile = async () => {
+    try {
+      const res = await fetch(`/api/admin/clients/${clientId}/profile`, {
+        credentials: 'include',
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to fetch client profile');
+      }
+
+      const data = await res.json();
+      setProfile(data);
+    } catch (err) {
+      console.error('Error refetching profile:', err);
+    }
+  };
 
   // Tab-level loading states
   const [tabLoading, setTabLoading] = useState({
@@ -334,23 +355,22 @@ export default function ClientProfile({ clientId }: ClientProfileProps) {
               </div>
 
               <div className="client-profile-header-actions">
-                <button
-                  className="client-profile-action-btn client-profile-action-btn--primary"
-                  aria-label="Assign therapist to this client"
-                >
-                  🎯 Assign Therapist
-                </button>
+                <ClientActionButton
+                  clientId={clientId}
+                  clientName={profile.name}
+                  status={profile.status}
+                  therapistId={profile.therapist_id}
+                  therapistName={profile.therapist_name}
+                  isRecurring={profile.is_recurring}
+                  clinicId={clinicId}
+                  clinicLoading={clinicLoading}
+                  onActionComplete={refetchProfile}
+                />
                 <button
                   className="client-profile-action-btn client-profile-action-btn--secondary"
                   aria-label="Edit client profile"
                 >
                   Edit
-                </button>
-                <button
-                  className="client-profile-action-btn client-profile-action-btn--danger"
-                  aria-label="Cancel booking for this client"
-                >
-                  Cancel Booking
                 </button>
               </div>
             </div>
