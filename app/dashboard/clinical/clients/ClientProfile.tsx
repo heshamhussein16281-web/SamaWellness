@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { HeaderSkeleton, StatsSkeleton, TabSkeleton } from './SkeletonLoader';
 import './client-profile.css';
+import './skeleton-loader.css';
 
 interface ClientData {
   id: number;
@@ -108,6 +110,14 @@ export default function ClientProfile({ clientId }: ClientProfileProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Tab-level loading states
+  const [tabLoading, setTabLoading] = useState({
+    sessions: false,
+    bookings: false,
+    payments: false,
+    history: false,
+  });
+
   // Pagination states
   const [sessionsPage, setSessionsPage] = useState(1);
   const [paymentsPage, setPaymentsPage] = useState(1);
@@ -148,6 +158,7 @@ export default function ClientProfile({ clientId }: ClientProfileProps) {
     if (activeTab === 'sessions') {
       const fetchSessions = async () => {
         try {
+          setTabLoading(prev => ({ ...prev, sessions: true }));
           const res = await fetch(
             `/api/admin/clients/${clientId}/sessions?page=${sessionsPage}&limit=10`,
             { credentials: 'include' }
@@ -160,6 +171,8 @@ export default function ClientProfile({ clientId }: ClientProfileProps) {
           setSessionsPagination(data.pagination);
         } catch (err) {
           console.error('Error fetching sessions:', err);
+        } finally {
+          setTabLoading(prev => ({ ...prev, sessions: false }));
         }
       };
 
@@ -172,6 +185,7 @@ export default function ClientProfile({ clientId }: ClientProfileProps) {
     if (activeTab === 'bookings') {
       const fetchBookings = async () => {
         try {
+          setTabLoading(prev => ({ ...prev, bookings: true }));
           const res = await fetch(`/api/admin/clients/${clientId}/bookings`, {
             credentials: 'include',
           });
@@ -182,6 +196,8 @@ export default function ClientProfile({ clientId }: ClientProfileProps) {
           setBookings(data.data);
         } catch (err) {
           console.error('Error fetching bookings:', err);
+        } finally {
+          setTabLoading(prev => ({ ...prev, bookings: false }));
         }
       };
 
@@ -194,6 +210,7 @@ export default function ClientProfile({ clientId }: ClientProfileProps) {
     if (activeTab === 'payments') {
       const fetchPayments = async () => {
         try {
+          setTabLoading(prev => ({ ...prev, payments: true }));
           const res = await fetch(
             `/api/admin/clients/${clientId}/payments?page=${paymentsPage}&limit=10`,
             { credentials: 'include' }
@@ -206,6 +223,8 @@ export default function ClientProfile({ clientId }: ClientProfileProps) {
           setPaymentsPagination(data.pagination);
         } catch (err) {
           console.error('Error fetching payments:', err);
+        } finally {
+          setTabLoading(prev => ({ ...prev, payments: false }));
         }
       };
 
@@ -218,6 +237,7 @@ export default function ClientProfile({ clientId }: ClientProfileProps) {
     if (activeTab === 'history') {
       const fetchHistory = async () => {
         try {
+          setTabLoading(prev => ({ ...prev, history: true }));
           const res = await fetch(
             `/api/admin/clients/${clientId}/status-history?page=${historyPage}&limit=10`,
             { credentials: 'include' }
@@ -230,6 +250,8 @@ export default function ClientProfile({ clientId }: ClientProfileProps) {
           setHistoryPagination(data.pagination);
         } catch (err) {
           console.error('Error fetching history:', err);
+        } finally {
+          setTabLoading(prev => ({ ...prev, history: false }));
         }
       };
 
@@ -251,57 +273,118 @@ export default function ClientProfile({ clientId }: ClientProfileProps) {
 
   const statusBadgeClass = `client-profile-badge client-profile-badge--${profile.status}`;
 
+  // Helper to get status icon
+  const getStatusIcon = (status: string) => {
+    const icons: Record<string, string> = {
+      intake: '📋',
+      assessment_pending: '⏳',
+      ready_for_booking: '✓',
+      booking_scheduled: '📅',
+      payment_pending: '💳',
+      active: '🟢',
+      completed: '✅',
+      inactive: '⏸️',
+      booking_expired: '❌',
+    };
+    return icons[status] || '•';
+  };
+
+  const getBookingStatusIcon = (status: string) => {
+    const icons: Record<string, string> = {
+      confirmed: '✓',
+      scheduled: '📅',
+      completed: '✅',
+      cancelled: '❌',
+      expired: '⏰',
+    };
+    return icons[status] || '•';
+  };
+
+  const getPaymentStatusIcon = (status: string) => {
+    const icons: Record<string, string> = {
+      paid: '✅',
+      unpaid: '⏳',
+      partial: '⚠️',
+      pending: '💳',
+    };
+    return icons[status] || '•';
+  };
+
   return (
     <div className="client-profile-container">
-      {/* Profile Header */}
-      <div className="client-profile-header">
-        <div className="client-profile-header-content">
-          <div className="client-profile-title-section">
-            <h1 className="client-profile-name">{profile.name}</h1>
-            <div className="client-profile-badges">
-              <span className={statusBadgeClass}>{profile.status}</span>
-              {profile.is_recurring && (
-                <span className="client-profile-badge client-profile-badge--recurring">
-                  Recurring
-                </span>
-              )}
+      {/* Profile Header - Sticky */}
+      <div className="client-profile-header-sticky">
+        {loading ? (
+          <HeaderSkeleton />
+        ) : (
+          <div className="client-profile-header">
+            <div className="client-profile-header-content">
+              <div className="client-profile-title-section">
+                <h1 className="client-profile-name">{profile.name}</h1>
+                <div className="client-profile-badges">
+                  <span className={statusBadgeClass}>
+                    {getStatusIcon(profile.status)} {profile.status.replace(/_/g, ' ')}
+                  </span>
+                  {profile.is_recurring && (
+                    <span className="client-profile-badge client-profile-badge--recurring">
+                      🔄 Recurring
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div className="client-profile-header-actions">
+                <button
+                  className="client-profile-action-btn client-profile-action-btn--primary"
+                  aria-label="Assign therapist to this client"
+                >
+                  🎯 Assign Therapist
+                </button>
+                <button
+                  className="client-profile-action-btn client-profile-action-btn--secondary"
+                  aria-label="Edit client profile"
+                >
+                  Edit
+                </button>
+                <button
+                  className="client-profile-action-btn client-profile-action-btn--danger"
+                  aria-label="Cancel booking for this client"
+                >
+                  Cancel Booking
+                </button>
+              </div>
             </div>
           </div>
-
-          <div className="client-profile-header-actions">
-            <button className="client-profile-action-btn client-profile-action-btn--secondary">
-              Edit
-            </button>
-            <button className="client-profile-action-btn client-profile-action-btn--danger">
-              Cancel Booking
-            </button>
-          </div>
-        </div>
+        )}
       </div>
 
       {/* Quick Stats */}
-      <div className="client-profile-stats">
-        <div className="client-profile-stat">
-          <span className="client-profile-stat-label">Sessions Completed</span>
-          <span className="client-profile-stat-value">{profile.total_sessions_completed}</span>
+      {loading ? (
+        <StatsSkeleton />
+      ) : (
+        <div className="client-profile-stats">
+          <div className="client-profile-stat">
+            <span className="client-profile-stat-label">Sessions Completed</span>
+            <span className="client-profile-stat-value">{profile.total_sessions_completed}</span>
+          </div>
+          <div className="client-profile-stat">
+            <span className="client-profile-stat-label">Total Paid</span>
+            <span className="client-profile-stat-value">
+              ${profile.total_amount_paid.toFixed(2)}
+            </span>
+          </div>
+          <div className="client-profile-stat">
+            <span className="client-profile-stat-label">Therapist</span>
+            <span className="client-profile-stat-value">
+              {profile.therapist_name || 'Not assigned'}
+            </span>
+          </div>
         </div>
-        <div className="client-profile-stat">
-          <span className="client-profile-stat-label">Total Paid</span>
-          <span className="client-profile-stat-value">
-            ${profile.total_amount_paid.toFixed(2)}
-          </span>
-        </div>
-        <div className="client-profile-stat">
-          <span className="client-profile-stat-label">Therapist</span>
-          <span className="client-profile-stat-value">
-            {profile.therapist_name || 'Not assigned'}
-          </span>
-        </div>
-      </div>
+      )}
 
       {/* Tabs */}
       <div className="client-profile-tabs">
-        <div className="client-profile-tabs-nav">
+        <div className="client-profile-tabs-nav" role="tablist">
           {(['information', 'sessions', 'bookings', 'payments', 'history'] as const).map((tab) => (
             <button
               key={tab}
@@ -312,6 +395,9 @@ export default function ClientProfile({ clientId }: ClientProfileProps) {
                 if (tab === 'payments') setPaymentsPage(1);
                 if (tab === 'history') setHistoryPage(1);
               }}
+              role="tab"
+              aria-selected={activeTab === tab}
+              aria-controls={`tabpanel-${tab}`}
             >
               {tab === 'information' && 'Information'}
               {tab === 'sessions' && 'Sessions'}
@@ -390,9 +476,23 @@ export default function ClientProfile({ clientId }: ClientProfileProps) {
 
           {/* Sessions Tab */}
           {activeTab === 'sessions' && (
-            <div className="client-profile-tab-pane">
-              {sessions.length === 0 ? (
-                <p className="client-profile-empty-state">No sessions completed yet</p>
+            <div className="client-profile-tab-pane" id="tabpanel-sessions" role="tabpanel">
+              {tabLoading.sessions ? (
+                <TabSkeleton />
+              ) : sessions.length === 0 ? (
+                <div className="client-profile-empty-state">
+                  <div className="client-profile-empty-icon">📅</div>
+                  <p className="client-profile-empty-title">No sessions completed yet</p>
+                  <p className="client-profile-empty-description">
+                    Schedule a session to track client progress
+                  </p>
+                  <button
+                    className="client-profile-action-btn client-profile-action-btn--primary"
+                    aria-label="Schedule a new session"
+                  >
+                    + Schedule Session
+                  </button>
+                </div>
               ) : (
                 <>
                   <table className="client-profile-table">
@@ -455,9 +555,23 @@ export default function ClientProfile({ clientId }: ClientProfileProps) {
 
           {/* Bookings Tab */}
           {activeTab === 'bookings' && (
-            <div className="client-profile-tab-pane">
-              {bookings.length === 0 ? (
-                <p className="client-profile-empty-state">No bookings found</p>
+            <div className="client-profile-tab-pane" id="tabpanel-bookings" role="tabpanel">
+              {tabLoading.bookings ? (
+                <TabSkeleton />
+              ) : bookings.length === 0 ? (
+                <div className="client-profile-empty-state">
+                  <div className="client-profile-empty-icon">📅</div>
+                  <p className="client-profile-empty-title">No bookings found</p>
+                  <p className="client-profile-empty-description">
+                    Schedule a new booking to get started
+                  </p>
+                  <button
+                    className="client-profile-action-btn client-profile-action-btn--primary"
+                    aria-label="Schedule a new booking"
+                  >
+                    + Schedule Booking
+                  </button>
+                </div>
               ) : (
                 <table className="client-profile-table">
                   <thead>
@@ -476,12 +590,12 @@ export default function ClientProfile({ clientId }: ClientProfileProps) {
                         <td>{booking.therapist_name || '-'}</td>
                         <td>
                           <span className={`client-profile-status-badge client-profile-status-badge--${booking.booking_status}`}>
-                            {booking.booking_status}
+                            {getBookingStatusIcon(booking.booking_status)} {booking.booking_status}
                           </span>
                         </td>
                         <td>
                           <span className={`client-profile-status-badge client-profile-status-badge--${booking.payment_status}`}>
-                            {booking.payment_status}
+                            {getPaymentStatusIcon(booking.payment_status)} {booking.payment_status}
                           </span>
                         </td>
                         <td>${booking.amount.toFixed(2)}</td>
@@ -495,9 +609,17 @@ export default function ClientProfile({ clientId }: ClientProfileProps) {
 
           {/* Payments Tab */}
           {activeTab === 'payments' && (
-            <div className="client-profile-tab-pane">
-              {payments.length === 0 ? (
-                <p className="client-profile-empty-state">No payment records found</p>
+            <div className="client-profile-tab-pane" id="tabpanel-payments" role="tabpanel">
+              {tabLoading.payments ? (
+                <TabSkeleton />
+              ) : payments.length === 0 ? (
+                <div className="client-profile-empty-state">
+                  <div className="client-profile-empty-icon">💳</div>
+                  <p className="client-profile-empty-title">No payment records found</p>
+                  <p className="client-profile-empty-description">
+                    Payment records will appear after the first session
+                  </p>
+                </div>
               ) : (
                 <>
                   <table className="client-profile-table">
@@ -522,7 +644,7 @@ export default function ClientProfile({ clientId }: ClientProfileProps) {
                           <td>${payment.additional_charge.toFixed(2)}</td>
                           <td>
                             <span className={`client-profile-status-badge client-profile-status-badge--${payment.charge_status}`}>
-                              {payment.charge_status}
+                              {getPaymentStatusIcon(payment.charge_status)} {payment.charge_status}
                             </span>
                           </td>
                           <td>{payment.marked_by || '-'}</td>
@@ -560,9 +682,17 @@ export default function ClientProfile({ clientId }: ClientProfileProps) {
 
           {/* Notes & History Tab */}
           {activeTab === 'history' && (
-            <div className="client-profile-tab-pane">
-              {history.length === 0 ? (
-                <p className="client-profile-empty-state">No status history found</p>
+            <div className="client-profile-tab-pane" id="tabpanel-history" role="tabpanel">
+              {tabLoading.history ? (
+                <TabSkeleton />
+              ) : history.length === 0 ? (
+                <div className="client-profile-empty-state">
+                  <div className="client-profile-empty-icon">📋</div>
+                  <p className="client-profile-empty-title">No status history found</p>
+                  <p className="client-profile-empty-description">
+                    Status changes will appear here as the client progresses
+                  </p>
+                </div>
               ) : (
                 <>
                   <div className="client-profile-timeline">
@@ -572,7 +702,7 @@ export default function ClientProfile({ clientId }: ClientProfileProps) {
                         <div className="client-profile-timeline-content">
                           <p className="client-profile-timeline-text">
                             <strong>
-                              {record.old_status || 'Created'} → {record.new_status}
+                              {getStatusIcon(record.old_status || 'created')} {record.old_status || 'Created'} → {getStatusIcon(record.new_status)} {record.new_status}
                             </strong>
                           </p>
                           <p className="client-profile-timeline-date">

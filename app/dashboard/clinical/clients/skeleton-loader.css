@@ -1,0 +1,105 @@
+/* ════════════════════════════════════════════════════════════════
+   SKELETON LOADERS — Shimmer Loading States
+   ════════════════════════════════════════════════════════════════ */
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton-line {
+  background-color: #f0f0f0;
+  background-image: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e0e0e0 50%,
+    #f0f0f0 75%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+  border-radius: 4px;
+}
+
+/* Header Skeleton */
+.skeleton-header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.skeleton-title {
+  height: 32px;
+  width: 300px;
+}
+
+.skeleton-badges {
+  display: flex;
+  gap: 12px;
+}
+
+.skeleton-badge {
+  width: 100px;
+  height: 24px;
+}
+
+/* Stats Skeleton */
+.skeleton-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.skeleton-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skeleton-label {
+  height: 12px;
+  width: 80px;
+}
+
+.skeleton-value {
+  height: 22px;
+  width: 150px;
+}
+
+/* Table Skeleton */
+.skeleton-table {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skeleton-table-header {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.skeleton-table-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.skeleton-cell {
+  height: 16px;
+  width: 100%;
+}
+
+/* Tab Skeleton */
+.skeleton-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
