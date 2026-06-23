@@ -131,7 +131,14 @@ body { font-family: var(--font); font-size: 13px; color: var(--text); background
 .nav-item.adm-nav { border-left: 2px solid var(--purple); padding-left: 6px; }
 .nav-item.adm-nav.active { background: var(--purple-bg); color: var(--purple); }
 
-.yr-sw { padding: 8px 10px; border-top: 1px solid var(--border); }
+.yr-sw {
+  padding: 8px 10px;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+}
 .yr-sw label { font-size: 9px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
 .yr-sw select { width: 100%; }
 
