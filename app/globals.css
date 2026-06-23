@@ -1206,6 +1206,10 @@ textarea.form-input {
   box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.15);
   position: relative;
   animation: slideUp 0.3s ease;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 @media (min-width: 640px) {
@@ -1263,6 +1267,10 @@ textarea.form-input {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  min-height: 0;
 }
 
 .contact-modal-item {
