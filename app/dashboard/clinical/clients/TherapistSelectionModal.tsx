@@ -14,6 +14,8 @@ interface Therapist {
   id: number;
   name: string;
   specialization?: string;
+  rate?: number;
+  hourly_rate?: number;
 }
 
 export default function TherapistSelectionModal({
@@ -64,13 +66,18 @@ export default function TherapistSelectionModal({
       // Assign therapist and update status to ready_for_booking
       console.log('[TherapistSelectionModal] Assigning therapist', selectedTherapistId, 'to client', clientId);
 
+      // Get the selected therapist's rate
+      const selectedTherapist = therapists.find(t => t.id === selectedTherapistId);
+      const therapistRate = selectedTherapist?.hourly_rate || selectedTherapist?.rate || 2000; // Default to 2000 if rate not available
+
       const res = await fetch(`/api/admin/clients/${clientId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({
           therapist_id: selectedTherapistId,
-          status: 'ready_for_booking',
+          status: 'assessment_pending', // Keep in assessment_pending until payment verified
+          total_payment_due: therapistRate, // Set the therapist's rate as total payment due
         }),
       });
 

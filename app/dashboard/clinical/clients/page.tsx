@@ -304,7 +304,7 @@ export default function ClientsPage() {
                       therapistId={client.therapist_id || undefined}
                       therapistName={client.therapist_name || undefined}
                       isRecurring={client.is_recurring || false}
-                      clinicId={clinicId || 0}
+                      clinicId={clinicId || undefined}
                       clinicLoading={clinicLoading}
                       assessmentPaymentVerified={client.assessment_payment_verified || false}
                       assessmentPaymentAmount={client.assessment_payment_amount || undefined}

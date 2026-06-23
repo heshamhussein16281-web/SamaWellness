@@ -96,6 +96,13 @@ export async function PUT(
       status,
       payment_verified,
       payment_date,
+      assessment_payment_verified,
+      assessment_payment_amount,
+      assessment_payment_date,
+      therapist_fee_payment_verified,
+      therapist_fee_payment_amount,
+      therapist_fee_payment_date,
+      total_payment_due,
       notes,
     } = body;
 
@@ -103,8 +110,20 @@ export async function PUT(
     const updateData: any = {};
     if (therapist_id !== undefined) updateData.therapist_id = therapist_id;
     if (status !== undefined) updateData.status = status;
+
+    // Support both old and new payment field names (for backwards compatibility)
     if (payment_verified !== undefined) updateData.payment_verified = payment_verified;
     if (payment_date !== undefined) updateData.payment_date = payment_date;
+
+    // New two-tier payment system fields
+    if (assessment_payment_verified !== undefined) updateData.assessment_payment_verified = assessment_payment_verified;
+    if (assessment_payment_amount !== undefined) updateData.assessment_payment_amount = assessment_payment_amount;
+    if (assessment_payment_date !== undefined) updateData.assessment_payment_date = assessment_payment_date;
+    if (therapist_fee_payment_verified !== undefined) updateData.therapist_fee_payment_verified = therapist_fee_payment_verified;
+    if (therapist_fee_payment_amount !== undefined) updateData.therapist_fee_payment_amount = therapist_fee_payment_amount;
+    if (therapist_fee_payment_date !== undefined) updateData.therapist_fee_payment_date = therapist_fee_payment_date;
+    if (total_payment_due !== undefined) updateData.total_payment_due = total_payment_due;
+
     if (notes !== undefined) updateData.notes = notes;
 
     // Always update the updated_at timestamp when any field changes
