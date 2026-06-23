@@ -414,54 +414,66 @@ export default function ClientProfile({ clientId }: ClientProfileProps) {
           {activeTab === 'information' && (
             <div className="client-profile-tab-pane">
               <div className="client-profile-info-grid">
-                <div className="client-profile-info-item">
-                  <label className="client-profile-info-label">Email</label>
-                  <p className="client-profile-info-value">{profile.email || 'Not provided'}</p>
+                {/* Contact Information Section */}
+                <div className="client-profile-info-section">
+                  <h3 className="client-profile-info-section-title">Contact Information</h3>
+                  <div className="client-profile-info-item">
+                    <label className="client-profile-info-label">Email</label>
+                    <p className="client-profile-info-value">{profile.email || 'Not provided'}</p>
+                  </div>
+
+                  <div className="client-profile-info-item">
+                    <label className="client-profile-info-label">Phone</label>
+                    <p className="client-profile-info-value">{profile.phone || 'Not provided'}</p>
+                  </div>
                 </div>
 
-                <div className="client-profile-info-item">
-                  <label className="client-profile-info-label">Phone</label>
-                  <p className="client-profile-info-value">{profile.phone || 'Not provided'}</p>
+                {/* Demographic & Status Section */}
+                <div className="client-profile-info-section">
+                  <h3 className="client-profile-info-section-title">Demographic & Status</h3>
+                  <div className="client-profile-info-item">
+                    <label className="client-profile-info-label">Date of Birth</label>
+                    <p className="client-profile-info-value">
+                      {profile.date_of_birth
+                        ? new Date(profile.date_of_birth).toLocaleDateString()
+                        : 'Not provided'}
+                    </p>
+                  </div>
+
+                  <div className="client-profile-info-item">
+                    <label className="client-profile-info-label">Status</label>
+                    <p className="client-profile-info-value">{profile.status}</p>
+                  </div>
+
+                  <div className="client-profile-info-item">
+                    <label className="client-profile-info-label">Client Since</label>
+                    <p className="client-profile-info-value">
+                      {new Date(profile.client_since).toLocaleDateString()}
+                    </p>
+                  </div>
+
+                  <div className="client-profile-info-item">
+                    <label className="client-profile-info-label">Intake Date</label>
+                    <p className="client-profile-info-value">
+                      {profile.intake_date
+                        ? new Date(profile.intake_date).toLocaleDateString()
+                        : 'Not provided'}
+                    </p>
+                  </div>
                 </div>
 
-                <div className="client-profile-info-item">
-                  <label className="client-profile-info-label">Date of Birth</label>
-                  <p className="client-profile-info-value">
-                    {profile.date_of_birth
-                      ? new Date(profile.date_of_birth).toLocaleDateString()
-                      : 'Not provided'}
-                  </p>
-                </div>
+                {/* Care Coordination Section */}
+                <div className="client-profile-info-section">
+                  <h3 className="client-profile-info-section-title">Care Coordination</h3>
+                  <div className="client-profile-info-item">
+                    <label className="client-profile-info-label">Referral Source</label>
+                    <p className="client-profile-info-value">{profile.referral_source || 'Not provided'}</p>
+                  </div>
 
-                <div className="client-profile-info-item">
-                  <label className="client-profile-info-label">Status</label>
-                  <p className="client-profile-info-value">{profile.status}</p>
-                </div>
-
-                <div className="client-profile-info-item">
-                  <label className="client-profile-info-label">Client Since</label>
-                  <p className="client-profile-info-value">
-                    {new Date(profile.client_since).toLocaleDateString()}
-                  </p>
-                </div>
-
-                <div className="client-profile-info-item">
-                  <label className="client-profile-info-label">Intake Date</label>
-                  <p className="client-profile-info-value">
-                    {profile.intake_date
-                      ? new Date(profile.intake_date).toLocaleDateString()
-                      : 'Not provided'}
-                  </p>
-                </div>
-
-                <div className="client-profile-info-item">
-                  <label className="client-profile-info-label">Referral Source</label>
-                  <p className="client-profile-info-value">{profile.referral_source || 'Not provided'}</p>
-                </div>
-
-                <div className="client-profile-info-item">
-                  <label className="client-profile-info-label">Assigned Therapist</label>
-                  <p className="client-profile-info-value">{profile.therapist_name || 'Not assigned'}</p>
+                  <div className="client-profile-info-item">
+                    <label className="client-profile-info-label">Assigned Therapist</label>
+                    <p className="client-profile-info-value">{profile.therapist_name || 'Not assigned'}</p>
+                  </div>
                 </div>
               </div>
 
