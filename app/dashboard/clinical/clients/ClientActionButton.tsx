@@ -70,8 +70,9 @@ export default function ClientActionButton({
 
     // Step 3: After therapist assigned, check if additional payment is needed
     // If therapist rate > initial payment, show "Verify Additional Payment"
-    if (therapistId && paymentVerified1 && status === 'assessment_pending') {
-      const minimumFee = paymentAmount1 || 2000;
+    // For old clients: if therapistId is set in assessment_pending, assume initial payment was done
+    if (therapistId && status === 'assessment_pending' && (paymentVerified1 || !paymentAmount1)) {
+      const minimumFee = paymentAmount1 || 2000; // Default to 2000 if not set (old clients)
       const remainingAmount = (totalPaymentDue || 0) - minimumFee;
 
       // If therapist rate equals or is less than initial payment, no additional payment needed
