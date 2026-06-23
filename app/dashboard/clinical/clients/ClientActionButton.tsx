@@ -176,11 +176,14 @@ export default function ClientActionButton({
     console.log('[ClientActionButton] Modal success - calling onActionComplete');
     try {
       await Promise.resolve(onActionComplete());
-      console.log('[ClientActionButton] onActionComplete finished - closing modal');
+      console.log('[ClientActionButton] onActionComplete finished');
+      // Wait a bit for React to process the state update
+      await new Promise(resolve => setTimeout(resolve, 500));
     } catch (err) {
       console.error('[ClientActionButton] Error during onActionComplete:', err);
     }
     // Close modal after data refresh completes
+    console.log('[ClientActionButton] Closing modal');
     setActiveModal(null);
   };
 
