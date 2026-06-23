@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { Plus, Edit2, Trash2, X } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 import './clinics.css';
 import ClinicRoomsTab from './ClinicRoomsTab';
 
@@ -20,6 +21,7 @@ type SortByOption = 'name' | 'location' | 'created_at';
 type SortOrder = 'asc' | 'desc';
 
 export default function ClinicsList() {
+  const { user } = useAuth();
   const [clinics, setClinics] = useState<Clinic[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -38,7 +40,7 @@ export default function ClinicsList() {
   const [loadingDelete, setLoadingDelete] = useState(false);
 
   // Permission state
-  const [canManageClinics, setCanManageClinics] = useState(false);
+  const canManageClinics = user?.permissions?.includes('manage_clinics') || false;
 
   // Message states
   const [errorMessage, setErrorMessage] = useState('');
@@ -75,20 +77,7 @@ export default function ClinicsList() {
 
   useEffect(() => {
     fetchClinics();
-    fetchUserPermissions();
   }, []);
-
-  async function fetchUserPermissions() {
-    try {
-      const res = await fetch('/api/auth/verify', { credentials: 'include' });
-      if (res.ok) {
-        const data = await res.json();
-        setCanManageClinics(data.permissions?.includes('manage_clinics') || false);
-      }
-    } catch (error) {
-      console.error('Failed to fetch permissions:', error);
-    }
-  }
 
   async function fetchClinics() {
     try {

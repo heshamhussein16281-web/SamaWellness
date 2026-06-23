@@ -2,6 +2,7 @@
 
 import { useEffect, useState, ReactNode } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import { useAuth } from '../context/AuthContext';
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -10,66 +11,43 @@ interface AdminLayoutProps {
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const { user, loading } = useAuth();
   const [isAuthorized, setIsAuthorized] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const res = await fetch('/api/auth/verify', {
-          credentials: 'include',
-        });
+    if (loading) return;
 
-        if (!res.ok) {
-          router.push('/app/login');
-          return;
-        }
+    if (!user) {
+      router.push('/app/login');
+      return;
+    }
 
-        const data = await res.json();
+    // Check if accessing audit-logs and user is not super-admin
+    if (
+      pathname.includes('audit-logs') &&
+      user.role !== 'Super Admin' &&
+      !user.permissions?.includes('is_super_admin')
+    ) {
+      router.push('/dashboard');
+      return;
+    }
 
-        // Check if accessing audit-logs and user is not super-admin
-        if (
-          pathname.includes('audit-logs') &&
-          data.role !== 'Super Admin' &&
-          !data.permissions?.includes('is_super_admin')
-        ) {
-          router.push('/dashboard');
-          return;
-        }
+    // Check for manage_roles or manage_users
+    if (
+      !user.permissions?.includes('manage_roles') &&
+      !user.permissions?.includes('manage_users')
+    ) {
+      router.push('/app/login');
+      return;
+    }
 
-        // Check for manage_roles or manage_users
-        if (
-          !data.permissions?.includes('manage_roles') &&
-          !data.permissions?.includes('manage_users')
-        ) {
-          router.push('/app/login');
-          return;
-        }
+    setIsAuthorized(true);
+  }, [user, loading, router, pathname]);
 
-        setIsAuthorized(true);
-      } catch (err) {
-        console.error('Auth check failed:', err);
-        router.push('/app/login');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkAuth();
-  }, [router, pathname]);
-
-  if (isLoading) {
+  if (loading || !isAuthorized) {
     return (
       <div style={{ padding: '20px', textAlign: 'center' }}>
-        <p>Loading...</p>
-      </div>
-    );
-  }
-
-  if (!isAuthorized) {
-    return (
-      <div style={{ padding: '20px', textAlign: 'center' }}>
-        <p>You do not have access to this section.</p>
+        <p>{loading ? 'Loading...' : 'You do not have access to this section.'}</p>
       </div>
     );
   }

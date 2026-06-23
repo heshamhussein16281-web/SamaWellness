@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { Plus, Edit2, Trash2, X } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 import TherapistAvailabilityCalendar from './TherapistAvailabilityCalendar';
 import ScheduleAvailabilityModal from './ScheduleAvailabilityModal';
 import './therapists-refined.css';
@@ -26,6 +27,7 @@ interface TherapistStats {
 }
 
 export default function TherapistsListRefined() {
+  const { user } = useAuth();
   const [therapists, setTherapists] = useState<Therapist[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -59,9 +61,8 @@ export default function TherapistsListRefined() {
   const [therapistAvailability, setTherapistAvailability] = useState<Map<string, any>>(new Map());
   const [therapistStats, setTherapistStats] = useState<Map<string, TherapistStats>>(new Map());
 
-  // Permission states
-  const [canManageTherapists, setCanManageTherapists] = useState(false);
-  const [permissionsLoading, setPermissionsLoading] = useState(true);
+  // Permission state
+  const canManageTherapists = user?.permissions?.includes('manage_therapists') || false;
 
   // Auto-dismiss notifications
   useEffect(() => {
@@ -86,30 +87,7 @@ export default function TherapistsListRefined() {
   useEffect(() => {
     fetchTherapists();
     fetchClinics();
-    fetchPermissions();
   }, []);
-
-  async function fetchPermissions() {
-    try {
-      const res = await fetch('/api/auth/verify', {
-        credentials: 'include',
-      });
-      if (!res.ok) throw new Error('Failed to fetch permissions');
-      const data = await res.json();
-      const hasPermission = Array.isArray(data.permissions) && data.permissions.includes('manage_therapists');
-      console.log('TherapistsList - Permissions check:', {
-        permissions: data.permissions,
-        hasPermission,
-        isArray: Array.isArray(data.permissions)
-      });
-      setCanManageTherapists(hasPermission);
-    } catch (error) {
-      console.error('Error fetching permissions:', error);
-      setCanManageTherapists(false);
-    } finally {
-      setPermissionsLoading(false);
-    }
-  }
 
   useEffect(() => {
     therapists.forEach(therapist => {

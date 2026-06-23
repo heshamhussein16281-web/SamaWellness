@@ -2,6 +2,7 @@
 
 import { useEffect, useState, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '../context/AuthContext';
 
 interface ClinicalLayoutProps {
   children: ReactNode;
@@ -9,64 +10,34 @@ interface ClinicalLayoutProps {
 
 export default function ClinicalLayout({ children }: ClinicalLayoutProps) {
   const router = useRouter();
+  const { user, loading } = useAuth();
   const [isAuthorized, setIsAuthorized] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        console.log('Checking clinical section authentication...');
-        const res = await fetch('/api/auth/verify', {
-          credentials: 'include',
-        });
+    if (loading) return;
 
-        console.log('Auth verify response status:', res.status);
+    if (!user) {
+      router.push('/app/login');
+      return;
+    }
 
-        if (!res.ok) {
-          console.log('Authentication failed, redirecting to login');
-          router.push('/app/login');
-          return;
-        }
-
-        const data = await res.json();
-        console.log('Auth data received:', { username: data.username, role: data.role, permissions: data.permissions });
-
-        // Check for clinical access permissions (any of these allows access)
-        const hasClinicialAccess = data.permissions?.some((p: string) =>
-          ['view_therapists', 'manage_therapists', 'view_clients', 'view_bookings'].includes(p)
-        );
-
-        if (!hasClinicialAccess) {
-          console.log('User lacks required permissions for clinical section');
-          router.push('/app/login');
-          return;
-        }
-
-        console.log('Clinical section authorization successful');
-        setIsAuthorized(true);
-      } catch (err) {
-        console.error('Auth check failed:', err);
-        router.push('/app/login');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkAuth();
-  }, [router]);
-
-  if (isLoading) {
-    return (
-      <div style={{ padding: '20px', textAlign: 'center' }}>
-        <p>Loading...</p>
-      </div>
+    // Check for clinical access permissions (any of these allows access)
+    const hasClinicialAccess = user.permissions?.some((p: string) =>
+      ['view_therapists', 'manage_therapists', 'view_clients', 'view_bookings'].includes(p)
     );
-  }
 
-  if (!isAuthorized) {
+    if (!hasClinicialAccess) {
+      router.push('/app/login');
+      return;
+    }
+
+    setIsAuthorized(true);
+  }, [user, loading, router]);
+
+  if (loading || !isAuthorized) {
     return (
       <div style={{ padding: '20px', textAlign: 'center' }}>
-        <p>You do not have access to this section.</p>
+        <p>{loading ? 'Loading...' : 'You do not have access to this section.'}</p>
       </div>
     );
   }

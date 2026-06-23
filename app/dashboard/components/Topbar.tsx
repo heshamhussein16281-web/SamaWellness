@@ -1,44 +1,21 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useAuth } from '../context/AuthContext';
 
 interface TopbarProps {
   title?: string;
   subtitle?: string;
 }
 
-interface UserData {
-  role: string;
-  username?: string;
-}
-
 export default function Topbar({ title = 'Dashboard', subtitle }: TopbarProps) {
-  const [user, setUser] = useState<UserData | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await fetch('/api/auth/verify', { credentials: 'include' });
-        if (res.ok) {
-          const data = await res.json();
-          setUser(data);
-        }
-      } catch (err) {
-        console.error('Failed to fetch user:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUser();
-  }, []);
+  const { user, loading } = useAuth();
 
   const handleToggle = () => {
     window.location.href = '/app';
   };
 
-  const roleLabel = loading ? 'Loading...' : user?.role || 'Guest';
+  const roleLabel = loading ? 'Loading...' : (user?.role || 'Guest');
 
   return (
     <div className="dashboard-topbar">

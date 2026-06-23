@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useAuth } from '../context/AuthContext';
 
 // Permission mapping: each link requires at least one of these permissions
 // These keys must match the permission 'key' values in the Supabase 'permissions' table
@@ -22,44 +23,14 @@ const hasPermission = (permissions: string[] | undefined, requiredPerms: string[
   return requiredPerms.some(p => permissions.includes(p));
 };
 
-interface UserData {
-  role: string;
-  permissions: string[];
-}
-
 export default function Sidebar() {
   const pathname = usePathname();
-  const [user, setUser] = useState<UserData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, loading } = useAuth();
 
   const isActive = (href: string) => pathname === href;
 
   const isClinicalSection = pathname.includes('/dashboard/clinical');
   const isAdminSection = pathname.includes('/dashboard/admin');
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await fetch('/api/auth/verify', { credentials: 'include' });
-        if (res.ok) {
-          const data = await res.json();
-          console.log('Sidebar - Auth verify response:', data);
-          console.log('Sidebar - Checking clinics permission:', {
-            hasViewClinics: data.permissions?.includes('view_clinics'),
-            hasManageClinics: data.permissions?.includes('manage_clinics'),
-            allPermissions: data.permissions,
-          });
-          setUser(data);
-        }
-      } catch (err) {
-        console.error('Failed to fetch user data:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUser();
-  }, []);
 
   const isSuperAdmin = user && (user.role === 'Super Admin' || user.permissions?.includes('is_super_admin'));
 
