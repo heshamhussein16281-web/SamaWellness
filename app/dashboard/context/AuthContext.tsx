@@ -13,6 +13,7 @@ interface AuthContextType {
   user: UserData | null;
   loading: boolean;
   error: string | null;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -43,8 +44,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     fetchUser();
   }, []);
 
+  const logout = async () => {
+    try {
+      const res = await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include',
+      });
+      if (res.ok) {
+        setUser(null);
+        window.location.href = '/';
+      } else {
+        setError('Logout failed');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Logout error');
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, error }}>
+    <AuthContext.Provider value={{ user, loading, error, logout }}>
       {children}
     </AuthContext.Provider>
   );
