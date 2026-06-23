@@ -143,7 +143,8 @@ export async function GET(request: NextRequest) {
           client_since,
           therapist_id,
           is_recurring,
-          total_sessions_completed
+          total_sessions_completed,
+          total_payment_due
         `)
         .order('created_at', { ascending: false })
         .range(offset, offset + limit - 1);
