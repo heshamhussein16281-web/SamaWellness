@@ -10,10 +10,10 @@ interface ClientActionButtonProps {
   clientId: number;
   clientName: string;
   status: string;
-  therapistId?: number;
+  therapistId?: number | null;
   therapistName?: string | null;
   isRecurring: boolean;
-  clinicId: number;
+  clinicId?: number | null;
   clinicLoading?: boolean;
   onActionComplete: () => Promise<void> | void;
 }
@@ -193,11 +193,11 @@ export default function ClientActionButton({
       )}
 
       {/* Booking Calendar Modal */}
-      {activeModal === 'booking' && (
+      {activeModal === 'booking' && clinicId && (
         <BookingCalendarModal
           clientId={clientId}
           clientName={clientName}
-          therapistId={therapistId}
+          therapistId={therapistId || undefined}
           therapistName={therapistName || undefined}
           isRecurring={isRecurring}
           clinicId={clinicId}
