@@ -70,6 +70,7 @@ body { font-family: var(--font); font-size: 13px; color: var(--text); background
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: relative;
 }
 .sb-logo {
   padding: 18px 16px 14px;
@@ -107,7 +108,7 @@ body { font-family: var(--font); font-size: 13px; color: var(--text); background
 .role-strip.cli { background: var(--blue-bg); color: var(--blue); }
 .role-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: 0.7; }
 
-.nav { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 8px 8px; overscroll-behavior: contain; }
+.nav { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 8px 8px; padding-bottom: 120px; overscroll-behavior: contain; }
 .nav-section { font-size: 9px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.8px; padding: 10px 8px 4px; }
 .nav-item {
   display: flex;
@@ -132,11 +133,13 @@ body { font-family: var(--font); font-size: 13px; color: var(--text); background
 .nav-item.adm-nav.active { background: var(--purple-bg); color: var(--purple); }
 
 .yr-sw {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   padding: 8px 10px;
   border-top: 1px solid var(--border);
   background: var(--surface);
-  position: sticky;
-  bottom: 0;
   z-index: 10;
 }
 .yr-sw label { font-size: 9px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
