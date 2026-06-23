@@ -45,17 +45,17 @@ export default function PaymentVerificationModal({
       const updateData: any = {};
 
       if (paymentType === 'assessment') {
-        // Initial assessment payment (before therapist assignment)
-        updateData.assessment_payment_verified = true;
-        updateData.assessment_payment_date = paymentDate;
-        updateData.assessment_payment_amount = amount || 2000; // Default to minimum (2000 EGP)
-        // After assessment payment, move to assessment pending (Sama will assess)
+        // Initial payment for first session booking (minimum therapist rate)
+        updateData.payment_verified_1 = true;
+        updateData.payment_date_1 = paymentDate;
+        updateData.payment_amount_1 = amount || 2000; // Default to minimum (2000 EGP)
+        // After payment, move to assessment pending (Sama will assess and assign therapist)
         updateData.status = 'assessment_pending';
       } else {
-        // Remaining therapist fee payment (after therapist assigned)
-        updateData.therapist_fee_payment_verified = true;
-        updateData.therapist_fee_payment_date = paymentDate;
-        updateData.therapist_fee_payment_amount = amount;
+        // Remaining payment after therapist assigned (if therapist rate > initial payment)
+        updateData.payment_verified_2 = true;
+        updateData.payment_date_2 = paymentDate;
+        updateData.payment_amount_2 = amount;
         // After remaining payment, ready for booking
         updateData.status = 'ready_for_booking';
       }
@@ -104,8 +104,8 @@ export default function PaymentVerificationModal({
             <h2 className="modal-success-title">Payment Verified ✓</h2>
             <p className="modal-success-message">
               {paymentType === 'assessment'
-                ? `Assessment payment (${amount || 2000} EGP) from ${clientName} confirmed. Awaiting assessment from Sama to assign a therapist.`
-                : `Remaining payment (${amount} EGP) from ${clientName} for ${therapistName || 'their therapist'} confirmed. They can now proceed to book their session.`}
+                ? `Payment (${amount || 2000} EGP) from ${clientName} confirmed. They will now have a session with Sama to help select a therapist.`
+                : `Additional payment (${amount} EGP) from ${clientName} for ${therapistName || 'their therapist'} confirmed. They can now book sessions.`}
             </p>
           </div>
         </div>
@@ -119,8 +119,8 @@ export default function PaymentVerificationModal({
         <div className="modal-header">
           <h2 className="modal-title">
             {paymentType === 'assessment'
-              ? `Confirm Assessment Payment - ${clientName}`
-              : `Confirm Remaining Payment - ${clientName}`}
+              ? `Confirm Payment - ${clientName}`
+              : `Confirm Additional Payment - ${clientName}`}
           </h2>
           <button
             className="modal-close-btn"
@@ -138,8 +138,8 @@ export default function PaymentVerificationModal({
           <div className="modal-info-box">
             <p style={{ margin: '0 0 1rem 0', fontSize: '14px', color: '#556277' }}>
               {paymentType === 'assessment'
-                ? `Assessment Payment: ${amount || 2000} EGP. Payment received via InstaPay or Bank Transfer. Confirm the transfer date to complete payment verification.`
-                : `Remaining Payment: ${amount} EGP for ${therapistName || 'assigned therapist'}. Payment received via InstaPay or Bank Transfer. Confirm the transfer date to complete payment verification.`}
+                ? `Payment: ${amount || 2000} EGP for first session booking. Payment received via InstaPay or Bank Transfer. Confirm the transfer date to complete payment verification.`
+                : `Additional Payment: ${amount} EGP for ${therapistName || 'assigned therapist'}. Payment received via InstaPay or Bank Transfer. Confirm the transfer date to complete payment verification.`}
             </p>
           </div>
 

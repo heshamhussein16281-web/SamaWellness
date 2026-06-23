@@ -104,10 +104,10 @@ export async function GET(request: NextRequest) {
         therapist_id,
         is_recurring,
         total_sessions_completed,
-        assessment_payment_verified,
-        assessment_payment_amount,
-        therapist_fee_payment_verified,
-        therapist_fee_payment_amount,
+        payment_verified_1,
+        payment_amount_1,
+        payment_verified_2,
+        payment_amount_2,
         total_payment_due
       `)
       .order('created_at', { ascending: false })
@@ -132,7 +132,7 @@ export async function GET(request: NextRequest) {
       console.warn('Payment fields not available, retrying without them:', error.message);
       paymentFieldsAvailable = false;
 
-      const basicQuery = supabase
+      let basicQuery = supabase
         .from('clients')
         .select(`
           id,
@@ -149,10 +149,10 @@ export async function GET(request: NextRequest) {
         .range(offset, offset + limit - 1);
 
       if (statusFilter) {
-        basicQuery.eq('status', statusFilter);
+        basicQuery = basicQuery.eq('status', statusFilter);
       }
       if (phoneFilter) {
-        basicQuery.ilike('phone', `%${phoneFilter}%`);
+        basicQuery = basicQuery.ilike('phone', `%${phoneFilter}%`);
       }
 
       ({ data: clients, error } = await basicQuery);
@@ -202,10 +202,10 @@ export async function GET(request: NextRequest) {
       if (paymentFieldsAvailable) {
         return {
           ...baseClient,
-          assessment_payment_verified: client.assessment_payment_verified || false,
-          assessment_payment_amount: client.assessment_payment_amount || null,
-          therapist_fee_payment_verified: client.therapist_fee_payment_verified || false,
-          therapist_fee_payment_amount: client.therapist_fee_payment_amount || null,
+          payment_verified_1: client.payment_verified_1 || false,
+          payment_amount_1: client.payment_amount_1 || null,
+          payment_verified_2: client.payment_verified_2 || false,
+          payment_amount_2: client.payment_amount_2 || null,
           total_payment_due: client.total_payment_due || null,
         };
       }

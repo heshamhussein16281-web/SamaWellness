@@ -17,10 +17,10 @@ interface Client {
   therapist_name?: string | null;
   is_recurring?: boolean;
   total_sessions_completed?: number;
-  assessment_payment_verified?: boolean;
-  assessment_payment_amount?: number | null;
-  therapist_fee_payment_verified?: boolean;
-  therapist_fee_payment_amount?: number | null;
+  payment_verified_1?: boolean;
+  payment_amount_1?: number | null;
+  payment_verified_2?: boolean;
+  payment_amount_2?: number | null;
   total_payment_due?: number | null;
 }
 
@@ -306,10 +306,10 @@ export default function ClientsPage() {
                       isRecurring={client.is_recurring || false}
                       clinicId={clinicId || undefined}
                       clinicLoading={clinicLoading}
-                      assessmentPaymentVerified={client.assessment_payment_verified || false}
-                      assessmentPaymentAmount={client.assessment_payment_amount || undefined}
-                      therapistFeePaymentVerified={client.therapist_fee_payment_verified || false}
-                      therapistFeePaymentAmount={client.therapist_fee_payment_amount || undefined}
+                      paymentVerified1={client.payment_verified_1 || false}
+                      paymentAmount1={client.payment_amount_1 || undefined}
+                      paymentVerified2={client.payment_verified_2 || false}
+                      paymentAmount2={client.payment_amount_2 || undefined}
                       totalPaymentDue={client.total_payment_due || undefined}
                       onActionComplete={() => fetchClients(currentPage, searchPhone)}
                     />
