@@ -91,6 +91,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch clients with therapist names and payment info
+    // Try to select payment fields, fallback to basic fields if they don't exist
     let dataQuery = supabase
       .from('clients')
       .select(`
@@ -112,6 +113,9 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1);
 
+    // Track if payment fields are available
+    let paymentFieldsAvailable = true;
+
     if (statusFilter) {
       dataQuery = dataQuery.eq('status', statusFilter);
     }
@@ -120,7 +124,39 @@ export async function GET(request: NextRequest) {
       dataQuery = dataQuery.ilike('phone', `%${phoneFilter}%`);
     }
 
-    const { data: clients, error } = await dataQuery;
+    let clients, error;
+    ({ data: clients, error } = await dataQuery);
+
+    // If the query fails (likely due to missing payment columns), try without those fields
+    if (error && error.message?.includes('column')) {
+      console.warn('Payment fields not available, retrying without them:', error.message);
+      paymentFieldsAvailable = false;
+
+      const basicQuery = supabase
+        .from('clients')
+        .select(`
+          id,
+          name,
+          email,
+          phone,
+          status,
+          client_since,
+          therapist_id,
+          is_recurring,
+          total_sessions_completed
+        `)
+        .order('created_at', { ascending: false })
+        .range(offset, offset + limit - 1);
+
+      if (statusFilter) {
+        basicQuery.eq('status', statusFilter);
+      }
+      if (phoneFilter) {
+        basicQuery.ilike('phone', `%${phoneFilter}%`);
+      }
+
+      ({ data: clients, error } = await basicQuery);
+    }
 
     if (error) {
       console.error('Error fetching clients:', error);
@@ -149,7 +185,7 @@ export async function GET(request: NextRequest) {
 
     // Format response
     const formattedClients = (clients || []).map((client: any) => {
-      return {
+      const baseClient = {
         id: client.id,
         name: client.name,
         email: client.email,
@@ -160,12 +196,21 @@ export async function GET(request: NextRequest) {
         is_recurring: client.is_recurring || false,
         total_sessions_completed: client.total_sessions_completed || 0,
         therapist_name: client.therapist_id ? (therapistMap[client.therapist_id] || null) : null,
-        assessment_payment_verified: client.assessment_payment_verified || false,
-        assessment_payment_amount: client.assessment_payment_amount || null,
-        therapist_fee_payment_verified: client.therapist_fee_payment_verified || false,
-        therapist_fee_payment_amount: client.therapist_fee_payment_amount || null,
-        total_payment_due: client.total_payment_due || null,
       };
+
+      // Include payment fields only if they exist in the database
+      if (paymentFieldsAvailable) {
+        return {
+          ...baseClient,
+          assessment_payment_verified: client.assessment_payment_verified || false,
+          assessment_payment_amount: client.assessment_payment_amount || null,
+          therapist_fee_payment_verified: client.therapist_fee_payment_verified || false,
+          therapist_fee_payment_amount: client.therapist_fee_payment_amount || null,
+          total_payment_due: client.total_payment_due || null,
+        };
+      }
+
+      return baseClient;
     });
 
     return NextResponse.json(
