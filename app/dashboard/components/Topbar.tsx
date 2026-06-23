@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useAuth } from '../context/AuthContext';
 
 interface TopbarProps {
@@ -9,16 +9,10 @@ interface TopbarProps {
 }
 
 export default function Topbar({ title = 'Dashboard', subtitle }: TopbarProps) {
-  const { user, loading, logout } = useAuth();
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const { user, loading } = useAuth();
 
   const handleToggle = () => {
     window.location.href = '/app';
-  };
-
-  const handleLogout = async () => {
-    setIsLoggingOut(true);
-    await logout();
   };
 
   const roleLabel = loading ? 'Loading...' : (user?.role || 'Guest');
@@ -34,13 +28,6 @@ export default function Topbar({ title = 'Dashboard', subtitle }: TopbarProps) {
         <span className="topbar-role-label">{roleLabel}</span>
         <button className="topbar-button topbar-button--secondary" onClick={handleToggle}>
           Try Legacy Dashboard
-        </button>
-        <button
-          className="topbar-button topbar-button--danger"
-          onClick={handleLogout}
-          disabled={isLoggingOut}
-        >
-          {isLoggingOut ? 'Logging out...' : 'Logout'}
         </button>
       </div>
     </div>

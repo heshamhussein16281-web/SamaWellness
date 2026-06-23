@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '../context/AuthContext';
@@ -25,7 +25,9 @@ const hasPermission = (permissions: string[] | undefined, requiredPerms: string[
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const { user, loading } = useAuth();
+  const { user, loading, logout } = useAuth();
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const isActive = (href: string) => pathname === href;
 
@@ -47,6 +49,19 @@ export default function Sidebar() {
     user && hasPermission(user.permissions, linkPermissions.roles),
     isSuperAdmin, // Audit Logs visibility
   ].some(Boolean);
+
+  const handleLogoutClick = () => {
+    setShowLogoutConfirm(true);
+  };
+
+  const handleConfirmLogout = async () => {
+    setIsLoggingOut(true);
+    await logout();
+  };
+
+  const handleCancelLogout = () => {
+    setShowLogoutConfirm(false);
+  };
 
   return (
     <aside className="dashboard-sidebar">
@@ -137,6 +152,44 @@ export default function Sidebar() {
         )}
           </div>
         </>
+      )}
+
+      {/* Logout Button */}
+      <div className="sidebar-logout-section">
+        <button
+          className="sidebar-logout-button"
+          onClick={handleLogoutClick}
+          disabled={isLoggingOut}
+        >
+          <span className="sidebar-logout-icon">🚪</span>
+          <span className="sidebar-logout-label">{isLoggingOut ? 'Logging out...' : 'Logout'}</span>
+        </button>
+      </div>
+
+      {/* Logout Confirmation Dialog */}
+      {showLogoutConfirm && (
+        <div className="logout-confirm-overlay">
+          <div className="logout-confirm-dialog">
+            <h2 className="logout-confirm-title">Confirm Logout</h2>
+            <p className="logout-confirm-message">Are you sure you want to logout?</p>
+            <div className="logout-confirm-buttons">
+              <button
+                className="logout-confirm-button logout-confirm-button--cancel"
+                onClick={handleCancelLogout}
+                disabled={isLoggingOut}
+              >
+                Cancel
+              </button>
+              <button
+                className="logout-confirm-button logout-confirm-button--confirm"
+                onClick={handleConfirmLogout}
+                disabled={isLoggingOut}
+              >
+                {isLoggingOut ? 'Logging out...' : 'Logout'}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </aside>
   );
