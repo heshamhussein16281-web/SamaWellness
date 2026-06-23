@@ -68,17 +68,22 @@ export default function TherapistSelectionModal({
 
       // Get the selected therapist's rate
       const selectedTherapist = therapists.find(t => t.id === selectedTherapistId);
+      console.log('[TherapistSelectionModal] Selected therapist:', selectedTherapist);
       const therapistRate = selectedTherapist?.hourly_rate || selectedTherapist?.rate || 2000; // Default to 2000 if rate not available
+      console.log('[TherapistSelectionModal] Therapist rate:', therapistRate, 'hourly_rate:', selectedTherapist?.hourly_rate, 'rate:', selectedTherapist?.rate);
+
+      const updatePayload = {
+        therapist_id: selectedTherapistId,
+        status: 'assessment_pending', // Keep in assessment_pending until payment verified
+        total_payment_due: therapistRate, // Set the therapist's rate as total payment due
+      };
+      console.log('[TherapistSelectionModal] Sending payload:', JSON.stringify(updatePayload));
 
       const res = await fetch(`/api/admin/clients/${clientId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({
-          therapist_id: selectedTherapistId,
-          status: 'assessment_pending', // Keep in assessment_pending until payment verified
-          total_payment_due: therapistRate, // Set the therapist's rate as total payment due
-        }),
+        body: JSON.stringify(updatePayload),
       });
 
       console.log('[TherapistSelectionModal] API response status:', res.status);

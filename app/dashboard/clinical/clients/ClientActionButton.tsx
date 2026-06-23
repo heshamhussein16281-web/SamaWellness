@@ -51,6 +51,17 @@ export default function ClientActionButton({
     // Tier 1: Payment for first session (minimum therapist rate = 2000 EGP)
     // Tier 2: Additional payment (difference between therapist rate and tier 1)
 
+    console.log('[ClientActionButton] getNextAction - Client:', clientName, {
+      status,
+      therapistId,
+      paymentVerified1,
+      paymentAmount1,
+      paymentVerified2,
+      paymentAmount2,
+      totalPaymentDue,
+      isRecurring,
+    });
+
     // Step 1: NEW CLIENTS - Verify Payment for first session (before therapist assignment)
     if (status === 'intake' && !paymentVerified1) {
       return {
@@ -75,8 +86,20 @@ export default function ClientActionButton({
       const minimumFee = paymentAmount1 || 2000; // Default to 2000 if not set (old clients)
       const remainingAmount = (totalPaymentDue || 0) - minimumFee;
 
+      console.log('[ClientActionButton] Step 3 - Checking additional payment:', {
+        therapistId,
+        status,
+        paymentVerified1,
+        paymentAmount1,
+        totalPaymentDue,
+        minimumFee,
+        remainingAmount,
+        paymentVerified2,
+      });
+
       // If therapist rate equals or is less than initial payment, no additional payment needed
       if (remainingAmount <= 0) {
+        console.log('[ClientActionButton] No additional payment needed (remainingAmount <= 0)');
         return {
           label: 'Book Session',
           type: 'booking',
@@ -85,6 +108,7 @@ export default function ClientActionButton({
 
       // If additional payment not verified, show payment verification
       if (!paymentVerified2) {
+        console.log('[ClientActionButton] Additional payment needed:', remainingAmount);
         return {
           label: 'Verify Additional Payment',
           type: 'payment',
