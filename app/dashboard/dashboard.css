@@ -70,6 +70,11 @@
   height: var(--dashboard-topbar-height);
   padding: 0 var(--space-sm);
   flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: var(--color-linen);
+  border-bottom: 1px solid var(--color-sand);
 }
 
 /* Main content area */
