@@ -212,6 +212,7 @@ export default function AppSidebar() {
           flex-direction: column;
           height: 100vh;
           overflow-y: auto;
+          overscroll-behavior: contain;
           position: fixed;
           left: 0;
           top: 0;
