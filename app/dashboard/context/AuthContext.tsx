@@ -52,7 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
       if (res.ok) {
         setUser(null);
-        window.location.href = '/';
+        window.location.href = '/app/login';
       } else {
         setError('Logout failed');
       }
