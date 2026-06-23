@@ -147,18 +147,19 @@ export default function ClientActionButton({
     setActiveModal(null);
   };
 
-  // Disable button if clinic is loading or clinic ID is not set
-  const isDisabled = nextAction.type === 'none' || clinicLoading || !clinicId;
+  // Disable button only if no valid next action exists
+  // Clinic loading is handled by button state; clinicId is optional for most actions
+  const isDisabled = nextAction.type === 'none';
 
   return (
     <>
       <button
         className={`client-next-action-btn ${!isDisabled ? 'active' : 'disabled'}`}
         onClick={handleActionClick}
-        title={clinicLoading ? 'Loading clinic data...' : (clinicId ? `Next action: ${nextAction.label}` : 'Clinic data unavailable')}
+        title={`Next action: ${nextAction.label}`}
         disabled={isDisabled}
       >
-        {clinicLoading ? 'Loading...' : nextAction.label}
+        {nextAction.label}
       </button>
 
       {/* Assessment Entry Modal */}
