@@ -64,7 +64,7 @@ export default function Sidebar() {
         <div className="sidebar-section-label">Clinical</div>
 
         {user && hasPermission(user.permissions, linkPermissions.clients) && (
-          <Link href="/dashboard/clinical/clients" className={`sidebar-nav-link ${isActive('/dashboard/clinical/clients') ? 'active' : ''}`}>
+          <Link href="/dashboard/clinical/clients" prefetch={false} className={`sidebar-nav-link ${isActive('/dashboard/clinical/clients') ? 'active' : ''}`}>
             <div className={`sidebar-nav-item ${isActive('/dashboard/clinical/clients') ? 'active' : ''}`}>
               <span className="sidebar-icon">👤</span>
               <span className="sidebar-label">Clients</span>
@@ -73,7 +73,7 @@ export default function Sidebar() {
         )}
 
         {user && hasPermission(user.permissions, linkPermissions.bookings) && (
-          <Link href="/dashboard/clinical/bookings" className={`sidebar-nav-link ${isActive('/dashboard/clinical/bookings') ? 'active' : ''}`}>
+          <Link href="/dashboard/clinical/bookings" prefetch={false} className={`sidebar-nav-link ${isActive('/dashboard/clinical/bookings') ? 'active' : ''}`}>
             <div className={`sidebar-nav-item ${isActive('/dashboard/clinical/bookings') ? 'active' : ''}`}>
               <span className="sidebar-icon">📅</span>
               <span className="sidebar-label">Bookings</span>
@@ -82,7 +82,7 @@ export default function Sidebar() {
         )}
 
         {user && hasPermission(user.permissions, linkPermissions.therapists) && (
-          <Link href="/dashboard/clinical/therapists" className={`sidebar-nav-link ${isActive('/dashboard/clinical/therapists') ? 'active' : ''}`}>
+          <Link href="/dashboard/clinical/therapists" prefetch={false} className={`sidebar-nav-link ${isActive('/dashboard/clinical/therapists') ? 'active' : ''}`}>
             <div className={`sidebar-nav-item ${isActive('/dashboard/clinical/therapists') ? 'active' : ''}`}>
               <span className="sidebar-icon">💼</span>
               <span className="sidebar-label">Therapists</span>
@@ -101,7 +101,7 @@ export default function Sidebar() {
         <div className="sidebar-section-label">Admin</div>
 
         {user && hasPermission(user.permissions, linkPermissions.clinics) && (
-          <Link href="/dashboard/admin/clinics" className={`sidebar-nav-link ${isActive('/dashboard/admin/clinics') ? 'active' : ''}`}>
+          <Link href="/dashboard/admin/clinics" prefetch={false} className={`sidebar-nav-link ${isActive('/dashboard/admin/clinics') ? 'active' : ''}`}>
             <div className={`sidebar-nav-item ${isActive('/dashboard/admin/clinics') ? 'active' : ''}`}>
               <span className="sidebar-icon">🏥</span>
               <span className="sidebar-label">Clinics</span>
@@ -110,7 +110,7 @@ export default function Sidebar() {
         )}
 
         {user && hasPermission(user.permissions, linkPermissions.users) && (
-          <Link href="/dashboard/admin/users" className={`sidebar-nav-link ${isActive('/dashboard/admin/users') ? 'active' : ''}`}>
+          <Link href="/dashboard/admin/users" prefetch={false} className={`sidebar-nav-link ${isActive('/dashboard/admin/users') ? 'active' : ''}`}>
             <div className={`sidebar-nav-item ${isActive('/dashboard/admin/users') ? 'active' : ''}`}>
               <span className="sidebar-icon">👥</span>
               <span className="sidebar-label">Users</span>
@@ -119,7 +119,7 @@ export default function Sidebar() {
         )}
 
         {user && hasPermission(user.permissions, linkPermissions.roles) && (
-          <Link href="/dashboard/admin/roles" className={`sidebar-nav-link ${isActive('/dashboard/admin/roles') ? 'active' : ''}`}>
+          <Link href="/dashboard/admin/roles" prefetch={false} className={`sidebar-nav-link ${isActive('/dashboard/admin/roles') ? 'active' : ''}`}>
             <div className={`sidebar-nav-item ${isActive('/dashboard/admin/roles') ? 'active' : ''}`}>
               <span className="sidebar-icon">🔐</span>
               <span className="sidebar-label">Roles</span>
@@ -128,7 +128,7 @@ export default function Sidebar() {
         )}
 
         {!loading && isSuperAdmin && (
-          <Link href="/dashboard/admin/audit-logs" className={`sidebar-nav-link ${isActive('/dashboard/admin/audit-logs') ? 'active' : ''}`}>
+          <Link href="/dashboard/admin/audit-logs" prefetch={false} className={`sidebar-nav-link ${isActive('/dashboard/admin/audit-logs') ? 'active' : ''}`}>
             <div className={`sidebar-nav-item ${isActive('/dashboard/admin/audit-logs') ? 'active' : ''}`}>
               <span className="sidebar-icon">📋</span>
               <span className="sidebar-label">Audit Logs</span>
