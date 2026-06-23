@@ -90,7 +90,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to fetch clients count' }, { status: 500 });
     }
 
-    // Fetch clients with therapist names
+    // Fetch clients with therapist names and payment info
     let dataQuery = supabase
       .from('clients')
       .select(`
@@ -102,7 +102,12 @@ export async function GET(request: NextRequest) {
         client_since,
         therapist_id,
         is_recurring,
-        total_sessions_completed
+        total_sessions_completed,
+        assessment_payment_verified,
+        assessment_payment_amount,
+        therapist_fee_payment_verified,
+        therapist_fee_payment_amount,
+        total_payment_due
       `)
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1);
@@ -155,6 +160,11 @@ export async function GET(request: NextRequest) {
         is_recurring: client.is_recurring || false,
         total_sessions_completed: client.total_sessions_completed || 0,
         therapist_name: client.therapist_id ? (therapistMap[client.therapist_id] || null) : null,
+        assessment_payment_verified: client.assessment_payment_verified || false,
+        assessment_payment_amount: client.assessment_payment_amount || null,
+        therapist_fee_payment_verified: client.therapist_fee_payment_verified || false,
+        therapist_fee_payment_amount: client.therapist_fee_payment_amount || null,
+        total_payment_due: client.total_payment_due || null,
       };
     });
 

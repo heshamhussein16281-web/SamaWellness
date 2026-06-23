@@ -7,6 +7,8 @@ interface PaymentVerificationModalProps {
   clientId: number;
   clientName: string;
   hasTherapist?: boolean; // true if therapist already assigned (direct selection)
+  therapistName?: string; // name of assigned therapist
+  paymentType?: 'assessment' | 'remaining'; // 'assessment' for initial, 'remaining' for therapist fee difference
   amount?: number;
   onSuccess: () => Promise<void> | void;
   onClose: () => void;
@@ -16,6 +18,8 @@ export default function PaymentVerificationModal({
   clientId,
   clientName,
   hasTherapist = false,
+  therapistName,
+  paymentType = 'assessment',
   amount,
   onSuccess,
   onClose,
@@ -37,23 +41,33 @@ export default function PaymentVerificationModal({
     setLoading(true);
 
     try {
-      // Determine next status based on whether therapist is already assigned
-      const nextStatus = hasTherapist ? 'ready_for_booking' : 'assessment_pending';
+      // Build update object based on payment type
+      const updateData: any = {};
 
-      const payload = {
-        status: nextStatus,
-        payment_verified: true,
-        payment_date: paymentDate,
-      };
+      if (paymentType === 'assessment') {
+        // Initial assessment payment (before therapist assignment)
+        updateData.assessment_payment_verified = true;
+        updateData.assessment_payment_date = paymentDate;
+        updateData.assessment_payment_amount = amount || 2000; // Default to minimum (2000 EGP)
+        // After assessment payment, move to assessment pending (Sama will assess)
+        updateData.status = 'assessment_pending';
+      } else {
+        // Remaining therapist fee payment (after therapist assigned)
+        updateData.therapist_fee_payment_verified = true;
+        updateData.therapist_fee_payment_date = paymentDate;
+        updateData.therapist_fee_payment_amount = amount;
+        // After remaining payment, ready for booking
+        updateData.status = 'ready_for_booking';
+      }
 
       console.log('[PaymentVerificationModal] Sending payment verification for client:', clientId);
-      console.log('[PaymentVerificationModal] Payload:', payload);
+      console.log('[PaymentVerificationModal] Update data:', updateData);
 
       const res = await fetch(`/api/admin/clients/${clientId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify(payload),
+        body: JSON.stringify(updateData),
       });
 
       console.log('[PaymentVerificationModal] API response status:', res.status);
@@ -89,9 +103,9 @@ export default function PaymentVerificationModal({
             <div className="modal-success-icon">✓</div>
             <h2 className="modal-success-title">Payment Verified ✓</h2>
             <p className="modal-success-message">
-              {hasTherapist
-                ? `Payment from ${clientName} confirmed. They can now proceed to book their session.`
-                : `Payment from ${clientName} confirmed. Awaiting assessment from Sama to assign a therapist.`}
+              {paymentType === 'assessment'
+                ? `Assessment payment (${amount || 2000} EGP) from ${clientName} confirmed. Awaiting assessment from Sama to assign a therapist.`
+                : `Remaining payment (${amount} EGP) from ${clientName} for ${therapistName || 'their therapist'} confirmed. They can now proceed to book their session.`}
             </p>
           </div>
         </div>
@@ -103,7 +117,11 @@ export default function PaymentVerificationModal({
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2 className="modal-title">Confirm Payment - {clientName}</h2>
+          <h2 className="modal-title">
+            {paymentType === 'assessment'
+              ? `Confirm Assessment Payment - ${clientName}`
+              : `Confirm Remaining Payment - ${clientName}`}
+          </h2>
           <button
             className="modal-close-btn"
             onClick={onClose}
@@ -119,7 +137,9 @@ export default function PaymentVerificationModal({
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="modal-info-box">
             <p style={{ margin: '0 0 1rem 0', fontSize: '14px', color: '#556277' }}>
-              Payment received via InstaPay or Bank Transfer. Confirm the transfer date to complete payment verification.
+              {paymentType === 'assessment'
+                ? `Assessment Payment: ${amount || 2000} EGP. Payment received via InstaPay or Bank Transfer. Confirm the transfer date to complete payment verification.`
+                : `Remaining Payment: ${amount} EGP for ${therapistName || 'assigned therapist'}. Payment received via InstaPay or Bank Transfer. Confirm the transfer date to complete payment verification.`}
             </p>
           </div>
 

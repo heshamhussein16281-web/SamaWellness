@@ -17,6 +17,11 @@ interface Client {
   therapist_name?: string | null;
   is_recurring?: boolean;
   total_sessions_completed?: number;
+  assessment_payment_verified?: boolean;
+  assessment_payment_amount?: number | null;
+  therapist_fee_payment_verified?: boolean;
+  therapist_fee_payment_amount?: number | null;
+  total_payment_due?: number | null;
 }
 
 type ViewMode = 'list' | 'intake';
@@ -301,6 +306,11 @@ export default function ClientsPage() {
                       isRecurring={client.is_recurring || false}
                       clinicId={clinicId || 0}
                       clinicLoading={clinicLoading}
+                      assessmentPaymentVerified={client.assessment_payment_verified || false}
+                      assessmentPaymentAmount={client.assessment_payment_amount || undefined}
+                      therapistFeePaymentVerified={client.therapist_fee_payment_verified || false}
+                      therapistFeePaymentAmount={client.therapist_fee_payment_amount || undefined}
+                      totalPaymentDue={client.total_payment_due || undefined}
                       onActionComplete={() => fetchClients(currentPage, searchPhone)}
                     />
                   </td>

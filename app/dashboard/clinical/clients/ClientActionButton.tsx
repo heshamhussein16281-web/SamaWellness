@@ -15,6 +15,11 @@ interface ClientActionButtonProps {
   isRecurring: boolean;
   clinicId?: number | null;
   clinicLoading?: boolean;
+  assessmentPaymentVerified?: boolean;
+  assessmentPaymentAmount?: number;
+  therapistFeePaymentVerified?: boolean;
+  therapistFeePaymentAmount?: number;
+  totalPaymentDue?: number;
   onActionComplete: () => Promise<void> | void;
 }
 
@@ -32,49 +37,82 @@ export default function ClientActionButton({
   isRecurring,
   clinicId,
   clinicLoading = false,
+  assessmentPaymentVerified = false,
+  assessmentPaymentAmount,
+  therapistFeePaymentVerified = false,
+  therapistFeePaymentAmount,
+  totalPaymentDue,
   onActionComplete,
 }: ClientActionButtonProps) {
   const [activeModal, setActiveModal] = useState<string | null>(null);
 
   const getNextAction = (): NextAction => {
-    // Every route has a next action based on current status
+    // ========== TWO-TIER PAYMENT SYSTEM ==========
+    // Tier 1: Assessment Payment (minimum therapist rate = 2000 EGP)
+    // Tier 2: Therapist Fee Payment (difference between therapist rate and assessment payment)
 
-    // ========== NEW CLIENTS: PAYMENT COMES FIRST ==========
-    // Step 1: New clients must verify payment BEFORE any action (assessment or booking)
-    if (!isRecurring && status === 'intake') {
+    // Step 1: NEW CLIENTS - Verify Assessment Payment (before therapist assignment)
+    if (status === 'intake' && !assessmentPaymentVerified) {
+      return {
+        label: 'Verify Assessment Payment',
+        type: 'payment',
+      };
+    }
+
+    // Step 2: After assessment payment verified, Sama assesses and assigns therapist
+    // Reception needs to select the therapist
+    if (!isRecurring && status === 'assessment_pending' && !therapistId) {
+      return {
+        label: 'Select Therapist',
+        type: 'therapist',
+      };
+    }
+
+    // Step 3: After therapist assigned, check if remaining payment is needed
+    // If therapist rate > assessment payment, show "Verify Remaining Payment"
+    if (therapistId && assessmentPaymentVerified && status === 'assessment_pending') {
+      const minimumFee = assessmentPaymentAmount || 2000;
+      const remainingAmount = (totalPaymentDue || 0) - minimumFee;
+
+      // If therapist rate equals or is less than assessment payment, no remaining payment needed
+      if (remainingAmount <= 0) {
+        return {
+          label: 'Book Session',
+          type: 'booking',
+        };
+      }
+
+      // If remaining payment not verified, show payment verification
+      if (!therapistFeePaymentVerified) {
+        return {
+          label: 'Verify Remaining Payment',
+          type: 'payment',
+        };
+      }
+
+      return {
+        label: 'Book Session',
+        type: 'booking',
+      };
+    }
+
+    // Step 4: Ready for booking after all payments verified
+    if (therapistId && status === 'ready_for_booking') {
+      return {
+        label: 'Book Session',
+        type: 'booking',
+      };
+    }
+
+    // RECURRING CLIENTS: Skip assessment, go straight to payment verification
+    if (isRecurring && status === 'intake' && !assessmentPaymentVerified) {
       return {
         label: 'Verify Payment',
         type: 'payment',
       };
     }
 
-    // Step 2: After payment verified, if client chose assessment route, Sama assesses
-    // Then reception needs to select the recommended therapist
-    if (!isRecurring && status === 'assessment_pending') {
-      return {
-        label: 'Select Therapist',
-        type: 'therapist', // Opens therapist selection modal
-      };
-    }
-
-    // Step 3: After Sama completes assessment and assigns therapist
-    if (!isRecurring && therapistId && status === 'ready_for_booking') {
-      return {
-        label: 'Book Session',
-        type: 'booking',
-      };
-    }
-
-    // Step 3 Alternative: If client chose direct selection (skips assessment)
-    if (!isRecurring && therapistId && status === 'payment_verified') {
-      return {
-        label: 'Book Session',
-        type: 'booking',
-      };
-    }
-
-    // Payment has been received, waiting for session booking
-    if (therapistId && status === 'payment_pending') {
+    if (isRecurring && therapistId && assessmentPaymentVerified && status === 'assessment_pending') {
       return {
         label: 'Book Session',
         type: 'booking',
@@ -173,15 +211,26 @@ export default function ClientActionButton({
       )}
 
       {/* Payment Verification Modal */}
-      {activeModal === 'payment' && (
-        <PaymentVerificationModal
-          clientId={clientId}
-          clientName={clientName}
-          hasTherapist={therapistId ? true : false}
-          onSuccess={handleModalSuccess}
-          onClose={handleModalClose}
-        />
-      )}
+      {activeModal === 'payment' && (() => {
+        // Determine payment type and amount
+        const isRemainingPayment = therapistId && assessmentPaymentVerified && !therapistFeePaymentVerified;
+        const paymentType = isRemainingPayment ? 'remaining' : 'assessment';
+        const minimumFee = assessmentPaymentAmount || 2000;
+        const amount = isRemainingPayment ? ((totalPaymentDue || 0) - minimumFee) : minimumFee;
+
+        return (
+          <PaymentVerificationModal
+            clientId={clientId}
+            clientName={clientName}
+            therapistName={therapistName || undefined}
+            paymentType={paymentType}
+            amount={amount > 0 ? amount : minimumFee}
+            hasTherapist={therapistId ? true : false}
+            onSuccess={handleModalSuccess}
+            onClose={handleModalClose}
+          />
+        );
+      })()}
 
       {/* Therapist Selection Modal */}
       {activeModal === 'therapist' && (
