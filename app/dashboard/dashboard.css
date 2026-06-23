@@ -43,7 +43,8 @@
 /* Main dashboard flex container */
 .dashboard-container {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* Sidebar layout */
@@ -53,6 +54,10 @@
   width: var(--dashboard-sidebar-width);
   padding: var(--space-sm) 0;
   flex-shrink: 0;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
 }
 
 /* Main content area (flex column wrapper) */
@@ -60,6 +65,8 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* Topbar layout */
