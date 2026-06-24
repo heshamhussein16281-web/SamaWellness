@@ -277,4 +277,5 @@ if (require.main === module) {
   generateTestData(defaultConfig);
 }
 
-export { generateTestData, TestDataConfig };
+export { generateTestData };
+export type { TestDataConfig };
