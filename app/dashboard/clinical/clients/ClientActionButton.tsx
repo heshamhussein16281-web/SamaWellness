@@ -317,14 +317,6 @@ export default function ClientActionButton({
       };
     }
 
-    // View history
-    if (status === 'completed' || status === 'inactive') {
-      return {
-        label: 'View History',
-        type: 'view',
-      };
-    }
-
     // Fallback (should rarely occur)
     return {
       label: 'No Action',
