@@ -161,6 +161,30 @@ export async function POST(
 
     console.log('[complete-session] Client updated successfully for client_id:', booking.client_id);
 
+    // Record session payment in payment_history for accounting
+    try {
+      // For recurring clients, record the payment from current cycle
+      if (client?.is_recurring && completedBooking.payment_amount) {
+        console.log('[complete-session] Recording session payment in history for booking:', bookingId);
+        await supabase.from('payment_history').insert([
+          {
+            client_id: booking.client_id,
+            booking_id: bookingId,
+            amount: completedBooking.payment_amount,
+            payment_date: new Date().toISOString(),
+            payment_type: 'session',
+            verified: true,
+            verified_by: auth.user.userId,
+            verified_at: new Date().toISOString(),
+            notes: `Session ${isNoShow ? 'no-show' : 'completed'} - payment recorded for accounting`
+          }
+        ]);
+      }
+    } catch (historyError) {
+      console.error('[complete-session] Error recording payment in history:', historyError);
+      // Don't fail the request if payment history recording fails
+    }
+
     // Log audit action
     await logAuditAction({
       adminId: auth.user.userId,
