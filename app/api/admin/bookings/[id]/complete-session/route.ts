@@ -127,9 +127,9 @@ export async function POST(
       updated_at: new Date().toISOString(),
     };
 
-    // For recurring clients, allow them to book the next session
+    // For recurring clients, set back to recurring_client status for next booking cycle
     if (client?.is_recurring && client?.therapist_id) {
-      clientUpdate.status = 'assessment_pending';
+      clientUpdate.status = 'recurring_client';
     } else {
       clientUpdate.status = 'completed';
     }

@@ -8,6 +8,7 @@ import BookingCalendarModal from './BookingCalendarModal';
 import CompleteSessionModal from './CompleteSessionModal';
 import SessionTracker from './SessionTracker';
 import RescheduleModal from './RescheduleModal';
+import PaymentDeadlineModal from './PaymentDeadlineModal';
 
 interface ClientActionButtonProps {
   clientId: number;
@@ -50,10 +51,12 @@ export default function ClientActionButton({
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const [currentBooking, setCurrentBooking] = useState<any>(null);
   const [loadingBooking, setLoadingBooking] = useState(false);
+  const [showPaymentDeadline, setShowPaymentDeadline] = useState(false);
 
   // Auto-transition booking_scheduled to active if within 24 hours of session
+  // (Only for non-recurring clients - recurring clients have payment verification until 24hrs)
   useEffect(() => {
-    if (status === 'booking_scheduled' && currentBooking?.session_date) {
+    if (!isRecurring && status === 'booking_scheduled' && currentBooking?.session_date) {
       const sessionTime = new Date(currentBooking.session_date).getTime();
       const now = new Date().getTime();
       const hoursUntilSession = (sessionTime - now) / (1000 * 60 * 60);
@@ -64,7 +67,7 @@ export default function ClientActionButton({
         transitionToActive();
       }
     }
-  }, [status, currentBooking?.session_date]);
+  }, [status, currentBooking?.session_date, isRecurring]);
 
   const transitionToActive = async () => {
     try {
@@ -89,10 +92,30 @@ export default function ClientActionButton({
 
   // Fetch booking on mount or when client changes to check 24-hour transition rule
   useEffect(() => {
-    if (status === 'booking_scheduled' && !currentBooking) {
+    if ((status === 'booking_scheduled' || isRecurring) && !currentBooking) {
       fetchCurrentBooking();
     }
-  }, [clientId, status]);
+  }, [clientId, status, isRecurring]);
+
+  // Check for recurring clients with unpaid sessions within 24 hours
+  useEffect(() => {
+    if (
+      isRecurring &&
+      status === 'booking_scheduled' &&
+      !paymentVerified1 &&
+      currentBooking?.session_date
+    ) {
+      const sessionTime = new Date(currentBooking.session_date).getTime();
+      const now = new Date().getTime();
+      const hoursUntilSession = (sessionTime - now) / (1000 * 60 * 60);
+
+      // Show payment deadline modal if within 24 hours and not yet paid
+      if (hoursUntilSession <= 24 && hoursUntilSession > 0) {
+        console.log('[ClientActionButton] Recurring client payment deadline approaching:', hoursUntilSession);
+        setShowPaymentDeadline(true);
+      }
+    }
+  }, [isRecurring, status, paymentVerified1, currentBooking?.session_date]);
 
   // Fetch current/active booking when view modal is triggered
   // Clear booking when modal closes or client changes
@@ -172,22 +195,66 @@ export default function ClientActionButton({
   };
 
   const getNextAction = (): NextAction => {
-    // ========== TWO-TIER PAYMENT SYSTEM ==========
-    // Tier 1: Payment for first session (minimum therapist rate = 2000 EGP)
-    // Tier 2: Additional payment (difference between therapist rate and tier 1)
+    // ========== RECURRING CLIENT WORKFLOW ==========
+    // Dedicated status and flow for recurring clients
 
     console.log('[ClientActionButton] getNextAction - Client:', clientName, {
       status,
       therapistId,
       paymentVerified1,
       paymentAmount1,
-      paymentVerified2,
-      paymentAmount2,
       totalPaymentDue,
       isRecurring,
     });
 
-    // Step 1: NEW CLIENTS - Verify Payment for first session (before therapist assignment)
+    // RECURRING CLIENTS: Dedicated workflow
+    if (isRecurring) {
+      // Step 1: Recurring client ready to book next session
+      if (status === 'recurring_client') {
+        return {
+          label: 'Book Session',
+          type: 'booking',
+        };
+      }
+
+      // Step 2: After booking, verify payment until 24 hours before session
+      if (status === 'booking_scheduled' && !paymentVerified1) {
+        // Check if within 24 hours - if so, show urgent payment notice via notification
+        if (currentBooking?.session_date) {
+          const sessionTime = new Date(currentBooking.session_date).getTime();
+          const now = new Date().getTime();
+          const hoursUntilSession = (sessionTime - now) / (1000 * 60 * 60);
+
+          if (hoursUntilSession <= 24 && hoursUntilSession > 0) {
+            // Payment overdue - within 24 hours and not paid
+            // This will trigger a payment confirmation/cancellation modal
+            console.log('[ClientActionButton] Recurring client payment overdue, hours left:', hoursUntilSession);
+          }
+        }
+
+        return {
+          label: 'Verify Payment',
+          type: 'payment',
+        };
+      }
+
+      // After payment verified, ready to view session when active
+      if (status === 'active') {
+        return {
+          label: 'View Session',
+          type: 'view',
+        };
+      }
+
+      // No action needed
+      return {
+        label: 'No Action',
+        type: 'none',
+      };
+    }
+
+    // ========== NEW CLIENTS (ONE-TIME) ==========
+    // Verify Payment for first session (before therapist assignment)
     if (status === 'intake' && !paymentVerified1) {
       return {
         label: 'Verify Payment',
@@ -195,45 +262,36 @@ export default function ClientActionButton({
       };
     }
 
-    // Step 2: After payment verified, Sama assesses and assigns therapist
-    // Reception needs to select the therapist
-    if (!isRecurring && status === 'assessment_pending' && !therapistId) {
+    // After payment verified, Sama assesses and assigns therapist
+    if (status === 'assessment_pending' && !therapistId) {
       return {
         label: 'Select Therapist',
         type: 'therapist',
       };
     }
 
-    // Step 3: After therapist assigned, check if additional payment is needed
-    // If therapist rate > initial payment, show "Verify Additional Payment"
-    // For old clients: if therapistId is set in assessment_pending, assume initial payment was done
+    // After therapist assigned, check if additional payment is needed
     if (therapistId && status === 'assessment_pending' && (paymentVerified1 || !paymentAmount1)) {
-      const minimumFee = paymentAmount1 || 2000; // Default to 2000 if not set (old clients)
+      const minimumFee = paymentAmount1 || 2000;
       const remainingAmount = (totalPaymentDue || 0) - minimumFee;
 
-      console.log('[ClientActionButton] Step 3 - Checking additional payment:', {
+      console.log('[ClientActionButton] Checking additional payment:', {
         therapistId,
         status,
         paymentVerified1,
-        paymentAmount1,
-        totalPaymentDue,
         minimumFee,
         remainingAmount,
         paymentVerified2,
       });
 
-      // If therapist rate equals or is less than initial payment, no additional payment needed
       if (remainingAmount <= 0) {
-        console.log('[ClientActionButton] No additional payment needed (remainingAmount <= 0)');
         return {
           label: 'Book Session',
           type: 'booking',
         };
       }
 
-      // If additional payment not verified, show payment verification
       if (!paymentVerified2) {
-        console.log('[ClientActionButton] Additional payment needed:', remainingAmount);
         return {
           label: 'Verify Additional Payment',
           type: 'payment',
@@ -246,31 +304,8 @@ export default function ClientActionButton({
       };
     }
 
-    // Step 4: Ready for booking after all payments verified
+    // Ready for booking after all payments verified
     if (therapistId && status === 'ready_for_booking') {
-      return {
-        label: 'Book Session',
-        type: 'booking',
-      };
-    }
-
-    // RECURRING CLIENTS: Skip initial payment verification, go straight to therapist assignment
-    if (isRecurring && status === 'intake' && !therapistId) {
-      return {
-        label: 'Select Therapist',
-        type: 'therapist',
-      };
-    }
-
-    if (isRecurring && therapistId && status === 'assessment_pending') {
-      return {
-        label: 'Book Session',
-        type: 'booking',
-      };
-    }
-
-    // RECURRING CLIENTS: Can book directly if therapist assigned and ready
-    if (isRecurring && therapistId && (status === 'ready_for_booking' || status === 'intake')) {
       return {
         label: 'Book Session',
         type: 'booking',
@@ -443,6 +478,24 @@ export default function ClientActionButton({
           clinicId={clinicId || 0}
           onSuccess={handleModalSuccess}
           onClose={handleModalClose}
+        />
+      )}
+
+      {/* Payment Deadline Modal (for recurring clients within 24 hours of unpaid session) */}
+      {showPaymentDeadline && currentBooking && (
+        <PaymentDeadlineModal
+          clientId={clientId}
+          clientName={clientName}
+          bookingId={currentBooking.id}
+          sessionDate={currentBooking.session_date}
+          therapistName={therapistName}
+          hoursRemaining={
+            (new Date(currentBooking.session_date).getTime() - new Date().getTime()) /
+            (1000 * 60 * 60)
+          }
+          paymentAmount={totalPaymentDue}
+          onSuccess={handleModalSuccess}
+          onClose={() => setShowPaymentDeadline(false)}
         />
       )}
     </>
