@@ -178,11 +178,15 @@ export async function POST(request: NextRequest) {
       updated_at: new Date().toISOString(),
     };
 
-    if (clientTypeData?.is_recurring) {
+    const isRecurringClient = clientTypeData?.is_recurring === true;
+    console.log('[bookings] Client type check - is_recurring:', isRecurringClient);
+
+    if (isRecurringClient) {
       // Recurring clients: reset payment to verify later within 24 hours
       clientUpdate.payment_verified_1 = false;
       clientUpdate.payment_date_1 = null;
       clientUpdate.payment_amount_1 = null;
+      console.log('[bookings] This is a recurring client - will reset payment_verified_1 to false');
     }
 
     console.log('[bookings] Updating client with:', clientUpdate);
@@ -204,8 +208,28 @@ export async function POST(request: NextRequest) {
         client_id,
         updated_rows: updatedClient?.length,
         new_status: updatedClient?.[0]?.status,
-        payment_verified_1: updatedClient?.[0]?.payment_verified_1
+        payment_verified_1: updatedClient?.[0]?.payment_verified_1,
+        is_recurring: updatedClient?.[0]?.is_recurring
       });
+
+      // Verify the reset actually took effect by re-fetching
+      if (isRecurringClient) {
+        const { data: verifyClient, error: verifyError } = await supabase
+          .from('clients')
+          .select('id, payment_verified_1, payment_amount_1, payment_date_1')
+          .eq('id', client_id)
+          .single();
+
+        if (verifyError) {
+          console.error('[bookings] Error verifying payment reset:', verifyError);
+        } else {
+          console.log('[bookings] VERIFICATION: Payment reset result for client', client_id, ':', {
+            payment_verified_1: verifyClient?.payment_verified_1,
+            payment_amount_1: verifyClient?.payment_amount_1,
+            payment_date_1: verifyClient?.payment_date_1
+          });
+        }
+      }
     }
 
     // Log audit action
