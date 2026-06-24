@@ -169,23 +169,27 @@ export async function GET(request: NextRequest) {
       .map((c: any) => c.therapist_id)
       .filter((id: any) => id !== null && id !== undefined);
 
-    // Fetch therapist names if needed
-    let therapistMap: Record<number, string> = {};
+    // Fetch therapist names and rates (important: use CURRENT rates, not stored values)
+    let therapistMap: Record<number, { name: string; hourly_rate: number | null }> = {};
     if (therapistIds.length > 0) {
       const { data: therapists } = await supabase
         .from('therapists')
-        .select('id, name')
+        .select('id, name, hourly_rate')
         .in('id', therapistIds);
 
       if (therapists) {
         therapistMap = Object.fromEntries(
-          therapists.map((t: any) => [t.id, t.name])
+          therapists.map((t: any) => [t.id, { name: t.name, hourly_rate: t.hourly_rate || 2000 }])
         );
       }
     }
 
     // Format response
     const formattedClients = (clients || []).map((client: any) => {
+      // Use therapist's CURRENT hourly_rate if available, otherwise use stored value
+      const therapistInfo = client.therapist_id ? therapistMap[client.therapist_id] : null;
+      const currentTherapistRate = therapistInfo?.hourly_rate || client.total_payment_due || null;
+
       const baseClient = {
         id: client.id,
         name: client.name,
@@ -196,7 +200,7 @@ export async function GET(request: NextRequest) {
         therapist_id: client.therapist_id || null,
         is_recurring: client.is_recurring || false,
         total_sessions_completed: client.total_sessions_completed || 0,
-        therapist_name: client.therapist_id ? (therapistMap[client.therapist_id] || null) : null,
+        therapist_name: therapistInfo?.name || null,
       };
 
       // Include payment fields only if they exist in the database
@@ -207,11 +211,14 @@ export async function GET(request: NextRequest) {
           payment_amount_1: client.payment_amount_1 || null,
           payment_verified_2: client.payment_verified_2 || false,
           payment_amount_2: client.payment_amount_2 || null,
-          total_payment_due: client.total_payment_due || null,
+          total_payment_due: currentTherapistRate, // Use CURRENT therapist rate
         };
       }
 
-      return baseClient;
+      return {
+        ...baseClient,
+        total_payment_due: currentTherapistRate, // Even in fallback, include current rate
+      };
     });
 
     return NextResponse.json(
