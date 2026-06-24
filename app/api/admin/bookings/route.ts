@@ -185,16 +185,27 @@ export async function POST(request: NextRequest) {
       clientUpdate.payment_amount_1 = null;
     }
 
-    const { error: clientUpdateError } = await supabase
+    console.log('[bookings] Updating client with:', clientUpdate);
+    const { error: clientUpdateError, data: updatedClient } = await supabase
       .from('clients')
       .update(clientUpdate)
-      .eq('id', client_id);
+      .eq('id', client_id)
+      .select();
 
     if (clientUpdateError) {
-      console.error('[bookings] Error updating client status:', clientUpdateError);
+      console.error('[bookings] Error updating client status:', {
+        error: clientUpdateError,
+        client_id,
+        update_data: clientUpdate
+      });
       // Don't fail the request if client update fails, just log it
     } else {
-      console.log('[bookings] Client status updated successfully');
+      console.log('[bookings] Client status updated successfully:', {
+        client_id,
+        updated_rows: updatedClient?.length,
+        new_status: updatedClient?.[0]?.status,
+        payment_verified_1: updatedClient?.[0]?.payment_verified_1
+      });
     }
 
     // Log audit action
