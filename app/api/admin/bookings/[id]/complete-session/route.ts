@@ -114,12 +114,19 @@ export async function POST(
     }
 
     // Update client: increment total_sessions_completed, update last_session_date
-    // For recurring clients, set status back to assessment_pending so they can book next session
-    const { data: client } = await supabase
+    // All clients should return to ready_for_booking so they can book next session
+    console.log('[complete-session] Fetching client data for client_id:', booking.client_id);
+
+    const { data: client, error: clientFetchError } = await supabase
       .from('clients')
       .select('is_recurring, therapist_id')
       .eq('id', booking.client_id)
       .single();
+
+    if (clientFetchError) {
+      console.error('[complete-session] Error fetching client:', clientFetchError);
+      return NextResponse.json({ error: `Failed to fetch client: ${clientFetchError.message}` }, { status: 500 });
+    }
 
     const clientUpdate: any = {
       total_sessions_completed: completedBooking.id ? (await getSessionCount(booking.client_id)) : 0,
@@ -127,12 +134,16 @@ export async function POST(
       updated_at: new Date().toISOString(),
     };
 
-    // For recurring clients, set back to recurring_client status for next booking cycle
-    if (client?.is_recurring && client?.therapist_id) {
+    // All clients return to ready_for_booking so they can book next session
+    if (client?.is_recurring) {
+      // Recurring clients go back to recurring_client status
       clientUpdate.status = 'recurring_client';
     } else {
-      clientUpdate.status = 'completed';
+      // One-time clients go back to ready_for_booking to allow reboking
+      clientUpdate.status = 'ready_for_booking';
     }
+
+    console.log('[complete-session] Updating client', booking.client_id, 'with:', clientUpdate);
 
     const { error: clientError } = await supabase
       .from('clients')
@@ -140,8 +151,15 @@ export async function POST(
       .eq('id', booking.client_id);
 
     if (clientError) {
-      console.error('Error updating client:', clientError);
+      console.error('[complete-session] Error updating client:', {
+        error: clientError,
+        client_id: booking.client_id,
+        update_data: clientUpdate
+      });
+      return NextResponse.json({ error: `Failed to update client status: ${clientError.message}` }, { status: 500 });
     }
+
+    console.log('[complete-session] Client updated successfully for client_id:', booking.client_id);
 
     // Log audit action
     await logAuditAction({

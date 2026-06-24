@@ -217,28 +217,16 @@ export default function ClientActionButton({
         };
       }
 
-      // Step 2: After booking, verify payment until 24 hours before session
+      // Step 2: After booking, verify payment immediately
+      // 24-hour mark is cutoff to cancel if payment not verified
       if (status === 'booking_scheduled' && !paymentVerified1) {
-        // Check if within 24 hours - if so, show urgent payment notice via notification
-        if (currentBooking?.session_date) {
-          const sessionTime = new Date(currentBooking.session_date).getTime();
-          const now = new Date().getTime();
-          const hoursUntilSession = (sessionTime - now) / (1000 * 60 * 60);
-
-          if (hoursUntilSession <= 24 && hoursUntilSession > 0) {
-            // Payment overdue - within 24 hours and not paid
-            // This will trigger a payment confirmation/cancellation modal
-            console.log('[ClientActionButton] Recurring client payment overdue, hours left:', hoursUntilSession);
-          }
-        }
-
         return {
           label: 'Verify Payment',
           type: 'payment',
         };
       }
 
-      // After payment verified, ready to view session when active
+      // Step 3: After payment verified, ready to view session when active
       if (status === 'active') {
         return {
           label: 'View Session',

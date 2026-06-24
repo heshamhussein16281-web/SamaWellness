@@ -49,7 +49,7 @@ export default function ClientsPage() {
     pages: 1,
   });
 
-  const fetchClients = async (page: number = 1, phone: string = '') => {
+  const fetchClients = async (page: number = 1, phone: string = ''): Promise<void> => {
     try {
       console.log('[ClientsPage] fetchClients called with page:', page, 'phone:', phone);
       setLoading(true);
@@ -69,7 +69,17 @@ export default function ClientsPage() {
       });
 
       if (!res.ok) {
-        throw new Error('Failed to fetch clients');
+        let errorMsg: string = `Failed to fetch clients (status: ${res.status})`;
+        try {
+          const errorData = await res.json() as any;
+          if (errorData?.error && typeof errorData.error === 'string') {
+            errorMsg = `Failed to fetch clients: ${errorData.error}`;
+          }
+        } catch (e) {
+          // If response isn't JSON, just use status message
+        }
+        console.error('[ClientsPage] API Error:', errorMsg);
+        throw new Error(errorMsg);
       }
 
       const data = await res.json();
@@ -88,6 +98,9 @@ export default function ClientsPage() {
       console.log('[ClientsPage] Setting pagination to:', paginationData);
       setPagination(paginationData);
       setCurrentPage(page);
+
+      // Wait for state to update before returning
+      await new Promise(r => setTimeout(r, 100));
     } catch (err) {
       console.error('[ClientsPage] fetchClients error:', err);
       setError(err instanceof Error ? err.message : 'An error occurred');
@@ -162,7 +175,7 @@ export default function ClientsPage() {
     );
   }
 
-  const getStatusLabel = (status: string) => {
+  const getStatusLabel = (status: string): string => {
     const labels: Record<string, string> = {
       intake: 'Intake',
       assessment_pending: 'Assessment Pending',
@@ -173,6 +186,7 @@ export default function ClientsPage() {
       completed: 'Completed',
       inactive: 'Inactive',
       booking_expired: 'Booking Expired',
+      recurring_client: 'Recurring Client',
     };
     return labels[status] || status;
   };

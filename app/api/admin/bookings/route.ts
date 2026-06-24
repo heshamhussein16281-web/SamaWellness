@@ -158,6 +158,45 @@ export async function POST(request: NextRequest) {
       }, { status: 500 });
     }
 
+    // Update client status and payment fields based on client type
+    console.log('[bookings] Updating client', client_id, 'status to booking_scheduled');
+
+    const { data: clientTypeData, error: clientTypeError } = await supabase
+      .from('clients')
+      .select('is_recurring')
+      .eq('id', client_id)
+      .single();
+
+    if (clientTypeError) {
+      console.error('[bookings] Error fetching client type:', clientTypeError);
+    }
+
+    // For recurring clients, reset payment verification (they pay after booking)
+    // For non-recurring clients, keep existing payment status
+    const clientUpdate: any = {
+      status: 'booking_scheduled',
+      updated_at: new Date().toISOString(),
+    };
+
+    if (clientTypeData?.is_recurring) {
+      // Recurring clients: reset payment to verify later within 24 hours
+      clientUpdate.payment_verified_1 = false;
+      clientUpdate.payment_date_1 = null;
+      clientUpdate.payment_amount_1 = null;
+    }
+
+    const { error: clientUpdateError } = await supabase
+      .from('clients')
+      .update(clientUpdate)
+      .eq('id', client_id);
+
+    if (clientUpdateError) {
+      console.error('[bookings] Error updating client status:', clientUpdateError);
+      // Don't fail the request if client update fails, just log it
+    } else {
+      console.log('[bookings] Client status updated successfully');
+    }
+
     // Log audit action
     await logAuditAction({
       adminId: auth.user.userId,
