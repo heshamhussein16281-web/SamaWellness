@@ -39,11 +39,6 @@ export default function CompleteSessionModal({
       return;
     }
 
-    if (sessionStatus === 'completed' && !notes.trim()) {
-      setError('Please add session notes if session was completed');
-      return;
-    }
-
     setError(null);
     setLoading(true);
 
@@ -54,7 +49,7 @@ export default function CompleteSessionModal({
       };
 
       if (sessionStatus === 'completed') {
-        payload.notes = notes.trim();
+        payload.notes = notes.trim() || 'Session completed';
         payload.session_outcome = outcome || 'neutral';
         payload.progress_score = progressScore || 3;
       } else if (sessionStatus === 'no_show') {
@@ -239,7 +234,7 @@ export default function CompleteSessionModal({
             {/* Notes */}
             <div className="modal-form-group">
               <label className="modal-label">
-                Session Notes <span className="modal-required">*</span>
+                Session Notes <span style={{ fontSize: '0.75rem', color: '#999' }}>(Optional)</span>
               </label>
               <textarea
                 value={notes}
@@ -357,7 +352,7 @@ export default function CompleteSessionModal({
             type="button"
             className="modal-btn modal-btn--primary"
             onClick={handleSubmit}
-            disabled={loading || !sessionStatus || (sessionStatus === 'completed' && !notes.trim())}
+            disabled={loading || !sessionStatus}
           >
             {loading ? 'Recording...' : sessionStatus ? `Record ${sessionStatus === 'completed' ? 'Completed' : 'No Show'}` : 'Select Status'}
           </button>
