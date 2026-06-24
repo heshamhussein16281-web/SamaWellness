@@ -1,10 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AssessmentEntryModal from './AssessmentEntryModal';
 import PaymentVerificationModal from './PaymentVerificationModal';
 import TherapistSelectionModal from './TherapistSelectionModal';
 import BookingCalendarModal from './BookingCalendarModal';
+import CompleteSessionModal from './CompleteSessionModal';
+import SessionTracker from './SessionTracker';
+import RescheduleModal from './RescheduleModal';
 
 interface ClientActionButtonProps {
   clientId: number;
@@ -45,6 +48,85 @@ export default function ClientActionButton({
   onActionComplete,
 }: ClientActionButtonProps) {
   const [activeModal, setActiveModal] = useState<string | null>(null);
+  const [currentBooking, setCurrentBooking] = useState<any>(null);
+  const [loadingBooking, setLoadingBooking] = useState(false);
+
+  // Fetch current/active booking when view modal is triggered
+  // Clear booking when modal closes or client changes
+  useEffect(() => {
+    if (!activeModal) {
+      setCurrentBooking(null);
+    }
+  }, [activeModal]);
+
+  // Fetch booking when modal is opened
+  useEffect(() => {
+    if ((activeModal === 'view' || activeModal === 'cancel') && !currentBooking) {
+      fetchCurrentBooking();
+    }
+  }, [activeModal, status, currentBooking]);
+
+  const fetchCurrentBooking = async () => {
+    setLoadingBooking(true);
+    try {
+      console.log('[ClientActionButton] Fetching booking for client:', clientId, 'status:', status);
+
+      // First, try to fetch with status filter based on client status
+      let statusFilter: string | null = null;
+      if (status === 'booking_scheduled') {
+        statusFilter = 'scheduled'; // booking_scheduled clients have scheduled bookings
+      } else if (status === 'active') {
+        statusFilter = 'scheduled'; // active clients should have a scheduled session happening
+      } else if (status === 'completed' || status === 'inactive') {
+        statusFilter = 'completed'; // completed clients have completed bookings
+      }
+
+      let url = `/api/admin/clients/${clientId}/bookings`;
+      if (statusFilter) {
+        url += `?status=${statusFilter}`;
+      }
+
+      console.log('[ClientActionButton] Fetching from URL:', url);
+
+      const res = await fetch(url, { credentials: 'include' });
+
+      if (!res.ok) {
+        console.error('[ClientActionButton] Booking fetch failed:', res.status, res.statusText);
+        return;
+      }
+
+      const data = await res.json();
+      console.log('[ClientActionButton] Booking fetch response:', data);
+
+      if (data.data && data.data.length > 0) {
+        // Get the first (soonest) booking
+        console.log('[ClientActionButton] Setting current booking:', data.data[0]);
+        setCurrentBooking(data.data[0]);
+      } else {
+        console.warn('[ClientActionButton] No bookings found for client:', clientId, 'with status filter:', statusFilter);
+
+        // If no bookings found with status filter, try fetching all bookings
+        console.log('[ClientActionButton] Trying to fetch all bookings for client:', clientId);
+        const fallbackRes = await fetch(`/api/admin/clients/${clientId}/bookings`, { credentials: 'include' });
+
+        if (fallbackRes.ok) {
+          const fallbackData = await fallbackRes.json();
+          console.log('[ClientActionButton] Fallback booking fetch response:', fallbackData);
+
+          if (fallbackData.data && fallbackData.data.length > 0) {
+            // Find the most relevant booking (prefer non-cancelled ones)
+            const relevantBooking = fallbackData.data.find((b: any) => b.booking_status !== 'cancelled') || fallbackData.data[0];
+            console.log('[ClientActionButton] Setting current booking from fallback:', relevantBooking);
+            setCurrentBooking(relevantBooking);
+          }
+        }
+      }
+    } catch (err) {
+      console.error('[ClientActionButton] Error fetching current booking:', err);
+    } finally {
+      setLoadingBooking(false);
+    }
+  };
 
   const getNextAction = (): NextAction => {
     // ========== TWO-TIER PAYMENT SYSTEM ==========
@@ -192,6 +274,8 @@ export default function ClientActionButton({
   };
 
   const handleModalClose = () => {
+    console.log('[ClientActionButton] Closing modal for client:', clientId);
+    setCurrentBooking(null);
     setActiveModal(null);
   };
 
@@ -283,23 +367,41 @@ export default function ClientActionButton({
         />
       )}
 
-      {/* View/Cancel - TODO: Implement these modals */}
-      {/* {activeModal === 'cancel' && (
-        <CancelRescheduleModal
-          clientId={clientId}
+      {/* Complete Session Modal (for active status) */}
+      {activeModal === 'view' && status === 'active' && (
+        <CompleteSessionModal
+          bookingId={currentBooking?.id}
           clientName={clientName}
+          therapistName={therapistName || undefined}
+          sessionDate={currentBooking?.session_date}
           onSuccess={handleModalSuccess}
           onClose={handleModalClose}
         />
       )}
 
-      {activeModal === 'view' && (
-        <ViewModal
+      {/* Session Tracker (for completed/inactive status) */}
+      {activeModal === 'view' && (status === 'completed' || status === 'inactive') && (
+        <SessionTracker
           clientId={clientId}
           clientName={clientName}
           onClose={handleModalClose}
         />
-      )} */}
+      )}
+
+      {/* Reschedule/Cancel Modal (for booking_scheduled status) */}
+      {activeModal === 'cancel' && status === 'booking_scheduled' && (
+        <RescheduleModal
+          clientId={clientId}
+          bookingId={currentBooking?.id || 0}
+          clientName={clientName}
+          therapistId={therapistId || 0}
+          therapistName={therapistName || undefined}
+          currentSessionDate={currentBooking?.session_date || ''}
+          clinicId={clinicId || 0}
+          onSuccess={handleModalSuccess}
+          onClose={handleModalClose}
+        />
+      )}
     </>
   );
 }

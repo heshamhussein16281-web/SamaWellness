@@ -83,10 +83,20 @@ export default function PaymentVerificationModal({
 
       setSuccess(true);
       // Wait 1.5 seconds to show success message, then trigger parent refresh
-      setTimeout(async () => {
-        await Promise.resolve(onSuccess()); // Triggers fetchClients on parent and waits for it
-        // Note: onClose will be called after onSuccess completes its async work
-        // because handleModalSuccess in parent awaits the data refresh
+      setTimeout(() => {
+        console.log('[PaymentVerificationModal] Calling onSuccess after success state');
+        try {
+          const result = onSuccess();
+          // If onSuccess returns a Promise, log it (but don't need to await in setTimeout)
+          if (result && typeof result.then === 'function') {
+            console.log('[PaymentVerificationModal] onSuccess returned a Promise');
+            result.catch((err) => {
+              console.error('[PaymentVerificationModal] onSuccess Promise rejected:', err);
+            });
+          }
+        } catch (err) {
+          console.error('[PaymentVerificationModal] onSuccess threw error:', err);
+        }
       }, 1500);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');

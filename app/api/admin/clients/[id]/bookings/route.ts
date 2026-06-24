@@ -76,9 +76,11 @@ export async function GET(
       .select(`
         id,
         session_date,
+        duration_minutes,
         booking_status,
         payment_status,
-        therapists:therapist_id (id, name)
+        therapists:therapist_id (id, name),
+        clinic_rooms:room_id (id, room_name)
       `)
       .eq('client_id', clientId);
 
@@ -100,6 +102,7 @@ export async function GET(
     const bookingsWithAmount = await Promise.all(
       (bookings || []).map(async (booking: any) => {
         const therapist = Array.isArray(booking.therapists) ? booking.therapists[0] : booking.therapists;
+        const room = Array.isArray(booking.clinic_rooms) ? booking.clinic_rooms[0] : booking.clinic_rooms;
 
         // Get payment amount if exists
         const { data: paymentData, error: paymentError } = await supabase
@@ -115,7 +118,9 @@ export async function GET(
         return {
           id: booking.id,
           session_date: booking.session_date,
+          duration_minutes: booking.duration_minutes,
           therapist_name: therapist?.name || null,
+          room_name: room?.room_name || null,
           booking_status: booking.booking_status,
           payment_status: booking.payment_status,
           amount: amount,

@@ -29,11 +29,15 @@ export default function BookingCalendarModal({
   onSuccess,
   onClose,
 }: BookingCalendarModalProps) {
+  // Get today's date (normalized to midnight)
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   const [weekStart, setWeekStart] = useState<Date>(() => {
-    const today = new Date();
-    const day = today.getDay();
-    const diff = today.getDate() - day + (day === 0 ? -6 : 1);
-    return new Date(today.setDate(diff));
+    const todayDate = new Date();
+    const day = todayDate.getDay();
+    const diff = todayDate.getDate() - day + (day === 0 ? -6 : 1);
+    return new Date(todayDate.setDate(diff));
   });
 
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
@@ -188,6 +192,12 @@ export default function BookingCalendarModal({
 
   const formatDate = (date: Date) => date.toISOString().split('T')[0];
 
+  const isToday = (date: Date): boolean => {
+    const dateNormalized = new Date(date);
+    dateNormalized.setHours(0, 0, 0, 0);
+    return dateNormalized.getTime() === today.getTime();
+  };
+
   const getDayName = (date: Date) => {
     return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][date.getDay()];
   };
@@ -213,6 +223,12 @@ export default function BookingCalendarModal({
   const weekDays = getWeekDays();
 
   const handleSlotClick = async (date: string, hour: number, roomName: string) => {
+    // Prevent same-day bookings
+    if (isToday(new Date(date))) {
+      setError('Bookings must be scheduled for the next day or later');
+      return;
+    }
+
     setError(null);
     setSelectedDate(date);
     setSelectedTime(hour);
@@ -427,6 +443,7 @@ export default function BookingCalendarModal({
               const isWorking = isTherapistWorking(dayName);
               const dayStart = getDayStart(dayName);
               const dayEnd = getDayEnd(dayName);
+              const isTodayDate = isToday(date);
               const formatHour = (h: number) => {
                 const period = h >= 12 ? 'PM' : 'AM';
                 const displayH = h > 12 ? h - 12 : h === 0 ? 12 : h;
@@ -434,11 +451,11 @@ export default function BookingCalendarModal({
               };
 
               return (
-                <div key={formatDate(date)} className={`legacy-header-cell ${isWorking ? 'working' : 'off'}`}>
-                  <div className="legacy-day-abbr">{dayName}</div>
+                <div key={formatDate(date)} className={`legacy-header-cell ${isTodayDate ? 'unavailable' : isWorking ? 'working' : 'off'}`}>
+                  <div className="legacy-day-abbr">{isTodayDate ? 'Today' : dayName}</div>
                   <div className="legacy-day-num">{date.getDate()}</div>
                   <div className="legacy-day-hours">
-                    {isWorking ? `${formatHour(dayStart)}–${formatHour(dayEnd)}` : 'Off'}
+                    {isTodayDate ? 'Not Available' : isWorking ? `${formatHour(dayStart)}–${formatHour(dayEnd)}` : 'Off'}
                   </div>
                 </div>
               );
@@ -469,8 +486,10 @@ export default function BookingCalendarModal({
                     const isInWorkingHours =
                       isWorking && hour >= getDayStart(dayName) && hour < getDayEnd(dayName);
                     const isSelected = selectedDate === dateStr && selectedTime === hour;
+                    const isTodayDate = isToday(date);
 
-                    if (!isInWorkingHours) {
+                    // Show as unavailable if not in working hours OR if it's today
+                    if (!isInWorkingHours || isTodayDate) {
                       return (
                         <div key={`${dateStr}-${hour}`} className="legacy-slot-cell unavailable">
                           {clinicRooms.map((room) => (
