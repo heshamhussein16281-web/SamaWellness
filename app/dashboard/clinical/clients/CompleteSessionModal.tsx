@@ -21,9 +21,6 @@ export default function CompleteSessionModal({
   onClose,
 }: CompleteSessionModalProps) {
   const [sessionStatus, setSessionStatus] = useState<'completed' | 'no_show' | null>(null);
-  const [notes, setNotes] = useState('');
-  const [outcome, setOutcome] = useState<'positive' | 'neutral' | 'negative' | null>(null);
-  const [progressScore, setProgressScore] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -47,16 +44,6 @@ export default function CompleteSessionModal({
         booking_status: 'completed',
         session_status: sessionStatus,
       };
-
-      if (sessionStatus === 'completed') {
-        payload.notes = notes.trim() || 'Session completed';
-        payload.session_outcome = outcome || 'neutral';
-        payload.progress_score = progressScore || 3;
-      } else if (sessionStatus === 'no_show') {
-        payload.notes = notes.trim() ? `No show - ${notes.trim()}` : 'Client did not show for session';
-        payload.session_outcome = 'no_show';
-        payload.progress_score = null;
-      }
 
       const res = await fetch(`/api/admin/bookings/${bookingId}/complete-session`, {
         method: 'POST',
@@ -228,114 +215,21 @@ export default function CompleteSessionModal({
           </p>
         </div>
 
-        {/* Form Content */}
-        {sessionStatus === 'completed' ? (
-          <>
-            {/* Notes */}
-            <div className="modal-form-group">
-              <label className="modal-label">
-                Session Notes <span style={{ fontSize: '0.75rem', color: '#999' }}>(Optional)</span>
-              </label>
-              <textarea
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                className="modal-input"
-                placeholder="Summary of session, topics discussed, observations..."
-                style={{ minHeight: '100px', fontFamily: 'inherit' }}
-                disabled={loading}
-              />
-              <p style={{ fontSize: '0.75rem', color: '#999', margin: '0.5rem 0 0 0' }}>
-                {notes.length} / 5000 characters
-              </p>
-            </div>
-
-            {/* Session Outcome */}
-            <div className="modal-form-group">
-              <label htmlFor="outcome" className="modal-label">
-                Session Outcome
-              </label>
-              <select
-                id="outcome"
-                value={outcome}
-                onChange={(e) => setOutcome(e.target.value as any)}
-                className="modal-input"
-                disabled={loading}
-              >
-                <option value="positive">Positive - Client showed good progress</option>
-                <option value="neutral">Neutral - Standard session</option>
-                <option value="negative">Negative - Client struggled</option>
-              </select>
-            </div>
-
-            {/* Progress Score */}
-            <div className="modal-form-group">
-              <label className="modal-label">
-                Progress Score
-              </label>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <input
-                  type="range"
-                  min="1"
-                  max="5"
-                  value={progressScore}
-                  onChange={(e) => setProgressScore(parseInt(e.target.value))}
-                  disabled={loading}
-                  style={{ flex: 1 }}
-                />
-                <div style={{ display: 'flex', gap: '0.25rem' }}>
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <span
-                      key={star}
-                      style={{
-                        fontSize: '1.5rem',
-                        color:
-                          star <= progressScore ? '#4a6741' : '#ddd',
-                        cursor: 'pointer',
-                      }}
-                      onClick={() => setProgressScore(star)}
-                    >
-                      ★
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <p style={{ fontSize: '0.75rem', color: '#999', margin: '0.5rem 0 0 0' }}>
-                {progressScore} / 5 stars
-              </p>
-            </div>
-          </>
-        ) : (
-          <>
-            {/* No Show Notes */}
-            <div className="modal-form-group">
-              <label className="modal-label">
-                Reason for No-Show (Optional)
-              </label>
-              <textarea
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                className="modal-input"
-                placeholder="Why client didn't attend..."
-                style={{ minHeight: '80px', fontFamily: 'inherit' }}
-                disabled={loading}
-              />
-            </div>
-
-            {/* No Show Warning */}
-            <div
-              style={{
-                padding: '1rem',
-                background: '#fff3cd',
-                border: '1px solid #ffc107',
-                borderRadius: '6px',
-                marginBottom: '1rem',
-              }}
-            >
-              <p style={{ margin: 0, fontSize: '0.875rem', color: '#333' }}>
-                ⚠️ <strong>No-Show Policy:</strong> Payment for this session is retained. Client will need to reschedule for next session.
-              </p>
-            </div>
-          </>
+        {/* No Show Warning */}
+        {sessionStatus === 'no_show' && (
+          <div
+            style={{
+              padding: '1rem',
+              background: '#fff3cd',
+              border: '1px solid #ffc107',
+              borderRadius: '6px',
+              marginBottom: '1rem',
+            }}
+          >
+            <p style={{ margin: 0, fontSize: '0.875rem', color: '#333' }}>
+              ⚠️ <strong>No-Show Policy:</strong> Payment for this session is retained. Client will need to reschedule for next session.
+            </p>
+          </div>
         )}
 
         {/* Action Buttons */}
