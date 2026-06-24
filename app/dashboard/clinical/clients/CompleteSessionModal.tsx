@@ -20,10 +20,10 @@ export default function CompleteSessionModal({
   onSuccess,
   onClose,
 }: CompleteSessionModalProps) {
-  const [sessionStatus, setSessionStatus] = useState<'completed' | 'no_show'>('completed');
+  const [sessionStatus, setSessionStatus] = useState<'completed' | 'no_show' | null>(null);
   const [notes, setNotes] = useState('');
-  const [outcome, setOutcome] = useState<'positive' | 'neutral' | 'negative'>('positive');
-  const [progressScore, setProgressScore] = useState(3);
+  const [outcome, setOutcome] = useState<'positive' | 'neutral' | 'negative' | null>(null);
+  const [progressScore, setProgressScore] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -31,6 +31,11 @@ export default function CompleteSessionModal({
   const handleSubmit = async () => {
     if (!bookingId) {
       setError('No active booking found for this client. Unable to mark session.');
+      return;
+    }
+
+    if (!sessionStatus) {
+      setError('Please select either Completed or No Show');
       return;
     }
 
@@ -50,8 +55,8 @@ export default function CompleteSessionModal({
 
       if (sessionStatus === 'completed') {
         payload.notes = notes.trim();
-        payload.session_outcome = outcome;
-        payload.progress_score = progressScore;
+        payload.session_outcome = outcome || 'neutral';
+        payload.progress_score = progressScore || 3;
       } else if (sessionStatus === 'no_show') {
         payload.notes = notes.trim() ? `No show - ${notes.trim()}` : 'Client did not show for session';
         payload.session_outcome = 'no_show';
@@ -352,9 +357,9 @@ export default function CompleteSessionModal({
             type="button"
             className="modal-btn modal-btn--primary"
             onClick={handleSubmit}
-            disabled={loading || (sessionStatus === 'completed' && !notes.trim())}
+            disabled={loading || !sessionStatus || (sessionStatus === 'completed' && !notes.trim())}
           >
-            {loading ? 'Recording...' : `Record ${sessionStatus === 'completed' ? 'Completed' : 'No Show'}`}
+            {loading ? 'Recording...' : sessionStatus ? `Record ${sessionStatus === 'completed' ? 'Completed' : 'No Show'}` : 'Select Status'}
           </button>
         </div>
       </div>

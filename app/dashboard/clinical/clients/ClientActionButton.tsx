@@ -51,6 +51,49 @@ export default function ClientActionButton({
   const [currentBooking, setCurrentBooking] = useState<any>(null);
   const [loadingBooking, setLoadingBooking] = useState(false);
 
+  // Auto-transition booking_scheduled to active if within 24 hours of session
+  useEffect(() => {
+    if (status === 'booking_scheduled' && currentBooking?.session_date) {
+      const sessionTime = new Date(currentBooking.session_date).getTime();
+      const now = new Date().getTime();
+      const hoursUntilSession = (sessionTime - now) / (1000 * 60 * 60);
+
+      // If within 24 hours of session, auto-transition to active
+      if (hoursUntilSession <= 24) {
+        console.log('[ClientActionButton] Session within 24 hours, auto-transitioning to active');
+        transitionToActive();
+      }
+    }
+  }, [status, currentBooking?.session_date]);
+
+  const transitionToActive = async () => {
+    try {
+      const res = await fetch(`/api/admin/clients/${clientId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          status: 'active',
+        }),
+      });
+
+      if (res.ok) {
+        console.log('[ClientActionButton] Successfully transitioned to active');
+        // Trigger parent refresh to update status
+        await Promise.resolve(onActionComplete());
+      }
+    } catch (err) {
+      console.error('[ClientActionButton] Error auto-transitioning to active:', err);
+    }
+  };
+
+  // Fetch booking on mount or when client changes to check 24-hour transition rule
+  useEffect(() => {
+    if (status === 'booking_scheduled' && !currentBooking) {
+      fetchCurrentBooking();
+    }
+  }, [clientId, status]);
+
   // Fetch current/active booking when view modal is triggered
   // Clear booking when modal closes or client changes
   useEffect(() => {

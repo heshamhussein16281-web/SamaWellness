@@ -114,13 +114,29 @@ export async function POST(
     }
 
     // Update client: increment total_sessions_completed, update last_session_date
+    // For recurring clients, set status back to assessment_pending so they can book next session
+    const { data: client } = await supabase
+      .from('clients')
+      .select('is_recurring, therapist_id')
+      .eq('id', booking.client_id)
+      .single();
+
+    const clientUpdate: any = {
+      total_sessions_completed: completedBooking.id ? (await getSessionCount(booking.client_id)) : 0,
+      last_session_date: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+
+    // For recurring clients, allow them to book the next session
+    if (client?.is_recurring && client?.therapist_id) {
+      clientUpdate.status = 'assessment_pending';
+    } else {
+      clientUpdate.status = 'completed';
+    }
+
     const { error: clientError } = await supabase
       .from('clients')
-      .update({
-        total_sessions_completed: completedBooking.id ? (await getSessionCount(booking.client_id)) : 0,
-        last_session_date: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      })
+      .update(clientUpdate)
       .eq('id', booking.client_id);
 
     if (clientError) {
