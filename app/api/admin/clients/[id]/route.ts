@@ -187,6 +187,44 @@ export async function PUT(
     console.log('[PUT /api/admin/clients/[id]] Successfully updated client:', clientId);
     console.log('[PUT /api/admin/clients/[id]] Updated data:', JSON.stringify(updatedClient));
 
+    // Record payment in payment_history if payment verification was updated
+    try {
+      if (payment_verified_1 === true && payment_amount_1) {
+        console.log('[PUT /api/admin/clients/[id]] Recording payment_1 in history');
+        await supabase.from('payment_history').insert([
+          {
+            client_id: clientId,
+            amount: payment_amount_1,
+            payment_date: payment_date_1 || new Date().toISOString(),
+            payment_type: 'assessment',
+            verified: true,
+            verified_by: auth.user.userId,
+            verified_at: new Date().toISOString(),
+            notes: 'First payment verification'
+          }
+        ]);
+      }
+
+      if (payment_verified_2 === true && payment_amount_2) {
+        console.log('[PUT /api/admin/clients/[id]] Recording payment_2 in history');
+        await supabase.from('payment_history').insert([
+          {
+            client_id: clientId,
+            amount: payment_amount_2,
+            payment_date: payment_date_2 || new Date().toISOString(),
+            payment_type: 'remaining',
+            verified: true,
+            verified_by: auth.user.userId,
+            verified_at: new Date().toISOString(),
+            notes: 'Second payment verification'
+          }
+        ]);
+      }
+    } catch (historyError) {
+      console.error('[PUT /api/admin/clients/[id]] Error recording payment in history:', historyError);
+      // Don't fail the request if payment history recording fails
+    }
+
     // Log audit action
     try {
       await logAuditAction({
