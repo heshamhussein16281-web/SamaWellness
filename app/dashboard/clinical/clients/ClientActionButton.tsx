@@ -476,7 +476,7 @@ export default function ClientActionButton({
           clientName={clientName}
           bookingId={currentBooking.id}
           sessionDate={currentBooking.session_date}
-          therapistName={therapistName}
+          therapistName={therapistName || undefined}
           hoursRemaining={
             (new Date(currentBooking.session_date).getTime() - new Date().getTime()) /
             (1000 * 60 * 60)
