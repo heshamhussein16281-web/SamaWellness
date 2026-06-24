@@ -226,7 +226,7 @@ export default function SessionHistory({
                                   style={{
                                     fontSize: '1.5rem',
                                     color:
-                                      star <= session.progress_score ? getProgressColor(session.progress_score) : '#ddd',
+                                      star <= (session.progress_score ?? 0) ? getProgressColor(session.progress_score ?? 0) : '#ddd',
                                   }}
                                 >
                                   ★
