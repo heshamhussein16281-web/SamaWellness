@@ -332,7 +332,7 @@ export default function RescheduleModal({
           session_type: 'single',
           clinic_id: clinicId,
           room_id: selectedRoom?.id || null,
-          notes: `Rescheduled from ${formatDate(currentSessionDate)}`,
+          notes: currentSessionDate ? `Rescheduled from ${formatDate(currentSessionDate)}` : 'Rescheduled to new date',
         }),
       });
 
