@@ -310,7 +310,9 @@ export default function RescheduleModal({
       });
 
       if (!cancelRes.ok) {
-        throw new Error('Failed to cancel original session');
+        const errorData = await cancelRes.json();
+        console.error('[RescheduleModal] Cancel booking failed:', cancelRes.status, errorData);
+        throw new Error(errorData.error || `Failed to cancel original session (${cancelRes.status})`);
       }
 
       // Then, create new booking
