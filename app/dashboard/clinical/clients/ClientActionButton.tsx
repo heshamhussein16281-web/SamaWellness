@@ -226,6 +226,14 @@ export default function ClientActionButton({
         };
       }
 
+      // Step 2b: After payment verified, can reschedule/cancel until session starts
+      if (status === 'booking_scheduled' && paymentVerified1) {
+        return {
+          label: 'Reschedule or Cancel',
+          type: 'cancel',
+        };
+      }
+
       // Step 3: After payment verified, ready to view session when active
       if (status === 'active') {
         return {
