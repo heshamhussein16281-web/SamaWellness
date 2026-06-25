@@ -35,11 +35,17 @@ export default function RescheduleModal({
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
+  // Tomorrow is the earliest date we can book
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
   // Log the booking being opened
   console.log('[RescheduleModal] Opened with:', {
     bookingId,
     currentSessionDate,
     clientName,
+    today: today.toISOString().split('T')[0],
+    tomorrow: tomorrow.toISOString().split('T')[0],
   });
 
   const [action, setAction] = useState<'reschedule' | 'cancel' | null>(null);
@@ -190,10 +196,16 @@ export default function RescheduleModal({
 
   const formatDate2 = (date: Date) => date.toISOString().split('T')[0];
 
-  const isToday = (date: Date): boolean => {
+  // Check if date is today or in the past (not allowed for booking)
+  const isPastOrToday = (date: Date): boolean => {
     const dateNormalized = new Date(date);
     dateNormalized.setHours(0, 0, 0, 0);
-    return dateNormalized.getTime() === today.getTime();
+    return dateNormalized.getTime() <= today.getTime();
+  };
+
+  // Check if date is in the future (allowed for booking)
+  const isFutureDate = (date: Date): boolean => {
+    return !isPastOrToday(date);
   };
 
   const formatHour = (hour: number): string => {
@@ -274,9 +286,9 @@ export default function RescheduleModal({
   };
 
   const handleSlotClick = async (date: string, hour: number, roomName: string) => {
-    // Prevent same-day bookings
-    if (isToday(new Date(date))) {
-      setError('Bookings must be scheduled for the next day or later');
+    // Prevent bookings that are not in the future (today or past)
+    if (!isFutureDate(new Date(date))) {
+      setError('Bookings must be scheduled for tomorrow or later');
       return;
     }
 
@@ -650,7 +662,7 @@ export default function RescheduleModal({
                   const isWorking = isTherapistWorking(dayName);
                   const dayStart = getDayStart(dayName);
                   const dayEnd = getDayEnd(dayName);
-                  const isTodayDate = isToday(date);
+                  const isPastDate = isPastOrToday(date);
                   const formatHourLabel = (h: number) => {
                     const period = h >= 12 ? 'PM' : 'AM';
                     const displayH = h > 12 ? h - 12 : h === 0 ? 12 : h;
@@ -658,11 +670,11 @@ export default function RescheduleModal({
                   };
 
                   return (
-                    <div key={formatDate2(date)} className={`legacy-header-cell ${isTodayDate ? 'unavailable' : isWorking ? 'working' : 'off'}`}>
-                      <div className="legacy-day-abbr">{isTodayDate ? 'Today' : dayName}</div>
+                    <div key={formatDate2(date)} className={`legacy-header-cell ${isPastDate ? 'unavailable' : isWorking ? 'working' : 'off'}`}>
+                      <div className="legacy-day-abbr">{isPastDate ? 'Closed' : dayName}</div>
                       <div className="legacy-day-num">{date.getDate()}</div>
                       <div className="legacy-day-hours">
-                        {isTodayDate ? 'Not Available' : isWorking ? `${formatHourLabel(dayStart)}–${formatHourLabel(dayEnd)}` : 'Off'}
+                        {isPastDate ? 'Cannot Book' : isWorking ? `${formatHourLabel(dayStart)}–${formatHourLabel(dayEnd)}` : 'Off'}
                       </div>
                     </div>
                   );
@@ -692,9 +704,9 @@ export default function RescheduleModal({
                         const isInWorkingHours =
                           isWorking && hour >= getDayStart(dayName) && hour < getDayEnd(dayName);
                         const isSelected = selectedDate === dateStr && selectedTime === hour;
-                        const isTodayDate = isToday(date);
+                        const isPastDate = isPastOrToday(date);
 
-                        if (!isInWorkingHours || isTodayDate) {
+                        if (!isInWorkingHours || isPastDate) {
                           return (
                             <div key={`${dateStr}-${hour}`} className="legacy-slot-cell unavailable">
                               {clinicRooms.map((room) => (

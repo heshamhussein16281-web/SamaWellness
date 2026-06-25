@@ -494,19 +494,67 @@ export default function ClientActionButton({
       )}
 
       {/* Reschedule/Cancel Modal (for booking_scheduled status) */}
-      {activeModal === 'cancel' && status === 'booking_scheduled' && (
-        <RescheduleModal
-          clientId={clientId}
-          bookingId={currentBooking?.id || 0}
-          clientName={clientName}
-          therapistId={therapistId || 0}
-          therapistName={therapistName || undefined}
-          currentSessionDate={currentBooking?.session_date || ''}
-          clinicId={clinicId || 0}
-          onSuccess={handleModalSuccess}
-          onClose={handleModalClose}
-        />
-      )}
+      {activeModal === 'cancel' && status === 'booking_scheduled' && currentBooking ? (
+        // Check if booking is in the past
+        (() => {
+          const sessionDate = new Date(currentBooking.session_date);
+          const now = new Date();
+          const isPast = sessionDate < now;
+
+          if (isPast) {
+            // Show error modal for past bookings
+            return (
+              <div className="modal-overlay" onClick={handleModalClose}>
+                <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                  <div className="modal-header">
+                    <h2 className="modal-title">Cannot Reschedule Past Session</h2>
+                    <button
+                      className="modal-close-btn"
+                      onClick={handleModalClose}
+                      type="button"
+                      aria-label="Close modal"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  <div className="modal-error" style={{ margin: '2rem' }}>
+                    This session was scheduled for {new Date(currentBooking.session_date).toLocaleDateString('en-US', {
+                      weekday: 'long',
+                      month: 'short',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })} and cannot be rescheduled or cancelled anymore.
+                    <br />
+                    <br />
+                    Please book a new session or contact support if you need to modify this booking.
+                  </div>
+                  <div style={{ padding: '1rem', display: 'flex', justifyContent: 'flex-end' }}>
+                    <button type="button" className="modal-btn modal-btn--secondary" onClick={handleModalClose}>
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          }
+
+          // Booking is in the future, show reschedule modal
+          return (
+            <RescheduleModal
+              clientId={clientId}
+              bookingId={currentBooking?.id || 0}
+              clientName={clientName}
+              therapistId={therapistId || 0}
+              therapistName={therapistName || undefined}
+              currentSessionDate={currentBooking?.session_date || ''}
+              clinicId={clinicId || 0}
+              onSuccess={handleModalSuccess}
+              onClose={handleModalClose}
+            />
+          );
+        })()
+      ) : null}
 
       {/* Payment Deadline Modal (for recurring clients within 24 hours of unpaid session) */}
       {showPaymentDeadline && currentBooking && (
