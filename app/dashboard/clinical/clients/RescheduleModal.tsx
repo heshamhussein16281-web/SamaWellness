@@ -392,7 +392,7 @@ export default function RescheduleModal({
     );
   }
 
-  // Show error if no booking found
+  // Show error if no booking found or booking is cancelled
   if (!bookingId || !currentSessionDate) {
     return (
       <div className="modal-overlay" onClick={onClose}>
@@ -410,6 +410,35 @@ export default function RescheduleModal({
           </div>
           <div className="modal-error" style={{ margin: '2rem' }}>
             No scheduled booking found for {clientName}. This client may need to book a session first before you can reschedule or cancel.
+          </div>
+          <div style={{ padding: '1rem', display: 'flex', justifyContent: 'flex-end' }}>
+            <button type="button" className="modal-btn modal-btn--secondary" onClick={onClose}>
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Check if booking is already cancelled (shouldn't happen, but protect against it)
+  if (bookingId && !currentSessionDate) {
+    return (
+      <div className="modal-overlay" onClick={onClose}>
+        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-header">
+            <h2 className="modal-title">Booking Already Cancelled</h2>
+            <button
+              className="modal-close-btn"
+              onClick={onClose}
+              type="button"
+              aria-label="Close modal"
+            >
+              ✕
+            </button>
+          </div>
+          <div className="modal-error" style={{ margin: '2rem' }}>
+            This booking has already been cancelled. Please refresh the page to see the latest client status, or book a new session for {clientName}.
           </div>
           <div style={{ padding: '1rem', display: 'flex', justifyContent: 'flex-end' }}>
             <button type="button" className="modal-btn modal-btn--secondary" onClick={onClose}>

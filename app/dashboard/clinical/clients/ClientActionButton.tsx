@@ -165,9 +165,26 @@ export default function ClientActionButton({
       console.log('[ClientActionButton] Booking fetch response:', data);
 
       if (data.data && data.data.length > 0) {
-        // Get the first (soonest) booking
-        console.log('[ClientActionButton] Setting current booking:', data.data[0]);
-        setCurrentBooking(data.data[0]);
+        // Filter out cancelled bookings and get the first (soonest) non-cancelled booking
+        const nonCancelledBooking = data.data.find((b: any) => b.booking_status !== 'cancelled');
+        if (nonCancelledBooking) {
+          console.log('[ClientActionButton] Setting current booking:', nonCancelledBooking);
+          setCurrentBooking(nonCancelledBooking);
+        } else {
+          console.warn('[ClientActionButton] All bookings are cancelled for client:', clientId);
+          // Fallback to fetch all bookings
+          const fallbackRes = await fetch(`/api/admin/clients/${clientId}/bookings`, { credentials: 'include' });
+          if (fallbackRes.ok) {
+            const fallbackData = await fallbackRes.json();
+            if (fallbackData.data && fallbackData.data.length > 0) {
+              const relevantBooking = fallbackData.data.find((b: any) => b.booking_status !== 'cancelled');
+              if (relevantBooking) {
+                console.log('[ClientActionButton] Setting current booking from fallback:', relevantBooking);
+                setCurrentBooking(relevantBooking);
+              }
+            }
+          }
+        }
       } else {
         console.warn('[ClientActionButton] No bookings found for client:', clientId, 'with status filter:', statusFilter);
 
@@ -181,9 +198,11 @@ export default function ClientActionButton({
 
           if (fallbackData.data && fallbackData.data.length > 0) {
             // Find the most relevant booking (prefer non-cancelled ones)
-            const relevantBooking = fallbackData.data.find((b: any) => b.booking_status !== 'cancelled') || fallbackData.data[0];
-            console.log('[ClientActionButton] Setting current booking from fallback:', relevantBooking);
-            setCurrentBooking(relevantBooking);
+            const relevantBooking = fallbackData.data.find((b: any) => b.booking_status !== 'cancelled');
+            if (relevantBooking) {
+              console.log('[ClientActionButton] Setting current booking from fallback:', relevantBooking);
+              setCurrentBooking(relevantBooking);
+            }
           }
         }
       }
