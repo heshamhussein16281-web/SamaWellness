@@ -549,6 +549,7 @@ export default function ClientActionButton({
               therapistName={therapistName || undefined}
               currentSessionDate={currentBooking?.session_date || ''}
               clinicId={clinicId || 0}
+              paymentAmount={paymentAmount1}
               onSuccess={handleModalSuccess}
               onClose={handleModalClose}
             />

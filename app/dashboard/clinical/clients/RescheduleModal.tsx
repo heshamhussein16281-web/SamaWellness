@@ -11,6 +11,7 @@ interface RescheduleModalProps {
   therapistName?: string;
   currentSessionDate?: string;
   clinicId?: number;
+  paymentAmount?: number | null;
   onSuccess: () => void;
   onClose: () => void;
 }
@@ -28,6 +29,7 @@ export default function RescheduleModal({
   therapistName,
   currentSessionDate,
   clinicId,
+  paymentAmount = 2000,
   onSuccess,
   onClose,
 }: RescheduleModalProps) {
@@ -277,8 +279,8 @@ export default function RescheduleModal({
       }
 
       // Refund amount should be based on therapist's rate, not hardcoded
-      // Default to payment_amount_1 or 2000 if not available
-      const refundAmount = 2000; // This comes from the session cost
+      // Use the actual payment amount from client record
+      const refundAmount = paymentAmount || 2000;
       setSuccessMessage(
         refundSelection === 'refund'
           ? `Session cancelled. Refund of ${refundAmount} EGP will be processed to client.`
@@ -850,7 +852,7 @@ export default function RescheduleModal({
                   Keep Payment
                 </div>
                 <div style={{ fontSize: '0.875rem', color: '#666' }}>
-                  3000 EGP retained
+                  {paymentAmount || 2000} EGP retained
                 </div>
                 <div style={{ fontSize: '0.75rem', color: '#999', marginTop: '0.5rem' }}>
                   Client can rebook anytime
