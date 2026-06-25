@@ -392,25 +392,31 @@ export async function DELETE(
     // For recurring clients, reset status to recurring_client so they can book a new session
     const { data: client, error: clientFetchError } = await supabase
       .from('clients')
-      .select('id, is_recurring')
+      .select('id, is_recurring, status')
       .eq('id', booking.client_id)
       .single();
 
+    console.log('[bookings DELETE] Client fetch for status reset:', { clientId: booking.client_id, client, clientFetchError });
+
     if (client && client.is_recurring) {
-      const { error: statusUpdateError } = await supabase
+      console.log('[bookings DELETE] Resetting recurring client status from', client.status, 'to recurring_client');
+      const { data: updatedClient, error: statusUpdateError } = await supabase
         .from('clients')
         .update({
           status: 'recurring_client',
           updated_at: new Date().toISOString(),
         })
-        .eq('id', booking.client_id);
+        .eq('id', booking.client_id)
+        .select();
 
       if (statusUpdateError) {
-        console.error('Error updating recurring client status:', statusUpdateError);
+        console.error('[bookings DELETE] Error updating recurring client status:', statusUpdateError);
         // Continue anyway - booking was cancelled successfully
       } else {
-        console.log('[bookings DELETE] Updated recurring client status to recurring_client:', booking.client_id);
+        console.log('[bookings DELETE] Successfully updated recurring client status:', { clientId: booking.client_id, updatedClient });
       }
+    } else {
+      console.log('[bookings DELETE] Client is not recurring or fetch failed:', { client, clientFetchError });
     }
 
     // Create audit entry in client_status_history
