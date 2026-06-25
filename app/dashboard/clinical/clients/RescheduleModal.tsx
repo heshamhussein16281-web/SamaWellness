@@ -52,12 +52,22 @@ export default function RescheduleModal({
   const [cancelReason, setCancelReason] = useState('');
   const [refundSelection, setRefundSelection] = useState<'keep' | 'refund'>('keep');
 
-  // Calendar state
+  // Calendar state - start from Monday of next week (or this week if it's early in the week)
   const [weekStart, setWeekStart] = useState<Date>(() => {
     const todayDate = new Date();
     const day = todayDate.getDay();
+
+    // Calculate Monday of current week
     const diff = todayDate.getDate() - day + (day === 0 ? -6 : 1);
-    return new Date(todayDate.setDate(diff));
+    const monday = new Date(todayDate.setDate(diff));
+
+    // If Monday is today or in the past, move to next week's Monday
+    if (monday <= today) {
+      monday.setDate(monday.getDate() + 7);
+    }
+
+    console.log('[RescheduleModal] Initialized calendar weekStart:', monday.toISOString().split('T')[0]);
+    return monday;
   });
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<number | null>(null);
