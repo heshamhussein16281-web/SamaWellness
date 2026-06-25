@@ -181,8 +181,17 @@ export default function ClientActionButton({
               if (relevantBooking) {
                 console.log('[ClientActionButton] Setting current booking from fallback:', relevantBooking);
                 setCurrentBooking(relevantBooking);
+              } else {
+                console.warn('[ClientActionButton] All fallback bookings are also cancelled');
+                setCurrentBooking(null);
               }
+            } else {
+              console.warn('[ClientActionButton] No fallback bookings found');
+              setCurrentBooking(null);
             }
+          } else {
+            console.error('[ClientActionButton] Fallback fetch failed');
+            setCurrentBooking(null);
           }
         }
       } else {
@@ -202,8 +211,17 @@ export default function ClientActionButton({
             if (relevantBooking) {
               console.log('[ClientActionButton] Setting current booking from fallback:', relevantBooking);
               setCurrentBooking(relevantBooking);
+            } else {
+              console.warn('[ClientActionButton] All fallback bookings are cancelled, clearing booking');
+              setCurrentBooking(null);
             }
+          } else {
+            console.warn('[ClientActionButton] No fallback bookings found, clearing booking');
+            setCurrentBooking(null);
           }
+        } else {
+          console.error('[ClientActionButton] Fallback fetch failed, clearing booking');
+          setCurrentBooking(null);
         }
       }
     } catch (err) {
