@@ -35,6 +35,13 @@ export default function RescheduleModal({
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
+  // Log the booking being opened
+  console.log('[RescheduleModal] Opened with:', {
+    bookingId,
+    currentSessionDate,
+    clientName,
+  });
+
   const [action, setAction] = useState<'reschedule' | 'cancel' | null>(null);
   const [cancelReason, setCancelReason] = useState('');
   const [refundSelection, setRefundSelection] = useState<'keep' | 'refund'>('keep');

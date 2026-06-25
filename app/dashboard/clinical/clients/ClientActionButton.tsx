@@ -163,10 +163,12 @@ export default function ClientActionButton({
 
       const data = await res.json();
       console.log('[ClientActionButton] Booking fetch response:', data);
+      console.log('[ClientActionButton] All bookings:', data.data?.map((b: any) => ({ id: b.id, status: b.booking_status })));
 
       if (data.data && data.data.length > 0) {
         // Filter out cancelled bookings and get the first (soonest) non-cancelled booking
         const nonCancelledBooking = data.data.find((b: any) => b.booking_status !== 'cancelled');
+        console.log('[ClientActionButton] Non-cancelled booking found:', nonCancelledBooking ? { id: nonCancelledBooking.id, status: nonCancelledBooking.booking_status } : 'NONE');
         if (nonCancelledBooking) {
           console.log('[ClientActionButton] Setting current booking:', nonCancelledBooking);
           setCurrentBooking(nonCancelledBooking);
