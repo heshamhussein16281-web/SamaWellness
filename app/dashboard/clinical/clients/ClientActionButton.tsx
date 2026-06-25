@@ -20,10 +20,10 @@ interface ClientActionButtonProps {
   clinicId?: number | null;
   clinicLoading?: boolean;
   paymentVerified1?: boolean;
-  paymentAmount1?: number;
+  paymentAmount1?: number | null;
   paymentVerified2?: boolean;
-  paymentAmount2?: number;
-  totalPaymentDue?: number;
+  paymentAmount2?: number | null;
+  totalPaymentDue?: number | null;
   onActionComplete: () => Promise<void> | void;
 }
 
@@ -354,9 +354,8 @@ export default function ClientActionButton({
     setActiveModal(null);
   };
 
-  // Disable button only if no valid next action exists
-  // Clinic loading is handled by button state; clinicId is optional for most actions
-  const isDisabled = nextAction.type === 'none';
+  // Disable button if no valid next action, or if we're trying to book but clinic/therapist data isn't ready
+  const isDisabled = nextAction.type === 'none' || (nextAction.type === 'booking' && (clinicLoading || typeof clinicId !== 'number' || typeof therapistId !== 'number'));
 
   return (
     <>
@@ -395,6 +394,7 @@ export default function ClientActionButton({
             paymentType={paymentType}
             amount={amount > 0 ? amount : minimumFee}
             hasTherapist={therapistId ? true : false}
+            isRecurring={isRecurring}
             onSuccess={handleModalSuccess}
             onClose={handleModalClose}
           />
@@ -412,7 +412,7 @@ export default function ClientActionButton({
       )}
 
       {/* Booking Calendar Modal */}
-      {activeModal === 'booking' && clinicId != null && therapistId != null && (
+      {activeModal === 'booking' && typeof clinicId === 'number' && typeof therapistId === 'number' && (
         <BookingCalendarModal
           clientId={clientId}
           clientName={clientName}

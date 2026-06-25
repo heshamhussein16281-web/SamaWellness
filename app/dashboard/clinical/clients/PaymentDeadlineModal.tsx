@@ -10,7 +10,7 @@ interface PaymentDeadlineModalProps {
   sessionDate: string;
   therapistName?: string;
   hoursRemaining: number;
-  paymentAmount?: number;
+  paymentAmount?: number | null;
   onSuccess: () => void;
   onClose: () => void;
 }

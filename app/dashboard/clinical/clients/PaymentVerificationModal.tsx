@@ -10,6 +10,7 @@ interface PaymentVerificationModalProps {
   therapistName?: string; // name of assigned therapist
   paymentType?: 'assessment' | 'remaining'; // 'assessment' for initial, 'remaining' for therapist fee difference
   amount?: number;
+  isRecurring?: boolean; // true if client is recurring (affects status transitions)
   onSuccess: () => Promise<void> | void;
   onClose: () => void;
 }
@@ -21,6 +22,7 @@ export default function PaymentVerificationModal({
   therapistName,
   paymentType = 'assessment',
   amount,
+  isRecurring = false,
   onSuccess,
   onClose,
 }: PaymentVerificationModalProps) {
@@ -49,8 +51,11 @@ export default function PaymentVerificationModal({
         updateData.payment_verified_1 = true;
         updateData.payment_date_1 = paymentDate;
         updateData.payment_amount_1 = amount || 2000; // Default to minimum (2000 EGP)
-        // After payment, move to assessment pending (Sama will assess and assign therapist)
-        updateData.status = 'assessment_pending';
+        // Status transition only for non-recurring clients
+        // Recurring clients stay in booking_scheduled until session starts (auto-transition at 24hr mark)
+        if (!isRecurring) {
+          updateData.status = 'assessment_pending';
+        }
       } else {
         // Remaining payment after therapist assigned (if therapist rate > initial payment)
         updateData.payment_verified_2 = true;
@@ -61,7 +66,9 @@ export default function PaymentVerificationModal({
       }
 
       console.log('[PaymentVerificationModal] Sending payment verification for client:', clientId);
+      console.log('[PaymentVerificationModal] Recurring client:', isRecurring);
       console.log('[PaymentVerificationModal] Update data:', updateData);
+      console.log('[PaymentVerificationModal] Status will change:', 'status' in updateData ? updateData.status : 'NO (not included in update)');
 
       const res = await fetch(`/api/admin/clients/${clientId}`, {
         method: 'PUT',

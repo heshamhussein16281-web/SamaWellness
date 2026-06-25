@@ -202,7 +202,12 @@ export async function POST(request: NextRequest) {
         client_id,
         update_data: clientUpdate
       });
-      // Don't fail the request if client update fails, just log it
+      // Fail the request if critical client update fails
+      return NextResponse.json({
+        error: 'Failed to update client status after booking',
+        details: clientUpdateError.message,
+        code: clientUpdateError.code
+      }, { status: 500 });
     } else {
       console.log('[bookings] Client status updated successfully:', {
         client_id,

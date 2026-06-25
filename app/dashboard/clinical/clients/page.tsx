@@ -18,10 +18,10 @@ interface Client {
   is_recurring?: boolean;
   total_sessions_completed?: number;
   payment_verified_1?: boolean;
-  payment_amount_1?: number | null;
+  payment_amount_1?: number | null | undefined;
   payment_verified_2?: boolean;
-  payment_amount_2?: number | null;
-  total_payment_due?: number | null;
+  payment_amount_2?: number | null | undefined;
+  total_payment_due?: number | null | undefined;
 }
 
 type ViewMode = 'list' | 'intake';
@@ -85,7 +85,16 @@ export default function ClientsPage() {
       const data = await res.json();
       console.log('[ClientsPage] fetchClients completed - got', data.data?.length, 'clients');
       console.log('[ClientsPage] Pagination from API:', data.pagination);
-      console.log('[ClientsPage] First client status:', data.data?.[0]?.status);
+      if (data.data && data.data.length > 0) {
+        console.log('[ClientsPage] First client status:', data.data[0].status);
+        console.log('[ClientsPage] Payment fields for first client:', {
+          payment_verified_1: data.data[0].payment_verified_1,
+          payment_amount_1: data.data[0].payment_amount_1,
+          payment_verified_2: data.data[0].payment_verified_2,
+          payment_amount_2: data.data[0].payment_amount_2,
+          is_recurring: data.data[0].is_recurring,
+        });
+      }
       setClients(data.data || []);
 
       // Ensure pagination is set correctly
@@ -315,16 +324,16 @@ export default function ClientsPage() {
                       clientId={client.id}
                       clientName={client.name}
                       status={client.status}
-                      therapistId={client.therapist_id || undefined}
-                      therapistName={client.therapist_name || undefined}
+                      therapistId={client.therapist_id}
+                      therapistName={client.therapist_name}
                       isRecurring={client.is_recurring || false}
-                      clinicId={clinicId || undefined}
+                      clinicId={clinicId ?? undefined}
                       clinicLoading={clinicLoading}
                       paymentVerified1={client.payment_verified_1 || false}
-                      paymentAmount1={client.payment_amount_1 || undefined}
+                      paymentAmount1={client.payment_amount_1}
                       paymentVerified2={client.payment_verified_2 || false}
-                      paymentAmount2={client.payment_amount_2 || undefined}
-                      totalPaymentDue={client.total_payment_due || undefined}
+                      paymentAmount2={client.payment_amount_2}
+                      totalPaymentDue={client.total_payment_due}
                       onActionComplete={() => fetchClients(currentPage, searchPhone)}
                     />
                   </td>
