@@ -389,6 +389,30 @@ export async function DELETE(
       return NextResponse.json({ error: 'Failed to cancel booking' }, { status: 500 });
     }
 
+    // For recurring clients, reset status to recurring_client so they can book a new session
+    const { data: client, error: clientFetchError } = await supabase
+      .from('clients')
+      .select('id, is_recurring')
+      .eq('id', booking.client_id)
+      .single();
+
+    if (client && client.is_recurring) {
+      const { error: statusUpdateError } = await supabase
+        .from('clients')
+        .update({
+          status: 'recurring_client',
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', booking.client_id);
+
+      if (statusUpdateError) {
+        console.error('Error updating recurring client status:', statusUpdateError);
+        // Continue anyway - booking was cancelled successfully
+      } else {
+        console.log('[bookings DELETE] Updated recurring client status to recurring_client:', booking.client_id);
+      }
+    }
+
     // Create audit entry in client_status_history
     try {
       await supabase
