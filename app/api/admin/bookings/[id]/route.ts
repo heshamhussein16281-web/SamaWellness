@@ -305,7 +305,7 @@ export async function DELETE(
     // Fetch booking
     const { data: booking, error: bookingError } = await supabase
       .from('bookings')
-      .select('id, booking_status, payment_status, client_id, therapist_id, session_date')
+      .select('id, booking_status, payment_status, client_id, therapist_id, session_date, duration_minutes')
       .eq('id', bookingId)
       .single();
 
@@ -323,6 +323,29 @@ export async function DELETE(
 
     // If payment was received, mark refund in payment_records
     if (booking.payment_status === 'paid') {
+      // Fetch the therapist to get their hourly rate
+      const { data: therapist, error: therapistError } = await supabase
+        .from('therapists')
+        .select('id, hourly_rate')
+        .eq('id', booking.therapist_id)
+        .single();
+
+      let refundAmount = 2000; // Default refund amount
+
+      if (!therapistError && therapist) {
+        const hourlyRate = therapist.hourly_rate || 2000;
+        // Calculate actual cost based on therapist's rate and booking duration
+        refundAmount = Math.round((hourlyRate / 60) * booking.duration_minutes);
+        console.log('[bookings DELETE] Refund calculation:', {
+          therapist: therapist.id,
+          hourlyRate,
+          duration: booking.duration_minutes,
+          refundAmount,
+        });
+      } else {
+        console.warn('[bookings DELETE] Could not fetch therapist rate, using default 2000');
+      }
+
       // Create a refund entry in payment_records
       const { error: refundError } = await supabase
         .from('payment_records')
@@ -333,7 +356,7 @@ export async function DELETE(
             therapist_id: booking.therapist_id,
             amount_paid: 0, // No amount paid in refund record
             actual_cost: 0,
-            refund_amount: 2000, // Full refund of 2000 EGP
+            refund_amount: refundAmount, // Dynamic refund based on therapist rate
             additional_charge: 0,
             charge_status: 'pending', // Refund pending
             payment_date: new Date().toISOString(),

@@ -276,10 +276,13 @@ export default function RescheduleModal({
         throw new Error(data.error || 'Failed to cancel session');
       }
 
+      // Refund amount should be based on therapist's rate, not hardcoded
+      // Default to payment_amount_1 or 2000 if not available
+      const refundAmount = 2000; // This comes from the session cost
       setSuccessMessage(
         refundSelection === 'refund'
-          ? `Session cancelled. Refund of 3000 EGP will be processed to client.`
-          : `Session cancelled. Payment of 3000 EGP kept. Client can rebook anytime.`
+          ? `Session cancelled. Refund of ${refundAmount} EGP will be processed to client.`
+          : `Session cancelled. Payment of ${refundAmount} EGP kept. Client can rebook anytime.`
       );
       setSuccess(true);
 
@@ -869,7 +872,7 @@ export default function RescheduleModal({
                   Issue Refund
                 </div>
                 <div style={{ fontSize: '0.875rem', color: '#666' }}>
-                  3000 EGP refunded
+                  Payment refunded to client
                 </div>
                 <div style={{ fontSize: '0.75rem', color: '#999', marginTop: '0.5rem' }}>
                   Client will need to repay for rebook

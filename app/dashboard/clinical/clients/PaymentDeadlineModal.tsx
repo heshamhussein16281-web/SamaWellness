@@ -54,7 +54,7 @@ export default function PaymentDeadlineModal({
         body: JSON.stringify({
           payment_verified_1: true,
           payment_date_1: new Date().toISOString().split('T')[0],
-          payment_amount_1: paymentAmount || 3000,
+          payment_amount_1: paymentAmount || 2000,
         }),
       });
 
@@ -175,7 +175,7 @@ export default function PaymentDeadlineModal({
             {formatDate(sessionDate)}
           </p>
           <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.85rem', color: '#666' }}>
-            Payment Amount: <strong>{paymentAmount || 3000} EGP</strong>
+            Payment Amount: <strong>{paymentAmount || 2000} EGP</strong>
           </p>
         </div>
 
@@ -253,7 +253,7 @@ export default function PaymentDeadlineModal({
                 ✓ Confirm Payment
               </p>
               <p style={{ margin: 0, fontSize: '0.875rem', color: '#333' }}>
-                Payment of <strong>{paymentAmount || 3000} EGP</strong> has been received. Click below to
+                Payment of <strong>{paymentAmount || 2000} EGP</strong> has been received. Click below to
                 confirm and keep your booking active.
               </p>
             </div>
@@ -295,7 +295,7 @@ export default function PaymentDeadlineModal({
                 ⚠️ Cancel Booking
               </p>
               <p style={{ margin: 0, fontSize: '0.875rem', color: '#333' }}>
-                This will release the slot for other clients. A refund of <strong>{paymentAmount || 3000} EGP</strong> will
+                This will release the slot for other clients. A refund of <strong>{paymentAmount || 2000} EGP</strong> will
                 be processed.
               </p>
             </div>
