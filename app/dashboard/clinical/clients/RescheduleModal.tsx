@@ -341,6 +341,22 @@ export default function RescheduleModal({
         throw new Error(data.error || 'Failed to create new session');
       }
 
+      // Restore payment_verified_1 after rescheduling
+      // The booking API resets it to false, but for rescheduling we want to preserve payment state
+      const updateRes = await fetch(`/api/admin/clients/${clientId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          payment_verified_1: true,
+        }),
+      });
+
+      if (!updateRes.ok) {
+        console.error('[RescheduleModal] Warning: Could not restore payment state after rescheduling');
+        // Don't throw - the reschedule succeeded, just log a warning
+      }
+
       setSuccessMessage(
         `Session rescheduled to ${new Date(selectedDate).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })} at ${HOUR_LABELS[HOURS.indexOf(selectedTime)]} in ${selectedRoom?.room_name}. Original payment applies.`
       );
