@@ -36,8 +36,20 @@ export default function BookingCalendarModal({
   const [weekStart, setWeekStart] = useState<Date>(() => {
     const todayDate = new Date();
     const day = todayDate.getDay();
+
+    // Calculate Monday of current week
     const diff = todayDate.getDate() - day + (day === 0 ? -6 : 1);
-    return new Date(todayDate.setDate(diff));
+    const monday = new Date(todayDate);
+    monday.setDate(diff);
+    monday.setHours(0, 0, 0, 0);
+
+    // If Monday is today or in the past, move to next week's Monday
+    if (monday <= today) {
+      monday.setDate(monday.getDate() + 7);
+    }
+
+    console.log('[BookingCalendarModal] Initialized weekStart to:', monday.toISOString().split('T')[0]);
+    return monday;
   });
 
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
@@ -196,6 +208,18 @@ export default function BookingCalendarModal({
     const dateNormalized = new Date(date);
     dateNormalized.setHours(0, 0, 0, 0);
     return dateNormalized.getTime() === today.getTime();
+  };
+
+  const isPastOrToday = (date: Date): boolean => {
+    const dateNormalized = new Date(date);
+    dateNormalized.setHours(0, 0, 0, 0);
+    return dateNormalized.getTime() <= today.getTime();
+  };
+
+  const isFutureDate = (date: Date): boolean => {
+    const dateNormalized = new Date(date);
+    dateNormalized.setHours(0, 0, 0, 0);
+    return dateNormalized.getTime() > today.getTime();
   };
 
   const getDayName = (date: Date) => {
@@ -424,6 +448,7 @@ export default function BookingCalendarModal({
               const isWorking = isTherapistWorking(dayName);
               const dayStart = getDayStart(dayName);
               const dayEnd = getDayEnd(dayName);
+              const isPastOrTodayDate = isPastOrToday(date);
               const isTodayDate = isToday(date);
               const formatHour = (h: number) => {
                 const period = h >= 12 ? 'PM' : 'AM';
@@ -432,11 +457,11 @@ export default function BookingCalendarModal({
               };
 
               return (
-                <div key={formatDate(date)} className={`legacy-header-cell ${isTodayDate ? 'unavailable' : isWorking ? 'working' : 'off'}`}>
+                <div key={formatDate(date)} className={`legacy-header-cell ${isPastOrTodayDate ? 'unavailable' : isWorking ? 'working' : 'off'}`}>
                   <div className="legacy-day-abbr">{isTodayDate ? 'Today' : dayName}</div>
                   <div className="legacy-day-num">{date.getDate()}</div>
                   <div className="legacy-day-hours">
-                    {isTodayDate ? 'Not Available' : isWorking ? `${formatHour(dayStart)}–${formatHour(dayEnd)}` : 'Off'}
+                    {isPastOrTodayDate ? 'Not Available' : isWorking ? `${formatHour(dayStart)}–${formatHour(dayEnd)}` : 'Off'}
                   </div>
                 </div>
               );
@@ -467,10 +492,10 @@ export default function BookingCalendarModal({
                     const isInWorkingHours =
                       isWorking && hour >= getDayStart(dayName) && hour < getDayEnd(dayName);
                     const isSelected = selectedDate === dateStr && selectedTime === hour;
-                    const isTodayDate = isToday(date);
+                    const isPastOrTodayDate = isPastOrToday(date);
 
-                    // Show as unavailable if not in working hours OR if it's today
-                    if (!isInWorkingHours || isTodayDate) {
+                    // Show as unavailable if not in working hours OR if it's today or in the past
+                    if (!isInWorkingHours || isPastOrTodayDate) {
                       return (
                         <div key={`${dateStr}-${hour}`} className="legacy-slot-cell unavailable">
                           {clinicRooms.map((room) => (

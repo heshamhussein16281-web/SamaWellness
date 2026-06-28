@@ -61,7 +61,9 @@ export default function RescheduleModal({
 
     // Calculate Monday of current week
     const diff = todayDate.getDate() - day + (day === 0 ? -6 : 1);
-    const monday = new Date(todayDate.setDate(diff));
+    const monday = new Date(todayDate);
+    monday.setDate(diff);
+    monday.setHours(0, 0, 0, 0);
 
     // If Monday is today or in the past, move to next week's Monday
     if (monday <= today) {
