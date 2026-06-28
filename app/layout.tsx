@@ -26,7 +26,10 @@ const josefinSans = Josefin_Sans({
 
 export const metadata: Metadata = {
   title: "Sama Wellness Therapy",
-  description: "Professional Care Tailored to Your Journey",
+  description: "Professional psychological support services",
+  other: {
+    'facebook-domain-verification': 'bq5lk7pmejyijqs9tvokifgdhf9u2c',
+  },
 };
 
 export const viewport: Viewport = {
