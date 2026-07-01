@@ -79,7 +79,9 @@ export async function GET(
         duration_minutes,
         booking_status,
         payment_status,
-        therapists:therapist_id (id, name),
+        notes,
+        created_at,
+        therapists:therapist_id (id, name, hourly_rate),
         clinic_rooms:room_id (id, room_name)
       `)
       .eq('client_id', clientId);
@@ -93,18 +95,31 @@ export async function GET(
     const { data: bookings, error } = await query
       .order('session_date', { ascending: false });
 
+    console.log(`[Bookings API] Query for client ${clientId} with status filter: ${statusFilter}`);
+    console.log(`[Bookings API] Raw bookings returned:`, bookings ? bookings.map((b: any) => ({ id: b.id, status: b.booking_status, date: b.session_date })) : 'null');
+
     if (error) {
       console.error('Error fetching bookings:', error);
       return NextResponse.json({ error: 'Failed to fetch bookings' }, { status: 500 });
     }
 
-    // For each booking, get the amount from the first payment record
+    // For each booking, calculate expected amount from therapist rate, or get actual paid amount if exists
     const bookingsWithAmount = await Promise.all(
       (bookings || []).map(async (booking: any) => {
         const therapist = Array.isArray(booking.therapists) ? booking.therapists[0] : booking.therapists;
         const room = Array.isArray(booking.clinic_rooms) ? booking.clinic_rooms[0] : booking.clinic_rooms;
 
-        // Get payment amount if exists
+        // Calculate expected amount from therapist hourly_rate
+        let amount = 0;
+        if (therapist) {
+          const hourlyRate = therapist.hourly_rate || 2000; // Default to 2000 if not set
+          if (booking.duration_minutes) {
+            amount = (hourlyRate / 60) * booking.duration_minutes;
+          }
+          console.log(`[Bookings] Therapist: ${therapist.name}, Rate: ${hourlyRate}, Duration: ${booking.duration_minutes}, Calculated Amount: ${amount}`);
+        }
+
+        // Override with actual payment amount if a payment record exists
         const { data: paymentData, error: paymentError } = await supabase
           .from('payment_records')
           .select('amount_paid')
@@ -113,7 +128,9 @@ export async function GET(
           .limit(1)
           .single();
 
-        const amount = !paymentError && paymentData ? paymentData.amount_paid : 0;
+        if (!paymentError && paymentData) {
+          amount = paymentData.amount_paid;
+        }
 
         return {
           id: booking.id,
@@ -124,6 +141,8 @@ export async function GET(
           booking_status: booking.booking_status,
           payment_status: booking.payment_status,
           amount: amount,
+          notes: booking.notes || null,
+          created_at: booking.created_at,
         };
       })
     );

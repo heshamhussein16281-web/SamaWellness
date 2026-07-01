@@ -28,7 +28,7 @@ export default function ClientProfilePage() {
         }
 
         const data = await res.json();
-        const primaryClinic = data[0];
+        const primaryClinic = data.clinics?.[0];
         if (primaryClinic) {
           setClinicId(primaryClinic.id);
         }

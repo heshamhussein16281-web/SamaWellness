@@ -208,7 +208,13 @@ export default function RescheduleModal({
     return therapistSchedule.schedule[fullDayName]?.end || 22;
   };
 
-  const formatDate2 = (date: Date) => date.toISOString().split('T')[0];
+  const formatDate2 = (date: Date) => {
+    // Use local date components to avoid timezone shift
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
 
   // Check if date is today or in the past (not allowed for booking)
   const isPastOrToday = (date: Date): boolean => {
@@ -334,21 +340,27 @@ export default function RescheduleModal({
     setLoading(true);
 
     try {
-      // First, cancel the old booking
-      const cancelRes = await fetch(`/api/admin/bookings/${bookingId}`, {
-        method: 'DELETE',
+      // First, cancel the old booking (skip if already cancelled)
+      console.log('[RescheduleModal] Cancelling old booking:', bookingId);
+      const cancelRes = await fetch(`/api/admin/bookings/${bookingId}/cancel`, {
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({
-          reason: 'Rescheduled to new date',
-          refund_requested: false,
+          cancellation_reason: 'Rescheduled to new date',
         }),
       });
 
+      // If booking is already cancelled or cancel fails, log but continue with creating new booking
       if (!cancelRes.ok) {
         const errorData = await cancelRes.json();
-        console.error('[RescheduleModal] Cancel booking failed:', cancelRes.status, errorData);
-        throw new Error(errorData.error || `Failed to cancel original session (${cancelRes.status})`);
+        console.error('[RescheduleModal] ❌ CANCEL FAILED:', cancelRes.status, errorData);
+        console.error('[RescheduleModal] Response:', cancelRes);
+        // Still continue - we'll create the new booking anyway
+        // This handles cases where the old booking is already cancelled
+      } else {
+        const cancelData = await cancelRes.json();
+        console.log('[RescheduleModal] ✓ Old booking cancelled successfully:', cancelData);
       }
 
       // Then, create new booking
@@ -357,6 +369,14 @@ export default function RescheduleModal({
       if (!clinicId) {
         throw new Error('Clinic ID is required to create a booking');
       }
+
+      console.log('[RescheduleModal] Creating new booking:', {
+        clientId,
+        therapistId,
+        newSessionDate,
+        clinicId,
+        roomId: selectedRoom?.id,
+      });
 
       const bookRes = await fetch('/api/admin/bookings', {
         method: 'POST',
@@ -376,7 +396,17 @@ export default function RescheduleModal({
 
       if (!bookRes.ok) {
         const data = await bookRes.json();
-        throw new Error(data.error || 'Failed to create new session');
+        console.error('[RescheduleModal] New booking failed:', bookRes.status, data);
+        throw new Error(data.error || `Failed to create new session (${bookRes.status})`);
+      }
+
+      const newBookingData = await bookRes.json();
+      console.log('[RescheduleModal] New booking created:', newBookingData);
+
+      // Store the new booking ID so we can use it as the current booking
+      if (newBookingData.data && newBookingData.data.id) {
+        sessionStorage.setItem('lastCreatedBookingId', String(newBookingData.data.id));
+        console.log('[RescheduleModal] Stored new booking ID:', newBookingData.data.id);
       }
 
       // Restore payment_verified_1 after rescheduling

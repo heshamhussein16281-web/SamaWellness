@@ -50,6 +50,8 @@ interface Booking {
   booking_status: string;
   payment_status: string;
   amount: number;
+  notes?: string | null;
+  created_at?: string;
 }
 
 interface BookingsResponse {
@@ -116,6 +118,7 @@ export default function ClientProfile({ clientId, clinicId, clinicLoading = fals
   // Refetch profile function for action button callback
   const refetchProfile = async () => {
     try {
+      // Refetch profile
       const res = await fetch(`/api/admin/clients/${clientId}/profile`, {
         credentials: 'include',
       });
@@ -126,6 +129,16 @@ export default function ClientProfile({ clientId, clinicId, clinicLoading = fals
 
       const data = await res.json();
       setProfile(data);
+
+      // Also refetch bookings to show updated history
+      const bookingsRes = await fetch(`/api/admin/clients/${clientId}/bookings`, {
+        credentials: 'include',
+      });
+
+      if (bookingsRes.ok) {
+        const bookingsData = await bookingsRes.json();
+        setBookings(bookingsData.data || []);
+      }
     } catch (err) {
       console.error('Error refetching profile:', err);
     }
@@ -608,18 +621,32 @@ export default function ClientProfile({ clientId, clinicId, clinicLoading = fals
                 <table className="client-profile-table">
                   <thead>
                     <tr>
-                      <th>Date</th>
+                      <th>Session Date & Time</th>
                       <th>Therapist</th>
-                      <th>Status</th>
+                      <th>Room</th>
+                      <th>Booking Status</th>
                       <th>Payment Status</th>
                       <th>Amount</th>
+                      <th>Booking History / Notes</th>
                     </tr>
                   </thead>
                   <tbody>
                     {bookings.map((booking) => (
-                      <tr key={booking.id}>
-                        <td>{new Date(booking.session_date).toLocaleDateString()}</td>
+                      <tr key={booking.id} style={{ opacity: booking.booking_status === 'cancelled' ? 0.5 : 1 }}>
+                        <td style={{ fontWeight: booking.booking_status === 'cancelled' ? 'normal' : '500' }}>
+                          {new Date(booking.session_date).toLocaleDateString('en-US', {
+                            weekday: 'short',
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                          })} {new Date(booking.session_date).toLocaleTimeString('en-US', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: true
+                          })}
+                        </td>
                         <td>{booking.therapist_name || '-'}</td>
+                        <td>{booking.room_name || '-'}</td>
                         <td>
                           <span className={`client-profile-status-badge client-profile-status-badge--${booking.booking_status}`}>
                             {getBookingStatusIcon(booking.booking_status)} {booking.booking_status}
@@ -631,6 +658,15 @@ export default function ClientProfile({ clientId, clinicId, clinicLoading = fals
                           </span>
                         </td>
                         <td>${booking.amount.toFixed(2)}</td>
+                        <td style={{ fontSize: '12px', color: '#666', maxWidth: '200px', wordWrap: 'break-word' }}>
+                          {booking.notes ? (
+                            <span title={booking.notes}>{booking.notes}</span>
+                          ) : booking.booking_status === 'cancelled' ? (
+                            <span style={{ fontStyle: 'italic', color: '#999' }}>Cancelled</span>
+                          ) : (
+                            <span style={{ color: '#ccc' }}>—</span>
+                          )}
+                        </td>
                       </tr>
                     ))}
                   </tbody>

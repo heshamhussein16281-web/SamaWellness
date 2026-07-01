@@ -137,6 +137,26 @@ export default function ClientActionButton({
     try {
       console.log('[ClientActionButton] Fetching booking for client:', clientId, 'status:', status);
 
+      // Check if there's a recently created booking from a reschedule
+      const lastCreatedBookingId = sessionStorage.getItem('lastCreatedBookingId');
+      if (lastCreatedBookingId) {
+        console.log('[ClientActionButton] Found recently created booking ID:', lastCreatedBookingId);
+        // Don't clear yet - keep it for the refresh call later
+
+        // Fetch all bookings and find the one with this ID
+        const recentRes = await fetch(`/api/admin/clients/${clientId}/bookings`, { credentials: 'include' });
+        if (recentRes.ok) {
+          const recentData = await recentRes.json();
+          const recentBooking = recentData.data?.find((b: any) => b.id === parseInt(lastCreatedBookingId));
+          if (recentBooking && recentBooking.booking_status !== 'cancelled') {
+            console.log('[ClientActionButton] Setting current booking to recently created booking:', recentBooking);
+            setCurrentBooking(recentBooking);
+            setLoadingBooking(false);
+            return; // Exit early, don't do the normal fetch
+          }
+        }
+      }
+
       // First, try to fetch with status filter based on client status
       let statusFilter: string | null = null;
       if (status === 'booking_scheduled') {
@@ -166,9 +186,20 @@ export default function ClientActionButton({
       console.log('[ClientActionButton] All bookings:', data.data?.map((b: any) => ({ id: b.id, status: b.booking_status })));
 
       if (data.data && data.data.length > 0) {
-        // Filter out cancelled bookings and get the first (soonest) non-cancelled booking
-        const nonCancelledBooking = data.data.find((b: any) => b.booking_status !== 'cancelled');
-        console.log('[ClientActionButton] Non-cancelled booking found:', nonCancelledBooking ? { id: nonCancelledBooking.id, status: nonCancelledBooking.booking_status } : 'NONE');
+        // Filter out cancelled bookings and get the soonest upcoming non-cancelled booking
+        const nonCancelledBookings = data.data.filter((b: any) => b.booking_status !== 'cancelled');
+        console.log('[ClientActionButton] Non-cancelled bookings:', nonCancelledBookings.map((b: any) => ({ id: b.id, date: b.session_date, status: b.booking_status })));
+
+        // Find the earliest (soonest) session date that is not cancelled
+        const nonCancelledBooking = nonCancelledBookings.length > 0
+          ? nonCancelledBookings.reduce((earliest: any, current: any) => {
+              const earliestDate = new Date(earliest.session_date);
+              const currentDate = new Date(current.session_date);
+              return currentDate < earliestDate ? current : earliest;
+            })
+          : null;
+
+        console.log('[ClientActionButton] Non-cancelled booking found (soonest):', nonCancelledBooking ? { id: nonCancelledBooking.id, date: nonCancelledBooking.session_date, status: nonCancelledBooking.booking_status } : 'NONE');
         if (nonCancelledBooking) {
           console.log('[ClientActionButton] Setting current booking:', nonCancelledBooking);
           setCurrentBooking(nonCancelledBooking);
@@ -179,7 +210,15 @@ export default function ClientActionButton({
           if (fallbackRes.ok) {
             const fallbackData = await fallbackRes.json();
             if (fallbackData.data && fallbackData.data.length > 0) {
-              const relevantBooking = fallbackData.data.find((b: any) => b.booking_status !== 'cancelled');
+              // Find the soonest upcoming non-cancelled booking
+              const nonCancelledBookings = fallbackData.data.filter((b: any) => b.booking_status !== 'cancelled');
+              const relevantBooking = nonCancelledBookings.length > 0
+                ? nonCancelledBookings.reduce((earliest: any, current: any) => {
+                    const earliestDate = new Date(earliest.session_date);
+                    const currentDate = new Date(current.session_date);
+                    return currentDate < earliestDate ? current : earliest;
+                  })
+                : null;
               if (relevantBooking) {
                 console.log('[ClientActionButton] Setting current booking from fallback:', relevantBooking);
                 setCurrentBooking(relevantBooking);
@@ -208,8 +247,15 @@ export default function ClientActionButton({
           console.log('[ClientActionButton] Fallback booking fetch response:', fallbackData);
 
           if (fallbackData.data && fallbackData.data.length > 0) {
-            // Find the most relevant booking (prefer non-cancelled ones)
-            const relevantBooking = fallbackData.data.find((b: any) => b.booking_status !== 'cancelled');
+            // Find the soonest upcoming non-cancelled booking
+            const nonCancelledBookings = fallbackData.data.filter((b: any) => b.booking_status !== 'cancelled');
+            const relevantBooking = nonCancelledBookings.length > 0
+              ? nonCancelledBookings.reduce((earliest: any, current: any) => {
+                  const earliestDate = new Date(earliest.session_date);
+                  const currentDate = new Date(current.session_date);
+                  return currentDate < earliestDate ? current : earliest;
+                })
+              : null;
             if (relevantBooking) {
               console.log('[ClientActionButton] Setting current booking from fallback:', relevantBooking);
               setCurrentBooking(relevantBooking);
@@ -256,17 +302,9 @@ export default function ClientActionButton({
         };
       }
 
-      // Step 2: After booking, verify payment immediately
-      // 24-hour mark is cutoff to cancel if payment not verified
-      if (status === 'booking_scheduled' && !paymentVerified1) {
-        return {
-          label: 'Verify Payment',
-          type: 'payment',
-        };
-      }
-
-      // Step 2b: After payment verified, can reschedule/cancel until session starts
-      if (status === 'booking_scheduled' && paymentVerified1) {
+      // Step 2: After booking, show reschedule/cancel (payment deadline handled by modal)
+      // Recurring clients use PaymentDeadlineModal for payment, no separate verification button
+      if (status === 'booking_scheduled') {
         return {
           label: 'Reschedule or Cancel',
           type: 'cancel',
@@ -391,10 +429,22 @@ export default function ClientActionButton({
     try {
       await Promise.resolve(onActionComplete());
       console.log('[ClientActionButton] onActionComplete finished');
+
+      // Wait a moment for database to be ready with the new booking
+      console.log('[ClientActionButton] Waiting for database to commit new booking...');
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Also refresh the current booking for this component
+      console.log('[ClientActionButton] Refreshing current booking after modal success');
+      await fetchCurrentBooking();
+
       // Wait a bit for React to process the state update
       await new Promise(resolve => setTimeout(resolve, 500));
     } catch (err) {
       console.error('[ClientActionButton] Error during onActionComplete:', err);
+    } finally {
+      // Clear the sessionStorage ID after we're done with it
+      sessionStorage.removeItem('lastCreatedBookingId');
     }
     // Close modal after data refresh completes
     console.log('[ClientActionButton] Closing modal');

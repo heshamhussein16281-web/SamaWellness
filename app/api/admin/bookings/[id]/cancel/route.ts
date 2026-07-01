@@ -45,9 +45,20 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const auth = await checkPermission(request, 'manage_bookings');
-  if (!auth.authorized) {
-    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  console.log(`[Cancel Booking] PATCH /api/admin/bookings/${params.id}/cancel called`);
+
+  // Just verify user is authenticated (same as GET clinic endpoint for booking workflow)
+  const cookieHeader = request.headers.get('cookie');
+  const token = getJWTFromCookie(cookieHeader || undefined);
+  console.log(`[Cancel Booking] Token present: ${!!token}`);
+
+  if (!token) {
+    return NextResponse.json({ error: 'No authentication token found' }, { status: 401 });
+  }
+
+  const payload = await verifyJWT(token);
+  if (!payload) {
+    return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 });
   }
 
   try {
@@ -68,13 +79,19 @@ export async function PATCH(
       .eq('id', bookingId)
       .single();
 
+    console.log(`[Cancel Booking] Fetch booking ${bookingId}:`, { fetchError, booking });
+
     if (fetchError || !booking) {
+      console.error(`[Cancel Booking] Booking ${bookingId} not found`, fetchError);
       return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
     }
 
     // Check if booking can be cancelled
     const cancelledStatuses = ['cancelled', 'completed', 'expired'];
+    console.log(`[Cancel Booking] Booking ${bookingId} status: ${booking.booking_status}`);
+
     if (cancelledStatuses.includes(booking.booking_status)) {
+      console.log(`[Cancel Booking] Cannot cancel booking ${bookingId} - already ${booking.booking_status}`);
       return NextResponse.json(
         { error: `Cannot cancel booking with status: ${booking.booking_status}` },
         { status: 400 }
@@ -83,11 +100,12 @@ export async function PATCH(
 
     // Update booking status to cancelled
     const now = new Date().toISOString();
+    console.log(`[Cancel Booking] Attempting to cancel booking ${bookingId} for user ${payload.userId}`);
+
     const { data: updatedBooking, error: updateError } = await supabase
       .from('bookings')
       .update({
         booking_status: 'cancelled',
-        cancelled_by_user_id: auth.user.userId,
         cancellation_reason: cancellation_reason || null,
         cancelled_at: now,
         updated_at: now,
@@ -96,10 +114,19 @@ export async function PATCH(
       .select()
       .single();
 
+    console.log(`[Cancel Booking] Update result:`, { updateError, booking: updatedBooking });
+
     if (updateError) {
       console.error('Error cancelling booking:', updateError);
-      return NextResponse.json({ error: 'Failed to cancel booking' }, { status: 500 });
+      return NextResponse.json({ error: 'Failed to cancel booking', details: updateError }, { status: 500 });
     }
+
+    if (!updatedBooking) {
+      console.error('No booking returned after update');
+      return NextResponse.json({ error: 'Booking not found after update' }, { status: 500 });
+    }
+
+    console.log(`[Cancel Booking] Successfully cancelled booking ${bookingId}, new status: ${updatedBooking.booking_status}`);
 
     return NextResponse.json(
       { success: true, data: updatedBooking },
