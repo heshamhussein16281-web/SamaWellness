@@ -59,17 +59,29 @@ export default function RescheduleModal({
     const todayDate = new Date();
     const day = todayDate.getDay(); // 0=Sunday, 1=Monday, ..., 6=Saturday
 
+    console.log('[RescheduleModal Week Calc]:', {
+      todayDate: todayDate.toISOString().split('T')[0],
+      dayOfWeek: day,
+      dayName: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][day],
+      todayVariable: today.toISOString().split('T')[0]
+    });
+
     // Calculate days back to Monday (if today is Monday, daysBack=0)
     const daysBack = day === 0 ? 6 : day - 1;
 
     // Get Monday of current week
     const monday = new Date(todayDate);
+    const beforeSetDate = monday.getDate();
     monday.setDate(monday.getDate() - daysBack);
+    console.log('[RescheduleModal Week Calc] After subtract:', { before: beforeSetDate, after: monday.getDate(), result: monday.toISOString().split('T')[0] });
+
     monday.setHours(0, 0, 0, 0);
 
     // If Monday is today or in the past, move to next week's Monday
     if (monday <= today) {
+      const beforeAdd = monday.getDate();
       monday.setDate(monday.getDate() + 7);
+      console.log('[RescheduleModal Week Calc] After add 7:', { before: beforeAdd, after: monday.getDate(), result: monday.toISOString().split('T')[0] });
     }
 
     console.log('[RescheduleModal] Initialized calendar weekStart:', monday.toISOString().split('T')[0]);
