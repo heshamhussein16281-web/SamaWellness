@@ -371,10 +371,12 @@ export default function RescheduleModal({
         throw new Error('Clinic ID is required to create a booking');
       }
 
-      console.log('[RescheduleModal] Creating new booking:', {
+      console.log('[RescheduleModal] handleReschedule called with:', {
+        selectedDate,
+        selectedTime,
+        newSessionDate,
         clientId,
         therapistId,
-        newSessionDate,
         clinicId,
         roomId: selectedRoom?.id,
       });
