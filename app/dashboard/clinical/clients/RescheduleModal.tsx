@@ -253,6 +253,7 @@ export default function RescheduleModal({
       date.setDate(date.getDate() + i);
       days.push(date);
     }
+    console.log('[RescheduleModal] weekDays:', days.map(d => d.toISOString().split('T')[0]));
     return days;
   };
 
