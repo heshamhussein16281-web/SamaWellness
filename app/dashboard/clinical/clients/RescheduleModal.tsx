@@ -57,12 +57,14 @@ export default function RescheduleModal({
   // Calendar state - start from Monday of next week (or this week if it's early in the week)
   const [weekStart, setWeekStart] = useState<Date>(() => {
     const todayDate = new Date();
-    const day = todayDate.getDay();
+    const day = todayDate.getDay(); // 0=Sunday, 1=Monday, ..., 6=Saturday
 
-    // Calculate Monday of current week
-    const diff = todayDate.getDate() - day + (day === 0 ? -6 : 1);
+    // Calculate days back to Monday (if today is Monday, daysBack=0)
+    const daysBack = day === 0 ? 6 : day - 1;
+
+    // Get Monday of current week
     const monday = new Date(todayDate);
-    monday.setDate(diff);
+    monday.setDate(monday.getDate() - daysBack);
     monday.setHours(0, 0, 0, 0);
 
     // If Monday is today or in the past, move to next week's Monday
