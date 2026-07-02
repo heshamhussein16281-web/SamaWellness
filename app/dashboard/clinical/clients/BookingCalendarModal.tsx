@@ -37,17 +37,29 @@ export default function BookingCalendarModal({
     const todayDate = new Date();
     const day = todayDate.getDay(); // 0=Sunday, 1=Monday, ..., 6=Saturday
 
+    console.log('[Week Calc] Today:', {
+      date: todayDate.toISOString().split('T')[0],
+      dayOfWeek: day,
+      dayNames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][day]
+    });
+
     // Calculate days back to Monday (if today is Monday, daysBack=0)
     const daysBack = day === 0 ? 6 : day - 1;
+    console.log('[Week Calc] daysBack to Monday:', daysBack);
 
-    // Get Monday of current week
+    // Get Monday of current week by subtracting days
     const monday = new Date(todayDate);
+    const beforeSubtract = monday.getDate();
     monday.setDate(monday.getDate() - daysBack);
+    console.log('[Week Calc] After subtract:', { before: beforeSubtract, after: monday.getDate(), result: monday.toISOString().split('T')[0] });
+
     monday.setHours(0, 0, 0, 0);
 
     // If Monday is today or in the past, move to next week's Monday
     if (monday <= today) {
+      console.log('[Week Calc] Monday is in past, moving to next week');
       monday.setDate(monday.getDate() + 7);
+      console.log('[Week Calc] After adding 7 days:', monday.toISOString().split('T')[0]);
     }
 
     console.log('[BookingCalendarModal] Initialized weekStart to:', monday.toISOString().split('T')[0]);
