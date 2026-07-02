@@ -255,7 +255,8 @@ export default function BookingCalendarModal({
 
   const handleSlotClick = async (date: string, hour: number, roomName: string) => {
     console.log('[BookingCalendarModal] Slot clicked - date string:', date);
-    const clickedDate = new Date(date.split('-')[0], parseInt(date.split('-')[1]) - 1, parseInt(date.split('-')[2]));
+    const dateParts = date.split('-');
+    const clickedDate = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2]));
     console.log('[BookingCalendarModal] Slot clicked - parsed as:', clickedDate.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }));
 
     // Prevent same-day bookings

@@ -47,6 +47,7 @@ interface Booking {
   id: number;
   session_date: string;
   therapist_name: string;
+  room_name?: string | null;
   booking_status: string;
   payment_status: string;
   amount: number;
