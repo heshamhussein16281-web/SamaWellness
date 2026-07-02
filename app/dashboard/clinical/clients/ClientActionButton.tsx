@@ -190,12 +190,11 @@ export default function ClientActionButton({
         const nonCancelledBookings = data.data.filter((b: any) => b.booking_status !== 'cancelled');
         console.log('[ClientActionButton] Non-cancelled bookings:', nonCancelledBookings.map((b: any) => ({ id: b.id, date: b.session_date, status: b.booking_status })));
 
-        // Find the earliest (soonest) session date that is not cancelled
+        // Find the most recent (highest ID) non-cancelled booking
+        // After a reschedule, we have old + new bookings, so pick newest (highest ID) not earliest date
         const nonCancelledBooking = nonCancelledBookings.length > 0
-          ? nonCancelledBookings.reduce((earliest: any, current: any) => {
-              const earliestDate = new Date(earliest.session_date);
-              const currentDate = new Date(current.session_date);
-              return currentDate < earliestDate ? current : earliest;
+          ? nonCancelledBookings.reduce((latest: any, current: any) => {
+              return current.id > latest.id ? current : latest;
             })
           : null;
 
