@@ -403,7 +403,7 @@ export default function ClientProfile({ clientId, clinicId, clinicLoading = fals
           <div className="client-profile-stat">
             <span className="client-profile-stat-label">Total Paid</span>
             <span className="client-profile-stat-value">
-              ${profile.total_amount_paid.toFixed(2)}
+              EGP {profile.total_amount_paid.toFixed(2)}
             </span>
           </div>
           <div className="client-profile-stat">
@@ -657,7 +657,7 @@ export default function ClientProfile({ clientId, clinicId, clinicLoading = fals
                             {getPaymentStatusIcon(booking.payment_status)} {booking.payment_status}
                           </span>
                         </td>
-                        <td>${booking.amount.toFixed(2)}</td>
+                        <td>EGP {booking.amount.toFixed(2)}</td>
                         <td style={{ fontSize: '12px', color: '#666', maxWidth: '200px', wordWrap: 'break-word' }}>
                           {booking.notes ? (
                             <span title={booking.notes}>{booking.notes}</span>
@@ -706,10 +706,10 @@ export default function ClientProfile({ clientId, clinicId, clinicLoading = fals
                       {payments.map((payment, idx) => (
                         <tr key={idx}>
                           <td>{new Date(payment.payment_date).toLocaleDateString()}</td>
-                          <td>${payment.amount_paid.toFixed(2)}</td>
-                          <td>${payment.actual_cost.toFixed(2)}</td>
-                          <td>${payment.refund_amount.toFixed(2)}</td>
-                          <td>${payment.additional_charge.toFixed(2)}</td>
+                          <td>EGP {payment.amount_paid.toFixed(2)}</td>
+                          <td>EGP {payment.actual_cost.toFixed(2)}</td>
+                          <td>EGP {payment.refund_amount.toFixed(2)}</td>
+                          <td>EGP {payment.additional_charge.toFixed(2)}</td>
                           <td>
                             <span className={`client-profile-status-badge client-profile-status-badge--${payment.charge_status}`}>
                               {getPaymentStatusIcon(payment.charge_status)} {payment.charge_status}

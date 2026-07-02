@@ -35,12 +35,14 @@ export default function BookingCalendarModal({
 
   const [weekStart, setWeekStart] = useState<Date>(() => {
     const todayDate = new Date();
-    const day = todayDate.getDay();
+    const day = todayDate.getDay(); // 0=Sunday, 1=Monday, ..., 6=Saturday
 
-    // Calculate Monday of current week
-    const diff = todayDate.getDate() - day + (day === 0 ? -6 : 1);
+    // Calculate days back to Monday (if today is Monday, daysBack=0)
+    const daysBack = day === 0 ? 6 : day - 1;
+
+    // Get Monday of current week
     const monday = new Date(todayDate);
-    monday.setDate(diff);
+    monday.setDate(monday.getDate() - daysBack);
     monday.setHours(0, 0, 0, 0);
 
     // If Monday is today or in the past, move to next week's Monday
@@ -202,7 +204,12 @@ export default function BookingCalendarModal({
     return days;
   };
 
-  const formatDate = (date: Date) => date.toISOString().split('T')[0];
+  const formatDate = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
 
   const isToday = (date: Date): boolean => {
     const dateNormalized = new Date(date);
@@ -247,6 +254,10 @@ export default function BookingCalendarModal({
   const weekDays = getWeekDays();
 
   const handleSlotClick = async (date: string, hour: number, roomName: string) => {
+    console.log('[BookingCalendarModal] Slot clicked - date string:', date);
+    const clickedDate = new Date(date.split('-')[0], parseInt(date.split('-')[1]) - 1, parseInt(date.split('-')[2]));
+    console.log('[BookingCalendarModal] Slot clicked - parsed as:', clickedDate.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }));
+
     // Prevent same-day bookings
     if (isToday(new Date(date))) {
       setError('Bookings must be scheduled for the next day or later');
@@ -255,6 +266,7 @@ export default function BookingCalendarModal({
 
     setError(null);
     setSelectedDate(date);
+    console.log('[BookingCalendarModal] Set selectedDate to:', date);
     setSelectedTime(hour);
     // Find the room object by name
     const room = clinicRooms.find(r => r.room_name === roomName);
@@ -542,7 +554,16 @@ export default function BookingCalendarModal({
               </div>
               <div>
                 <span>Date:</span>
-                <strong>{new Date(selectedDate).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}</strong>
+                <strong>{(() => {
+                  console.log('[BookingCalendarModal] Summary - selectedDate string:', selectedDate);
+                  const [year, month, day] = selectedDate.split('-');
+                  console.log('[BookingCalendarModal] Summary - parsed components:', { year, month, day });
+                  const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+                  console.log('[BookingCalendarModal] Summary - Date object:', date.toISOString());
+                  const display = date.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+                  console.log('[BookingCalendarModal] Summary - display:', display);
+                  return display;
+                })()}</strong>
               </div>
               <div>
                 <span>Time:</span>

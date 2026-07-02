@@ -40,6 +40,13 @@ export default function BookingConfirmation({
   const [confirmError, setConfirmError] = useState(error);
 
   // Format date for display
+  const formatLocalDate = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -132,7 +139,7 @@ export default function BookingConfirmation({
           bookingId={booking.id || 'N/A'}
           clientName={booking.client_name || 'Client'}
           amount={booking.payment_amount || 2000}
-          deadline={booking.payment_deadline || new Date().toISOString()}
+          deadline={booking.payment_deadline || formatLocalDate(new Date())}
           sessionDate={booking.session_date}
           showCopyButtons={true}
           showPrintButton={true}
@@ -234,7 +241,7 @@ export default function BookingConfirmation({
               </div>
               <div className="booking-summary-item">
                 <label className="booking-summary-label">Payment Deadline</label>
-                <p className="booking-summary-value">{formatDate(booking.payment_deadline || new Date().toISOString())}</p>
+                <p className="booking-summary-value">{formatDate(booking.payment_deadline || formatLocalDate(new Date()))}</p>
               </div>
               {deadlineInfo && (
                 <div className="booking-summary-item">

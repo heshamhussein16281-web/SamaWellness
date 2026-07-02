@@ -54,19 +54,25 @@ export default function AvailableSlotsModal({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Helper to format date as YYYY-MM-DD using local components (not UTC)
+  const formatLocalDate = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   // Get today's date in YYYY-MM-DD format
   const getTodayDate = useCallback(() => {
     const today = new Date();
-    return today.toISOString().split('T')[0];
+    return formatLocalDate(today);
   }, []);
 
   // Get min date (today) and max date (7 days from today)
   const getDateRange = useCallback(() => {
     const today = new Date();
-    const minDate = today.toISOString().split('T')[0];
-    const maxDate = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000)
-      .toISOString()
-      .split('T')[0];
+    const minDate = formatLocalDate(today);
+    const maxDate = formatLocalDate(new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000));
     return { minDate, maxDate };
   }, []);
 

@@ -58,7 +58,7 @@ export async function GET(
       return NextResponse.json({ error: 'Invalid client ID format' }, { status: 400 });
     }
 
-    // Fetch client with therapist name
+    // Fetch client with therapist name and payment amounts
     const { data: client, error } = await supabase
       .from('clients')
       .select(`
@@ -74,6 +74,8 @@ export async function GET(
         referral_source,
         notes,
         therapist_id,
+        payment_amount_1,
+        payment_amount_2,
         therapists:therapist_id (id, name, email)
       `)
       .eq('id', clientId)
@@ -94,7 +96,7 @@ export async function GET(
       console.error('Error counting sessions:', sessionsError);
     }
 
-    // Sum total amount paid
+    // Sum total amount paid from payment records, or fallback to client payment amounts
     const { data: paymentSum, error: paymentError } = await supabase
       .from('payment_records')
       .select('amount_paid')
@@ -104,7 +106,14 @@ export async function GET(
       console.error('Error fetching payments:', paymentError);
     }
 
-    const totalAmountPaid = paymentSum?.reduce((sum, p) => sum + (p.amount_paid || 0), 0) || 0;
+    let totalAmountPaid = paymentSum?.reduce((sum, p) => sum + (p.amount_paid || 0), 0) || 0;
+
+    // Fallback: if no payment records, sum the client's payment amounts
+    if (totalAmountPaid === 0) {
+      const amount1 = client.payment_amount_1 || 0;
+      const amount2 = client.payment_amount_2 || 0;
+      totalAmountPaid = amount1 + amount2;
+    }
 
     // Format response
     const therapist = Array.isArray(client.therapists) ? client.therapists[0] : client.therapists;
