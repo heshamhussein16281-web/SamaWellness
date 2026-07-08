@@ -1250,45 +1250,70 @@
   }
 }
 
-/* Action Button Styles */
-.action-button--reschedule {
-  padding: 16px !important;
-  border: 2px solid var(--modal-accent-border) !important;
-  border-radius: 12px !important;
-  background: var(--modal-accent-bg) !important;
+/* Action Buttons Grid */
+.action-buttons-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+/* Action Button Base Styles */
+.action-button {
+  padding: 16px;
+  border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s ease-out;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
   gap: 10px;
   text-align: center;
+  border: 2px solid;
+  font-family: var(--modal-font-body);
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+}
+
+.action-button:active {
+  transform: scale(0.98);
+}
+
+/* Reschedule Button */
+.action-button--reschedule {
+  border-color: #1e6ba8 !important;
+  background-color: #f0f9ff !important;
+  color: #1e6ba8;
 }
 
 .action-button--reschedule:hover {
-  border-color: var(--modal-accent-border-hover) !important;
-  background: var(--modal-accent-bg-hover) !important;
+  border-color: #0f4a78 !important;
+  background-color: #e0f2fe !important;
   box-shadow: 0 4px 12px rgba(30, 107, 168, 0.15);
   transform: translateY(-2px);
 }
 
+.action-button--reschedule:focus {
+  outline: 2px solid #1e6ba8;
+  outline-offset: 2px;
+}
+
+/* Cancel Button */
 .action-button--cancel {
-  padding: 16px !important;
-  border: 2px solid var(--modal-danger-border) !important;
-  border-radius: 12px !important;
-  background: var(--modal-danger-bg) !important;
-  cursor: pointer;
-  transition: all 0.2s ease-out;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  text-align: center;
+  border-color: #c75c5c !important;
+  background-color: #fef2f2 !important;
+  color: #c75c5c;
 }
 
 .action-button--cancel:hover {
-  border-color: var(--modal-danger-border-hover) !important;
-  background: var(--modal-danger-bg-hover) !important;
+  border-color: #9e4646 !important;
+  background-color: #fde8e8 !important;
   box-shadow: 0 4px 12px rgba(199, 92, 92, 0.15);
   transform: translateY(-2px);
+}
+
+.action-button--cancel:focus {
+  outline: 2px solid #c75c5c;
+  outline-offset: 2px;
 }
