@@ -820,7 +820,7 @@ export default function RescheduleModal({
             </div>
           </>
         ) : (
-          <>
+          <div className="modal-body">
             <p style={{ marginBottom: '1rem', color: '#666', fontWeight: '500' }}>
               Cancellation reason (required):
             </p>
@@ -935,7 +935,7 @@ export default function RescheduleModal({
                 {loading ? 'Cancelling...' : 'Confirm Cancellation'}
               </button>
             </div>
-          </>
+          </div>
         )}
       </div>
     </div>
