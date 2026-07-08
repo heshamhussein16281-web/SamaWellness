@@ -160,9 +160,9 @@ export default function PaymentVerificationModal({
       console.log('[PaymentVerificationModal] API success response:', responseData);
 
       setSuccess(true);
-      // Wait 1.5 seconds to show success message, then trigger parent refresh
+      // Wait 2 seconds to show success message, then trigger parent refresh and close modal
       setTimeout(async () => {
-        console.log('[PaymentVerificationModal] Calling onSuccess after success state');
+        console.log('[PaymentVerificationModal] Success timeout - calling onSuccess to close modal and refresh parent');
         try {
           const result = onSuccess();
           // Properly await the Promise if returned
@@ -171,10 +171,11 @@ export default function PaymentVerificationModal({
             await result;
             console.log('[PaymentVerificationModal] onSuccess Promise completed');
           }
+          console.log('[PaymentVerificationModal] onSuccess finished, modal should close');
         } catch (err) {
           console.error('[PaymentVerificationModal] onSuccess threw error:', err);
         }
-      }, 1500);
+      }, 2000);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
