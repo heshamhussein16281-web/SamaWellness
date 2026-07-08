@@ -297,16 +297,8 @@ export default function ClientActionButton({
 
     // RECURRING CLIENTS: Dedicated workflow
     if (isRecurring) {
-      // Step 1a: Recurring client needs therapist assigned first
-      if ((status === 'recurring_client' || status === 'completed') && !therapistId) {
-        return {
-          label: 'Select Therapist',
-          type: 'therapist',
-        };
-      }
-
-      // Step 1b: Recurring client ready to book next session (after therapist assigned)
-      if ((status === 'recurring_client' || status === 'completed') && therapistId) {
+      // Step 1: Recurring client ready to book next session
+      if (status === 'recurring_client' || status === 'completed') {
         return {
           label: 'Book Session',
           type: 'booking',
