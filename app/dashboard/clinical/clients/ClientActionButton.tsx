@@ -458,25 +458,27 @@ export default function ClientActionButton({
 
   return (
     <>
-      <button
-        className={`client-next-action-btn ${!isDisabled ? 'active' : 'disabled'}`}
-        onClick={handleActionClick}
-        title={`Next action: ${nextAction.label}`}
-        disabled={isDisabled}
-      >
-        {nextAction.label}
-      </button>
-
-      {/* Payment Verification Button for recurring clients with bookings */}
-      {showPaymentButton && (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         <button
-          className="client-next-action-btn active"
-          onClick={() => setActiveModal('payment')}
-          title="Verify payment from client"
+          className={`client-next-action-btn ${!isDisabled ? 'active' : 'disabled'}`}
+          onClick={handleActionClick}
+          title={`Next action: ${nextAction.label}`}
+          disabled={isDisabled}
         >
-          Verify Payment
+          {nextAction.label}
         </button>
-      )}
+
+        {/* Payment Verification Button for recurring clients with bookings - shown below main button */}
+        {showPaymentButton && (
+          <button
+            className="client-next-action-btn active"
+            onClick={() => setActiveModal('payment')}
+            title="Verify payment from client"
+          >
+            Verify Payment
+          </button>
+        )}
+      </div>
 
       {/* Assessment Entry Modal */}
       {activeModal === 'assessment' && (
