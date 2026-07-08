@@ -544,79 +544,100 @@ export default function RescheduleModal({
         {/* Action Selection */}
         {action === null ? (
           <>
-            <p style={{ marginBottom: '1.5rem', color: '#666' }}>
-              What would you like to do with this session?
+            <p style={{ marginBottom: '1.5rem', color: 'var(--modal-text-secondary)', fontWeight: '500', fontSize: '0.95rem' }}>
+              What would you like to do?
             </p>
 
             <div
               style={{
                 display: 'grid',
                 gridTemplateColumns: '1fr 1fr',
-                gap: '1rem',
+                gap: '12px',
                 marginBottom: '1rem',
               }}
+              className="action-buttons-grid"
             >
               {/* Reschedule Option */}
               <button
                 onClick={() => setAction('reschedule')}
+                className="action-button action-button--reschedule"
                 style={{
-                  padding: '1.5rem',
-                  border: '2px solid #1e6ba8',
-                  borderRadius: '8px',
-                  background: '#f0f9ff',
+                  padding: '16px',
+                  border: '2px solid var(--modal-accent-border)',
+                  borderRadius: '12px',
+                  background: 'var(--modal-accent-bg)',
                   cursor: 'pointer',
-                  transition: 'all 0.2s ease',
+                  transition: 'all 0.2s ease-out',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '10px',
+                  textAlign: 'center',
+                  position: 'relative',
+                  overflow: 'hidden',
                 }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.background = '#e0f2fe')
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.background = '#f0f9ff')
-                }
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--modal-accent-border-hover)';
+                  e.currentTarget.style.background = 'var(--modal-accent-bg-hover)';
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(30, 107, 168, 0.15)';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--modal-accent-border)';
+                  e.currentTarget.style.background = 'var(--modal-accent-bg)';
+                  e.currentTarget.style.boxShadow = 'none';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
               >
-                <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>
+                <div style={{ fontSize: '28px', lineHeight: '1', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   📅
                 </div>
-                <div style={{ fontWeight: '600', color: '#1e6ba8' }}>
+                <div style={{ fontWeight: '600', color: 'var(--modal-accent-text)', fontSize: '14px', lineHeight: '1.2' }}>
                   Reschedule
                 </div>
-                <div style={{ fontSize: '0.875rem', color: '#666', marginTop: '0.5rem' }}>
-                  Move to different date/time
-                </div>
-                <div style={{ fontSize: '0.75rem', color: '#999', marginTop: '0.5rem' }}>
-                  Payment applies to new session
+                <div style={{ fontSize: '12px', color: 'var(--modal-text-secondary)', lineHeight: '1.4' }}>
+                  Move to a new<br/>date or time
                 </div>
               </button>
 
               {/* Cancel Option */}
               <button
                 onClick={() => setAction('cancel')}
+                className="action-button action-button--cancel"
                 style={{
-                  padding: '1.5rem',
-                  border: '2px solid #c75c5c',
-                  borderRadius: '8px',
-                  background: '#fef2f2',
+                  padding: '16px',
+                  border: '2px solid var(--modal-danger-border)',
+                  borderRadius: '12px',
+                  background: 'var(--modal-danger-bg)',
                   cursor: 'pointer',
-                  transition: 'all 0.2s ease',
+                  transition: 'all 0.2s ease-out',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '10px',
+                  textAlign: 'center',
                 }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.background = '#fde8e8')
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.background = '#fef2f2')
-                }
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--modal-danger-border-hover)';
+                  e.currentTarget.style.background = 'var(--modal-danger-bg-hover)';
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(199, 92, 92, 0.15)';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--modal-danger-border)';
+                  e.currentTarget.style.background = 'var(--modal-danger-bg)';
+                  e.currentTarget.style.boxShadow = 'none';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
               >
-                <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>
-                  ✕
+                <div style={{ fontSize: '28px', lineHeight: '1', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  ⏸
                 </div>
-                <div style={{ fontWeight: '600', color: '#c75c5c' }}>
+                <div style={{ fontWeight: '600', color: 'var(--modal-danger-text)', fontSize: '14px', lineHeight: '1.2' }}>
                   Cancel
                 </div>
-                <div style={{ fontSize: '0.875rem', color: '#666', marginTop: '0.5rem' }}>
-                  Remove this session
-                </div>
-                <div style={{ fontSize: '0.75rem', color: '#999', marginTop: '0.5rem' }}>
-                  Choose payment handling
+                <div style={{ fontSize: '12px', color: 'var(--modal-text-secondary)', lineHeight: '1.4' }}>
+                  Remove this<br/>appointment
                 </div>
               </button>
             </div>

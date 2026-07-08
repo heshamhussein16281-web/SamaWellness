@@ -13,6 +13,20 @@
   --modal-error: #c75c5c;
   --modal-warning: #d4a574;
 
+  /* Action Button Colors - Accent (Reschedule) */
+  --modal-accent-border: #1e6ba8;
+  --modal-accent-border-hover: #0f4a78;
+  --modal-accent-bg: #f0f9ff;
+  --modal-accent-bg-hover: #e0f2fe;
+  --modal-accent-text: #1e6ba8;
+
+  /* Action Button Colors - Danger (Cancel) */
+  --modal-danger-border: #c75c5c;
+  --modal-danger-border-hover: #9e4646;
+  --modal-danger-bg: #fef2f2;
+  --modal-danger-bg-hover: #fde8e8;
+  --modal-danger-text: #c75c5c;
+
   /* Modal Fonts */
   --modal-font-display: 'Playfair Display', serif;
   --modal-font-body: 'DM Sans', sans-serif;
@@ -1221,5 +1235,17 @@
 
   .modal-steps {
     padding: 1rem;
+  }
+
+  .action-buttons-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .action-button {
+    padding: 14px !important;
+  }
+
+  .action-button div {
+    font-size: 12px !important;
   }
 }
