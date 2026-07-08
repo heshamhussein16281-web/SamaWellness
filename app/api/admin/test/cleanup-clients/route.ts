@@ -9,33 +9,35 @@ const supabase = createClient(
 );
 
 /**
- * POST /api/admin/test/cleanup-clients - Delete all clients (TEST ONLY)
+ * POST /api/admin/test/cleanup-clients - Delete test clients only
  * WARNING: This is a destructive operation. Use only for testing.
+ * Only deletes clients with names starting with "Test".
  */
 export async function POST(request: NextRequest) {
   try {
-    console.log('[Cleanup] Starting client deletion...');
+    console.log('[Cleanup] Starting test client deletion...');
 
-    // Delete all clients (cascading deletes should handle related records)
-    const { data, error } = await supabase
+    // Delete only test clients (those with names starting with "Test")
+    const { count, error } = await supabase
       .from('clients')
       .delete()
-      .neq('id', 0); // neq means "not equal" - this deletes all records
+      .ilike('name', 'Test%'); // ilike is case-insensitive pattern matching
 
     if (error) {
-      console.error('[Cleanup] Error deleting clients:', error);
+      console.error('[Cleanup] Error deleting test clients:', error);
       return NextResponse.json(
-        { error: 'Failed to delete clients', details: error.message },
+        { error: 'Failed to delete test clients', details: error.message },
         { status: 500 }
       );
     }
 
-    console.log('[Cleanup] Successfully deleted all clients');
+    console.log('[Cleanup] Successfully deleted test clients:', count);
 
     return NextResponse.json(
       {
         success: true,
-        message: 'All test clients deleted successfully',
+        message: `Test clients deleted successfully`,
+        deletedCount: count || 0,
       },
       { status: 200 }
     );
