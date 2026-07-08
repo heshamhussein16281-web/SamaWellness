@@ -1260,31 +1260,65 @@
 
 /* Action Button Base Styles */
 .action-button {
-  padding: 16px;
-  border-radius: 12px;
+  padding: 20px 16px !important;
+  border-radius: 12px !important;
   cursor: pointer;
   transition: all 0.2s ease-out;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
-  gap: 10px;
+  justify-content: center !important;
+  gap: 12px;
   text-align: center;
-  border: 2px solid;
+  border: 2px solid !important;
   font-family: var(--modal-font-body);
-  font-weight: 500;
   position: relative;
   overflow: hidden;
+  min-height: 140px;
 }
 
 .action-button:active {
   transform: scale(0.98);
 }
 
+/* Icon styling within buttons */
+.action-button > div:first-child {
+  font-size: 32px !important;
+  line-height: 1 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* Label styling */
+.action-button > div:nth-child(2) {
+  font-weight: 700 !important;
+  font-size: 16px !important;
+  line-height: 1.2;
+  letter-spacing: -0.3px;
+}
+
+/* Description styling */
+.action-button > div:nth-child(3) {
+  font-weight: 400 !important;
+  font-size: 13px !important;
+  line-height: 1.4;
+  opacity: 0.85;
+}
+
 /* Reschedule Button */
 .action-button--reschedule {
   border-color: #1e6ba8 !important;
   background-color: #f0f9ff !important;
-  color: #1e6ba8;
+}
+
+.action-button--reschedule > div:nth-child(2) {
+  color: #1e6ba8 !important;
+}
+
+.action-button--reschedule > div:nth-child(3) {
+  color: #666666 !important;
 }
 
 .action-button--reschedule:hover {
@@ -1303,7 +1337,14 @@
 .action-button--cancel {
   border-color: #c75c5c !important;
   background-color: #fef2f2 !important;
-  color: #c75c5c;
+}
+
+.action-button--cancel > div:nth-child(2) {
+  color: #c75c5c !important;
+}
+
+.action-button--cancel > div:nth-child(3) {
+  color: #666666 !important;
 }
 
 .action-button--cancel:hover {
