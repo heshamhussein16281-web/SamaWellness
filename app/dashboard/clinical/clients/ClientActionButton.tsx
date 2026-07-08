@@ -453,6 +453,9 @@ export default function ClientActionButton({
   // Disable button if no valid next action, or if we're trying to book but clinic/therapist data isn't ready
   const isDisabled = nextAction.type === 'none' || (nextAction.type === 'booking' && (clinicLoading || typeof clinicId !== 'number' || typeof therapistId !== 'number'));
 
+  // For recurring clients with a booked session, show both "Manage Booking" and "Verify Payment" buttons
+  const showPaymentButton = isRecurring && status === 'booking_scheduled';
+
   return (
     <>
       <button
@@ -463,6 +466,17 @@ export default function ClientActionButton({
       >
         {nextAction.label}
       </button>
+
+      {/* Payment Verification Button for recurring clients with bookings */}
+      {showPaymentButton && (
+        <button
+          className="client-next-action-btn active"
+          onClick={() => setActiveModal('payment')}
+          title="Verify payment from client"
+        >
+          Verify Payment
+        </button>
+      )}
 
       {/* Assessment Entry Modal */}
       {activeModal === 'assessment' && (
