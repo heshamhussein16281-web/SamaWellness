@@ -602,11 +602,11 @@ export default function ClientActionButton({
       )}
 
       {/* Booking Calendar Modal */}
-      {activeModal === 'booking' && typeof clinicId === 'number' && typeof therapistId === 'number' && (
+      {activeModal === 'booking' && typeof clinicId === 'number' && (isRecurring || typeof therapistId === 'number') && (
         <BookingCalendarModal
           clientId={clientId}
           clientName={clientName}
-          therapistId={therapistId}
+          therapistId={therapistId || undefined}
           therapistName={therapistName || undefined}
           isRecurring={isRecurring}
           clinicId={clinicId}

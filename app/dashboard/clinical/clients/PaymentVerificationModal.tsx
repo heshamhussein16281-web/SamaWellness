@@ -1,5 +1,32 @@
 'use client';
 
+/**
+ * PaymentVerificationModal - Handles all payment verification for clients
+ *
+ * PAYMENT TYPES (controlled by paymentType prop):
+ *
+ * 1. 'assessment' - First payment (Tier 1)
+ *    - Amount: Minimum 2000 EGP
+ *    - Updates: payment_verified_1, payment_amount_1, payment_date_1, total_amount_paid
+ *    - Status transition: 'intake' → 'assessment_pending'
+ *    - Used for: All new clients at intake stage
+ *
+ * 2. 'remaining' - Additional payment (Tier 2)
+ *    - Amount: therapist_rate - 2000 (only if therapist rate > 2000)
+ *    - Updates: payment_verified_2, payment_amount_2, payment_date_2, total_amount_paid
+ *    - Status transition: 'assessment_pending' → 'ready_for_booking'
+ *    - Used for: Clients with therapist assigned who need to pay difference
+ *
+ * 3. 'session' - Session payment (Recurring clients only)
+ *    - Amount: therapist hourly rate (from booking context)
+ *    - Updates: session_payment_received, session_payment_date, session_payment_amount, total_amount_paid
+ *    - Status transition: None (remains 'booking_scheduled')
+ *    - Used for: Recurring clients verifying payment for each booked session
+ *    - Creates: payment_history record for audit trail
+ *
+ * See: docs/PAYMENT_FIELDS_DOCUMENTATION.md for complete payment flow
+ */
+
 import React, { useState } from 'react';
 import './modal.css';
 

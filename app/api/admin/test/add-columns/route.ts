@@ -16,16 +16,26 @@ export async function POST(request: NextRequest) {
     console.log('[AddColumns] Starting column migration...');
 
     // Use rpc to execute raw SQL
-    const { data, error } = await supabase.rpc('exec_sql', {
-      sql: `
-        -- Add columns if they don't exist
-        ALTER TABLE clients
-        ADD COLUMN IF NOT EXISTS total_amount_paid BIGINT DEFAULT 0,
-        ADD COLUMN IF NOT EXISTS session_payment_received BOOLEAN DEFAULT false,
-        ADD COLUMN IF NOT EXISTS session_payment_date TEXT,
-        ADD COLUMN IF NOT EXISTS session_payment_amount BIGINT;
-      `
-    }).catch(() => null);
+    let data: any = null;
+    let error: any = null;
+
+    try {
+      const result = await supabase.rpc('exec_sql', {
+        sql: `
+          -- Add columns if they don't exist
+          ALTER TABLE clients
+          ADD COLUMN IF NOT EXISTS total_amount_paid BIGINT DEFAULT 0,
+          ADD COLUMN IF NOT EXISTS session_payment_received BOOLEAN DEFAULT false,
+          ADD COLUMN IF NOT EXISTS session_payment_date TEXT,
+          ADD COLUMN IF NOT EXISTS session_payment_amount BIGINT;
+        `
+      });
+      data = result.data;
+      error = result.error;
+    } catch (err) {
+      console.log('[AddColumns] RPC call failed, will try fallback method');
+      error = err;
+    }
 
     // If rpc doesn't work, try direct SQL execution via postgres
     if (data === null) {
