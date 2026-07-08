@@ -37,7 +37,14 @@ async function checkPermission(
 
 /**
  * GET /api/admin/clients/[id]/profile - Get full client profile
- * Returns: {id, name, email, phone, date_of_birth, status, is_recurring, client_since, total_sessions_completed, total_amount_paid, therapist_id, therapist_name, intake_date, referral_source, notes}
+ * Returns: {id, name, email, phone, date_of_birth, status, is_recurring, client_since,
+ *           total_sessions_completed, total_amount_paid, therapist_id, therapist_name,
+ *           intake_date, referral_source, notes,
+ *           payment_verified_1, payment_amount_1, payment_date_1,
+ *           payment_verified_2, payment_amount_2, payment_date_2,
+ *           total_payment_due,
+ *           session_payment_received, session_payment_date, session_payment_amount}
+ * PHASE 2: All new consolidated payment field names included
  * Status: 200, 401/403/404/500 on error
  */
 export async function GET(
@@ -59,6 +66,7 @@ export async function GET(
     }
 
     // Fetch client with therapist name and payment amounts
+    // PHASE 2: Include all new consolidated payment field names
     const { data: client, error } = await supabase
       .from('clients')
       .select(`
@@ -74,9 +82,17 @@ export async function GET(
         referral_source,
         notes,
         therapist_id,
+        payment_verified_1,
         payment_amount_1,
+        payment_date_1,
+        payment_verified_2,
         payment_amount_2,
+        payment_date_2,
         total_amount_paid,
+        total_payment_due,
+        session_payment_received,
+        session_payment_date,
+        session_payment_amount,
         therapists:therapist_id (id, name, email)
       `)
       .eq('id', clientId)
