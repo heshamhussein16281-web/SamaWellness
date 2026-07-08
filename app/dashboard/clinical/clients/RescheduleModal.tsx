@@ -521,7 +521,10 @@ export default function RescheduleModal({
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content modal-content--large" onClick={(e) => e.stopPropagation()}>
+      <div
+        className={`modal-content ${action === 'reschedule' ? 'modal-content--large' : ''}`}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="modal-header">
           <div>
             <h2 className="modal-title">Manage Booking - {clientName}</h2>
@@ -543,12 +546,12 @@ export default function RescheduleModal({
 
         {/* Action Selection */}
         {action === null ? (
-          <>
+          <div className="modal-body">
             <p style={{ marginBottom: '1.5rem', color: 'var(--modal-text-secondary)', fontWeight: '500', fontSize: '0.95rem' }}>
               What would you like to do?
             </p>
 
-            <div className="action-buttons-grid" style={{ marginBottom: '1rem' }}>
+            <div className="action-buttons-grid">
               {/* Reschedule Option */}
               <button
                 onClick={() => setAction('reschedule')}
@@ -589,7 +592,7 @@ export default function RescheduleModal({
                 </div>
               </button>
             </div>
-          </>
+          </div>
         ) : action === 'reschedule' ? (
           <>
             {/* Week Navigation */}
