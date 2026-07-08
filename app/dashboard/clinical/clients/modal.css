@@ -97,6 +97,10 @@
   padding: 1.5rem;
   border-bottom: 1px solid var(--modal-border);
   gap: 1rem;
+  position: sticky;
+  top: 0;
+  background: var(--modal-bg);
+  z-index: 5;
 }
 
 .modal-title {
@@ -532,6 +536,10 @@
   border-top: 1px solid var(--modal-border);
   justify-content: flex-end;
   flex-wrap: wrap;
+  position: sticky;
+  bottom: 0;
+  background: var(--modal-bg);
+  z-index: 5;
 }
 
 .modal-btn {
