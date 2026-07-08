@@ -127,7 +127,7 @@ export default function ClientActionButton({
 
   // Fetch booking when modal is opened
   useEffect(() => {
-    if ((activeModal === 'view' || activeModal === 'cancel') && !currentBooking) {
+    if ((activeModal === 'view' || activeModal === 'cancel' || activeModal === 'payment') && !currentBooking) {
       fetchCurrentBooking();
     }
   }, [activeModal, status, currentBooking]);
@@ -493,10 +493,15 @@ export default function ClientActionButton({
       {/* Payment Verification Modal */}
       {activeModal === 'payment' && (() => {
         // Determine payment type and amount
+        // Session payment for recurring clients with booked sessions
+        const isSessionPayment = isRecurring && status === 'booking_scheduled';
         const isAdditionalPayment = therapistId && paymentVerified1 && !paymentVerified2;
-        const paymentType = isAdditionalPayment ? 'remaining' : 'assessment';
+
+        const paymentType = isSessionPayment ? 'session' : (isAdditionalPayment ? 'remaining' : 'assessment');
         const minimumFee = paymentAmount1 || 2000;
-        const amount = isAdditionalPayment ? ((totalPaymentDue || 0) - minimumFee) : minimumFee;
+        const amount = isSessionPayment
+          ? (totalPaymentDue || minimumFee)
+          : (isAdditionalPayment ? ((totalPaymentDue || 0) - minimumFee) : minimumFee);
 
         return (
           <PaymentVerificationModal
@@ -507,6 +512,7 @@ export default function ClientActionButton({
             amount={amount > 0 ? amount : minimumFee}
             hasTherapist={therapistId ? true : false}
             isRecurring={isRecurring}
+            bookingId={isSessionPayment ? currentBooking?.id : undefined}
             onSuccess={handleModalSuccess}
             onClose={handleModalClose}
           />

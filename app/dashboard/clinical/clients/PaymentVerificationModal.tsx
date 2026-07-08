@@ -8,9 +8,10 @@ interface PaymentVerificationModalProps {
   clientName: string;
   hasTherapist?: boolean; // true if therapist already assigned (direct selection)
   therapistName?: string; // name of assigned therapist
-  paymentType?: 'assessment' | 'remaining'; // 'assessment' for initial, 'remaining' for therapist fee difference
+  paymentType?: 'assessment' | 'remaining' | 'session'; // 'assessment' for initial, 'remaining' for therapist fee, 'session' for recurring client session
   amount?: number;
   isRecurring?: boolean; // true if client is recurring (affects status transitions)
+  bookingId?: number; // booking ID for session payment (when paymentType is 'session')
   onSuccess: () => Promise<void> | void;
   onClose: () => void;
 }
@@ -23,6 +24,7 @@ export default function PaymentVerificationModal({
   paymentType = 'assessment',
   amount,
   isRecurring = false,
+  bookingId,
   onSuccess,
   onClose,
 }: PaymentVerificationModalProps) {
@@ -54,7 +56,33 @@ export default function PaymentVerificationModal({
       // Build update object based on payment type
       const updateData: any = {};
 
-      if (paymentType === 'assessment') {
+      if (paymentType === 'session' && bookingId) {
+        // Session payment for recurring clients (after booking a session)
+        console.log('[PaymentVerificationModal] Recording session payment for booking:', bookingId);
+
+        // Fetch current client to get existing total_amount_paid
+        const currentClientRes = await fetch(`/api/admin/clients/${clientId}`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+
+        if (!currentClientRes.ok) {
+          throw new Error('Failed to fetch current client data');
+        }
+
+        const currentClientData = await currentClientRes.json();
+        const currentTotal = currentClientData.data?.total_amount_paid || 0;
+        const sessionAmount = amount || 2000;
+
+        console.log('[PaymentVerificationModal] Current total_amount_paid:', currentTotal);
+        console.log('[PaymentVerificationModal] Session amount:', sessionAmount);
+        console.log('[PaymentVerificationModal] New total will be:', currentTotal + sessionAmount);
+
+        updateData.session_payment_received = true;
+        updateData.session_payment_date = paymentDate;
+        updateData.session_payment_amount = sessionAmount;
+        updateData.total_amount_paid = currentTotal + sessionAmount;
+      } else if (paymentType === 'assessment') {
         // Initial payment for first session booking (minimum therapist rate)
         updateData.payment_verified_1 = true;
         updateData.payment_date_1 = paymentDate;
