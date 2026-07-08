@@ -216,12 +216,16 @@ export async function GET(request: NextRequest) {
           payment_verified_2: client.payment_verified_2 || false,
           payment_amount_2: client.payment_amount_2 || null,
           total_payment_due: currentTherapistRate, // Use CURRENT therapist rate
+          session_payment_received: client.session_payment_received || false,
+          session_payment_date: client.session_payment_date || null,
+          session_payment_amount: client.session_payment_amount || null,
         };
       }
 
       return {
         ...baseClient,
         total_payment_due: currentTherapistRate, // Even in fallback, include current rate
+        session_payment_received: client.session_payment_received || false,
       };
     });
 
