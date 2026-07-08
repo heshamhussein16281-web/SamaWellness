@@ -454,8 +454,15 @@ export default function ClientActionButton({
     setActiveModal(null);
   };
 
-  // Disable button if no valid next action, or if we're trying to book but clinic/therapist data isn't ready
-  const isDisabled = nextAction.type === 'none' || (nextAction.type === 'booking' && (clinicLoading || typeof clinicId !== 'number' || typeof therapistId !== 'number'));
+  // Disable button if no valid next action, or if we're trying to book but required data isn't ready
+  // For recurring clients: only need clinic ID (no therapist required)
+  // For non-recurring clients: need both clinic ID and therapist ID
+  const isDisabledForBooking = nextAction.type === 'booking' && (
+    clinicLoading ||
+    typeof clinicId !== 'number' ||
+    (!isRecurring && typeof therapistId !== 'number') // Only require therapist for non-recurring clients
+  );
+  const isDisabled = nextAction.type === 'none' || isDisabledForBooking;
 
   // For recurring clients with a booked session, show both "Manage Booking" and "Verify Payment" buttons
   // Hide the payment button if payment has already been received/verified
