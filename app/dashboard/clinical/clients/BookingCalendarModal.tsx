@@ -275,6 +275,12 @@ export default function BookingCalendarModal({
       return;
     }
 
+    // CRITICAL: Verify therapist is assigned before booking
+    if (!therapistId) {
+      setError('Therapist must be assigned before booking a session. Please contact admin.');
+      return;
+    }
+
     setError(null);
     setSubmitting(true);
 
