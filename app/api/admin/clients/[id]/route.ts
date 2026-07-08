@@ -94,8 +94,8 @@ export async function PUT(
     const {
       therapist_id,
       status,
-      payment_verified,
-      payment_date,
+      // PHASE 2: Removed deprecated fields (payment_verified, payment_date)
+      // Use new field names instead: payment_verified_1, payment_date_1, etc.
       payment_verified_1,
       payment_amount_1,
       payment_date_1,
@@ -115,21 +115,24 @@ export async function PUT(
     if (therapist_id !== undefined) updateData.therapist_id = therapist_id;
     if (status !== undefined) updateData.status = status;
 
-    // Support old field names for backwards compatibility
-    if (payment_verified !== undefined) updateData.payment_verified = payment_verified;
-    if (payment_date !== undefined) updateData.payment_date = payment_date;
+    // PHASE 2: Payment fields - Use new consolidated field names
+    // See: docs/PAYMENT_FIELDS_DOCUMENTATION.md for complete reference
 
-    // New simplified two-tier payment system fields
+    // Tier 1: First session payment (2000 EGP minimum)
     if (payment_verified_1 !== undefined) updateData.payment_verified_1 = payment_verified_1;
     if (payment_amount_1 !== undefined) updateData.payment_amount_1 = payment_amount_1;
     if (payment_date_1 !== undefined) updateData.payment_date_1 = payment_date_1;
+
+    // Tier 2: Additional payment (if therapist rate > 2000)
     if (payment_verified_2 !== undefined) updateData.payment_verified_2 = payment_verified_2;
     if (payment_amount_2 !== undefined) updateData.payment_amount_2 = payment_amount_2;
     if (payment_date_2 !== undefined) updateData.payment_date_2 = payment_date_2;
-    if (total_payment_due !== undefined) updateData.total_payment_due = total_payment_due;
 
-    // Session payment fields for recurring clients
+    // Summary fields
+    if (total_payment_due !== undefined) updateData.total_payment_due = total_payment_due;
     if (total_amount_paid !== undefined) updateData.total_amount_paid = total_amount_paid;
+
+    // Session payments (recurring clients)
     if (session_payment_received !== undefined) updateData.session_payment_received = session_payment_received;
     if (session_payment_date !== undefined) updateData.session_payment_date = session_payment_date;
     if (session_payment_amount !== undefined) updateData.session_payment_amount = session_payment_amount;
