@@ -76,6 +76,7 @@ export async function GET(
         therapist_id,
         payment_amount_1,
         payment_amount_2,
+        total_amount_paid,
         therapists:therapist_id (id, name, email)
       `)
       .eq('id', clientId)
@@ -96,24 +97,9 @@ export async function GET(
       console.error('Error counting sessions:', sessionsError);
     }
 
-    // Sum total amount paid from payment records, or fallback to client payment amounts
-    const { data: paymentSum, error: paymentError } = await supabase
-      .from('payment_records')
-      .select('amount_paid')
-      .eq('client_id', clientId);
-
-    if (paymentError) {
-      console.error('Error fetching payments:', paymentError);
-    }
-
-    let totalAmountPaid = paymentSum?.reduce((sum, p) => sum + (p.amount_paid || 0), 0) || 0;
-
-    // Fallback: if no payment records, sum the client's payment amounts
-    if (totalAmountPaid === 0) {
-      const amount1 = client.payment_amount_1 || 0;
-      const amount2 = client.payment_amount_2 || 0;
-      totalAmountPaid = amount1 + amount2;
-    }
+    // Use the total_amount_paid field directly from the clients table
+    // This is the actual verified/paid amount, not the expected payment amounts
+    let totalAmountPaid = client.total_amount_paid || 0;
 
     // Format response
     const therapist = Array.isArray(client.therapists) ? client.therapists[0] : client.therapists;

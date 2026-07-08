@@ -22,6 +22,8 @@ interface Client {
   payment_verified_2?: boolean;
   payment_amount_2?: number | null | undefined;
   total_payment_due?: number | null | undefined;
+  total_amount_paid?: number | null | undefined;
+  session_payment_received?: boolean;
 }
 
 type ViewMode = 'list' | 'intake';
@@ -92,6 +94,8 @@ export default function ClientsPage() {
           payment_amount_1: data.data[0].payment_amount_1,
           payment_verified_2: data.data[0].payment_verified_2,
           payment_amount_2: data.data[0].payment_amount_2,
+          total_amount_paid: data.data[0].total_amount_paid,
+          session_payment_received: data.data[0].session_payment_received,
           is_recurring: data.data[0].is_recurring,
         });
       }
@@ -334,6 +338,8 @@ export default function ClientsPage() {
                       paymentVerified2={client.payment_verified_2 || false}
                       paymentAmount2={client.payment_amount_2}
                       totalPaymentDue={client.total_payment_due}
+                      totalAmountPaid={client.total_amount_paid}
+                      sessionPaymentReceived={client.session_payment_received}
                       onActionComplete={() => fetchClients(currentPage, searchPhone)}
                     />
                   </td>

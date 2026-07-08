@@ -103,6 +103,10 @@ export async function PUT(
       payment_amount_2,
       payment_date_2,
       total_payment_due,
+      total_amount_paid,
+      session_payment_received,
+      session_payment_date,
+      session_payment_amount,
       notes,
     } = body;
 
@@ -123,6 +127,12 @@ export async function PUT(
     if (payment_amount_2 !== undefined) updateData.payment_amount_2 = payment_amount_2;
     if (payment_date_2 !== undefined) updateData.payment_date_2 = payment_date_2;
     if (total_payment_due !== undefined) updateData.total_payment_due = total_payment_due;
+
+    // Session payment fields for recurring clients
+    if (total_amount_paid !== undefined) updateData.total_amount_paid = total_amount_paid;
+    if (session_payment_received !== undefined) updateData.session_payment_received = session_payment_received;
+    if (session_payment_date !== undefined) updateData.session_payment_date = session_payment_date;
+    if (session_payment_amount !== undefined) updateData.session_payment_amount = session_payment_amount;
 
     if (notes !== undefined) updateData.notes = notes;
 

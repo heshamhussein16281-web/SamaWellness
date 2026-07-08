@@ -24,6 +24,8 @@ interface ClientActionButtonProps {
   paymentVerified2?: boolean;
   paymentAmount2?: number | null;
   totalPaymentDue?: number | null;
+  totalAmountPaid?: number | null;
+  sessionPaymentReceived?: boolean;
   onActionComplete: () => Promise<void> | void;
 }
 
@@ -46,6 +48,8 @@ export default function ClientActionButton({
   paymentVerified2 = false,
   paymentAmount2,
   totalPaymentDue,
+  totalAmountPaid,
+  sessionPaymentReceived = false,
   onActionComplete,
 }: ClientActionButtonProps) {
   const [activeModal, setActiveModal] = useState<string | null>(null);
@@ -454,7 +458,18 @@ export default function ClientActionButton({
   const isDisabled = nextAction.type === 'none' || (nextAction.type === 'booking' && (clinicLoading || typeof clinicId !== 'number' || typeof therapistId !== 'number'));
 
   // For recurring clients with a booked session, show both "Manage Booking" and "Verify Payment" buttons
-  const showPaymentButton = isRecurring && status === 'booking_scheduled';
+  // Hide the payment button if payment has already been received/verified
+  const showPaymentButton = isRecurring && status === 'booking_scheduled' && !sessionPaymentReceived;
+
+  // Debug logging for button visibility
+  if (isRecurring && status === 'booking_scheduled') {
+    console.log(`[ClientActionButton] Payment button visibility for ${clientName}:`, {
+      isRecurring,
+      status,
+      sessionPaymentReceived,
+      showPaymentButton,
+    });
+  }
 
   return (
     <>
@@ -492,9 +507,48 @@ export default function ClientActionButton({
 
       {/* Payment Verification Modal */}
       {activeModal === 'payment' && (() => {
+        // For session payments, ensure booking is loaded first
+        const isSessionPayment = isRecurring && status === 'booking_scheduled';
+
+        if (isSessionPayment && loadingBooking) {
+          console.log('[ClientActionButton] Session payment modal waiting for booking to load...');
+          return (
+            <div className="modal-overlay" onClick={handleModalClose}>
+              <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                <div className="modal-header">
+                  <h2 className="modal-title">Verify Payment</h2>
+                  <button className="modal-close-btn" onClick={handleModalClose} type="button" aria-label="Close modal">✕</button>
+                </div>
+                <div style={{ padding: '2rem', textAlign: 'center' }}>
+                  <p>Loading booking information...</p>
+                </div>
+              </div>
+            </div>
+          );
+        }
+
+        if (isSessionPayment && !currentBooking?.id) {
+          console.error('[ClientActionButton] ERROR: Session payment required but no booking found!');
+          return (
+            <div className="modal-overlay" onClick={handleModalClose}>
+              <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                <div className="modal-header">
+                  <h2 className="modal-title">Error</h2>
+                  <button className="modal-close-btn" onClick={handleModalClose} type="button" aria-label="Close modal">✕</button>
+                </div>
+                <div className="modal-error" style={{ margin: '2rem' }}>
+                  Unable to load booking information. Please try again or contact support.
+                </div>
+                <div style={{ padding: '1rem', display: 'flex', justifyContent: 'flex-end' }}>
+                  <button type="button" className="modal-btn modal-btn--secondary" onClick={handleModalClose}>Close</button>
+                </div>
+              </div>
+            </div>
+          );
+        }
+
         // Determine payment type and amount
         // Session payment for recurring clients with booked sessions
-        const isSessionPayment = isRecurring && status === 'booking_scheduled';
         const isAdditionalPayment = therapistId && paymentVerified1 && !paymentVerified2;
 
         const paymentType = isSessionPayment ? 'session' : (isAdditionalPayment ? 'remaining' : 'assessment');
@@ -502,6 +556,17 @@ export default function ClientActionButton({
         const amount = isSessionPayment
           ? (totalPaymentDue || minimumFee)
           : (isAdditionalPayment ? ((totalPaymentDue || 0) - minimumFee) : minimumFee);
+
+        // Debug logging to trace payment type detection
+        console.log('[ClientActionButton] Payment Modal Render - Session Payment Debug:', {
+          isRecurring,
+          status,
+          isSessionPayment,
+          currentBookingId: currentBooking?.id,
+          bookingIdWillBe: isSessionPayment ? currentBooking?.id : undefined,
+          paymentType,
+          loadingBooking,
+        });
 
         return (
           <PaymentVerificationModal

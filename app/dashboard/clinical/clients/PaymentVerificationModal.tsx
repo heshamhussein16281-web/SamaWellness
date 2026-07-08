@@ -56,6 +56,14 @@ export default function PaymentVerificationModal({
       // Build update object based on payment type
       const updateData: any = {};
 
+      // Debug: Log the payment type detection logic
+      console.log('[PaymentVerificationModal] handleSubmit - Payment Type Evaluation:', {
+        paymentType,
+        bookingId,
+        isRecurring,
+        checkResult: paymentType === 'session' && bookingId ? 'WILL USE SESSION PAYMENT' : 'WILL NOT USE SESSION PAYMENT (FALLBACK TO OTHER)',
+      });
+
       if (paymentType === 'session' && bookingId) {
         // Session payment for recurring clients (after booking a session)
         console.log('[PaymentVerificationModal] Recording session payment for booking:', bookingId);

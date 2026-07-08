@@ -108,7 +108,9 @@ export async function GET(request: NextRequest) {
         payment_amount_1,
         payment_verified_2,
         payment_amount_2,
-        total_payment_due
+        total_payment_due,
+        total_amount_paid,
+        session_payment_received
       `)
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1);
@@ -144,7 +146,9 @@ export async function GET(request: NextRequest) {
           therapist_id,
           is_recurring,
           total_sessions_completed,
-          total_payment_due
+          total_payment_due,
+          total_amount_paid,
+          session_payment_received
         `)
         .order('created_at', { ascending: false })
         .range(offset, offset + limit - 1);
