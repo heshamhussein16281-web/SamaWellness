@@ -1249,3 +1249,46 @@
     font-size: 12px !important;
   }
 }
+
+/* Action Button Styles */
+.action-button--reschedule {
+  padding: 16px !important;
+  border: 2px solid var(--modal-accent-border) !important;
+  border-radius: 12px !important;
+  background: var(--modal-accent-bg) !important;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.action-button--reschedule:hover {
+  border-color: var(--modal-accent-border-hover) !important;
+  background: var(--modal-accent-bg-hover) !important;
+  box-shadow: 0 4px 12px rgba(30, 107, 168, 0.15);
+  transform: translateY(-2px);
+}
+
+.action-button--cancel {
+  padding: 16px !important;
+  border: 2px solid var(--modal-danger-border) !important;
+  border-radius: 12px !important;
+  background: var(--modal-danger-bg) !important;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.action-button--cancel:hover {
+  border-color: var(--modal-danger-border-hover) !important;
+  background: var(--modal-danger-bg-hover) !important;
+  box-shadow: 0 4px 12px rgba(199, 92, 92, 0.15);
+  transform: translateY(-2px);
+}

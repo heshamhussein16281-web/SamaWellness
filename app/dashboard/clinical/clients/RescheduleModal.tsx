@@ -561,41 +561,15 @@ export default function RescheduleModal({
               <button
                 onClick={() => setAction('reschedule')}
                 className="action-button action-button--reschedule"
-                style={{
-                  padding: '16px',
-                  border: '2px solid var(--modal-accent-border)',
-                  borderRadius: '12px',
-                  background: 'var(--modal-accent-bg)',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease-out',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '10px',
-                  textAlign: 'center',
-                  position: 'relative',
-                  overflow: 'hidden',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--modal-accent-border-hover)';
-                  e.currentTarget.style.background = 'var(--modal-accent-bg-hover)';
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(30, 107, 168, 0.15)';
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--modal-accent-border)';
-                  e.currentTarget.style.background = 'var(--modal-accent-bg)';
-                  e.currentTarget.style.boxShadow = 'none';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                }}
+                type="button"
               >
                 <div style={{ fontSize: '28px', lineHeight: '1', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   📅
                 </div>
-                <div style={{ fontWeight: '600', color: 'var(--modal-accent-text)', fontSize: '14px', lineHeight: '1.2' }}>
+                <div style={{ fontWeight: '600', color: '#1e6ba8', fontSize: '14px', lineHeight: '1.2' }}>
                   Reschedule
                 </div>
-                <div style={{ fontSize: '12px', color: 'var(--modal-text-secondary)', lineHeight: '1.4' }}>
+                <div style={{ fontSize: '12px', color: '#666', lineHeight: '1.4' }}>
                   Move to a new<br/>date or time
                 </div>
               </button>
@@ -604,39 +578,15 @@ export default function RescheduleModal({
               <button
                 onClick={() => setAction('cancel')}
                 className="action-button action-button--cancel"
-                style={{
-                  padding: '16px',
-                  border: '2px solid var(--modal-danger-border)',
-                  borderRadius: '12px',
-                  background: 'var(--modal-danger-bg)',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease-out',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '10px',
-                  textAlign: 'center',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--modal-danger-border-hover)';
-                  e.currentTarget.style.background = 'var(--modal-danger-bg-hover)';
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(199, 92, 92, 0.15)';
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--modal-danger-border)';
-                  e.currentTarget.style.background = 'var(--modal-danger-bg)';
-                  e.currentTarget.style.boxShadow = 'none';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                }}
+                type="button"
               >
                 <div style={{ fontSize: '28px', lineHeight: '1', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   ⏸
                 </div>
-                <div style={{ fontWeight: '600', color: 'var(--modal-danger-text)', fontSize: '14px', lineHeight: '1.2' }}>
+                <div style={{ fontWeight: '600', color: '#c75c5c', fontSize: '14px', lineHeight: '1.2' }}>
                   Cancel
                 </div>
-                <div style={{ fontSize: '12px', color: 'var(--modal-text-secondary)', lineHeight: '1.4' }}>
+                <div style={{ fontSize: '12px', color: '#666', lineHeight: '1.4' }}>
                   Remove this<br/>appointment
                 </div>
               </button>
