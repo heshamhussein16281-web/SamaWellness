@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { HeaderSkeleton, StatsSkeleton, TabSkeleton } from './SkeletonLoader';
-import ClientActionButton from './ClientActionButton';
 import './client-profile.css';
 import './skeleton-loader.css';
 
@@ -398,25 +397,6 @@ export default function ClientProfile({ clientId, clinicId, clinicLoading = fals
                 </div>
               </div>
 
-              <div className="client-profile-header-actions">
-                <ClientActionButton
-                  clientId={clientId}
-                  clientName={profile.name}
-                  status={profile.status}
-                  therapistId={profile.therapist_id}
-                  therapistName={profile.therapist_name}
-                  isRecurring={profile.is_recurring}
-                  clinicId={clinicId}
-                  clinicLoading={clinicLoading}
-                  onActionComplete={refetchProfile}
-                />
-                <button
-                  className="client-profile-action-btn client-profile-action-btn--secondary"
-                  aria-label="Edit client profile"
-                >
-                  Edit
-                </button>
-              </div>
             </div>
           </div>
         )}
