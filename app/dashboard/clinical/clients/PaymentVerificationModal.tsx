@@ -159,6 +159,33 @@ export default function PaymentVerificationModal({
       const responseData = await res.json();
       console.log('[PaymentVerificationModal] API success response:', responseData);
 
+      // Create payment record for audit trail
+      const paymentAmount = paymentType === 'session' ? (amount || 2000) : (amount || 2000);
+      console.log('[PaymentVerificationModal] Creating payment record - Amount:', paymentAmount, 'Date:', paymentDate);
+
+      const recordRes = await fetch('/api/admin/payment-records', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          client_id: clientId,
+          payment_date: paymentDate,
+          amount_paid: paymentAmount,
+          actual_cost: paymentAmount,
+          refund_amount: 0,
+          additional_charge: 0,
+          charge_status: 'completed',
+        }),
+      });
+
+      if (!recordRes.ok) {
+        const recordError = await recordRes.json();
+        console.warn('[PaymentVerificationModal] Failed to create payment record:', recordError);
+        // Don't fail the entire flow if record creation fails
+      } else {
+        console.log('[PaymentVerificationModal] Payment record created successfully');
+      }
+
       setSuccess(true);
       // Wait 2 seconds to show success message, then trigger parent refresh and close modal
       setTimeout(async () => {
