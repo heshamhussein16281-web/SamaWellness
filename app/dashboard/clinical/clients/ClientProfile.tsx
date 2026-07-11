@@ -119,17 +119,35 @@ export default function ClientProfile({ clientId, clinicId, clinicLoading = fals
   // Refetch profile function for action button callback
   const refetchProfile = async () => {
     try {
+      console.log('[ClientProfile] refetchProfile called for clientId:', clientId);
+
       // Refetch profile
-      const res = await fetch(`/api/admin/clients/${clientId}/profile`, {
+      const profileUrl = `/api/admin/clients/${clientId}/profile`;
+      console.log('[ClientProfile] Fetching from:', profileUrl);
+
+      const res = await fetch(profileUrl, {
         credentials: 'include',
       });
 
+      console.log('[ClientProfile] Profile fetch response status:', res.status);
+
       if (!res.ok) {
-        throw new Error('Failed to fetch client profile');
+        const errorData = await res.text();
+        console.error('[ClientProfile] API returned error:', res.status, errorData);
+        throw new Error(`Failed to fetch client profile: ${res.status} ${errorData}`);
       }
 
       const data = await res.json();
+      console.log('[ClientProfile] Profile data received:', {
+        id: data.id,
+        total_amount_paid: data.total_amount_paid,
+        session_payment_received: data.session_payment_received,
+        session_payment_amount: data.session_payment_amount,
+      });
+
+      console.log('[ClientProfile] Updating profile state with new data');
       setProfile(data);
+      console.log('[ClientProfile] ✓ Profile state updated');
 
       // Also refetch bookings to show updated history
       const bookingsRes = await fetch(`/api/admin/clients/${clientId}/bookings`, {
@@ -139,9 +157,15 @@ export default function ClientProfile({ clientId, clinicId, clinicLoading = fals
       if (bookingsRes.ok) {
         const bookingsData = await bookingsRes.json();
         setBookings(bookingsData.data || []);
+        console.log('[ClientProfile] ✓ Bookings updated');
+      } else {
+        console.warn('[ClientProfile] Bookings fetch returned status:', bookingsRes.status);
       }
     } catch (err) {
-      console.error('Error refetching profile:', err);
+      console.error('[ClientProfile] ❌ Error refetching profile:', {
+        message: err instanceof Error ? err.message : String(err),
+        stack: err instanceof Error ? err.stack : undefined,
+      });
     }
   };
 
@@ -166,20 +190,26 @@ export default function ClientProfile({ clientId, clinicId, clinicLoading = fals
   useEffect(() => {
     const fetchProfile = async () => {
       try {
+        console.log('[ClientProfile] Initial fetch for clientId:', clientId);
         setLoading(true);
         setError(null);
         const res = await fetch(`/api/admin/clients/${clientId}/profile`, {
           credentials: 'include',
         });
 
+        console.log('[ClientProfile] Initial fetch response status:', res.status);
+
         if (!res.ok) {
           throw new Error('Failed to fetch client profile');
         }
 
         const data = await res.json();
+        console.log('[ClientProfile] Initial load - received total_amount_paid:', data.total_amount_paid);
         setProfile(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
+        const errorMsg = err instanceof Error ? err.message : 'An error occurred';
+        console.error('[ClientProfile] Initial fetch error:', errorMsg);
+        setError(errorMsg);
       } finally {
         setLoading(false);
       }
