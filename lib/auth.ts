@@ -110,11 +110,11 @@ export async function verifyCredentials(username: string, password: string): Pro
         'create_client', 'view_clients', 'view_bookings', 'view_payments',
         'view_assessments', 'view_satisfaction', 'view_expenses', 'view_reports',
         'view_payouts', 'manage_users', 'manage_roles', 'view_change_log',
-        'view_therapists', 'manage_therapists', 'create_therapist'
+        'view_therapists', 'manage_therapists', 'create_therapist', 'manage_clients'
       ],
       'reception': [
         'create_client', 'view_clients', 'view_bookings', 'view_payments',
-        'view_assessments', 'view_satisfaction', 'view_therapists'
+        'view_assessments', 'view_satisfaction', 'view_therapists', 'manage_clients'
       ],
       'clinician': [
         'view_clients', 'view_bookings', 'view_assessments', 'view_satisfaction',
