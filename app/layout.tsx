@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Gilda_Display, Nunito_Sans, Josefin_Sans } from "next/font/google";
+import { QueryClientProviderWrapper } from "@/lib/providers";
 import "./globals.css";
 
 const gildaDisplay = Gilda_Display({
@@ -69,7 +70,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </noscript>
       </head>
       <body className={`${gildaDisplay.variable} ${nunitoSans.variable} ${josefinSans.variable}`}>
-        {children}
+        <QueryClientProviderWrapper>
+          {children}
+        </QueryClientProviderWrapper>
       </body>
     </html>
   );

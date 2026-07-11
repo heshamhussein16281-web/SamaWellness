@@ -1,7 +1,14 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { HeaderSkeleton, StatsSkeleton, TabSkeleton } from './SkeletonLoader';
+import {
+  useClientProfile,
+  useClientBookings,
+  useClientSessions,
+  useClientPayments,
+  useClientStatusHistory,
+} from '@/lib/hooks/useClientQueries';
 import './client-profile.css';
 import './skeleton-loader.css';
 
@@ -106,229 +113,38 @@ type TabType = 'information' | 'sessions' | 'bookings' | 'payments' | 'history';
 
 export default function ClientProfile({ clientId, clinicId, clinicLoading = false }: ClientProfileProps) {
   const [activeTab, setActiveTab] = useState<TabType>('information');
-  const [profile, setProfile] = useState<ClientData | null>(null);
-  const [sessions, setSessions] = useState<Session[]>([]);
-  const [bookings, setBookings] = useState<Booking[]>([]);
-  const [payments, setPayments] = useState<Payment[]>([]);
-  const [history, setHistory] = useState<StatusHistoryRecord[]>([]);
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  // Refetch profile function for action button callback
-  const refetchProfile = async () => {
-    try {
-      console.log('[ClientProfile] refetchProfile called for clientId:', clientId);
-
-      // Refetch profile
-      const profileUrl = `/api/admin/clients/${clientId}/profile`;
-      console.log('[ClientProfile] Fetching from:', profileUrl);
-
-      const res = await fetch(profileUrl, {
-        credentials: 'include',
-      });
-
-      console.log('[ClientProfile] Profile fetch response status:', res.status);
-
-      if (!res.ok) {
-        const errorData = await res.text();
-        console.error('[ClientProfile] API returned error:', res.status, errorData);
-        throw new Error(`Failed to fetch client profile: ${res.status} ${errorData}`);
-      }
-
-      const data = await res.json();
-      console.log('[ClientProfile] Profile data received:', {
-        id: data.id,
-        total_amount_paid: data.total_amount_paid,
-        session_payment_received: data.session_payment_received,
-        session_payment_amount: data.session_payment_amount,
-      });
-
-      console.log('[ClientProfile] Updating profile state with new data');
-      setProfile(data);
-      console.log('[ClientProfile] ✓ Profile state updated');
-
-      // Also refetch bookings to show updated history
-      const bookingsRes = await fetch(`/api/admin/clients/${clientId}/bookings`, {
-        credentials: 'include',
-      });
-
-      if (bookingsRes.ok) {
-        const bookingsData = await bookingsRes.json();
-        setBookings(bookingsData.data || []);
-        console.log('[ClientProfile] ✓ Bookings updated');
-      } else {
-        console.warn('[ClientProfile] Bookings fetch returned status:', bookingsRes.status);
-      }
-    } catch (err) {
-      console.error('[ClientProfile] ❌ Error refetching profile:', {
-        message: err instanceof Error ? err.message : String(err),
-        stack: err instanceof Error ? err.stack : undefined,
-      });
-    }
-  };
-
-  // Tab-level loading states
-  const [tabLoading, setTabLoading] = useState({
-    sessions: false,
-    bookings: false,
-    payments: false,
-    history: false,
-  });
-
-  // Pagination states
+  // Pagination states - these control which page of data to fetch
   const [sessionsPage, setSessionsPage] = useState(1);
   const [paymentsPage, setPaymentsPage] = useState(1);
   const [historyPage, setHistoryPage] = useState(1);
 
-  const [sessionsPagination, setSessionsPagination] = useState({ page: 1, pages: 0, total: 0 });
-  const [paymentsPagination, setPaymentsPagination] = useState({ page: 1, pages: 0, total: 0 });
-  const [historyPagination, setHistoryPagination] = useState({ page: 1, pages: 0, total: 0 });
+  // ============================================
+  // React Query hooks - automatic data fetching & caching
+  // ============================================
+  const { data: profileData, isLoading: profileLoading, error: profileError } = useClientProfile(clientId);
+  const { data: bookingsData, isLoading: bookingsLoading } = useClientBookings(clientId);
+  const { data: sessionsData, isLoading: sessionsLoading } = useClientSessions(clientId, activeTab === 'sessions' ? sessionsPage : 1);
+  const { data: paymentsData, isLoading: paymentsLoading } = useClientPayments(clientId, activeTab === 'payments' ? paymentsPage : 1);
+  const { data: historyData, isLoading: historyLoading } = useClientStatusHistory(clientId, activeTab === 'history' ? historyPage : 1);
 
-  // Fetch profile on mount
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        console.log('[ClientProfile] Initial fetch for clientId:', clientId);
-        setLoading(true);
-        setError(null);
-        const res = await fetch(`/api/admin/clients/${clientId}/profile`, {
-          credentials: 'include',
-        });
+  // Map query data to component variables
+  const profile = profileData || null;
+  const bookings = bookingsData?.data || [];
+  const sessions = sessionsData?.data || [];
+  const payments = paymentsData?.data || [];
+  const history = historyData?.data || [];
 
-        console.log('[ClientProfile] Initial fetch response status:', res.status);
+  const sessionsPagination = sessionsData?.pagination || { page: 1, pages: 0, total: 0 };
+  const paymentsPagination = paymentsData?.pagination || { page: 1, pages: 0, total: 0 };
+  const historyPagination = historyData?.pagination || { page: 1, pages: 0, total: 0 };
 
-        if (!res.ok) {
-          throw new Error('Failed to fetch client profile');
-        }
-
-        const data = await res.json();
-        console.log('[ClientProfile] Initial load - received total_amount_paid:', data.total_amount_paid);
-        setProfile(data);
-      } catch (err) {
-        const errorMsg = err instanceof Error ? err.message : 'An error occurred';
-        console.error('[ClientProfile] Initial fetch error:', errorMsg);
-        setError(errorMsg);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProfile();
-  }, [clientId]);
-
-  // Fetch sessions
-  useEffect(() => {
-    if (activeTab === 'sessions') {
-      const fetchSessions = async () => {
-        try {
-          setTabLoading(prev => ({ ...prev, sessions: true }));
-          const res = await fetch(
-            `/api/admin/clients/${clientId}/sessions?page=${sessionsPage}&limit=10`,
-            { credentials: 'include' }
-          );
-
-          if (!res.ok) throw new Error('Failed to fetch sessions');
-
-          const data: SessionsResponse = await res.json();
-          setSessions(data.data);
-          setSessionsPagination(data.pagination);
-        } catch (err) {
-          console.error('Error fetching sessions:', err);
-        } finally {
-          setTabLoading(prev => ({ ...prev, sessions: false }));
-        }
-      };
-
-      fetchSessions();
-    }
-  }, [activeTab, sessionsPage, clientId]);
-
-  // Fetch bookings
-  useEffect(() => {
-    if (activeTab === 'bookings') {
-      const fetchBookings = async () => {
-        try {
-          setTabLoading(prev => ({ ...prev, bookings: true }));
-          const res = await fetch(`/api/admin/clients/${clientId}/bookings`, {
-            credentials: 'include',
-          });
-
-          if (!res.ok) throw new Error('Failed to fetch bookings');
-
-          const data: BookingsResponse = await res.json();
-          setBookings(data.data);
-        } catch (err) {
-          console.error('Error fetching bookings:', err);
-        } finally {
-          setTabLoading(prev => ({ ...prev, bookings: false }));
-        }
-      };
-
-      fetchBookings();
-    }
-  }, [activeTab, clientId]);
-
-  // Fetch payments
-  useEffect(() => {
-    if (activeTab === 'payments') {
-      const fetchPayments = async () => {
-        try {
-          setTabLoading(prev => ({ ...prev, payments: true }));
-          const res = await fetch(
-            `/api/admin/clients/${clientId}/payments?page=${paymentsPage}&limit=10`,
-            { credentials: 'include' }
-          );
-
-          if (!res.ok) throw new Error('Failed to fetch payments');
-
-          const data: PaymentsResponse = await res.json();
-          setPayments(data.data);
-          setPaymentsPagination(data.pagination);
-        } catch (err) {
-          console.error('Error fetching payments:', err);
-        } finally {
-          setTabLoading(prev => ({ ...prev, payments: false }));
-        }
-      };
-
-      fetchPayments();
-    }
-  }, [activeTab, paymentsPage, clientId]);
-
-  // Fetch status history
-  useEffect(() => {
-    if (activeTab === 'history') {
-      const fetchHistory = async () => {
-        try {
-          setTabLoading(prev => ({ ...prev, history: true }));
-          const res = await fetch(
-            `/api/admin/clients/${clientId}/status-history?page=${historyPage}&limit=10`,
-            { credentials: 'include' }
-          );
-
-          if (!res.ok) throw new Error('Failed to fetch status history');
-
-          const data: StatusHistoryResponse = await res.json();
-          setHistory(data.data);
-          setHistoryPagination(data.pagination);
-        } catch (err) {
-          console.error('Error fetching history:', err);
-        } finally {
-          setTabLoading(prev => ({ ...prev, history: false }));
-        }
-      };
-
-      fetchHistory();
-    }
-  }, [activeTab, historyPage, clientId]);
-
-  if (loading) {
+  if (profileLoading) {
     return <div className="client-profile-loading">Loading client profile...</div>;
   }
 
-  if (error) {
-    return <div className="client-profile-error">Error: {error}</div>;
+  if (profileError) {
+    return <div className="client-profile-error">Error: {profileError instanceof Error ? profileError.message : 'Failed to load profile'}</div>;
   }
 
   if (!profile) {
@@ -378,7 +194,7 @@ export default function ClientProfile({ clientId, clinicId, clinicLoading = fals
     <div className="client-profile-container">
       {/* Profile Header - Sticky */}
       <div className="client-profile-header-sticky">
-        {loading ? (
+        {profileLoading ? (
           <HeaderSkeleton />
         ) : (
           <div className="client-profile-header">
@@ -403,7 +219,7 @@ export default function ClientProfile({ clientId, clinicId, clinicLoading = fals
       </div>
 
       {/* Quick Stats */}
-      {loading ? (
+      {profileLoading ? (
         <StatsSkeleton />
       ) : (
         <div className="client-profile-stats">
@@ -533,7 +349,7 @@ export default function ClientProfile({ clientId, clinicId, clinicLoading = fals
           {/* Sessions Tab */}
           {activeTab === 'sessions' && (
             <div className="client-profile-tab-pane" id="tabpanel-sessions" role="tabpanel">
-              {tabLoading.sessions ? (
+              {sessionsLoading ? (
                 <TabSkeleton />
               ) : sessions.length === 0 ? (
                 <div className="client-profile-empty-state">
@@ -562,7 +378,7 @@ export default function ClientProfile({ clientId, clinicId, clinicLoading = fals
                       </tr>
                     </thead>
                     <tbody>
-                      {sessions.map((session, idx) => (
+                      {sessions.map((session: Session, idx: number) => (
                         <tr key={idx}>
                           <td>{new Date(session.session_date).toLocaleDateString()}</td>
                           <td>{session.duration_minutes} min</td>
@@ -612,7 +428,7 @@ export default function ClientProfile({ clientId, clinicId, clinicLoading = fals
           {/* Bookings Tab */}
           {activeTab === 'bookings' && (
             <div className="client-profile-tab-pane" id="tabpanel-bookings" role="tabpanel">
-              {tabLoading.bookings ? (
+              {bookingsLoading ? (
                 <TabSkeleton />
               ) : bookings.length === 0 ? (
                 <div className="client-profile-empty-state">
@@ -642,7 +458,7 @@ export default function ClientProfile({ clientId, clinicId, clinicLoading = fals
                     </tr>
                   </thead>
                   <tbody>
-                    {bookings.map((booking) => (
+                    {bookings.map((booking: Booking) => (
                       <tr key={booking.id} style={{ opacity: booking.booking_status === 'cancelled' ? 0.5 : 1 }}>
                         <td style={{ fontWeight: booking.booking_status === 'cancelled' ? 'normal' : '500' }}>
                           {new Date(booking.session_date).toLocaleDateString('en-US', {
@@ -689,7 +505,7 @@ export default function ClientProfile({ clientId, clinicId, clinicLoading = fals
           {/* Payments Tab */}
           {activeTab === 'payments' && (
             <div className="client-profile-tab-pane" id="tabpanel-payments" role="tabpanel">
-              {tabLoading.payments ? (
+              {paymentsLoading ? (
                 <TabSkeleton />
               ) : payments.length === 0 ? (
                 <div className="client-profile-empty-state">
@@ -714,7 +530,7 @@ export default function ClientProfile({ clientId, clinicId, clinicLoading = fals
                       </tr>
                     </thead>
                     <tbody>
-                      {payments.map((payment, idx) => (
+                      {payments.map((payment: Payment, idx: number) => (
                         <tr key={idx}>
                           <td>{new Date(payment.payment_date).toLocaleDateString()}</td>
                           <td>EGP {payment.amount_paid.toFixed(2)}</td>
@@ -762,7 +578,7 @@ export default function ClientProfile({ clientId, clinicId, clinicLoading = fals
           {/* Notes & History Tab */}
           {activeTab === 'history' && (
             <div className="client-profile-tab-pane" id="tabpanel-history" role="tabpanel">
-              {tabLoading.history ? (
+              {historyLoading ? (
                 <TabSkeleton />
               ) : history.length === 0 ? (
                 <div className="client-profile-empty-state">
@@ -775,7 +591,7 @@ export default function ClientProfile({ clientId, clinicId, clinicLoading = fals
               ) : (
                 <>
                   <div className="client-profile-timeline">
-                    {history.map((record, idx) => (
+                    {history.map((record: StatusHistoryRecord, idx: number) => (
                       <div key={idx} className="client-profile-timeline-item">
                         <div className="client-profile-timeline-dot" />
                         <div className="client-profile-timeline-content">
