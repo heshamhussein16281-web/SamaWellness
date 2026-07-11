@@ -117,6 +117,25 @@ export default function PaymentVerificationModal({
         updateData.session_payment_date = paymentDate;
         updateData.session_payment_amount = sessionAmount;
         updateData.total_amount_paid = currentTotal + sessionAmount;
+
+        // Also update the booking's payment status to 'paid'
+        console.log('[PaymentVerificationModal] Updating booking payment status for booking:', bookingId);
+        const bookingUpdateRes = await fetch(`/api/admin/bookings/${bookingId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            payment_status: 'paid',
+          }),
+        });
+
+        if (!bookingUpdateRes.ok) {
+          const bookingError = await bookingUpdateRes.json();
+          console.warn('[PaymentVerificationModal] Failed to update booking payment status:', bookingError);
+          // Don't fail the flow if booking update fails
+        } else {
+          console.log('[PaymentVerificationModal] Booking payment status updated to paid');
+        }
       } else if (paymentType === 'assessment') {
         // Initial payment for first session booking (minimum therapist rate)
         updateData.payment_verified_1 = true;
