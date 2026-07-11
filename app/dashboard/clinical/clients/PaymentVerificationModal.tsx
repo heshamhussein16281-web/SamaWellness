@@ -28,6 +28,7 @@
  */
 
 import React, { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import './modal.css';
 
 interface PaymentVerificationModalProps {
@@ -55,6 +56,9 @@ export default function PaymentVerificationModal({
   onSuccess,
   onClose,
 }: PaymentVerificationModalProps) {
+  // Get React Query client to invalidate caches after mutations
+  const queryClient = useQueryClient();
+
   // Helper to format date as YYYY-MM-DD using local components (not UTC)
   const formatLocalDate = (date: Date): string => {
     const year = date.getFullYear();
@@ -204,6 +208,13 @@ export default function PaymentVerificationModal({
       } else {
         console.log('[PaymentVerificationModal] Payment record created successfully');
       }
+
+      // Invalidate React Query caches so ClientProfile refetches the updated data
+      console.log('[PaymentVerificationModal] Invalidating React Query caches for client:', clientId);
+      await queryClient.invalidateQueries({
+        queryKey: ['client', clientId]
+      });
+      console.log('[PaymentVerificationModal] React Query caches invalidated - queries will refetch');
 
       setSuccess(true);
       // Wait 2 seconds to show success message, then trigger parent refresh and close modal
