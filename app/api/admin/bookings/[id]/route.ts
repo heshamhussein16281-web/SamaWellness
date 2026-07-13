@@ -277,6 +277,78 @@ export async function PUT(
 }
 
 /**
+ * PATCH /api/admin/bookings/[id] - Update booking fields
+ * Body: {payment_status?, booking_status?, ...}
+ * Response: {success, data: updated_booking}
+ * Status: 200, 400/401/403/404/500 on error
+ */
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const auth = await checkPermission(request, 'manage_clients');
+  if (!auth.authorized) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
+
+  try {
+    const { id } = params;
+    const body = await request.json();
+
+    // Parse booking ID
+    const bookingId = parseInt(id, 10);
+    if (isNaN(bookingId)) {
+      return NextResponse.json({ error: 'Invalid booking ID format' }, { status: 400 });
+    }
+
+    // Build update object with allowed fields
+    const updateData: any = {};
+    if (body.payment_status !== undefined) updateData.payment_status = body.payment_status;
+    if (body.booking_status !== undefined) updateData.booking_status = body.booking_status;
+    if (body.payment_date !== undefined) updateData.payment_date = body.payment_date;
+    if (body.notes !== undefined) updateData.notes = body.notes;
+
+    // Always update timestamp
+    updateData.updated_at = new Date().toISOString();
+
+    console.log('[PATCH /api/admin/bookings/[id]] Updating booking', bookingId, 'with:', JSON.stringify(updateData));
+
+    // Update booking
+    const { data: updatedBooking, error: updateError } = await supabase
+      .from('bookings')
+      .update(updateData)
+      .eq('id', bookingId)
+      .select()
+      .single();
+
+    if (updateError) {
+      console.error('[PATCH /api/admin/bookings/[id]] Error updating booking:', {
+        message: updateError.message,
+        code: updateError.code,
+        details: updateError.details,
+      });
+      return NextResponse.json({
+        error: 'Failed to update booking: ' + (updateError.message || 'Unknown error'),
+        code: updateError.code,
+        details: updateError.details
+      }, { status: 500 });
+    }
+
+    console.log('[PATCH /api/admin/bookings/[id]] Successfully updated booking:', bookingId);
+
+    return NextResponse.json(
+      { success: true, data: updatedBooking },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error('[PATCH /api/admin/bookings/[id]] error:', error);
+    return NextResponse.json({
+      error: 'Internal server error: ' + (error instanceof Error ? error.message : 'Unknown')
+    }, { status: 500 });
+  }
+}
+
+/**
  * DELETE /api/admin/bookings/[id] - Cancel booking
  * Body: {reason? (optional cancellation reason)}
  * Response: {success, data: cancelled_booking}
