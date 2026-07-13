@@ -376,7 +376,7 @@ export async function DELETE(
   try {
     const { id } = params;
     const body = await request.json().catch(() => ({}));
-    const { reason } = body;
+    const { reason, refund_requested = true } = body; // Default to refund if not specified
 
     // Parse booking ID
     const bookingId = parseInt(id, 10);
@@ -403,8 +403,9 @@ export async function DELETE(
       );
     }
 
-    // If payment was received, mark refund in payment_records
-    if (booking.payment_status === 'paid') {
+    // If payment was received, handle refund (only if refund_requested is true)
+    // If client keeps payment, don't deduct from total_amount_paid
+    if (booking.payment_status === 'paid' && refund_requested) {
       // Fetch the therapist to get their hourly rate
       const { data: therapist, error: therapistError } = await supabase
         .from('therapists')
@@ -483,13 +484,15 @@ export async function DELETE(
       return NextResponse.json({ error: 'Failed to cancel booking' }, { status: 500 });
     }
 
-    // If payment was made, deduct refund from client's total_amount_paid
+    // If payment was made AND refund requested, deduct refund from client's total_amount_paid
+    // If client keeps payment, don't deduct anything
     console.log('[bookings DELETE] Checking if refund needed:', {
       payment_status: booking.payment_status,
-      shouldDeduct: booking.payment_status === 'paid',
+      refund_requested,
+      shouldDeduct: booking.payment_status === 'paid' && refund_requested,
     });
 
-    if (booking.payment_status === 'paid') {
+    if (booking.payment_status === 'paid' && refund_requested) {
       console.log('[bookings DELETE] ✓ Deducting refund from client total_amount_paid');
 
       // Fetch client
@@ -532,6 +535,7 @@ export async function DELETE(
           .update({
             total_amount_paid: newTotal,
             // CRITICAL: Reset session payment flags after refund so next booking can show "Verify Payment"
+            // These are only reset when refund happens; if client keeps money, flags stay for next booking to use
             session_payment_received: false,
             session_payment_date: null,
             session_payment_amount: null,
