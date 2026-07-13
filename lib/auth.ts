@@ -105,13 +105,15 @@ export async function verifyCredentials(username: string, password: string): Pro
 
     // Provide default permissions based on role if no database permissions exist
     const roleName = role?.name || 'user';
+    const adminPermissions = [
+      'create_client', 'view_clients', 'view_bookings', 'view_payments',
+      'view_assessments', 'view_satisfaction', 'view_expenses', 'view_reports',
+      'view_payouts', 'manage_users', 'manage_roles', 'view_change_log',
+      'view_therapists', 'manage_therapists', 'create_therapist', 'manage_clients'
+    ];
     const defaultPermissions: Record<string, string[]> = {
-      'admin': [
-        'create_client', 'view_clients', 'view_bookings', 'view_payments',
-        'view_assessments', 'view_satisfaction', 'view_expenses', 'view_reports',
-        'view_payouts', 'manage_users', 'manage_roles', 'view_change_log',
-        'view_therapists', 'manage_therapists', 'create_therapist', 'manage_clients'
-      ],
+      'admin': adminPermissions,
+      'super admin': adminPermissions,  // Handle role name from database
       'reception': [
         'create_client', 'view_clients', 'view_bookings', 'view_payments',
         'view_assessments', 'view_satisfaction', 'view_therapists', 'manage_clients'
@@ -122,10 +124,15 @@ export async function verifyCredentials(username: string, password: string): Pro
       ]
     };
 
-    // Use database permissions if available, otherwise use defaults for the role
-    const permissions = dbPermissions.length > 0
-      ? dbPermissions
-      : (defaultPermissions[roleName.toLowerCase()] || []);
+    // Merge database permissions with defaults for the role
+    // Database permissions are explicit; defaults fill in missing permissions
+    const roleDefaults = defaultPermissions[roleName.toLowerCase()] || [];
+    const permissions = Array.from(new Set([...dbPermissions, ...roleDefaults]));
+
+    console.log(`[AUTH] Role: ${roleName}, DB Permissions: ${dbPermissions.length}, Default Permissions: ${roleDefaults.length}, Merged: ${permissions.length}`);
+    console.log(`[AUTH] DB Perms:`, dbPermissions);
+    console.log(`[AUTH] Default Perms:`, roleDefaults);
+    console.log(`[AUTH] Final Perms:`, permissions);
 
     return {
       userId: user.id,

@@ -142,9 +142,28 @@ export default function PaymentVerificationModal({
         }
       } else if (paymentType === 'assessment') {
         // Initial payment for first session booking (minimum therapist rate)
+        // Fetch current client to get existing total_amount_paid
+        const currentClientRes = await fetch(`/api/admin/clients/${clientId}`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+
+        if (!currentClientRes.ok) {
+          throw new Error('Failed to fetch current client data');
+        }
+
+        const currentClientData = await currentClientRes.json();
+        const currentTotal = currentClientData.data?.total_amount_paid || 0;
+        const assessmentAmount = amount || 2000;
+
+        console.log('[PaymentVerificationModal] Assessment payment - Current total_amount_paid:', currentTotal);
+        console.log('[PaymentVerificationModal] Assessment payment - Amount:', assessmentAmount);
+        console.log('[PaymentVerificationModal] Assessment payment - New total will be:', currentTotal + assessmentAmount);
+
         updateData.payment_verified_1 = true;
         updateData.payment_date_1 = paymentDate;
-        updateData.payment_amount_1 = amount || 2000; // Default to minimum (2000 EGP)
+        updateData.payment_amount_1 = assessmentAmount; // Use calculated amount
+        updateData.total_amount_paid = currentTotal + assessmentAmount; // ✅ ADD TO TOTAL
         // Status transition only for non-recurring clients
         // Recurring clients stay in booking_scheduled until session starts (auto-transition at 24hr mark)
         if (!isRecurring) {
@@ -152,9 +171,28 @@ export default function PaymentVerificationModal({
         }
       } else {
         // Remaining payment after therapist assigned (if therapist rate > initial payment)
+        // Fetch current client to get existing total_amount_paid
+        const currentClientRes = await fetch(`/api/admin/clients/${clientId}`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+
+        if (!currentClientRes.ok) {
+          throw new Error('Failed to fetch current client data');
+        }
+
+        const currentClientData = await currentClientRes.json();
+        const currentTotal = currentClientData.data?.total_amount_paid || 0;
+        const remainingAmount = amount || 0;
+
+        console.log('[PaymentVerificationModal] Remaining payment - Current total_amount_paid:', currentTotal);
+        console.log('[PaymentVerificationModal] Remaining payment - Amount:', remainingAmount);
+        console.log('[PaymentVerificationModal] Remaining payment - New total will be:', currentTotal + remainingAmount);
+
         updateData.payment_verified_2 = true;
         updateData.payment_date_2 = paymentDate;
-        updateData.payment_amount_2 = amount;
+        updateData.payment_amount_2 = remainingAmount;
+        updateData.total_amount_paid = currentTotal + remainingAmount; // ✅ ADD TO TOTAL
         // After remaining payment, ready for booking
         updateData.status = 'ready_for_booking';
       }
