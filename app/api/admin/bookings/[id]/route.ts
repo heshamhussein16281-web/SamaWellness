@@ -449,11 +449,12 @@ export async function DELETE(
       }
     }
 
-    // Cancel the booking
+    // Cancel the booking and update payment_status to reflect refund if paid
     const { data: cancelledBooking, error: cancelError } = await supabase
       .from('bookings')
       .update({
         booking_status: 'cancelled',
+        payment_status: booking.payment_status === 'paid' ? 'refunded' : booking.payment_status,
         cancelled_by_user_id: auth.user.userId,
         cancellation_reason: reason || null,
         cancelled_at: new Date().toISOString(),
@@ -466,6 +467,50 @@ export async function DELETE(
     if (cancelError) {
       console.error('Error cancelling booking:', cancelError);
       return NextResponse.json({ error: 'Failed to cancel booking' }, { status: 500 });
+    }
+
+    // If payment was made, deduct refund from client's total_amount_paid
+    if (booking.payment_status === 'paid') {
+      console.log('[bookings DELETE] Deducting refund from client total_amount_paid');
+
+      // Fetch client
+      const { data: clientForRefund, error: clientError } = await supabase
+        .from('clients')
+        .select('id, total_amount_paid')
+        .eq('id', booking.client_id)
+        .single();
+
+      if (!clientError && clientForRefund) {
+        // Fetch therapist to calculate refund amount
+        const { data: therapistForRefund, error: therapistRefundError } = await supabase
+          .from('therapists')
+          .select('id, hourly_rate')
+          .eq('id', booking.therapist_id)
+          .single();
+
+        let refundAmount = 2000; // Default refund amount
+        if (!therapistRefundError && therapistForRefund) {
+          const hourlyRate = therapistForRefund.hourly_rate || 2000;
+          refundAmount = Math.round((hourlyRate / 60) * booking.duration_minutes);
+        }
+
+        const newTotal = Math.max(0, (clientForRefund.total_amount_paid || 0) - refundAmount);
+
+        console.log('[bookings DELETE] Refund deduction:', {
+          clientId: booking.client_id,
+          oldTotal: clientForRefund.total_amount_paid,
+          refundAmount,
+          newTotal,
+        });
+
+        await supabase
+          .from('clients')
+          .update({
+            total_amount_paid: newTotal,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', booking.client_id);
+      }
     }
 
     // For recurring clients, reset status to recurring_client so they can book a new session
