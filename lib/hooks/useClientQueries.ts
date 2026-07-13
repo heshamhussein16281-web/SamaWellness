@@ -21,8 +21,10 @@ export function useClientProfile(clientId: number | null) {
       return res.json();
     },
     enabled: !!clientId,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    gcTime: 1000 * 60 * 10, // 10 minutes (formerly cacheTime)
+    staleTime: 0, // ← CRITICAL: Payment data changes frequently, always refetch
+    gcTime: 1000 * 60 * 5, // 5 minutes (formerly cacheTime) - keep in cache for 5min
+    // refetchOnWindowFocus: true ensures fresh data when tab regains focus
+    refetchOnWindowFocus: true,
   });
 }
 
