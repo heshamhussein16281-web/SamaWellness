@@ -41,6 +41,8 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  unstable_noStore();
+
   const auth = await checkPermission(request, 'view_clients');
   if (!auth.authorized) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });

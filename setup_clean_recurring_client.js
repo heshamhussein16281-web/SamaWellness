@@ -15,17 +15,17 @@ const supabaseKey = envVars.SUPABASE_SERVICE_ROLE_KEY || envVars.NEXT_PUBLIC_SUP
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-async function setupRecurringClientTest() {
+async function setupCleanRecurringClient() {
   try {
     console.log('\n========================================');
-    console.log('🧹 CLEANING UP TEST CLIENTS');
+    console.log('🧹 CLEANING UP OLD TEST CLIENTS');
     console.log('========================================\n');
 
     // Find and delete all test clients
     const { data: testClients, error: findError } = await supabase
       .from('clients')
       .select('id, name')
-      .or('name.ilike.%Test Client%,name.ilike.%Fresh Test%,name.ilike.%RQ Fix%,name.ilike.%React Query%');
+      .or('name.ilike.%Clean Recurring Test%,name.ilike.%Refund Test%');
 
     if (findError) throw findError;
 
@@ -38,12 +38,6 @@ async function setupRecurringClientTest() {
         // Delete bookings first
         await supabase
           .from('bookings')
-          .delete()
-          .eq('client_id', client.id);
-
-        // Delete payment history
-        await supabase
-          .from('payment_history')
           .delete()
           .eq('client_id', client.id);
 
@@ -61,11 +55,11 @@ async function setupRecurringClientTest() {
       }
       console.log(`\n✓ Deleted ${testClients.length} test clients and all related data\n`);
     } else {
-      console.log('No test clients found.\n');
+      console.log('No old test clients found.\n');
     }
 
     console.log('========================================');
-    console.log('✨ CREATING RECURRING TEST CLIENT');
+    console.log('✨ CREATING CLEAN RECURRING TEST CLIENT');
     console.log('========================================\n');
 
     const therapistId = 88; // Sara El Shakankiri
@@ -87,22 +81,21 @@ async function setupRecurringClientTest() {
 
     console.log('📝 Creating recurring client with 2 completed sessions...');
 
-    // Create the client
-    // 2 completed sessions (2000 each) + 1 future session (2000) = 6000 total
+    // Create the client with 2 completed sessions and 4000 paid
     const { data: clients, error: clientError } = await supabase
       .from('clients')
       .insert([
         {
-          name: `Recurring Test Client ${timestamp}`,
-          email: `recurring-test-${timestamp}@example.com`,
+          name: `Clean Recurring Test ${timestamp}`,
+          email: `clean-recurring-${timestamp}@example.com`,
           phone: `01009${timestamp % 100000}`,
           therapist_id: therapistId,
           stage: 'active',
           status: 'booking_scheduled',
           is_recurring: true,
           total_sessions_completed: 2,
-          total_amount_paid: 6000,
-          client_since: '2026-06-15T00:00:00+00:00',
+          total_amount_paid: 4000, // ← 2 sessions × 2000 each
+          client_since: new Date().toISOString(),
         }
       ])
       .select();
@@ -111,13 +104,12 @@ async function setupRecurringClientTest() {
     const clientId = clients[0].id;
     console.log(`✓ Client created (ID: ${clientId})\n`);
 
-    // Create 2 completed bookings (with past dates for completed sessions)
-    console.log('📝 Creating 2 completed bookings with payment history...');
-    const session1Date = '2026-07-01T10:00:00';
-    const session2Date = '2026-07-08T10:00:00';
+    console.log('📝 Creating 2 completed bookings and 1 future booking (for testing)...');
 
-    // Also create 1 future booking for refund testing
-    const futureSessionDate = '2026-07-20T14:00:00';
+    // Create 2 past completed bookings + 1 future booking
+    const session1Date = '2026-07-05T10:00:00';
+    const session2Date = '2026-07-12T10:00:00';
+    const futureSessionDate = '2026-07-25T14:00:00';
 
     const { data: bookings, error: bookingsError } = await supabase
       .from('bookings')
@@ -131,8 +123,8 @@ async function setupRecurringClientTest() {
           room_id: roomId,
           booking_status: 'completed',
           payment_status: 'paid',
-          notes: 'Session 1 - Completed and Paid',
-          created_at: '2026-07-01T08:00:00',
+          notes: 'Session 1 - Completed',
+          created_at: '2026-07-05T08:00:00',
         },
         {
           client_id: clientId,
@@ -143,8 +135,8 @@ async function setupRecurringClientTest() {
           room_id: roomId,
           booking_status: 'completed',
           payment_status: 'paid',
-          notes: 'Session 2 - Completed and Paid',
-          created_at: '2026-07-08T08:00:00',
+          notes: 'Session 2 - Completed',
+          created_at: '2026-07-12T08:00:00',
         },
         {
           client_id: clientId,
@@ -154,73 +146,41 @@ async function setupRecurringClientTest() {
           session_type: 'single',
           room_id: roomId,
           booking_status: 'scheduled',
-          payment_status: 'paid',
-          notes: 'Session 3 - Future Booking for Refund Testing',
-          created_at: '2026-07-13T10:00:00',
+          payment_status: 'pending',
+          notes: 'Session 3 - Pending Payment Verification (for testing)',
+          created_at: new Date().toISOString(),
         }
       ])
       .select();
 
     if (bookingsError) throw bookingsError;
-    console.log(`✓ Created ${bookings?.length || 0} bookings (2 completed + 1 future for refund testing)\n`);
-
-    // Create payment history entries
-    console.log('📝 Creating payment history...');
-    const { error: paymentHistoryError } = await supabase
-      .from('payment_history')
-      .insert([
-        {
-          client_id: clientId,
-          amount: 2000,
-          payment_date: '2026-07-01',
-          payment_type: 'session',
-          verified: true,
-          verified_by: '1',
-          verified_at: '2026-07-01T09:00:00',
-          notes: 'Session 1 payment verification',
-        },
-        {
-          client_id: clientId,
-          amount: 2000,
-          payment_date: '2026-07-08',
-          payment_type: 'session',
-          verified: true,
-          verified_by: '1',
-          verified_at: '2026-07-08T09:00:00',
-          notes: 'Session 2 payment verification',
-        }
-      ]);
-
-    if (paymentHistoryError) {
-      console.warn('⚠️  Warning creating payment history:', paymentHistoryError.message);
-    } else {
-      console.log(`✓ Created payment history entries\n`);
-    }
+    const futureBookingId = bookings.find(b => b.session_date.includes('2026-07-25')).id;
+    console.log(`✓ Created 2 completed bookings + 1 future booking (ID: ${futureBookingId})\n`);
 
     console.log('========================================');
     console.log('✅ SETUP COMPLETE!');
     console.log('========================================\n');
     console.log('Recurring Client Details:');
-    console.log(`  Name: Recurring Test Client ${timestamp}`);
+    console.log(`  Name: Clean Recurring Test ${timestamp}`);
     console.log(`  ID: ${clientId}`);
-    console.log(`  Email: recurring-test-${timestamp}@example.com`);
+    console.log(`  Email: clean-recurring-${timestamp}@example.com`);
     console.log(`  Phone: 01009${timestamp % 100000}`);
     console.log(`  Therapist: Sara El Shakankiri`);
     console.log(`  Status: booking_scheduled`);
     console.log(`  Is Recurring: Yes`);
-    console.log(`  Completed Sessions: 2`);
-    console.log(`  Total Paid: EGP 6,000 (2 completed + 1 future session)\n`);
-    console.log('Bookings Created:');
-    console.log(`  - Session 1: Jul 1, 10:00 AM (COMPLETED, PAID)`);
-    console.log(`  - Session 2: Jul 8, 10:00 AM (COMPLETED, PAID)`);
-    console.log(`  - Session 3: Jul 20, 2:00 PM (SCHEDULED, PAID - for refund testing)\n`);
+    console.log(`  Total Sessions Completed: 2 ✓`);
+    console.log(`  Total Amount Paid: EGP 4,000 ✓\n`);
+    console.log('Completed Bookings:');
+    console.log(`  - Session 1: Jul 5, 10:00 AM (COMPLETED, PAID)`);
+    console.log(`  - Session 2: Jul 12, 10:00 AM (COMPLETED, PAID)\n`);
+    console.log('Test Booking (for verification/refund testing):');
+    console.log(`  Booking ID: ${futureBookingId}`);
+    console.log(`  Session Date: Jul 25, 2026 @ 2:00 PM`);
+    console.log(`  Payment Status: PENDING\n`);
     console.log('Ready to test:');
-    console.log(`  1. Go to Clients list and find: Recurring Test Client ${timestamp}`);
-    console.log(`  2. View client profile - should show total_amount_paid: 6000`);
-    console.log(`  3. Try to cancel Session 3 (Jul 20) and verify refund:`);
-    console.log(`     - After cancellation: total_amount_paid should drop to 4000`);
-    console.log(`     - Booking payment_status should change to "refunded"`);
-    console.log(`  4. Create a new booking and verify the payment button appears\n`);
+    console.log(`  1. Verify payment for Session 3 (should change total_amount_paid from 4000 → 6000)`);
+    console.log(`  2. Cancel Session 3 and verify refund (should change total_amount_paid from 6000 → 4000)`);
+    console.log(`  3. Create Session 4 and verify payment works again\n`);
 
   } catch (error) {
     console.error('❌ Error:', error.message);
@@ -228,4 +188,4 @@ async function setupRecurringClientTest() {
   }
 }
 
-setupRecurringClientTest();
+setupCleanRecurringClient();

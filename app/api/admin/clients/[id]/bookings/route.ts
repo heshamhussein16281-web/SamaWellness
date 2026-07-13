@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { unstable_noStore } from 'next/cache';
 import { verifyJWT, getJWTFromCookie, type JWTPayload } from '@/lib/auth';
 import { createClient } from '@supabase/supabase-js';
 
@@ -45,6 +46,8 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  unstable_noStore();
+
   const auth = await checkPermission(request, 'view_bookings');
   if (!auth.authorized) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { unstable_noStore } from 'next/cache';
 import { verifyJWT, getJWTFromCookie, type JWTPayload } from '@/lib/auth';
 import { createClient } from '@supabase/supabase-js';
 
@@ -39,6 +40,8 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  unstable_noStore();
+
   // For GET, just verify user is authenticated (needed for booking workflow)
   const cookieHeader = request.headers.get('cookie');
   const token = getJWTFromCookie(cookieHeader || undefined);
