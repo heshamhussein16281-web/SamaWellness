@@ -42,10 +42,20 @@ async function checkPermission(
  * Status: 201 on success, 400/401/403/500 on error
  */
 export async function POST(request: NextRequest) {
-  const auth = await checkPermission(request, 'manage_clients');
+  // Check if user has manage_clients OR view_payments permission
+  let auth = await checkPermission(request, 'manage_clients');
   if (!auth.authorized) {
+    auth = await checkPermission(request, 'view_payments');
+  }
+  if (!auth.authorized) {
+    console.error('[POST /api/admin/payment-records] Permission denied:', {
+      error: auth.error,
+      status: auth.status
+    });
     return NextResponse.json({ error: auth.error }, { status: auth.status });
   }
+
+  console.log('[POST /api/admin/payment-records] Authorized user:', auth.user.username, 'permissions:', auth.user.permissions);
 
   try {
     const body = await request.json();
@@ -79,6 +89,17 @@ export async function POST(request: NextRequest) {
     }
 
     // Create payment record
+    console.log('[POST /api/admin/payment-records] Creating record:', {
+      client_id,
+      payment_date,
+      amount_paid,
+      actual_cost,
+      refund_amount,
+      additional_charge,
+      charge_status,
+      marked_by_user_id: auth.user.userId,
+    });
+
     const { data: paymentRecord, error: createError } = await supabase
       .from('payment_records')
       .insert([
@@ -97,9 +118,15 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (createError) {
-      console.error('Error creating payment record:', createError);
-      return NextResponse.json({ error: 'Failed to create payment record' }, { status: 500 });
+      console.error('[POST /api/admin/payment-records] Error creating payment record:', {
+        message: createError.message,
+        code: createError.code,
+        details: createError.details,
+      });
+      return NextResponse.json({ error: 'Failed to create payment record: ' + createError.message }, { status: 500 });
     }
+
+    console.log('[POST /api/admin/payment-records] Successfully created record:', paymentRecord);
 
     return NextResponse.json(
       { success: true, data: paymentRecord },
