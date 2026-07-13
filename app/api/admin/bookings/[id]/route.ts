@@ -481,8 +481,13 @@ export async function DELETE(
     }
 
     // If payment was made, deduct refund from client's total_amount_paid
+    console.log('[bookings DELETE] Checking if refund needed:', {
+      payment_status: booking.payment_status,
+      shouldDeduct: booking.payment_status === 'paid',
+    });
+
     if (booking.payment_status === 'paid') {
-      console.log('[bookings DELETE] Deducting refund from client total_amount_paid');
+      console.log('[bookings DELETE] ✓ Deducting refund from client total_amount_paid');
 
       // Fetch client
       const { data: clientForRefund, error: clientError } = await supabase
