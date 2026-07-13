@@ -286,7 +286,14 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const auth = await checkPermission(request, 'manage_clients');
+  // Check for manage_clients, view_bookings, or view_payments permission
+  let auth = await checkPermission(request, 'manage_clients');
+  if (!auth.authorized) {
+    auth = await checkPermission(request, 'view_bookings');
+  }
+  if (!auth.authorized) {
+    auth = await checkPermission(request, 'view_payments');
+  }
   if (!auth.authorized) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
   }

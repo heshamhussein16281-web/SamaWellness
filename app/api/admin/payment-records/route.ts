@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create payment record
-    console.log('[POST /api/admin/payment-records] Creating record:', {
+    const insertData: any = {
       client_id,
       payment_date,
       amount_paid,
@@ -97,23 +97,18 @@ export async function POST(request: NextRequest) {
       refund_amount,
       additional_charge,
       charge_status,
-      marked_by_user_id: auth.user.userId,
-    });
+    };
+
+    // Only include marked_by_user_id if it's a valid UUID (36 chars with hyphens)
+    if (auth.user.userId && auth.user.userId.length === 36) {
+      insertData.marked_by_user_id = auth.user.userId;
+    }
+
+    console.log('[POST /api/admin/payment-records] Creating record:', insertData);
 
     const { data: paymentRecord, error: createError } = await supabase
       .from('payment_records')
-      .insert([
-        {
-          client_id,
-          payment_date,
-          amount_paid,
-          actual_cost,
-          refund_amount,
-          additional_charge,
-          charge_status,
-          marked_by_user_id: auth.user.userId,
-        },
-      ])
+      .insert([insertData])
       .select()
       .single();
 
