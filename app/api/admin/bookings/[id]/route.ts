@@ -426,26 +426,37 @@ export async function DELETE(
       }
 
       // Create a refund entry in payment_records
+      const refundData: any = {
+        booking_id: booking.id,
+        client_id: booking.client_id,
+        therapist_id: booking.therapist_id,
+        amount_paid: 0, // No amount paid in refund record
+        actual_cost: 0,
+        refund_amount: refundAmount, // Dynamic refund based on therapist rate
+        additional_charge: 0,
+        charge_status: 'pending', // Refund pending
+        payment_date: new Date().toISOString(),
+      };
+
+      // Only include marked_by_user_id if it's a valid UUID (36 chars with hyphens)
+      if (auth.user.userId && auth.user.userId.length === 36) {
+        refundData.marked_by_user_id = auth.user.userId;
+      }
+
+      console.log('[bookings DELETE] Creating refund record:', refundData);
       const { error: refundError } = await supabase
         .from('payment_records')
-        .insert([
-          {
-            booking_id: booking.id,
-            client_id: booking.client_id,
-            therapist_id: booking.therapist_id,
-            amount_paid: 0, // No amount paid in refund record
-            actual_cost: 0,
-            refund_amount: refundAmount, // Dynamic refund based on therapist rate
-            additional_charge: 0,
-            charge_status: 'pending', // Refund pending
-            payment_date: new Date().toISOString(),
-            marked_by_user_id: auth.user.userId,
-          },
-        ]);
+        .insert([refundData]);
 
       if (refundError) {
-        console.error('Error creating refund record:', refundError);
+        console.error('[bookings DELETE] Error creating refund record:', {
+          message: refundError.message,
+          code: refundError.code,
+          details: refundError.details,
+        });
         // Continue with cancellation even if refund record fails
+      } else {
+        console.log('[bookings DELETE] Refund record created successfully');
       }
     }
 
@@ -480,7 +491,9 @@ export async function DELETE(
         .eq('id', booking.client_id)
         .single();
 
-      if (!clientError && clientForRefund) {
+      if (clientError) {
+        console.error('[bookings DELETE] Error fetching client for refund:', clientError);
+      } else if (clientForRefund) {
         // Fetch therapist to calculate refund amount
         const { data: therapistForRefund, error: therapistRefundError } = await supabase
           .from('therapists')
@@ -489,27 +502,36 @@ export async function DELETE(
           .single();
 
         let refundAmount = 2000; // Default refund amount
-        if (!therapistRefundError && therapistForRefund) {
+        if (therapistRefundError) {
+          console.warn('[bookings DELETE] Could not fetch therapist for rate, using default 2000');
+        } else if (therapistForRefund) {
           const hourlyRate = therapistForRefund.hourly_rate || 2000;
           refundAmount = Math.round((hourlyRate / 60) * booking.duration_minutes);
         }
 
         const newTotal = Math.max(0, (clientForRefund.total_amount_paid || 0) - refundAmount);
 
-        console.log('[bookings DELETE] Refund deduction:', {
+        console.log('[bookings DELETE] Deducting refund:', {
           clientId: booking.client_id,
           oldTotal: clientForRefund.total_amount_paid,
           refundAmount,
           newTotal,
+          therapistId: booking.therapist_id,
         });
 
-        await supabase
+        const { error: updateError } = await supabase
           .from('clients')
           .update({
             total_amount_paid: newTotal,
             updated_at: new Date().toISOString(),
           })
           .eq('id', booking.client_id);
+
+        if (updateError) {
+          console.error('[bookings DELETE] Error deducting refund from client total:', updateError);
+        } else {
+          console.log('[bookings DELETE] Successfully deducted refund from client total');
+        }
       }
     }
 
