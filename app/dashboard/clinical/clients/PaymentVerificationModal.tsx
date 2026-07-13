@@ -164,10 +164,14 @@ export default function PaymentVerificationModal({
         updateData.payment_date_1 = paymentDate;
         updateData.payment_amount_1 = assessmentAmount; // Use calculated amount
         updateData.total_amount_paid = currentTotal + assessmentAmount; // ✅ ADD TO TOTAL
+
         // Status transition only for non-recurring clients
         // Recurring clients stay in booking_scheduled until session starts (auto-transition at 24hr mark)
         if (!isRecurring) {
-          updateData.status = 'assessment_pending';
+          // CRITICAL: Check if therapist already assigned
+          // - If therapist selected (direct referral/preference) → ready_for_booking (can book now)
+          // - If no therapist → assessment_pending (wait for Sama to assess and assign)
+          updateData.status = hasTherapist ? 'ready_for_booking' : 'assessment_pending';
         }
       } else {
         // Remaining payment after therapist assigned (if therapist rate > initial payment)
