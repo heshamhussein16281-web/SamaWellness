@@ -531,6 +531,10 @@ export async function DELETE(
           .from('clients')
           .update({
             total_amount_paid: newTotal,
+            // CRITICAL: Reset session payment flags after refund so next booking can show "Verify Payment"
+            session_payment_received: false,
+            session_payment_date: null,
+            session_payment_amount: null,
             updated_at: new Date().toISOString(),
           })
           .eq('id', booking.client_id);
