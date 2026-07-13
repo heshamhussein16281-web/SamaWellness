@@ -1,3 +1,28 @@
+/**
+ * FLEXIBLE TEST CLIENT CREATOR
+ *
+ * Creates a recurring client with CUSTOMIZABLE PAST SESSIONS
+ * Perfect for testing the full workflow without waiting for future dates
+ *
+ * USAGE:
+ *   node create_correct_recurring_test_client.js [daysAgo] [numSessions]
+ *
+ * EXAMPLES:
+ *   node create_correct_recurring_test_client.js
+ *     → Creates client with 2 sessions: 14 days ago, 7 days ago
+ *
+ *   node create_correct_recurring_test_client.js 7 2
+ *     → Creates client with 2 sessions: 7 days ago, 14 days ago
+ *
+ *   node create_correct_recurring_test_client.js 30 3
+ *     → Creates client with 3 sessions: 30 days ago, 60 days ago, 90 days ago
+ *
+ *   node create_correct_recurring_test_client.js 1 5
+ *     → Creates client with 5 sessions: 1 day ago, 8 days ago, 15 days ago, etc.
+ *
+ * DEFAULT: 14 days ago, 2 sessions (4000 EGP total)
+ */
+
 const fs = require('fs');
 const { createClient } = require('@supabase/supabase-js');
 
@@ -69,9 +94,21 @@ async function createCorrectRecurringTestClient() {
 
     const timestamp = Date.now();
 
+    // ============================================
+    // CUSTOMIZE TEST DATES HERE
+    // ============================================
+    // Parse command line arguments for flexible testing
+    const daysAgoFirstSession = parseInt(process.argv[2]) || 14; // Default: 14 days ago
+    const numSessions = parseInt(process.argv[3]) || 2; // Default: 2 completed sessions
+
+    console.log(`\n📅 Test Configuration:`);
+    console.log(`   - Number of sessions: ${numSessions}`);
+    console.log(`   - First session: ${daysAgoFirstSession} days ago`);
+    console.log(`   - Each session spaced 7 days apart\n`);
+
     // Create RECURRING client with status 'recurring_client' (READY TO BOOK)
     // NOT 'booking_scheduled' (which means already has a booking)
-    console.log('📝 Creating recurring client with 2 completed sessions...');
+    console.log('📝 Creating recurring client with completed sessions...');
     const { data: clients } = await supabase
       .from('clients')
       .insert([
@@ -83,8 +120,8 @@ async function createCorrectRecurringTestClient() {
           stage: 'active',
           status: 'recurring_client', // ← CORRECT: 'recurring_client' = ready to book, NOT 'booking_scheduled'
           is_recurring: true,
-          total_sessions_completed: 2,
-          total_amount_paid: 4000,  // ← EXACTLY 2 sessions × 2000
+          total_sessions_completed: numSessions,
+          total_amount_paid: 2000 * numSessions,  // ← CALCULATED: sessions × 2000
           client_since: new Date().toISOString(),
         }
       ])
@@ -93,46 +130,36 @@ async function createCorrectRecurringTestClient() {
     const clientId = clients[0].id;
     console.log(`✓ Client created (ID: ${clientId})\n`);
 
-    // Create 2 PAST completed sessions
-    console.log('📝 Creating 2 completed sessions in the past...');
+    // Create PAST completed sessions
+    console.log(`📝 Creating ${numSessions} completed sessions in the past...`);
     const today = new Date();
-    const session1Date = new Date(today);
-    session1Date.setDate(session1Date.getDate() - 14); // 14 days ago
 
-    const session2Date = new Date(today);
-    session2Date.setDate(session2Date.getDate() - 7); // 7 days ago
+    // Build array of sessions dynamically
+    const sessionsToCreate = [];
+    for (let i = 0; i < numSessions; i++) {
+      const sessionDate = new Date(today);
+      sessionDate.setDate(sessionDate.getDate() - (daysAgoFirstSession + i * 7)); // Each 7 days apart
+
+      sessionsToCreate.push({
+        client_id: clientId,
+        therapist_id: therapistId,
+        session_date: sessionDate.toISOString(),
+        duration_minutes: 60,
+        session_type: 'single',
+        room_id: roomId,
+        booking_status: 'completed',
+        payment_status: 'paid',
+        notes: `Session ${i + 1} - Completed and Paid (${sessionDate.toDateString()})`,
+        created_at: sessionDate.toISOString(),
+      });
+    }
 
     const { data: bookings } = await supabase
       .from('bookings')
-      .insert([
-        {
-          client_id: clientId,
-          therapist_id: therapistId,
-          session_date: session1Date.toISOString(),
-          duration_minutes: 60,
-          session_type: 'single',
-          room_id: roomId,
-          booking_status: 'completed',
-          payment_status: 'paid',
-          notes: 'Session 1 - Completed and Paid',
-          created_at: session1Date.toISOString(),
-        },
-        {
-          client_id: clientId,
-          therapist_id: therapistId,
-          session_date: session2Date.toISOString(),
-          duration_minutes: 60,
-          session_type: 'single',
-          room_id: roomId,
-          booking_status: 'completed',
-          payment_status: 'paid',
-          notes: 'Session 2 - Completed and Paid',
-          created_at: session2Date.toISOString(),
-        }
-      ])
+      .insert(sessionsToCreate)
       .select();
 
-    console.log(`✓ Created 2 completed sessions\n`);
+    console.log(`✓ Created ${numSessions} completed sessions\n`);
 
     console.log('========================================');
     console.log('✅ CORRECT TEST CLIENT READY!');
@@ -145,8 +172,8 @@ async function createCorrectRecurringTestClient() {
     console.log(`  Therapist: Haidy El Masry`);
     console.log(`  Status: recurring_client ✓ (Ready to Book)`);
     console.log(`  Is Recurring: Yes ✓`);
-    console.log(`  Total Sessions Completed: 2 ✓`);
-    console.log(`  Total Amount Paid: 4000 EGP ✓ (from 2 completed sessions only)\n`);
+    console.log(`  Total Sessions Completed: ${numSessions} ✓`);
+    console.log(`  Total Amount Paid: ${2000 * numSessions} EGP ✓ (from ${numSessions} completed sessions only)\n`);
 
     console.log('Completed Sessions:');
     bookings.forEach((b, i) => {
@@ -154,13 +181,20 @@ async function createCorrectRecurringTestClient() {
       console.log(`     Status: COMPLETED, PAID\n`);
     });
 
-    console.log('Ready to Test:');
+    console.log('Ready to Test Full Workflow:');
     console.log(`  1. Go to Clients list and find: Test Recurring Client ${timestamp}`);
     console.log(`  2. Next Action should show: "Book Session" ✓`);
-    console.log(`  3. Click "Book Session" to create the 3rd session`);
+    console.log(`  3. Click "Book Session" to create the next session`);
     console.log(`  4. After booking: you'll see "Verify Payment" button`);
-    console.log(`  5. Click "Verify Payment" to mark the 3rd session as paid`);
-    console.log(`  6. After verification: paid should change from 4000 → 6000 EGP\n`);
+    console.log(`  5. Click "Verify Payment" for the new session`);
+    console.log(`  6. After verification: paid should increase from ${2000 * numSessions} → ${2000 * (numSessions + 1)} EGP`);
+    console.log(`  7. Test cancellation, refunds, rescheduling, etc.\n`);
+
+    console.log('💡 Need different test scenarios?');
+    console.log(`   Run with custom parameters:`);
+    console.log(`     node create_correct_recurring_test_client.js 7 2    (7 days ago, 2 sessions)`);
+    console.log(`     node create_correct_recurring_test_client.js 30 3   (30 days ago, 3 sessions)`);
+    console.log(`     node create_correct_recurring_test_client.js 1 1    (1 day ago, 1 session)\n`);
 
   } catch (error) {
     console.error('❌ Error:', error.message);
