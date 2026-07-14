@@ -431,12 +431,27 @@ export default function ClientActionButton({
       };
     }
 
-    // After payment verified: allow reschedule or cancel
-    if (status === 'booking_scheduled' && paymentVerified1) {
-      return {
-        label: 'Reschedule or Cancel',
-        type: 'cancel',
-      };
+    // After payment verified: allow reschedule/cancel only within 24 hours of session
+    if (status === 'booking_scheduled' && paymentVerified1 && currentBooking?.session_date) {
+      const sessionTime = new Date(currentBooking.session_date).getTime();
+      const now = new Date().getTime();
+      const hoursUntilSession = (sessionTime - now) / (1000 * 60 * 60);
+
+      // Only show reschedule/cancel if within 24 hours of session
+      if (hoursUntilSession <= 24 && hoursUntilSession > 0) {
+        return {
+          label: 'Reschedule or Cancel',
+          type: 'cancel',
+        };
+      }
+
+      // If more than 24 hours away: no action (locked in, waiting)
+      if (hoursUntilSession > 24) {
+        return {
+          label: 'Confirmed - Waiting',
+          type: 'none',
+        };
+      }
     }
 
     // View session details
