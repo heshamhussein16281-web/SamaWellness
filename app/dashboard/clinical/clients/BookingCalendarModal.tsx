@@ -65,6 +65,8 @@ export default function BookingCalendarModal({
   const [clinicRooms, setClinicRooms] = useState<Array<{ id: number; room_name: string }>>([]);
   const [loadingRooms, setLoadingRooms] = useState(true);
   const [clinicName, setClinicName] = useState<string | null>(null);
+  const [existingBookings, setExistingBookings] = useState<Array<{ session_date: string; duration_minutes: number }>>([]);
+  const [loadingBookings, setLoadingBookings] = useState(true);
 
   // Fetch therapist schedule
   useEffect(() => {
@@ -152,6 +154,44 @@ export default function BookingCalendarModal({
 
     fetchRooms();
   }, [clinicId]);
+
+  // Fetch existing bookings for this therapist to prevent double-booking
+  useEffect(() => {
+    if (!therapistId) {
+      setLoadingBookings(false);
+      return;
+    }
+
+    const fetchBookings = async () => {
+      try {
+        setLoadingBookings(true);
+        // Fetch all bookings for this therapist (across all clients)
+        const res = await fetch(`/api/admin/therapists/${therapistId}/bookings`, {
+          credentials: 'include',
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          // Filter to only draft/scheduled/confirmed bookings (active bookings)
+          const activeBookings = (data.data || []).filter((b: any) =>
+            ['draft', 'scheduled', 'confirmed'].includes(b.booking_status)
+          );
+          console.log('[BookingCalendarModal] Existing bookings for therapist:', activeBookings);
+          setExistingBookings(activeBookings);
+        } else {
+          console.warn('[BookingCalendarModal] Failed to fetch therapist bookings:', res.status);
+          setExistingBookings([]);
+        }
+      } catch (err) {
+        console.error('[BookingCalendarModal] Error fetching bookings:', err);
+        setExistingBookings([]);
+      } finally {
+        setLoadingBookings(false);
+      }
+    };
+
+    fetchBookings();
+  }, [therapistId]);
 
   // Time slots (10am to 10pm) - full day view
   const HOUR_START = 10;
@@ -251,6 +291,30 @@ export default function BookingCalendarModal({
   };
 
   const weekDays = getWeekDays();
+
+  // Check if a time slot is booked by the therapist
+  const isSlotBooked = (dateStr: string, hour: number): boolean => {
+    // Create the session start and end times
+    const sessionStart = new Date(`${dateStr}T${String(hour).padStart(2, '0')}:00:00`);
+    const sessionEnd = new Date(sessionStart.getTime() + 60 * 60 * 1000); // 60 minutes
+
+    // Check against existing bookings
+    for (const booking of existingBookings) {
+      const bookingStart = new Date(booking.session_date);
+      const bookingEnd = new Date(bookingStart.getTime() + (booking.duration_minutes || 60) * 60 * 1000);
+
+      // Check if times overlap
+      if (sessionStart < bookingEnd && sessionEnd > bookingStart) {
+        console.log('[BookingCalendarModal] Slot conflict:', {
+          requested: { start: sessionStart.toISOString(), end: sessionEnd.toISOString() },
+          existing: { start: bookingStart.toISOString(), end: bookingEnd.toISOString() },
+        });
+        return true;
+      }
+    }
+
+    return false;
+  };
 
   const handleSlotClick = async (date: string, hour: number, roomName: string) => {
     // Prevent same-day bookings
@@ -506,12 +570,21 @@ export default function BookingCalendarModal({
                     const isSelected = selectedDate === dateStr && selectedTime === hour;
                     const isPastOrTodayDate = isPastOrToday(date);
 
-                    // Show as unavailable if not in working hours OR if it's today or in the past
-                    if (!isInWorkingHours || isPastOrTodayDate) {
+                    // Check if therapist is already booked at this time
+                    const booked = isSlotBooked(dateStr, hour);
+
+                    // Show as unavailable if not in working hours OR if it's today or in the past OR if therapist is booked
+                    if (!isInWorkingHours || isPastOrTodayDate || booked) {
                       return (
                         <div key={`${dateStr}-${hour}`} className="legacy-slot-cell unavailable">
                           {clinicRooms.map((room) => (
-                            <div key={room.id} className="legacy-room-btn disabled">—</div>
+                            <div
+                              key={room.id}
+                              className="legacy-room-btn disabled"
+                              title={booked ? 'Therapist is already booked at this time' : 'Not available'}
+                            >
+                              —
+                            </div>
                           ))}
                         </div>
                       );
