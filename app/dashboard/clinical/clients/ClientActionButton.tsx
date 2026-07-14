@@ -338,16 +338,16 @@ export default function ClientActionButton({
     }
 
     // ========== NEW CLIENTS (ONE-TIME) ==========
-    // Verify Payment for first session (before therapist assignment)
-    if (status === 'intake' && !paymentVerified1) {
+    // After intake: if therapist assigned, ready to book
+    if ((status === 'intake' || status === 'assessment_pending') && therapistId) {
       return {
-        label: 'Verify Payment',
-        type: 'payment',
+        label: 'Book Session',
+        type: 'booking',
       };
     }
 
-    // After payment verified, Sama assesses and assigns therapist
-    if (status === 'assessment_pending' && !therapistId) {
+    // After intake or assessment: if no therapist yet, need to select one
+    if ((status === 'intake' || status === 'assessment_pending') && !therapistId) {
       return {
         label: 'Select Therapist',
         type: 'therapist',

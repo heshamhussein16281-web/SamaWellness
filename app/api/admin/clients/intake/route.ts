@@ -129,12 +129,20 @@ export async function POST(request: NextRequest) {
     }
 
     // Determine client status based on therapist selection route
-    // NOTE: NEW CLIENTS always start with status 'intake' to show "Verify Payment" first
-    // This ensures payment is confirmed BEFORE assessment or booking
+    // NEW WORKFLOW: After intake, immediately move to appropriate status
     let clientStatus = 'intake';
 
-    // For recurring clients, skip to appropriate status
-    // (but for new clients, always start at intake to enforce payment first)
+    // If therapist directly assigned: move to ready_for_booking (can proceed to booking)
+    if (therapist_selection_route === 'direct_selection' && therapist_id) {
+      clientStatus = 'ready_for_booking';
+      console.log('[intake POST] Direct therapist assignment - setting status to ready_for_booking');
+    }
+    // If assessment needed: move to assessment_pending (Sama will assess and assign)
+    else if (therapist_selection_route === 'assessment') {
+      clientStatus = 'assessment_pending';
+      console.log('[intake POST] Assessment needed - setting status to assessment_pending');
+    }
+    // Otherwise stay in intake (shouldn't happen with valid form)
 
     // Create client record
     const now = new Date().toISOString();
@@ -181,15 +189,21 @@ export async function POST(request: NextRequest) {
     }
 
     // Create initial status history entry
+    const historyReason = clientStatus === 'ready_for_booking'
+      ? 'Intake completed - therapist assigned, ready for booking'
+      : clientStatus === 'assessment_pending'
+      ? 'Intake completed - awaiting Sama assessment for therapist assignment'
+      : 'Intake form submitted';
+
     const { error: historyError } = await supabase
       .from('client_status_history')
       .insert([
         {
           client_id: client.id,
           old_status: null,
-          new_status: 'intake',
+          new_status: clientStatus,
           changed_by_user_id: auth.user.userId,
-          reason: 'Client intake form submitted',
+          reason: historyReason,
           created_at: now,
         },
       ]);
