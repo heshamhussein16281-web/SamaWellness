@@ -109,6 +109,57 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // DOUBLE-BOOKING PREVENTION: Check for existing bookings
+    // A therapist cannot be booked twice at the same time (prevents scheduling conflicts)
+    const sessionStart = new Date(session_date);
+    const sessionEnd = new Date(sessionStart.getTime() + (duration_minutes || 60) * 60 * 1000);
+
+    console.log('[bookings POST] Checking for conflicts:', {
+      therapist_id,
+      session_date,
+      duration_minutes,
+      sessionStart: sessionStart.toISOString(),
+      sessionEnd: sessionEnd.toISOString(),
+    });
+
+    // Get all active bookings for this therapist that overlap with the requested time
+    const { data: conflictingBookings, error: conflictError } = await supabase
+      .from('bookings')
+      .select('id, session_date, duration_minutes, booking_status')
+      .eq('therapist_id', therapist_id)
+      .in('booking_status', ['draft', 'scheduled', 'confirmed'])
+      .lte('session_date', sessionEnd.toISOString())
+      .gte('session_date', new Date(sessionStart.getTime() - (480 * 60 * 1000)).toISOString()); // 8 hours buffer
+
+    if (conflictError) {
+      console.error('[bookings POST] Error checking conflicts:', conflictError);
+      return NextResponse.json({ error: 'Failed to check booking conflicts' }, { status: 500 });
+    }
+
+    // Check if any booking overlaps with the requested time
+    if (conflictingBookings && conflictingBookings.length > 0) {
+      for (const existingBooking of conflictingBookings) {
+        const existingStart = new Date(existingBooking.session_date);
+        const existingEnd = new Date(existingStart.getTime() + (existingBooking.duration_minutes || 60) * 60 * 1000);
+
+        // Check if times overlap
+        const hasOverlap = sessionStart < existingEnd && sessionEnd > existingStart;
+
+        if (hasOverlap) {
+          console.warn('[bookings POST] Double-booking attempt detected:', {
+            therapist_id,
+            existingBooking: { id: existingBooking.id, status: existingBooking.booking_status },
+            requestedTime: { start: sessionStart.toISOString(), end: sessionEnd.toISOString() },
+            existingTime: { start: existingStart.toISOString(), end: existingEnd.toISOString() },
+          });
+          return NextResponse.json(
+            { error: `Therapist is already booked during this time slot. Cannot create overlapping bookings.` },
+            { status: 409 }
+          );
+        }
+      }
+    }
+
     // Calculate payment deadline (24 hours from now)
     const now = new Date();
     const paymentDeadline = new Date(now.getTime() + 24 * 60 * 60 * 1000);

@@ -239,13 +239,15 @@ export async function GET(request: NextRequest) {
 
     const totalRooms = clinic.number_of_rooms || 1;
 
-    // 5. Get existing bookings for the clinic+date (all therapists)
+    // 5. Get existing bookings for THIS THERAPIST on this date
     // IMPORTANT: Include 'draft' status to exclude temporarily held slots (10-min hold system)
     // draft = slot selected but payment not verified yet (blocks double-booking for 10 min)
-    const { data: allBookings, error: bookingsError } = await supabase
+    // CRITICAL: A therapist cannot be booked twice at the same time (prevents double-booking)
+    const { data: therapistBookings, error: bookingsError } = await supabase
       .from('bookings')
       .select('therapist_id, session_date, duration_minutes, booking_status')
       .eq('clinic_id', clinicId)
+      .eq('therapist_id', therapistId)
       .gte('session_date', `${date}T00:00:00`)
       .lt('session_date', `${date}T23:59:59`)
       .in('booking_status', ['draft', 'scheduled', 'confirmed']);
@@ -254,19 +256,20 @@ export async function GET(request: NextRequest) {
       throw bookingsError;
     }
 
-    // Build a map: time_slot -> count of bookings at that time
-    const timeSlotBookingCounts = new Map<number, number>();
+    // Build a set of time slots occupied by THIS THERAPIST
+    // If therapist is booked at 10:00, they cannot be booked again at 10:00 (regardless of room)
+    const therapistBookedMinutes = new Set<number>();
 
-    if (allBookings) {
-      for (const booking of allBookings) {
+    if (therapistBookings) {
+      for (const booking of therapistBookings) {
         const bookingStart = new Date(booking.session_date);
         const startMinutes =
           bookingStart.getUTCHours() * 60 + bookingStart.getUTCMinutes();
         const endMinutes = startMinutes + (booking.duration_minutes || 60);
 
-        // Mark all minutes this booking occupies
+        // Mark all minutes this therapist is busy
         for (let minute = startMinutes; minute < endMinutes; minute++) {
-          timeSlotBookingCounts.set(minute, (timeSlotBookingCounts.get(minute) || 0) + 1);
+          therapistBookedMinutes.add(minute);
         }
       }
     }
@@ -286,16 +289,18 @@ export async function GET(request: NextRequest) {
     for (let slotStart = availStart; slotStart + durationMinutes <= availEnd; slotStart += 30) {
       const slotEnd = slotStart + durationMinutes;
 
-      // Check if room is available during this entire slot
-      let maxConcurrentBookings = 0;
+      // Check if THIS THERAPIST is available during this entire slot
+      let therapistIsBooked = false;
       for (let minute = slotStart; minute < slotEnd; minute++) {
-        const bookingCount = timeSlotBookingCounts.get(minute) || 0;
-        maxConcurrentBookings = Math.max(maxConcurrentBookings, bookingCount);
+        if (therapistBookedMinutes.has(minute)) {
+          therapistIsBooked = true;
+          break;
+        }
       }
 
-      const isAvailable = maxConcurrentBookings < totalRooms;
-      const conflictReason = maxConcurrentBookings >= totalRooms
-        ? `All ${totalRooms} room(s) are booked`
+      const isAvailable = !therapistIsBooked;
+      const conflictReason = therapistIsBooked
+        ? `Therapist is already booked at this time`
         : '';
 
       // Calculate cost
