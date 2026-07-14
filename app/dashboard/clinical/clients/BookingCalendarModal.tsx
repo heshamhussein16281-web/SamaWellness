@@ -65,7 +65,8 @@ export default function BookingCalendarModal({
   const [clinicRooms, setClinicRooms] = useState<Array<{ id: number; room_name: string }>>([]);
   const [loadingRooms, setLoadingRooms] = useState(true);
   const [clinicName, setClinicName] = useState<string | null>(null);
-  const [existingBookings, setExistingBookings] = useState<Array<{ session_date: string; duration_minutes: number; therapist_id: number; room_id?: number }>>([]);
+  const [therapistBookings, setTherapistBookings] = useState<Array<{ session_date: string; duration_minutes: number; therapist_id: number; room_id?: number }>>([]);
+  const [clinicBookings, setClinicBookings] = useState<Array<{ session_date: string; duration_minutes: number; therapist_id: number; room_id?: number }>>([]);
   const [loadingBookings, setLoadingBookings] = useState(true);
 
   // Fetch therapist schedule
@@ -155,9 +156,9 @@ export default function BookingCalendarModal({
     fetchRooms();
   }, [clinicId]);
 
-  // Fetch existing bookings for this therapist to prevent double-booking
+  // Fetch bookings for conflict checking (therapist + clinic-wide)
   useEffect(() => {
-    if (!therapistId) {
+    if (!therapistId || !clinicId) {
       setLoadingBookings(false);
       return;
     }
@@ -165,33 +166,51 @@ export default function BookingCalendarModal({
     const fetchBookings = async () => {
       try {
         setLoadingBookings(true);
-        // Fetch all bookings for this therapist (across all clients)
-        const res = await fetch(`/api/admin/therapists/${therapistId}/bookings`, {
+
+        // 1. Fetch THIS therapist's bookings (for therapist conflict checking)
+        const therapistRes = await fetch(`/api/admin/therapists/${therapistId}/bookings`, {
           credentials: 'include',
         });
 
-        if (res.ok) {
-          const data = await res.json();
-          // Filter to only draft/scheduled/confirmed bookings (active bookings)
+        if (therapistRes.ok) {
+          const data = await therapistRes.json();
           const activeBookings = (data.data || []).filter((b: any) =>
             ['draft', 'scheduled', 'confirmed'].includes(b.booking_status)
           );
-          console.log('[BookingCalendarModal] Existing bookings for therapist:', activeBookings);
-          setExistingBookings(activeBookings);
+          console.log('[BookingCalendarModal] Therapist bookings:', activeBookings);
+          setTherapistBookings(activeBookings);
         } else {
-          console.warn('[BookingCalendarModal] Failed to fetch therapist bookings:', res.status);
-          setExistingBookings([]);
+          console.warn('[BookingCalendarModal] Failed to fetch therapist bookings:', therapistRes.status);
+          setTherapistBookings([]);
+        }
+
+        // 2. Fetch ALL clinic bookings (for room conflict checking across all therapists)
+        const clinicRes = await fetch(`/api/admin/clinics/${clinicId}/bookings`, {
+          credentials: 'include',
+        });
+
+        if (clinicRes.ok) {
+          const data = await clinicRes.json();
+          const activeBookings = (data.data || []).filter((b: any) =>
+            ['draft', 'scheduled', 'confirmed'].includes(b.booking_status)
+          );
+          console.log('[BookingCalendarModal] All clinic bookings:', activeBookings);
+          setClinicBookings(activeBookings);
+        } else {
+          console.warn('[BookingCalendarModal] Failed to fetch clinic bookings:', clinicRes.status);
+          setClinicBookings([]);
         }
       } catch (err) {
         console.error('[BookingCalendarModal] Error fetching bookings:', err);
-        setExistingBookings([]);
+        setTherapistBookings([]);
+        setClinicBookings([]);
       } finally {
         setLoadingBookings(false);
       }
     };
 
     fetchBookings();
-  }, [therapistId]);
+  }, [therapistId, clinicId]);
 
   // Time slots (10am to 10pm) - full day view
   const HOUR_START = 10;
@@ -293,28 +312,19 @@ export default function BookingCalendarModal({
   const weekDays = getWeekDays();
 
   // Check if the therapist is booked at a specific time (blocks all rooms)
-  // All bookings in existingBookings are for THIS therapist (we fetch by therapist_id)
   const isTherapistBooked = (dateStr: string, hour: number): boolean => {
     // Create the session start and end times
     const sessionStart = new Date(`${dateStr}T${String(hour).padStart(2, '0')}:00:00`);
     const sessionEnd = new Date(sessionStart.getTime() + 60 * 60 * 1000); // 60 minutes
 
-    console.log('[BookingCalendarModal] Checking therapist conflicts for slot:', {
-      therapist: therapistId,
-      slotStart: sessionStart.toISOString(),
-      slotEnd: sessionEnd.toISOString(),
-      existingBookingsCount: existingBookings.length,
-    });
-
-    // Check against existing bookings
-    // Note: All bookings returned are for THIS therapist (endpoint filters by therapist_id)
-    for (const booking of existingBookings) {
+    // Check against THIS THERAPIST's bookings only
+    for (const booking of therapistBookings) {
       const bookingStart = new Date(booking.session_date);
       const bookingEnd = new Date(bookingStart.getTime() + (booking.duration_minutes || 60) * 60 * 1000);
 
       // Check if times overlap
       if (sessionStart < bookingEnd && sessionEnd > bookingStart) {
-        console.log('[BookingCalendarModal] THERAPIST CONFLICT DETECTED:', {
+        console.log('[BookingCalendarModal] THERAPIST CONFLICT:', {
           therapist: therapistId,
           requested: { start: sessionStart.toISOString(), end: sessionEnd.toISOString() },
           existing: {
@@ -330,14 +340,14 @@ export default function BookingCalendarModal({
     return false;
   };
 
-  // Check if a specific room is booked at a specific time (by any therapist)
+  // Check if a specific room is booked at a specific time (by ANY therapist in the clinic)
   const isRoomBooked = (dateStr: string, hour: number, roomId: number): boolean => {
     // Create the session start and end times
     const sessionStart = new Date(`${dateStr}T${String(hour).padStart(2, '0')}:00:00`);
     const sessionEnd = new Date(sessionStart.getTime() + 60 * 60 * 1000); // 60 minutes
 
-    // Check against existing bookings for THIS ROOM (by any therapist)
-    for (const booking of existingBookings) {
+    // Check against ALL clinic bookings for THIS ROOM (by any therapist)
+    for (const booking of clinicBookings) {
       // Only check bookings for THIS room
       if (booking.room_id !== roomId) continue;
 
@@ -346,8 +356,9 @@ export default function BookingCalendarModal({
 
       // Check if times overlap
       if (sessionStart < bookingEnd && sessionEnd > bookingStart) {
-        console.log('[BookingCalendarModal] Room conflict:', {
+        console.log('[BookingCalendarModal] ROOM CONFLICT:', {
           room: roomId,
+          bookedBy: booking.therapist_id,
           requested: { start: sessionStart.toISOString(), end: sessionEnd.toISOString() },
           existing: { start: bookingStart.toISOString(), end: bookingEnd.toISOString() },
         });
