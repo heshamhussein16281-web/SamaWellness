@@ -57,14 +57,12 @@ export async function POST(request: NextRequest) {
     const { therapist_id, client_id, session_date, duration_minutes, session_type, clinic_id, room_id, notes } = body;
 
     // Validate required fields
-    if (!therapist_id || !client_id || !session_date || !duration_minutes) {
+    if (!therapist_id || !client_id || !session_date || !duration_minutes || !clinic_id) {
       return NextResponse.json(
-        { error: 'Missing required fields: therapist_id, client_id, session_date, duration_minutes' },
+        { error: 'Missing required fields: therapist_id, client_id, session_date, duration_minutes, clinic_id' },
         { status: 400 }
       );
     }
-
-    // clinic_id is optional (not used in bookings table but may be provided for reference)
 
     // Validate session_type
     if (!['single', 'group', 'couple'].includes(session_type || 'single')) {
@@ -176,6 +174,7 @@ export async function POST(request: NextRequest) {
         {
           client_id,
           therapist_id,
+          clinic_id,
           session_date,
           duration_minutes,
           session_type: session_type || 'single',
