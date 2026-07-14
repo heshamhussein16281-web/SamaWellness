@@ -65,7 +65,7 @@ export default function BookingCalendarModal({
   const [clinicRooms, setClinicRooms] = useState<Array<{ id: number; room_name: string }>>([]);
   const [loadingRooms, setLoadingRooms] = useState(true);
   const [clinicName, setClinicName] = useState<string | null>(null);
-  const [existingBookings, setExistingBookings] = useState<Array<{ session_date: string; duration_minutes: number }>>([]);
+  const [existingBookings, setExistingBookings] = useState<Array<{ session_date: string; duration_minutes: number; therapist_id: number; room_id?: number }>>([]);
   const [loadingBookings, setLoadingBookings] = useState(true);
 
   // Fetch therapist schedule
@@ -292,20 +292,52 @@ export default function BookingCalendarModal({
 
   const weekDays = getWeekDays();
 
-  // Check if a time slot is booked by the therapist
-  const isSlotBooked = (dateStr: string, hour: number): boolean => {
+  // Check if the therapist is booked at a specific time (blocks all rooms)
+  const isTherapistBooked = (dateStr: string, hour: number): boolean => {
     // Create the session start and end times
     const sessionStart = new Date(`${dateStr}T${String(hour).padStart(2, '0')}:00:00`);
     const sessionEnd = new Date(sessionStart.getTime() + 60 * 60 * 1000); // 60 minutes
 
-    // Check against existing bookings
+    // Check against existing bookings by THIS THERAPIST
     for (const booking of existingBookings) {
+      // Only check bookings by THIS therapist (for therapist conflicts)
+      if (booking.therapist_id !== therapistId) continue;
+
       const bookingStart = new Date(booking.session_date);
       const bookingEnd = new Date(bookingStart.getTime() + (booking.duration_minutes || 60) * 60 * 1000);
 
       // Check if times overlap
       if (sessionStart < bookingEnd && sessionEnd > bookingStart) {
-        console.log('[BookingCalendarModal] Slot conflict:', {
+        console.log('[BookingCalendarModal] Therapist conflict:', {
+          therapist: therapistId,
+          requested: { start: sessionStart.toISOString(), end: sessionEnd.toISOString() },
+          existing: { start: bookingStart.toISOString(), end: bookingEnd.toISOString() },
+        });
+        return true;
+      }
+    }
+
+    return false;
+  };
+
+  // Check if a specific room is booked at a specific time (by any therapist)
+  const isRoomBooked = (dateStr: string, hour: number, roomId: number): boolean => {
+    // Create the session start and end times
+    const sessionStart = new Date(`${dateStr}T${String(hour).padStart(2, '0')}:00:00`);
+    const sessionEnd = new Date(sessionStart.getTime() + 60 * 60 * 1000); // 60 minutes
+
+    // Check against existing bookings for THIS ROOM (by any therapist)
+    for (const booking of existingBookings) {
+      // Only check bookings for THIS room
+      if (booking.room_id !== roomId) continue;
+
+      const bookingStart = new Date(booking.session_date);
+      const bookingEnd = new Date(bookingStart.getTime() + (booking.duration_minutes || 60) * 60 * 1000);
+
+      // Check if times overlap
+      if (sessionStart < bookingEnd && sessionEnd > bookingStart) {
+        console.log('[BookingCalendarModal] Room conflict:', {
+          room: roomId,
           requested: { start: sessionStart.toISOString(), end: sessionEnd.toISOString() },
           existing: { start: bookingStart.toISOString(), end: bookingEnd.toISOString() },
         });
@@ -570,18 +602,18 @@ export default function BookingCalendarModal({
                     const isSelected = selectedDate === dateStr && selectedTime === hour;
                     const isPastOrTodayDate = isPastOrToday(date);
 
-                    // Check if therapist is already booked at this time
-                    const booked = isSlotBooked(dateStr, hour);
+                    // Check if therapist is already booked at this time (blocks ALL rooms)
+                    const therapistBooked = isTherapistBooked(dateStr, hour);
 
                     // Show as unavailable if not in working hours OR if it's today or in the past OR if therapist is booked
-                    if (!isInWorkingHours || isPastOrTodayDate || booked) {
+                    if (!isInWorkingHours || isPastOrTodayDate || therapistBooked) {
                       return (
                         <div key={`${dateStr}-${hour}`} className="legacy-slot-cell unavailable">
                           {clinicRooms.map((room) => (
                             <div
                               key={room.id}
                               className="legacy-room-btn disabled"
-                              title={booked ? 'Therapist is already booked at this time' : 'Not available'}
+                              title={therapistBooked ? 'Therapist is already booked at this time' : 'Not available'}
                             >
                               —
                             </div>
@@ -592,17 +624,37 @@ export default function BookingCalendarModal({
 
                     return (
                       <div key={`${dateStr}-${hour}`} className="legacy-slot-cell">
-                        {clinicRooms.map((room) => (
-                          <button
-                            key={room.id}
-                            type="button"
-                            className={`legacy-room-btn ${isSelected && selectedRoom?.id === room.id ? 'selected' : 'free'}`}
-                            onClick={() => handleSlotClick(dateStr, hour, room.room_name)}
-                            title={room.room_name}
-                          >
-                            {room.room_name.charAt(0).toUpperCase()}
-                          </button>
-                        ))}
+                        {clinicRooms.map((room) => {
+                          // Check if THIS specific room is booked (by any therapist)
+                          const roomBooked = isRoomBooked(dateStr, hour, room.id);
+                          const isRoomSelected = isSelected && selectedRoom?.id === room.id;
+
+                          if (roomBooked) {
+                            // Room is booked by another therapist/client
+                            return (
+                              <div
+                                key={room.id}
+                                className="legacy-room-btn disabled"
+                                title={`${room.room_name} is already booked at this time`}
+                              >
+                                —
+                              </div>
+                            );
+                          }
+
+                          // Room is available
+                          return (
+                            <button
+                              key={room.id}
+                              type="button"
+                              className={`legacy-room-btn ${isRoomSelected ? 'selected' : 'free'}`}
+                              onClick={() => handleSlotClick(dateStr, hour, room.room_name)}
+                              title={room.room_name}
+                            >
+                              {room.room_name.charAt(0).toUpperCase()}
+                            </button>
+                          );
+                        })}
                       </div>
                     );
                   })}

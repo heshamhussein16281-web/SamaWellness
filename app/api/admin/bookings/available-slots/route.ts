@@ -239,15 +239,16 @@ export async function GET(request: NextRequest) {
 
     const totalRooms = clinic.number_of_rooms || 1;
 
-    // 5. Get existing bookings for THIS THERAPIST on this date
+    // 5. Get existing bookings for the clinic on this date (check therapist AND room conflicts)
     // IMPORTANT: Include 'draft' status to exclude temporarily held slots (10-min hold system)
     // draft = slot selected but payment not verified yet (blocks double-booking for 10 min)
-    // CRITICAL: A therapist cannot be booked twice at the same time (prevents double-booking)
-    const { data: therapistBookings, error: bookingsError } = await supabase
+    // We need to check TWO conflicts:
+    // 1. CRITICAL: A therapist cannot be booked twice at the same time (prevents therapist double-booking)
+    // 2. CRITICAL: A room cannot be booked twice at the same time (prevents room double-booking)
+    const { data: allBookingsOnDate, error: bookingsError } = await supabase
       .from('bookings')
-      .select('therapist_id, session_date, duration_minutes, booking_status')
+      .select('therapist_id, room_id, session_date, duration_minutes, booking_status')
       .eq('clinic_id', clinicId)
-      .eq('therapist_id', therapistId)
       .gte('session_date', `${date}T00:00:00`)
       .lt('session_date', `${date}T23:59:59`)
       .in('booking_status', ['draft', 'scheduled', 'confirmed']);
@@ -256,28 +257,47 @@ export async function GET(request: NextRequest) {
       throw bookingsError;
     }
 
-    // Build a set of time slots occupied by THIS THERAPIST
-    // If therapist is booked at 10:00, they cannot be booked again at 10:00 (regardless of room)
+    // Build maps for conflict checking
+    // 1. therapistBookedMinutes: Check if THIS therapist is already busy
+    // 2. roomBookedMinutes: Track which rooms are booked at which times
     const therapistBookedMinutes = new Set<number>();
+    const roomBookedMinutes = new Map<string, Set<number>>();
 
-    if (therapistBookings) {
-      for (const booking of therapistBookings) {
+    if (allBookingsOnDate) {
+      for (const booking of allBookingsOnDate) {
         const bookingStart = new Date(booking.session_date);
         const startMinutes =
           bookingStart.getUTCHours() * 60 + bookingStart.getUTCMinutes();
         const endMinutes = startMinutes + (booking.duration_minutes || 60);
 
-        // Mark all minutes this therapist is busy
-        for (let minute = startMinutes; minute < endMinutes; minute++) {
-          therapistBookedMinutes.add(minute);
+        // Check therapist conflict
+        if (booking.therapist_id === parseInt(therapistId)) {
+          for (let minute = startMinutes; minute < endMinutes; minute++) {
+            therapistBookedMinutes.add(minute);
+          }
+        }
+
+        // Check room conflict (for any therapist)
+        if (booking.room_id) {
+          const roomMinutes = roomBookedMinutes.get(booking.room_id) || new Set<number>();
+          for (let minute = startMinutes; minute < endMinutes; minute++) {
+            roomMinutes.add(minute);
+          }
+          roomBookedMinutes.set(booking.room_id, roomMinutes);
         }
       }
     }
 
-    // Create a virtual room for display
-    const rooms = [
-      { id: 'clinic_default', name: `Clinic Room (${totalRooms} available)`, capacity: 1 }
-    ];
+    // Get list of rooms for this clinic (if available)
+    const { data: roomsList, error: roomsError } = await supabase
+      .from('clinic_rooms')
+      .select('id, room_name')
+      .eq('clinic_id', clinicId)
+      .eq('status', 'active');
+
+    const rooms = (roomsList && roomsList.length > 0)
+      ? roomsList
+      : [{ id: 'clinic_default', room_name: 'Main Room' }];
 
     // 6. Generate 30-minute slots from availability start_time to end_time
     const availStart = timeToMinutes(availability.start_time);
@@ -298,23 +318,54 @@ export async function GET(request: NextRequest) {
         }
       }
 
-      const isAvailable = !therapistIsBooked;
-      const conflictReason = therapistIsBooked
-        ? `Therapist is already booked at this time`
-        : '';
+      // If therapist is booked, all rooms are unavailable for this therapist at this time
+      if (therapistIsBooked) {
+        const cost = (hourlyRate / 60) * durationMinutes;
 
-      // Calculate cost
-      const cost = (hourlyRate / 60) * durationMinutes;
+        // Add a single entry indicating therapist conflict (applies to all rooms)
+        slots.push({
+          start_time: minutesToTime(slotStart),
+          end_time: minutesToTime(slotEnd),
+          room_id: 'therapist_conflict',
+          room_name: 'All Rooms',
+          available: false,
+          cost: Math.round(cost * 100) / 100,
+          reason: `Therapist is already booked at this time`,
+        });
+        continue; // Skip to next slot
+      }
 
-      slots.push({
-        start_time: minutesToTime(slotStart),
-        end_time: minutesToTime(slotEnd),
-        room_id: rooms[0].id,
-        room_name: rooms[0].name,
-        available: isAvailable,
-        cost: Math.round(cost * 100) / 100,
-        ...(conflictReason && { reason: conflictReason }),
-      });
+      // Therapist is free - check room availability
+      for (const room of rooms) {
+        const roomMinutes = roomBookedMinutes.get(room.id) || new Set<number>();
+
+        // Check if room is available during this entire slot
+        let roomIsBooked = false;
+        for (let minute = slotStart; minute < slotEnd; minute++) {
+          if (roomMinutes.has(minute)) {
+            roomIsBooked = true;
+            break;
+          }
+        }
+
+        const isAvailable = !roomIsBooked;
+        const conflictReason = roomIsBooked
+          ? `${room.room_name} is already booked at this time`
+          : '';
+
+        // Calculate cost
+        const cost = (hourlyRate / 60) * durationMinutes;
+
+        slots.push({
+          start_time: minutesToTime(slotStart),
+          end_time: minutesToTime(slotEnd),
+          room_id: room.id,
+          room_name: room.room_name,
+          available: isAvailable,
+          cost: Math.round(cost * 100) / 100,
+          ...(conflictReason && { reason: conflictReason }),
+        });
+      }
     }
 
     if (slots.length === 0) {
