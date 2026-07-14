@@ -113,7 +113,12 @@ export async function POST(request: NextRequest) {
     const now = new Date();
     const paymentDeadline = new Date(now.getTime() + 24 * 60 * 60 * 1000);
 
-    // Create the booking
+    // Calculate hold expiration (10 minutes from now for slot reservation)
+    const holdExpiresAt = new Date(now.getTime() + 10 * 60 * 1000);
+
+    // Create the booking as DRAFT with 10-minute hold
+    // draft = slot selected, awaiting payment verification
+    // hold_expires_at = when this draft booking should be auto-released if not verified
     const { data: booking, error: bookingError } = await supabase
       .from('bookings')
       .insert([
@@ -126,7 +131,8 @@ export async function POST(request: NextRequest) {
           room_id: room_id || null,
           notes: notes || null,
           payment_status: 'pending',
-          booking_status: 'scheduled',
+          booking_status: 'draft', // CHANGE: Start as 'draft' (temporarily held)
+          hold_expires_at: holdExpiresAt.toISOString(), // 10-minute timeout
           payment_deadline: paymentDeadline.toISOString(),
           status: 'scheduled', // Maintain backwards compatibility with original status field
         },
@@ -157,6 +163,17 @@ export async function POST(request: NextRequest) {
         code: bookingError.code
       }, { status: 500 });
     }
+
+    // Log draft booking creation with hold timer
+    console.log('[bookings POST] ✓ Created DRAFT booking with 10-min hold', {
+      bookingId: booking.id,
+      clientId: client_id,
+      therapistId: therapist_id,
+      booking_status: 'draft',
+      hold_expires_at: booking.hold_expires_at,
+      session_date: booking.session_date,
+      message: 'Slot is now reserved. Reception must verify payment within 10 minutes.',
+    });
 
     // Update client status and payment fields based on client type
     console.log('[bookings] Updating client', client_id, 'status to booking_scheduled');

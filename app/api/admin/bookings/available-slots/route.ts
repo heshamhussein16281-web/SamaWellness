@@ -240,13 +240,15 @@ export async function GET(request: NextRequest) {
     const totalRooms = clinic.number_of_rooms || 1;
 
     // 5. Get existing bookings for the clinic+date (all therapists)
+    // IMPORTANT: Include 'draft' status to exclude temporarily held slots (10-min hold system)
+    // draft = slot selected but payment not verified yet (blocks double-booking for 10 min)
     const { data: allBookings, error: bookingsError } = await supabase
       .from('bookings')
       .select('therapist_id, session_date, duration_minutes, booking_status')
       .eq('clinic_id', clinicId)
       .gte('session_date', `${date}T00:00:00`)
       .lt('session_date', `${date}T23:59:59`)
-      .in('booking_status', ['scheduled', 'confirmed']);
+      .in('booking_status', ['draft', 'scheduled', 'confirmed']);
 
     if (bookingsError) {
       throw bookingsError;

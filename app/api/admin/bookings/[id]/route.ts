@@ -230,16 +230,19 @@ export async function PUT(
       return NextResponse.json({ error: 'Failed to create payment record' }, { status: 500 });
     }
 
-    // Update booking: payment_status='paid', booking_status='confirmed', marked_paid tracking
+    // Update booking: payment_status='paid', booking_status='confirmed', clear hold, set confirmed time
+    const now = new Date().toISOString();
     const { data: updatedBooking, error: updateError } = await supabase
       .from('bookings')
       .update({
         payment_status: 'paid',
         booking_status: 'confirmed',
+        hold_expires_at: null, // CHANGE: Clear 10-minute hold since payment verified
+        confirmed_at: now, // CHANGE: Record when payment was confirmed
         payment_date: paymentDateObj.toISOString(),
         marked_paid_by_user_id: auth.user.userId,
-        marked_paid_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
+        marked_paid_at: now,
+        updated_at: now,
       })
       .eq('id', booking.id)
       .select()
@@ -249,6 +252,16 @@ export async function PUT(
       console.error('Error updating booking:', updateError);
       return NextResponse.json({ error: 'Failed to update booking' }, { status: 500 });
     }
+
+    // Log that payment verification cleared the hold
+    console.log('[bookings PUT] ✓ Payment verified & hold cleared', {
+      bookingId: booking.id,
+      booking_status: 'confirmed',
+      hold_expires_at: 'NULL (cleared)',
+      confirmed_at: now,
+      payment_status: 'paid',
+      message: 'Draft booking confirmed. 10-minute hold released.',
+    });
 
     // Log audit action
     const actionDescription = `Payment received for booking ${booking.id}: ${amountPaid} EGP (actual cost: ${actualCost})` +
