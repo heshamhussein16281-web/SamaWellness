@@ -62,10 +62,10 @@ export async function POST(request: NextRequest) {
     }
 
     if (clientData.is_new_client && force_hold) {
-      // Create hold booking for new client
-      bookingStatus = 'H'; // Hold status
+      // Create draft booking for new client (10-minute hold per Phase 2 slot hold system)
+      bookingStatus = 'draft'; // Draft status with hold
       holdCreatedAt = new Date().toISOString();
-      holdExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(); // 24 hours
+      holdExpiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 minutes
     }
 
     const bookingData = {
@@ -73,7 +73,8 @@ export async function POST(request: NextRequest) {
       therapist_id,
       session_date,
       duration_minutes,
-      status: bookingStatus,
+      booking_status: bookingStatus,
+      payment_status: 'pending',
       notes,
       hold_created_at: holdCreatedAt,
       hold_expires_at: holdExpiresAt
