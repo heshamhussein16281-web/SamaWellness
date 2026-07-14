@@ -177,7 +177,14 @@ export default function BookingCalendarModal({
           const activeBookings = (data.data || []).filter((b: any) =>
             ['draft', 'scheduled', 'confirmed'].includes(b.booking_status)
           );
-          console.log('[BookingCalendarModal] Therapist bookings:', activeBookings);
+          console.log('[BookingCalendarModal] ===== THERAPIST BOOKINGS =====');
+          console.log('[BookingCalendarModal] Therapist ID:', therapistId);
+          console.log('[BookingCalendarModal] Bookings count:', activeBookings.length);
+          console.log('[BookingCalendarModal] Bookings:', activeBookings.map((b: any) => ({
+            therapist_id: b.therapist_id,
+            session_date: b.session_date,
+            room_id: b.room_id,
+          })));
           setTherapistBookings(activeBookings);
         } else {
           console.warn('[BookingCalendarModal] Failed to fetch therapist bookings:', therapistRes.status);
@@ -194,7 +201,14 @@ export default function BookingCalendarModal({
           const activeBookings = (data.data || []).filter((b: any) =>
             ['draft', 'scheduled', 'confirmed'].includes(b.booking_status)
           );
-          console.log('[BookingCalendarModal] All clinic bookings:', activeBookings);
+          console.log('[BookingCalendarModal] ===== CLINIC BOOKINGS =====');
+          console.log('[BookingCalendarModal] Clinic ID:', clinicId);
+          console.log('[BookingCalendarModal] Bookings count:', activeBookings.length);
+          console.log('[BookingCalendarModal] Bookings:', activeBookings.map((b: any) => ({
+            therapist_id: b.therapist_id,
+            session_date: b.session_date,
+            room_id: b.room_id,
+          })));
           setClinicBookings(activeBookings);
         } else {
           console.warn('[BookingCalendarModal] Failed to fetch clinic bookings:', clinicRes.status);
@@ -317,6 +331,14 @@ export default function BookingCalendarModal({
     const sessionStart = new Date(`${dateStr}T${String(hour).padStart(2, '0')}:00:00`);
     const sessionEnd = new Date(sessionStart.getTime() + 60 * 60 * 1000); // 60 minutes
 
+    if (hour === 10) { // Log only for debugging at 10:00
+      console.log('[isTherapistBooked] Checking slot:', {
+        therapist: therapistId,
+        slot: { start: sessionStart.toISOString(), end: sessionEnd.toISOString() },
+        therapistBookingsCount: therapistBookings.length,
+      });
+    }
+
     // Check against THIS THERAPIST's bookings only
     for (const booking of therapistBookings) {
       const bookingStart = new Date(booking.session_date);
@@ -324,19 +346,25 @@ export default function BookingCalendarModal({
 
       // Check if times overlap
       if (sessionStart < bookingEnd && sessionEnd > bookingStart) {
-        console.log('[BookingCalendarModal] THERAPIST CONFLICT:', {
-          therapist: therapistId,
-          requested: { start: sessionStart.toISOString(), end: sessionEnd.toISOString() },
-          existing: {
-            room: booking.room_id,
-            start: bookingStart.toISOString(),
-            end: bookingEnd.toISOString(),
-          },
-        });
+        if (hour === 10) {
+          console.log('[isTherapistBooked] ❌ THERAPIST CONFLICT FOUND', {
+            therapist: therapistId,
+            requested: { start: sessionStart.toISOString(), end: sessionEnd.toISOString() },
+            existing: {
+              therapist_id: booking.therapist_id,
+              room: booking.room_id,
+              start: bookingStart.toISOString(),
+              end: bookingEnd.toISOString(),
+            },
+          });
+        }
         return true;
       }
     }
 
+    if (hour === 10) {
+      console.log('[isTherapistBooked] ✓ No conflict for this therapist');
+    }
     return false;
   };
 
