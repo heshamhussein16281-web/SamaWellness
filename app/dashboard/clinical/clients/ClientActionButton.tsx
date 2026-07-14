@@ -339,6 +339,38 @@ export default function ClientActionButton({
 
     // ========== NEW CLIENTS (ONE-TIME) ==========
 
+    // *** CHECK BOOKING_SCHEDULED FIRST (most recent state) ***
+    // After booking: verify payment first (before allowing reschedule)
+    if (status === 'booking_scheduled' && !paymentVerified1) {
+      return {
+        label: 'Verify Payment',
+        type: 'payment',
+      };
+    }
+
+    // After payment verified: allow reschedule/cancel only within 24 hours of session
+    if (status === 'booking_scheduled' && paymentVerified1 && currentBooking?.session_date) {
+      const sessionTime = new Date(currentBooking.session_date).getTime();
+      const now = new Date().getTime();
+      const hoursUntilSession = (sessionTime - now) / (1000 * 60 * 60);
+
+      if (hoursUntilSession <= 24 && hoursUntilSession > 0) {
+        return {
+          label: 'Reschedule or Cancel',
+          type: 'cancel',
+        };
+      }
+
+      if (hoursUntilSession > 24) {
+        return {
+          label: 'Confirmed - Waiting',
+          type: 'none',
+        };
+      }
+    }
+
+    // *** THEN CHECK EARLY STAGES (intake, assessment_pending, ready_for_booking) ***
+
     // ASSESSMENT PATH: Payment verification is required first
     // If intake with no therapist and no payment → Verify Payment (assessment route)
     if (status === 'intake' && !therapistId && !paymentVerified1) {
@@ -422,38 +454,7 @@ export default function ClientActionButton({
       };
     }
 
-    // ========== POST-BOOKING ACTIONS ==========
-    // After booking: verify payment first (before allowing reschedule)
-    if (status === 'booking_scheduled' && !paymentVerified1) {
-      return {
-        label: 'Verify Payment',
-        type: 'payment',
-      };
-    }
-
-    // After payment verified: allow reschedule/cancel only within 24 hours of session
-    if (status === 'booking_scheduled' && paymentVerified1 && currentBooking?.session_date) {
-      const sessionTime = new Date(currentBooking.session_date).getTime();
-      const now = new Date().getTime();
-      const hoursUntilSession = (sessionTime - now) / (1000 * 60 * 60);
-
-      // Only show reschedule/cancel if within 24 hours of session
-      if (hoursUntilSession <= 24 && hoursUntilSession > 0) {
-        return {
-          label: 'Reschedule or Cancel',
-          type: 'cancel',
-        };
-      }
-
-      // If more than 24 hours away: no action (locked in, waiting)
-      if (hoursUntilSession > 24) {
-        return {
-          label: 'Confirmed - Waiting',
-          type: 'none',
-        };
-      }
-    }
-
+    // ========== ACTIVE/COMPLETED SESSIONS ==========
     // View session details
     if (status === 'active') {
       return {
