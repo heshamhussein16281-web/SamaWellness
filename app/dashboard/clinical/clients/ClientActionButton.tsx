@@ -338,19 +338,45 @@ export default function ClientActionButton({
     }
 
     // ========== NEW CLIENTS (ONE-TIME) ==========
-    // After intake: if therapist assigned, ready to book
-    if ((status === 'intake' || status === 'assessment_pending') && therapistId) {
+
+    // ASSESSMENT PATH: Payment verification is required first
+    // If intake with no therapist and no payment → Verify Payment (assessment route)
+    if (status === 'intake' && !therapistId && !paymentVerified1) {
+      return {
+        label: 'Verify Payment',
+        type: 'payment',
+      };
+    }
+
+    // DIRECT SELECTION PATH: If therapist assigned in intake → ready to book
+    if (status === 'intake' && therapistId) {
       return {
         label: 'Book Session',
         type: 'booking',
       };
     }
 
-    // After intake or assessment: if no therapist yet, need to select one
-    if ((status === 'intake' || status === 'assessment_pending') && !therapistId) {
+    // After payment verified in assessment path → Do assessment & assign therapist
+    if (status === 'assessment_pending' && !therapistId) {
       return {
         label: 'Select Therapist',
         type: 'therapist',
+      };
+    }
+
+    // After therapist assigned in assessment path → ready to book
+    if (status === 'assessment_pending' && therapistId) {
+      return {
+        label: 'Book Session',
+        type: 'booking',
+      };
+    }
+
+    // After therapist assigned and ready to book (either path)
+    if (status === 'ready_for_booking' && therapistId) {
+      return {
+        label: 'Book Session',
+        type: 'booking',
       };
     }
 

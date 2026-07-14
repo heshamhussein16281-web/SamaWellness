@@ -129,20 +129,21 @@ export async function POST(request: NextRequest) {
     }
 
     // Determine client status based on therapist selection route
-    // NEW WORKFLOW: After intake, immediately move to appropriate status
+    // WORKFLOW:
+    // - Assessment path: Stay in 'intake' → payment verification first → then assessment_pending
+    // - Direct selection path: Move to 'ready_for_booking' if therapist assigned
     let clientStatus = 'intake';
 
-    // If therapist directly assigned: move to ready_for_booking (can proceed to booking)
+    // If therapist directly assigned (Personal Preference path): move to ready_for_booking
     if (therapist_selection_route === 'direct_selection' && therapist_id) {
       clientStatus = 'ready_for_booking';
       console.log('[intake POST] Direct therapist assignment - setting status to ready_for_booking');
     }
-    // If assessment needed: move to assessment_pending (Sama will assess and assign)
+    // If assessment needed: stay in intake (payment verification is next step)
     else if (therapist_selection_route === 'assessment') {
-      clientStatus = 'assessment_pending';
-      console.log('[intake POST] Assessment needed - setting status to assessment_pending');
+      clientStatus = 'intake';
+      console.log('[intake POST] Assessment needed - staying in intake status (payment verification next)');
     }
-    // Otherwise stay in intake (shouldn't happen with valid form)
 
     // Create client record
     const now = new Date().toISOString();
