@@ -91,28 +91,6 @@ export async function GET(
         details: supabaseError?.message || 'Unknown error',
       }, { status: 500 });
     }
-
-    if (error) {
-      console.error('[clinic bookings] Supabase error:', {
-        message: error.message,
-        code: error.code,
-        details: error.details,
-      });
-      return NextResponse.json({
-        error: 'Failed to fetch clinic bookings',
-        details: error.message,
-      }, { status: 500 });
-    }
-
-    console.log('[clinic bookings] Success - returned', bookings?.length || 0, 'bookings');
-
-    return NextResponse.json(
-      {
-        success: true,
-        data: bookings || [],
-      },
-      { status: 200 }
-    );
   } catch (err) {
     console.error('GET /api/admin/clinics/[id]/bookings error:', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
