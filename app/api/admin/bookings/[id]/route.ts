@@ -254,20 +254,26 @@ export async function PUT(
     }
 
     // Update client status to booking_scheduled (payment verified, slot confirmed)
-    const { error: clientUpdateError } = await supabase
+    const { data: updatedClient, error: clientUpdateError } = await supabase
       .from('clients')
       .update({
         status: 'booking_scheduled',
         payment_verified_1: true,
         updated_at: now,
       })
-      .eq('id', booking.client_id);
+      .eq('id', booking.client_id)
+      .select('id, status, payment_verified_1')
+      .single();
 
     if (clientUpdateError) {
-      console.error('Error updating client status:', clientUpdateError);
+      console.error('[bookings PUT] Error updating client status:', clientUpdateError);
       // Don't fail the request - booking update was successful
     } else {
-      console.log('[bookings PUT] ✓ Client status updated to booking_scheduled');
+      console.log('[bookings PUT] ✓ Client status updated:', {
+        client_id: booking.client_id,
+        new_status: updatedClient?.status,
+        payment_verified_1: updatedClient?.payment_verified_1,
+      });
     }
 
     // Log that payment verification cleared the hold
