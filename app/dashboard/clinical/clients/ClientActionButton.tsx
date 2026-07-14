@@ -348,25 +348,13 @@ export default function ClientActionButton({
       };
     }
 
-    // After payment verified: allow reschedule/cancel only within 24 hours of session
-    if (status === 'booking_scheduled' && paymentVerified1 && currentBooking?.session_date) {
-      const sessionTime = new Date(currentBooking.session_date).getTime();
-      const now = new Date().getTime();
-      const hoursUntilSession = (sessionTime - now) / (1000 * 60 * 60);
-
-      if (hoursUntilSession <= 24 && hoursUntilSession > 0) {
-        return {
-          label: 'Reschedule or Cancel',
-          type: 'cancel',
-        };
-      }
-
-      if (hoursUntilSession > 24) {
-        return {
-          label: 'Confirmed - Waiting',
-          type: 'none',
-        };
-      }
+    // After payment verified: allow reschedule/cancel anytime (even if > 24 hours away)
+    // The RescheduleModal enforces the 24-hour minimum cancellation notice rule
+    if (status === 'booking_scheduled' && paymentVerified1) {
+      return {
+        label: 'Reschedule or Cancel',
+        type: 'cancel',
+      };
     }
 
     // *** THEN CHECK EARLY STAGES (intake, assessment_pending, ready_for_booking) ***
