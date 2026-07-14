@@ -423,8 +423,16 @@ export default function ClientActionButton({
     }
 
     // ========== POST-BOOKING ACTIONS ==========
-    // Reschedule or Cancel (within 24hrs of session)
-    if (status === 'booking_scheduled') {
+    // After booking: verify payment first (before allowing reschedule)
+    if (status === 'booking_scheduled' && !paymentVerified1) {
+      return {
+        label: 'Verify Payment',
+        type: 'payment',
+      };
+    }
+
+    // After payment verified: allow reschedule or cancel
+    if (status === 'booking_scheduled' && paymentVerified1) {
       return {
         label: 'Reschedule or Cancel',
         type: 'cancel',
