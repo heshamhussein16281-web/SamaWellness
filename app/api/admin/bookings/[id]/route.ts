@@ -253,6 +253,23 @@ export async function PUT(
       return NextResponse.json({ error: 'Failed to update booking' }, { status: 500 });
     }
 
+    // Update client status to booking_scheduled (payment verified, slot confirmed)
+    const { error: clientUpdateError } = await supabase
+      .from('clients')
+      .update({
+        status: 'booking_scheduled',
+        payment_verified_1: true,
+        updated_at: now,
+      })
+      .eq('id', booking.client_id);
+
+    if (clientUpdateError) {
+      console.error('Error updating client status:', clientUpdateError);
+      // Don't fail the request - booking update was successful
+    } else {
+      console.log('[bookings PUT] ✓ Client status updated to booking_scheduled');
+    }
+
     // Log that payment verification cleared the hold
     console.log('[bookings PUT] ✓ Payment verified & hold cleared', {
       bookingId: booking.id,
