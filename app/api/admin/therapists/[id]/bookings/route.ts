@@ -43,7 +43,7 @@ export async function GET(
     // Get all active bookings for this therapist
     const { data: bookings, error } = await supabase
       .from('bookings')
-      .select('id, session_date, duration_minutes, booking_status, client_id, room_id')
+      .select('id, therapist_id, session_date, duration_minutes, booking_status, client_id, room_id')
       .eq('therapist_id', therapistId)
       .in('booking_status', ['draft', 'scheduled', 'confirmed'])
       .order('session_date', { ascending: false });

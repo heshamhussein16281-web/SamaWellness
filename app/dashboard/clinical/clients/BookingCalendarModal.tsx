@@ -293,25 +293,35 @@ export default function BookingCalendarModal({
   const weekDays = getWeekDays();
 
   // Check if the therapist is booked at a specific time (blocks all rooms)
+  // All bookings in existingBookings are for THIS therapist (we fetch by therapist_id)
   const isTherapistBooked = (dateStr: string, hour: number): boolean => {
     // Create the session start and end times
     const sessionStart = new Date(`${dateStr}T${String(hour).padStart(2, '0')}:00:00`);
     const sessionEnd = new Date(sessionStart.getTime() + 60 * 60 * 1000); // 60 minutes
 
-    // Check against existing bookings by THIS THERAPIST
-    for (const booking of existingBookings) {
-      // Only check bookings by THIS therapist (for therapist conflicts)
-      if (booking.therapist_id !== therapistId) continue;
+    console.log('[BookingCalendarModal] Checking therapist conflicts for slot:', {
+      therapist: therapistId,
+      slotStart: sessionStart.toISOString(),
+      slotEnd: sessionEnd.toISOString(),
+      existingBookingsCount: existingBookings.length,
+    });
 
+    // Check against existing bookings
+    // Note: All bookings returned are for THIS therapist (endpoint filters by therapist_id)
+    for (const booking of existingBookings) {
       const bookingStart = new Date(booking.session_date);
       const bookingEnd = new Date(bookingStart.getTime() + (booking.duration_minutes || 60) * 60 * 1000);
 
       // Check if times overlap
       if (sessionStart < bookingEnd && sessionEnd > bookingStart) {
-        console.log('[BookingCalendarModal] Therapist conflict:', {
+        console.log('[BookingCalendarModal] THERAPIST CONFLICT DETECTED:', {
           therapist: therapistId,
           requested: { start: sessionStart.toISOString(), end: sessionEnd.toISOString() },
-          existing: { start: bookingStart.toISOString(), end: bookingEnd.toISOString() },
+          existing: {
+            room: booking.room_id,
+            start: bookingStart.toISOString(),
+            end: bookingEnd.toISOString(),
+          },
         });
         return true;
       }
