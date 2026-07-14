@@ -5,19 +5,26 @@
  *
  * PAYMENT TYPES (controlled by paymentType prop):
  *
- * 1. 'assessment' - First payment (Tier 1)
+ * 1. 'draft_booking' - Payment for draft booking (Phase 2 slot hold)
+ *    - Amount: 2000 EGP (minimum/fixed)
+ *    - Updates: Calls PUT /api/admin/bookings/[id] to confirm booking
+ *    - Endpoint handles: booking_status 'draft'→'confirmed', client status 'ready_for_booking'→'booking_scheduled'
+ *    - Status transition: 'ready_for_booking' → 'booking_scheduled'
+ *    - Used for: New clients verifying payment for their first booked session
+ *
+ * 2. 'assessment' - First payment (Tier 1)
  *    - Amount: Minimum 2000 EGP
  *    - Updates: payment_verified_1, payment_amount_1, payment_date_1, total_amount_paid
  *    - Status transition: 'intake' → 'assessment_pending'
  *    - Used for: All new clients at intake stage
  *
- * 2. 'remaining' - Additional payment (Tier 2)
+ * 3. 'remaining' - Additional payment (Tier 2)
  *    - Amount: therapist_rate - 2000 (only if therapist rate > 2000)
  *    - Updates: payment_verified_2, payment_amount_2, payment_date_2, total_amount_paid
  *    - Status transition: 'assessment_pending' → 'ready_for_booking'
  *    - Used for: Clients with therapist assigned who need to pay difference
  *
- * 3. 'session' - Session payment (Recurring clients only)
+ * 4. 'session' - Session payment (Recurring clients only)
  *    - Amount: therapist hourly rate (from booking context)
  *    - Updates: session_payment_received, session_payment_date, session_payment_amount, total_amount_paid
  *    - Status transition: None (remains 'booking_scheduled')
@@ -36,10 +43,10 @@ interface PaymentVerificationModalProps {
   clientName: string;
   hasTherapist?: boolean; // true if therapist already assigned (direct selection)
   therapistName?: string; // name of assigned therapist
-  paymentType?: 'assessment' | 'remaining' | 'session'; // 'assessment' for initial, 'remaining' for therapist fee, 'session' for recurring client session
+  paymentType?: 'assessment' | 'remaining' | 'session' | 'draft_booking'; // 'draft_booking' for phase 2 slot hold, 'assessment' for initial, 'remaining' for therapist fee, 'session' for recurring client session
   amount?: number;
   isRecurring?: boolean; // true if client is recurring (affects status transitions)
-  bookingId?: number; // booking ID for session payment (when paymentType is 'session')
+  bookingId?: number; // booking ID for session payment (when paymentType is 'session') or draft booking payment (when paymentType is 'draft_booking')
   onSuccess: () => Promise<void> | void;
   onClose: () => void;
 }
@@ -92,10 +99,61 @@ export default function PaymentVerificationModal({
         paymentType,
         bookingId,
         isRecurring,
-        checkResult: paymentType === 'session' && bookingId ? 'WILL USE SESSION PAYMENT' : 'WILL NOT USE SESSION PAYMENT (FALLBACK TO OTHER)',
+        checkResult: paymentType === 'draft_booking' && bookingId ? 'WILL USE DRAFT BOOKING' : 'WILL USE OTHER',
       });
 
-      if (paymentType === 'session' && bookingId) {
+      if (paymentType === 'draft_booking' && bookingId) {
+        // Draft booking payment verification - confirms the booking after payment
+        console.log('[PaymentVerificationModal] Recording draft booking payment verification for booking:', bookingId);
+
+        // Call the booking payment endpoint to verify payment and confirm booking
+        // This endpoint handles: booking status draft→confirmed, client status ready_for_booking→booking_scheduled
+        const bookingRes = await fetch(`/api/admin/bookings/${bookingId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            payment_date: paymentDate,
+          }),
+        });
+
+        console.log('[PaymentVerificationModal] Booking payment verification response status:', bookingRes.status);
+
+        if (!bookingRes.ok) {
+          const bookingError = await bookingRes.json();
+          console.error('[PaymentVerificationModal] Booking payment verification failed:', bookingError);
+          throw new Error(bookingError.details || bookingError.error || 'Failed to verify booking payment');
+        }
+
+        const bookingResponseData = await bookingRes.json();
+        console.log('[PaymentVerificationModal] Booking payment verified successfully:', bookingResponseData);
+
+        // Invalidate React Query caches so ClientProfile refetches the updated data
+        console.log('[PaymentVerificationModal] Invalidating React Query caches for client:', clientId);
+        await queryClient.invalidateQueries({
+          queryKey: ['client', clientId]
+        });
+        console.log('[PaymentVerificationModal] React Query caches invalidated - queries will refetch');
+
+        setSuccess(true);
+        // Wait 2 seconds to show success message, then trigger parent refresh and close modal
+        setTimeout(async () => {
+          console.log('[PaymentVerificationModal] Success timeout - calling onSuccess to close modal and refresh parent');
+          try {
+            const result = onSuccess();
+            // Properly await the Promise if returned
+            if (result && typeof result.then === 'function') {
+              console.log('[PaymentVerificationModal] onSuccess returned a Promise, awaiting...');
+              await result;
+              console.log('[PaymentVerificationModal] onSuccess Promise completed');
+            }
+            console.log('[PaymentVerificationModal] onSuccess finished, modal should close');
+          } catch (err) {
+            console.error('[PaymentVerificationModal] onSuccess threw error:', err);
+          }
+        }, 2000);
+        return;
+      } else if (paymentType === 'session' && bookingId) {
         // Session payment for recurring clients (after booking a session)
         console.log('[PaymentVerificationModal] Recording session payment for booking:', bookingId);
 
@@ -290,7 +348,9 @@ export default function PaymentVerificationModal({
             <div className="modal-success-icon">✓</div>
             <h2 className="modal-success-title">Payment Verified ✓</h2>
             <p className="modal-success-message">
-              {paymentType === 'assessment'
+              {paymentType === 'draft_booking'
+                ? `Payment (${amount || 2000} EGP) from ${clientName} confirmed. Session booking confirmed and is ready for their scheduled appointment.`
+                : paymentType === 'assessment'
                 ? `Payment (${amount || 2000} EGP) from ${clientName} confirmed. They will now have a session with Sama to help select a therapist.`
                 : `Additional payment (${amount} EGP) from ${clientName} for ${therapistName || 'their therapist'} confirmed. They can now book sessions.`}
             </p>
@@ -305,7 +365,9 @@ export default function PaymentVerificationModal({
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h2 className="modal-title">
-            {paymentType === 'assessment'
+            {paymentType === 'draft_booking'
+              ? `Confirm Session Payment - ${clientName}`
+              : paymentType === 'assessment'
               ? `Confirm Payment - ${clientName}`
               : `Confirm Additional Payment - ${clientName}`}
           </h2>
@@ -324,7 +386,9 @@ export default function PaymentVerificationModal({
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="modal-info-box">
             <p style={{ margin: '0 0 1rem 0', fontSize: '14px', color: '#556277' }}>
-              {paymentType === 'assessment'
+              {paymentType === 'draft_booking'
+                ? `Session Payment: ${amount || 2000} EGP to confirm and hold the booked session. Payment received via InstaPay or Bank Transfer. Confirm the transfer date to complete payment verification and lock in the session.`
+                : paymentType === 'assessment'
                 ? `Payment: ${amount || 2000} EGP for first session booking. Payment received via InstaPay or Bank Transfer. Confirm the transfer date to complete payment verification.`
                 : `Additional Payment: ${amount} EGP for ${therapistName || 'assigned therapist'}. Payment received via InstaPay or Bank Transfer. Confirm the transfer date to complete payment verification.`}
             </p>

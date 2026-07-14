@@ -572,11 +572,13 @@ export default function ClientActionButton({
 
       {/* Payment Verification Modal */}
       {activeModal === 'payment' && (() => {
-        // For session payments, ensure booking is loaded first
+        // For session payments OR draft bookings, ensure booking is loaded first
         const isSessionPayment = isRecurring && status === 'booking_scheduled';
+        const isDraftBooking = currentBooking?.booking_status === 'draft';
+        const needsBooking = isSessionPayment || isDraftBooking;
 
-        if (isSessionPayment && loadingBooking) {
-          console.log('[ClientActionButton] Session payment modal waiting for booking to load...');
+        if (needsBooking && loadingBooking) {
+          console.log('[ClientActionButton] Payment modal waiting for booking to load...');
           return (
             <div className="modal-overlay" onClick={handleModalClose}>
               <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -592,8 +594,8 @@ export default function ClientActionButton({
           );
         }
 
-        if (isSessionPayment && !currentBooking?.id) {
-          console.error('[ClientActionButton] ERROR: Session payment required but no booking found!');
+        if (needsBooking && !currentBooking?.id) {
+          console.error('[ClientActionButton] ERROR: Payment verification required but no booking found!');
           return (
             <div className="modal-overlay" onClick={handleModalClose}>
               <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -613,22 +615,27 @@ export default function ClientActionButton({
         }
 
         // Determine payment type and amount
+        // Draft booking payment for new clients booking their first session
         // Session payment for recurring clients with booked sessions
+        // Assessment payment for intake clients
         const isAdditionalPayment = therapistId && paymentVerified1 && !paymentVerified2;
 
-        const paymentType = isSessionPayment ? 'session' : (isAdditionalPayment ? 'remaining' : 'assessment');
+        const paymentType = isDraftBooking ? 'draft_booking' : (isSessionPayment ? 'session' : (isAdditionalPayment ? 'remaining' : 'assessment'));
         const minimumFee = paymentAmount1 || 2000;
-        const amount = isSessionPayment
-          ? (totalPaymentDue || minimumFee)
-          : (isAdditionalPayment ? ((totalPaymentDue || 0) - minimumFee) : minimumFee);
+        const amount = isDraftBooking
+          ? minimumFee  // Draft bookings always use minimum fee (2000 EGP)
+          : (isSessionPayment
+            ? (totalPaymentDue || minimumFee)
+            : (isAdditionalPayment ? ((totalPaymentDue || 0) - minimumFee) : minimumFee));
 
         // Debug logging to trace payment type detection
-        console.log('[ClientActionButton] Payment Modal Render - Session Payment Debug:', {
+        console.log('[ClientActionButton] Payment Modal Render - Payment Type Detection:', {
           isRecurring,
           status,
           isSessionPayment,
+          isDraftBooking,
+          currentBookingStatus: currentBooking?.booking_status,
           currentBookingId: currentBooking?.id,
-          bookingIdWillBe: isSessionPayment ? currentBooking?.id : undefined,
           paymentType,
           loadingBooking,
         });
@@ -642,7 +649,7 @@ export default function ClientActionButton({
             amount={amount > 0 ? amount : minimumFee}
             hasTherapist={therapistId ? true : false}
             isRecurring={isRecurring}
-            bookingId={isSessionPayment ? currentBooking?.id : undefined}
+            bookingId={needsBooking ? currentBooking?.id : undefined}
             onSuccess={handleModalSuccess}
             onClose={handleModalClose}
           />
