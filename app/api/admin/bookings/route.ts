@@ -56,8 +56,11 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { therapist_id, client_id, session_date, duration_minutes, session_type, clinic_id, room_id, notes } = body;
 
+    console.log('[bookings POST] Request body:', { therapist_id, client_id, session_date, duration_minutes, clinic_id });
+
     // Validate required fields
     if (!therapist_id || !client_id || !session_date || !duration_minutes || !clinic_id) {
+      console.error('[bookings POST] Validation failed:', { therapist_id, client_id, session_date, duration_minutes, clinic_id });
       return NextResponse.json(
         { error: 'Missing required fields: therapist_id, client_id, session_date, duration_minutes, clinic_id' },
         { status: 400 }
@@ -168,25 +171,27 @@ export async function POST(request: NextRequest) {
     // Create the booking as DRAFT with 10-minute hold
     // draft = slot selected, awaiting payment verification
     // hold_expires_at = when this draft booking should be auto-released if not verified
+    const bookingData = {
+      client_id,
+      therapist_id,
+      clinic_id,
+      session_date,
+      duration_minutes,
+      session_type: session_type || 'single',
+      room_id: room_id || null,
+      notes: notes || null,
+      payment_status: 'pending',
+      booking_status: 'draft',
+      hold_expires_at: holdExpiresAt.toISOString(),
+      payment_deadline: paymentDeadline.toISOString(),
+      status: 'scheduled',
+    };
+
+    console.log('[bookings POST] Inserting booking with data:', bookingData);
+
     const { data: booking, error: bookingError } = await supabase
       .from('bookings')
-      .insert([
-        {
-          client_id,
-          therapist_id,
-          clinic_id,
-          session_date,
-          duration_minutes,
-          session_type: session_type || 'single',
-          room_id: room_id || null,
-          notes: notes || null,
-          payment_status: 'pending',
-          booking_status: 'draft', // CHANGE: Start as 'draft' (temporarily held)
-          hold_expires_at: holdExpiresAt.toISOString(), // 10-minute timeout
-          payment_deadline: paymentDeadline.toISOString(),
-          status: 'scheduled', // Maintain backwards compatibility with original status field
-        },
-      ])
+      .insert([bookingData])
       .select()
       .single();
 
