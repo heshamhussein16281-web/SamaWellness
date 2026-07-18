@@ -87,6 +87,9 @@ export default function RescheduleModal({
   const [scheduleError, setScheduleError] = useState<string | null>(null);
   const [clinicRooms, setClinicRooms] = useState<Array<{ id: number; room_name: string }>>([]);
   const [loadingRooms, setLoadingRooms] = useState(true);
+  // Existing bookings used for conflict checking (so already-booked slots aren't offered).
+  const [therapistBookings, setTherapistBookings] = useState<Array<{ id: number; session_date: string; duration_minutes: number; therapist_id: number; room_id?: number }>>([]);
+  const [clinicBookings, setClinicBookings] = useState<Array<{ id: number; session_date: string; duration_minutes: number; therapist_id: number; room_id?: number }>>([]);
 
   // Fetch therapist schedule and clinic rooms on mount
   useEffect(() => {
@@ -156,6 +159,49 @@ export default function RescheduleModal({
     }
   }, [therapistId, clinicId]);
 
+  // Fetch existing bookings for conflict checking (therapist + clinic-wide).
+  // Excludes the booking being rescheduled so it doesn't block its own slot/room.
+  useEffect(() => {
+    if (!therapistId || !clinicId) return;
+
+    const ACTIVE = ['draft', 'scheduled', 'confirmed'];
+    const notSelf = (b: any) => bookingId == null || b.id !== bookingId;
+
+    const fetchBookings = async () => {
+      try {
+        // THIS therapist's bookings (for therapist conflict checking)
+        const therapistRes = await fetch(`/api/admin/therapists/${therapistId}/bookings`, {
+          credentials: 'include',
+          cache: 'no-store', // Always fetch live conflict data; never reuse a stale booking list
+        });
+        if (therapistRes.ok) {
+          const data = await therapistRes.json();
+          setTherapistBookings((data.data || []).filter((b: any) => ACTIVE.includes(b.booking_status) && notSelf(b)));
+        } else {
+          setTherapistBookings([]);
+        }
+
+        // ALL clinic bookings (for room conflict checking across all therapists)
+        const clinicRes = await fetch(`/api/admin/clinics/${clinicId}/bookings`, {
+          credentials: 'include',
+          cache: 'no-store', // Always fetch live conflict data; never reuse a stale booking list
+        });
+        if (clinicRes.ok) {
+          const data = await clinicRes.json();
+          setClinicBookings((data.data || []).filter((b: any) => ACTIVE.includes(b.booking_status) && notSelf(b)));
+        } else {
+          setClinicBookings([]);
+        }
+      } catch (err) {
+        console.error('[RescheduleModal] Error fetching bookings for conflict check:', err);
+        setTherapistBookings([]);
+        setClinicBookings([]);
+      }
+    };
+
+    fetchBookings();
+  }, [therapistId, clinicId, bookingId]);
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -207,6 +253,31 @@ export default function RescheduleModal({
     if (!therapistSchedule?.schedule) return 22;
     const fullDayName = matchDayInSchedule(dayAbbr);
     return therapistSchedule.schedule[fullDayName]?.end || 22;
+  };
+
+  // Check if THIS therapist is already booked at a given date/hour (blocks all rooms).
+  const isTherapistBooked = (dateStr: string, hour: number): boolean => {
+    const sessionStart = new Date(`${dateStr}T${String(hour).padStart(2, '0')}:00:00`);
+    const sessionEnd = new Date(sessionStart.getTime() + 60 * 60 * 1000);
+    for (const booking of therapistBookings) {
+      const bookingStart = new Date(booking.session_date);
+      const bookingEnd = new Date(bookingStart.getTime() + (booking.duration_minutes || 60) * 60 * 1000);
+      if (sessionStart < bookingEnd && sessionEnd > bookingStart) return true;
+    }
+    return false;
+  };
+
+  // Check if a specific room is already booked at a given date/hour (by any therapist).
+  const isRoomBooked = (dateStr: string, hour: number, roomId: number): boolean => {
+    const sessionStart = new Date(`${dateStr}T${String(hour).padStart(2, '0')}:00:00`);
+    const sessionEnd = new Date(sessionStart.getTime() + 60 * 60 * 1000);
+    for (const booking of clinicBookings) {
+      if (booking.room_id !== roomId) continue;
+      const bookingStart = new Date(booking.session_date);
+      const bookingEnd = new Date(bookingStart.getTime() + (booking.duration_minutes || 60) * 60 * 1000);
+      if (sessionStart < bookingEnd && sessionEnd > bookingStart) return true;
+    }
+    return false;
   };
 
   const formatDate2 = (date: Date) => {
@@ -727,12 +798,18 @@ export default function RescheduleModal({
                           isWorking && hour >= getDayStart(dayName) && hour < getDayEnd(dayName);
                         const isSelected = selectedDate === dateStr && selectedTime === hour;
                         const isPastDate = isPastOrToday(date);
+                        // Therapist already booked at this time blocks the whole cell (all rooms).
+                        const therapistBooked = isTherapistBooked(dateStr, hour);
 
-                        if (!isInWorkingHours || isPastDate) {
+                        if (!isInWorkingHours || isPastDate || therapistBooked) {
                           return (
                             <div key={`${dateStr}-${hour}`} className="legacy-slot-cell unavailable">
                               {clinicRooms.map((room) => (
-                                <div key={room.id} className="legacy-room-btn disabled">—</div>
+                                <div
+                                  key={room.id}
+                                  className="legacy-room-btn disabled"
+                                  title={therapistBooked ? 'Therapist is already booked at this time' : 'Not available'}
+                                >—</div>
                               ))}
                             </div>
                           );
@@ -740,17 +817,30 @@ export default function RescheduleModal({
 
                         return (
                           <div key={`${dateStr}-${hour}`} className="legacy-slot-cell">
-                            {clinicRooms.map((room) => (
-                              <button
-                                key={room.id}
-                                type="button"
-                                className={`legacy-room-btn ${isSelected && selectedRoom?.id === room.id ? 'selected' : 'free'}`}
-                                onClick={() => handleSlotClick(dateStr, hour, room.room_name)}
-                                title={room.room_name}
-                              >
-                                {room.room_name.charAt(0).toUpperCase()}
-                              </button>
-                            ))}
+                            {clinicRooms.map((room) => {
+                              // This specific room booked (by any therapist) → not selectable.
+                              const roomBooked = isRoomBooked(dateStr, hour, room.id);
+                              if (roomBooked) {
+                                return (
+                                  <div
+                                    key={room.id}
+                                    className="legacy-room-btn disabled"
+                                    title={`${room.room_name} is already booked at this time`}
+                                  >—</div>
+                                );
+                              }
+                              return (
+                                <button
+                                  key={room.id}
+                                  type="button"
+                                  className={`legacy-room-btn ${isSelected && selectedRoom?.id === room.id ? 'selected' : 'free'}`}
+                                  onClick={() => handleSlotClick(dateStr, hour, room.room_name)}
+                                  title={room.room_name}
+                                >
+                                  {room.room_name.charAt(0).toUpperCase()}
+                                </button>
+                              );
+                            })}
                           </div>
                         );
                       })}
