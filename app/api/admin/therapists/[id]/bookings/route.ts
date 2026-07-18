@@ -58,7 +58,8 @@ export async function GET(
         success: true,
         data: bookings || [],
       },
-      { status: 200 }
+      // Live conflict data: never cache (see clinics/[id]/bookings for details).
+      { status: 200, headers: { 'Cache-Control': 'no-store, max-age=0, must-revalidate' } }
     );
   } catch (err) {
     console.error('GET /api/admin/therapists/[id]/bookings error:', err);
