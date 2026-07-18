@@ -78,7 +78,10 @@ export async function GET(
           success: true,
           data: bookings || [],
         },
-        { status: 200 }
+        // Live conflict data: never cache. The default route response is
+        // `public, max-age=0, must-revalidate`, which lets the browser reuse a
+        // stale bookings list and render already-booked rooms as free.
+        { status: 200, headers: { 'Cache-Control': 'no-store, max-age=0, must-revalidate' } }
       );
     } catch (supabaseError: any) {
       console.error('[clinic bookings] Query error:', {

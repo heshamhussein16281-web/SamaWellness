@@ -170,6 +170,7 @@ export default function BookingCalendarModal({
         // 1. Fetch THIS therapist's bookings (for therapist conflict checking)
         const therapistRes = await fetch(`/api/admin/therapists/${therapistId}/bookings`, {
           credentials: 'include',
+          cache: 'no-store', // Always fetch live conflict data; never reuse a stale booking list
         });
 
         if (therapistRes.ok) {
@@ -194,6 +195,7 @@ export default function BookingCalendarModal({
         // 2. Fetch ALL clinic bookings (for room conflict checking across all therapists)
         const clinicRes = await fetch(`/api/admin/clinics/${clinicId}/bookings`, {
           credentials: 'include',
+          cache: 'no-store', // Always fetch live conflict data; never reuse a stale booking list
         });
 
         if (clinicRes.ok) {
