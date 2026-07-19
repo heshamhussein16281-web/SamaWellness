@@ -253,16 +253,29 @@ export async function PUT(
       return NextResponse.json({ error: 'Failed to update booking' }, { status: 500 });
     }
 
+    // Fetch client's current total_amount_paid so we can add this payment to it
+    const { data: clientRow, error: clientFetchError } = await supabase
+      .from('clients')
+      .select('total_amount_paid')
+      .eq('id', booking.client_id)
+      .single();
+
+    if (clientFetchError) {
+      console.error('[bookings PUT] Error fetching client total_amount_paid:', clientFetchError);
+    }
+    const currentTotalPaid = clientRow?.total_amount_paid || 0;
+
     // Update client status to booking_scheduled (payment verified, slot confirmed)
     const { data: updatedClient, error: clientUpdateError } = await supabase
       .from('clients')
       .update({
         status: 'booking_scheduled',
         payment_verified_1: true,
+        total_amount_paid: currentTotalPaid + amountPaid,
         updated_at: now,
       })
       .eq('id', booking.client_id)
-      .select('id, status, payment_verified_1')
+      .select('id, status, payment_verified_1, total_amount_paid')
       .single();
 
     if (clientUpdateError) {
