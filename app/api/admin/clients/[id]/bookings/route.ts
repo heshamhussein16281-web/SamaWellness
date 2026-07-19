@@ -140,6 +140,7 @@ export async function GET(
           session_date: booking.session_date,
           duration_minutes: booking.duration_minutes,
           therapist_name: therapist?.name || null,
+          room_id: room?.id || null,
           room_name: room?.room_name || null,
           booking_status: booking.booking_status,
           payment_status: booking.payment_status,
