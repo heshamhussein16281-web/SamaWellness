@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
       actual_cost = amount_paid,
       refund_amount = 0,
       additional_charge = 0,
-      charge_status = 'completed',
+      charge_status = 'collected',
     } = body;
 
     // Validate required fields

@@ -297,7 +297,7 @@ export default function PaymentVerificationModal({
           actual_cost: paymentAmount,
           refund_amount: 0,
           additional_charge: 0,
-          charge_status: 'completed',
+          charge_status: 'collected',
         }),
       });
 
