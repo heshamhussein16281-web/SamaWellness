@@ -227,7 +227,7 @@ export function useVerifySessionPayment(clientId: number | null, bookingId: numb
           actual_cost: data.amount,
           refund_amount: 0,
           additional_charge: 0,
-          charge_status: 'completed',
+          charge_status: 'collected',
         }),
       });
       if (!recordRes.ok) throw new Error('Failed to create payment record');
