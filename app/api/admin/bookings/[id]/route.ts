@@ -196,7 +196,7 @@ export async function PUT(
     // Calculate refund or additional charge
     let refundAmount = 0;
     let additionalCharge = 0;
-    let chargeStatus = 'pending';
+    let chargeStatus = 'collected';
 
     if (actualCost < amountPaid) {
       refundAmount = amountPaid - actualCost;
