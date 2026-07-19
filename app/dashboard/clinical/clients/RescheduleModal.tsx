@@ -10,6 +10,7 @@ interface RescheduleModalProps {
   therapistId: number;
   therapistName?: string;
   currentSessionDate?: string;
+  currentRoomId?: string;
   clinicId?: number;
   paymentAmount?: number | null;
   onSuccess: () => void;
@@ -28,6 +29,7 @@ export default function RescheduleModal({
   therapistId,
   therapistName,
   currentSessionDate,
+  currentRoomId,
   clinicId,
   paymentAmount = 2000,
   onSuccess,
@@ -267,6 +269,16 @@ export default function RescheduleModal({
     return false;
   };
 
+  // Check if a given date/hour/room is the slot this booking currently occupies.
+  const isCurrentSlot = (dateStr: string, hour: number, roomId: number): boolean => {
+    return (
+      currentDateStr !== null &&
+      dateStr === currentDateStr &&
+      hour === currentHour &&
+      String(roomId) === String(currentRoomId)
+    );
+  };
+
   // Check if a specific room is already booked at a given date/hour (by any therapist).
   const isRoomBooked = (dateStr: string, hour: number, roomId: number): boolean => {
     const sessionStart = new Date(`${dateStr}T${String(hour).padStart(2, '0')}:00:00`);
@@ -287,6 +299,12 @@ export default function RescheduleModal({
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   };
+
+  // The booking's current date/time/room, so the grid can mark that cell
+  // distinctly instead of showing it as plain "free" (it's excluded from
+  // conflict data above so its own slot doesn't block itself).
+  const currentDateStr = currentSessionDate ? formatDate2(new Date(currentSessionDate)) : null;
+  const currentHour = currentSessionDate ? new Date(currentSessionDate).getHours() : null;
 
   // Check if date is today or in the past (not allowed for booking)
   const isPastOrToday = (date: Date): boolean => {
@@ -804,13 +822,26 @@ export default function RescheduleModal({
                         if (!isInWorkingHours || isPastDate || therapistBooked) {
                           return (
                             <div key={`${dateStr}-${hour}`} className="legacy-slot-cell unavailable">
-                              {clinicRooms.map((room) => (
-                                <div
-                                  key={room.id}
-                                  className="legacy-room-btn disabled"
-                                  title={therapistBooked ? 'Therapist is already booked at this time' : 'Not available'}
-                                >—</div>
-                              ))}
+                              {clinicRooms.map((room) => {
+                                // Even when the therapist is unavailable, distinguish this
+                                // booking's own current slot from a real conflict.
+                                if (therapistBooked && isCurrentSlot(dateStr, hour, room.id)) {
+                                  return (
+                                    <div
+                                      key={room.id}
+                                      className="legacy-room-btn current"
+                                      title={`${room.room_name} — current session`}
+                                    >Current</div>
+                                  );
+                                }
+                                return (
+                                  <div
+                                    key={room.id}
+                                    className={`legacy-room-btn ${therapistBooked ? 'booked' : 'disabled'}`}
+                                    title={therapistBooked ? 'Therapist is already booked at this time' : 'Not available'}
+                                  >—</div>
+                                );
+                              })}
                             </div>
                           );
                         }
@@ -818,13 +849,23 @@ export default function RescheduleModal({
                         return (
                           <div key={`${dateStr}-${hour}`} className="legacy-slot-cell">
                             {clinicRooms.map((room) => {
+                              // This booking's own current date/time/room → mark distinctly, not selectable.
+                              if (isCurrentSlot(dateStr, hour, room.id)) {
+                                return (
+                                  <div
+                                    key={room.id}
+                                    className="legacy-room-btn current"
+                                    title={`${room.room_name} — current session`}
+                                  >Current</div>
+                                );
+                              }
                               // This specific room booked (by any therapist) → not selectable.
                               const roomBooked = isRoomBooked(dateStr, hour, room.id);
                               if (roomBooked) {
                                 return (
                                   <div
                                     key={room.id}
-                                    className="legacy-room-btn disabled"
+                                    className="legacy-room-btn booked"
                                     title={`${room.room_name} is already booked at this time`}
                                   >—</div>
                                 );

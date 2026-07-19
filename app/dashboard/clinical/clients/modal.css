@@ -1102,6 +1102,15 @@
   cursor: not-allowed;
 }
 
+.legacy-room-btn.current {
+  background: #D6ECEA;
+  color: #1F4E49;
+  border-color: #A9D6D1;
+  cursor: not-allowed;
+  font-weight: 700;
+  font-size: 0.6rem;
+}
+
 .legacy-room-btn.paid {
   background: #FCEBEB;
   color: #791F1F;
