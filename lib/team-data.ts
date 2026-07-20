@@ -72,4 +72,13 @@ export const therapists: Therapist[] = [
     bio: "Samar is a Relationship and Psychosexual Psychotherapist offering individual and couples therapy. She supports clients navigating relational, sexual, and emotional concerns within a safe, compassionate, and non-judgmental space. Samar works from an integrative approach grounded in person-centred principles, tailoring therapy to each individual and couple's unique needs. With a background in reproductive health, she has extensive experience supporting individuals and couples experiencing miscarriage, fertility challenges, and the emotional impact of assisted reproduction. Samar also has a special interest in working with Third Culture Persons, children of migrants, and intercultural relationships. Together, she explores themes of identity, belonging, attachment, and cross-cultural dynamics within therapy.",
     specializations: ["Relationship Therapy", "Couples Therapy", "Psychosexual Therapy", "Fertility & Reproductive Health", "Third Culture Persons", "Intercultural Relationships", "Attachment"],
   },
+  {
+    id: 8,
+    name: "Kareem Nagi",
+    title: "Addiction Counsellor",
+    approach: "Client-centered approach integrating cognitive behavioral therapy (CBT), with extensive experience across individual, couple, family, and group addiction treatment.",
+    image: "/team/kareem.jpg",
+    bio: "Kareem is a certified addiction counsellor and holds an Addiction Skills certification. He has been working at the substance misuse unit at Behman Hospital since 2013 and formerly served as the Head of the Addiction Team. He has experience working with individuals, couples, families, and groups struggling with addiction. Kareem offers both inpatient and outpatient services, and also works at an NGO with individuals diagnosed with HIV who need help with harm reduction. He prefers to use a client-centered approach and integrates cognitive behavioral therapy (CBT).",
+    specializations: ["Addiction", "Substance Abuse", "Relapse Prevention", "Harm Reduction", "CBT", "Couples & Family Counseling", "HIV Support"],
+  },
 ];
