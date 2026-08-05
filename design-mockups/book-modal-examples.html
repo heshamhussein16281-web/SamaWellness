@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book Modal — Design Options</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gilda+Display&family=Nunito+Sans:wght@400;600;700&family=Josefin+Sans:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --font-display: "Gilda Display", Georgia, serif;
+    --font-body:    "Nunito Sans", system-ui, sans-serif;
+    --font-ui:      "Josefin Sans", system-ui, sans-serif;
+
+    --color-linen:    #F5F2EE;
+    --color-sand:     rgb(234, 228, 221);
+    --color-nav-text: rgb(45, 74, 70);
+    --color-tagline:  rgb(75, 99, 95);
+    --color-burgundy: #7b2d3e;
+    --color-olive:    #4a6741;
+    --color-charcoal: #2c2c2c;
+
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 20px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--color-linen);
+    font-family: var(--font-body);
+    color: var(--color-charcoal);
+    padding: 3rem 1.5rem;
+  }
+
+  .page-title {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    color: var(--color-nav-text);
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+  .page-subtitle {
+    text-align: center;
+    color: var(--color-tagline);
+    margin-bottom: 3rem;
+    font-size: 0.95rem;
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .option {
+    background: white;
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(234, 228, 221, 0.8);
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .option__label {
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-burgundy);
+    background: rgba(123, 45, 62, 0.06);
+    padding: 0.85rem 1.25rem;
+    border-bottom: 1px solid rgba(234, 228, 221, 0.8);
+  }
+  .option__stage {
+    padding: 2.5rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(123,45,62,0.05), transparent 50%),
+      var(--color-sand);
+    min-height: 480px;
+  }
+
+  /* ============ Sample therapist card (context) ============ */
+  .mini-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    border: 1px solid rgba(234,228,221,0.6);
+    width: 100%;
+    max-width: 360px;
+  }
+  .mini-card__photo {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #cbb9a8, #a98f7a);
+    flex-shrink: 0;
+  }
+  .mini-card__info { flex: 1; min-width: 0; }
+  .mini-card__name {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    color: var(--color-nav-text);
+    margin: 0 0 0.15rem;
+  }
+  .mini-card__title {
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    color: var(--color-tagline);
+    margin: 0;
+  }
+  .mini-book-btn {
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: white;
+    background: var(--color-burgundy);
+    border: none;
+    padding: 0.6rem 1.1rem;
+    border-radius: 999px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.25s ease, transform 0.25s ease;
+  }
+  .mini-book-btn:hover { background: #632434; transform: translateY(-1px); }
+
+  /* ============ OPTION 1: Centered minimal dialog ============ */
+  .modal-1 {
+    background: var(--color-linen);
+    width: 100%;
+    max-width: 340px;
+    border-radius: 16px;
+    padding: 2rem 1.75rem 1.75rem;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+    text-align: center;
+    position: relative;
+  }
+  .modal-1__close {
+    position: absolute;
+    top: 0.85rem;
+    right: 0.85rem;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0,0,0,0.06);
+    color: var(--color-charcoal);
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-1__photo {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    margin: 0 auto 0.9rem;
+    background: linear-gradient(135deg, #cbb9a8, #a98f7a);
+    border: 3px solid white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  }
+  .modal-1__eyebrow {
+    font-family: var(--font-ui);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-burgundy);
+    margin: 0 0 0.35rem;
+  }
+  .modal-1__name {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    color: var(--color-nav-text);
+    margin: 0 0 1.1rem;
+  }
+  .modal-1__divider {
+    width: 36px;
+    height: 2px;
+    background: var(--color-burgundy);
+    opacity: 0.4;
+    margin: 0 auto 1.1rem;
+  }
+  .modal-1__contact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    margin-bottom: 1.25rem;
+  }
+  .modal-1__row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.9rem;
+    color: var(--color-charcoal);
+    background: white;
+    border: 1px solid var(--color-sand);
+    border-radius: 10px;
+    padding: 0.65rem 0.85rem;
+    text-align: left;
+  }
+  .modal-1__row-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: var(--color-burgundy);
+  }
+  .modal-1__message {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--color-tagline);
+    background: rgba(74,103,65,0.07);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+  }
+
+  /* ============ OPTION 2: Card with photo header + form-ready fields ============ */
+  .modal-2 {
+    background: white;
+    width: 100%;
+    max-width: 320px;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+    position: relative;
+  }
+  .modal-2__header {
+    background: var(--color-nav-text);
+    padding: 1.75rem 1.5rem 1.5rem;
+    position: relative;
+    text-align: center;
+  }
+  .modal-2__close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.85rem;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.7);
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+  .modal-2__photo {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    margin: 0 auto 0.65rem;
+    background: linear-gradient(135deg, #cbb9a8, #a98f7a);
+    border: 2px solid rgba(255,255,255,0.4);
+  }
+  .modal-2__name {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    color: white;
+    margin: 0 0 0.2rem;
+  }
+  .modal-2__title {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    color: rgba(255,255,255,0.65);
+    margin: 0;
+  }
+  .modal-2__body {
+    padding: 1.5rem 1.5rem 1.75rem;
+  }
+  .modal-2__contact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.3rem;
+  }
+  .modal-2__contact-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+  .modal-2__contact-label {
+    font-family: var(--font-ui);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-tagline);
+  }
+  .modal-2__contact-value {
+    font-size: 0.92rem;
+    color: var(--color-charcoal);
+    font-weight: 600;
+  }
+  .modal-2__intro {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--color-tagline);
+    text-align: center;
+    margin: 0 0 1.25rem;
+  }
+  .modal-2__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin-bottom: 0.9rem;
+  }
+  .modal-2__optional {
+    text-transform: none;
+    letter-spacing: 0;
+    color: rgba(75,99,95,0.6);
+    font-size: 0.65rem;
+  }
+  .modal-2__input {
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    color: var(--color-charcoal);
+    background: var(--color-linen);
+    border: 1px solid var(--color-sand);
+    border-radius: 10px;
+    padding: 0.7rem 0.85rem;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+  .modal-2__input:focus {
+    border-color: var(--color-burgundy);
+  }
+  .modal-2__input::placeholder {
+    color: rgba(75,99,95,0.45);
+  }
+  .modal-2__cta {
+    background: var(--color-burgundy);
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 10px;
+    font-family: var(--font-ui);
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    margin-bottom: 0.85rem;
+  }
+  .modal-2__footnote {
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--color-tagline);
+    text-align: center;
+    margin: 0;
+  }
+
+  /* ============ OPTION 3: Compact toast-style confirmation card ============ */
+  .modal-3 {
+    background: var(--color-linen);
+    width: 100%;
+    max-width: 300px;
+    border-radius: 20px;
+    padding: 1.75rem 1.5rem;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+    border-top: 4px solid var(--color-olive);
+    text-align: center;
+  }
+  .modal-3__icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(74,103,65,0.12);
+    color: var(--color-olive);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.9rem;
+  }
+  .modal-3__name {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--color-nav-text);
+    margin: 0 0 0.9rem;
+  }
+  .modal-3__message {
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: var(--color-charcoal);
+    margin: 0 0 1.25rem;
+  }
+  .modal-3__message strong { color: var(--color-olive); }
+  .modal-3__contact-pills {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .modal-3__pill {
+    font-size: 0.82rem;
+    background: white;
+    border: 1px solid var(--color-sand);
+    border-radius: 999px;
+    padding: 0.55rem 1rem;
+    color: var(--color-charcoal);
+  }
+  .modal-3__pill span { color: var(--color-tagline); }
+
+</style>
+</head>
+<body>
+
+  <h1 class="page-title">Book Button — 3 Design Options</h1>
+  <p class="page-subtitle">Each panel shows the therapist card trigger + the resulting popup, styled with the site's existing tokens (Gilda Display, Nunito Sans, Josefin Sans, burgundy/olive/linen palette)</p>
+
+  <div class="options-grid" style="grid-template-columns: repeat(auto-fit, minmax(340px, 420px)); justify-content: center;">
+
+    <!-- OPTION 2 — FINAL DIRECTION, now a client intake form -->
+    <div class="option">
+      <div class="option__label">Selected Direction — Client Booking Request Form</div>
+      <div class="option__stage">
+        <div class="modal-2">
+          <div class="modal-2__header">
+            <button class="modal-2__close">✕</button>
+            <div class="modal-2__photo"></div>
+            <h3 class="modal-2__name">Dr. Layla Ahmed</h3>
+            <p class="modal-2__title">Clinical Psychologist</p>
+          </div>
+          <div class="modal-2__body">
+            <p class="modal-2__intro">Leave your details and our clinic will be in touch with you to book your session.</p>
+
+            <div class="modal-2__field">
+              <label class="modal-2__contact-label" for="mock-name">Full Name *</label>
+              <input class="modal-2__input" id="mock-name" type="text" placeholder="Your full name">
+            </div>
+
+            <div class="modal-2__field">
+              <label class="modal-2__contact-label" for="mock-mobile">Mobile Number *</label>
+              <input class="modal-2__input" id="mock-mobile" type="tel" placeholder="+20 1XX XXX XXXX">
+            </div>
+
+            <div class="modal-2__field">
+              <label class="modal-2__contact-label" for="mock-email">Email <span class="modal-2__optional">(optional)</span></label>
+              <input class="modal-2__input" id="mock-email" type="email" placeholder="you@example.com">
+            </div>
+
+            <button class="modal-2__cta">Request Booking</button>
+            <p class="modal-2__footnote">We'll never share your details with anyone else.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUCCESS STATE -->
+    <div class="option">
+      <div class="option__label">After Submitting — Success State</div>
+      <div class="option__stage">
+        <div class="modal-3">
+          <div class="modal-3__icon">✓</div>
+          <h3 class="modal-3__name">Request Sent</h3>
+          <p class="modal-3__message">Thanks, Sarah! <strong>Our clinic will be in touch with you</strong> shortly to book your session with Dr. Layla Ahmed.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="max-width:900px;margin:3rem auto 0;text-align:center;">
+    <p class="page-subtitle" style="margin-bottom:1rem;">Sample trigger button on a therapist card (as it would sit on the real Team section):</p>
+    <div style="display:flex;justify-content:center;">
+      <div class="mini-card">
+        <div class="mini-card__photo"></div>
+        <div class="mini-card__info">
+          <p class="mini-card__name">Dr. Layla Ahmed</p>
+          <p class="mini-card__title">Clinical Psychologist</p>
+        </div>
+        <button class="mini-book-btn">Book</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

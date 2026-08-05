@@ -27,6 +27,7 @@
 "use client";
 import { useState } from "react";
 import { therapists } from "@/lib/team-data";
+import BookingModal from "@/components/BookingModal";
 
 /**
  * TherapistCard — Horizontal layout component
@@ -61,6 +62,7 @@ import { therapists } from "@/lib/team-data";
  */
 function TherapistCard({ therapist }: { therapist: typeof therapists[0] }) {
   const [expanded, setExpanded] = useState(false);
+  const [showBooking, setShowBooking] = useState(false);
 
   return (
     <article className="team-card">
@@ -82,12 +84,29 @@ function TherapistCard({ therapist }: { therapist: typeof therapists[0] }) {
           ─────────────────────────────────── */}
       <div className="team-card__header-and-approach">
         <div className="team-card__header">
-          <h3 className="team-card__name">{therapist.name}</h3>
-          <p className="team-card__title">{therapist.title}</p>
+          <div className="team-card__header-top">
+            <div>
+              <h3 className="team-card__name">{therapist.name}</h3>
+              <p className="team-card__title">{therapist.title}</p>
+            </div>
+            <button
+              className="team-card__book-btn"
+              onClick={() => setShowBooking(true)}
+            >
+              Book
+            </button>
+          </div>
           <div className="team-card__divider"></div>
         </div>
         <p className="team-card__approach">{therapist.approach}</p>
       </div>
+
+      {showBooking && (
+        <BookingModal
+          therapist={therapist}
+          onClose={() => setShowBooking(false)}
+        />
+      )}
 
       {/* ───────────────────────────────────
           Bio (Grid: row 3, cols 1-2)

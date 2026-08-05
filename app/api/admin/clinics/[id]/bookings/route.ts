@@ -47,12 +47,30 @@ export async function GET(
     console.log('[clinic bookings] Fetching for clinic:', clinicId, 'date filter:', date);
 
     try {
-      // Build and execute query in one chain
+      console.log('[clinic bookings] START - clinicId:', clinicId, 'date:', date);
+
+      // First, test query WITHOUT clinic_id filter to see if any bookings exist
+      const { data: allBookings, error: allError } = await supabase
+        .from('bookings')
+        .select('id, therapist_id, session_date, duration_minutes, booking_status, client_id, room_id, clinic_id')
+        .in('booking_status', ['draft', 'scheduled', 'confirmed'])
+        .limit(10);
+
+      console.log('[clinic bookings] All bookings (no filter):', allBookings?.length || 0, 'error:', allError?.message);
+
+      // Now do the actual clinic-filtered query
       let query = supabase
         .from('bookings')
-        .select('id, therapist_id, session_date, duration_minutes, booking_status, client_id, room_id')
+        .select('id, therapist_id, session_date, duration_minutes, booking_status, client_id, room_id, clinic_id')
         .eq('clinic_id', clinicId)
         .in('booking_status', ['draft', 'scheduled', 'confirmed']);
+
+      console.log('[clinic bookings] Query parameters:', {
+        clinicId,
+        clinicIdType: typeof clinicId,
+        date,
+        statuses: ['draft', 'scheduled', 'confirmed']
+      });
 
       // Add date filters if provided
       if (date) {
@@ -68,11 +86,23 @@ export async function GET(
       // Execute query
       const { data: bookings, error } = await query;
 
+      console.log('[clinic bookings] Clinic-filtered query returned:', bookings?.length || 0, 'bookings');
+      if (error) {
+        console.error('[clinic bookings] Query error:', error);
+      }
+      if (bookings && bookings.length > 0) {
+        console.log('[clinic bookings] Sample booking:', {
+          id: bookings[0].id,
+          clinic_id: bookings[0].clinic_id,
+          therapist_id: bookings[0].therapist_id,
+        });
+      }
+
       if (error) {
         throw error;
       }
 
-      console.log('[clinic bookings] Success - returned', bookings?.length || 0, 'bookings');
+      console.log('[clinic bookings] Success - returning', bookings?.length || 0, 'bookings');
       return NextResponse.json(
         {
           success: true,

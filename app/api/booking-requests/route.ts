@@ -9,57 +9,54 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, topic, question } = body;
+    const { therapist_id, therapist_name, full_name, mobile, email } = body;
 
-    // Validation
-    if (!email || !topic || !question) {
+    if (!therapist_id || !therapist_name || !full_name || !mobile) {
       return NextResponse.json(
-        { error: "Missing required fields: email, topic, and question" },
+        { error: "Missing required fields: therapist, full name, and mobile number" },
         { status: 400 }
       );
     }
 
-    // Store in Supabase
     const { error: dbError } = await supabase
-      .from("counselor_questions")
+      .from("booking_requests")
       .insert([
         {
-          name: name || null,
-          email,
-          topic,
-          question,
+          therapist_id,
+          therapist_name,
+          full_name,
+          mobile,
+          email: email || null,
           created_at: new Date().toISOString(),
         },
       ]);
 
     if (dbError) throw dbError;
 
-    // Send email notification (best-effort — don't fail the request if this breaks)
     try {
       const emailHtml = `
-        <h2>New Question Submission from Ask Counselor Sama</h2>
-        <p><strong>From:</strong> ${name || "Anonymous"} (${email})</p>
-        <p><strong>Topic:</strong> ${topic}</p>
-        <p><strong>Question:</strong></p>
-        <p>${question.replace(/\n/g, "<br>")}</p>
+        <h2>New Booking Request</h2>
+        <p><strong>Therapist:</strong> ${therapist_name}</p>
+        <p><strong>Client Name:</strong> ${full_name}</p>
+        <p><strong>Mobile Number:</strong> ${mobile}</p>
+        <p><strong>Email:</strong> ${email || "Not provided"}</p>
         <hr>
         <p>Timestamp: ${new Date().toISOString()}</p>
       `;
 
       await sendEmailNotification({
-        subject: `New Question from ${name || "Anonymous"}: ${topic}`,
+        subject: `New Booking Request for ${therapist_name}`,
         html: emailHtml,
       });
     } catch (emailError) {
       console.error("Email send failed:", emailError);
-      // Data is already saved in Supabase; don't fail the request over email
     }
 
     return NextResponse.json({ success: true }, { status: 201 });
   } catch (error) {
-    console.error("Error processing question:", error);
+    console.error("Error processing booking request:", error);
     return NextResponse.json(
-      { error: "Failed to process your question. Please try again." },
+      { error: "Failed to process your booking request. Please try again." },
       { status: 500 }
     );
   }

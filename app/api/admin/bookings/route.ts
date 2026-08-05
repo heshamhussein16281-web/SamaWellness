@@ -161,6 +161,61 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // ROOM CONFLICT PREVENTION: Check if the requested room is already booked at this time
+    if (room_id) {
+      try {
+        console.log('[bookings POST] Checking room conflicts for room:', room_id);
+
+        const { data: roomConflicts, error: roomConflictError } = await supabase
+          .from('bookings')
+          .select('id, session_date, duration_minutes, booking_status, therapist_id')
+          .eq('room_id', room_id)
+          .eq('clinic_id', clinic_id)
+          .in('booking_status', ['draft', 'scheduled', 'confirmed'])
+          .lte('session_date', sessionEnd.toISOString())
+          .gte('session_date', new Date(sessionStart.getTime() - (480 * 60 * 1000)).toISOString());
+
+        if (roomConflictError) {
+          console.error('[bookings POST] Error checking room conflicts:', {
+            message: roomConflictError.message,
+            code: roomConflictError.code,
+            details: roomConflictError.details,
+          });
+          return NextResponse.json({ error: 'Failed to check room availability', details: roomConflictError.message }, { status: 500 });
+        }
+
+        console.log('[bookings POST] Room conflict check - found', roomConflicts?.length || 0, 'potential conflicts');
+
+        // Check if any booking overlaps with the requested time in this room
+        if (roomConflicts && roomConflicts.length > 0) {
+          for (const existingBooking of roomConflicts) {
+            const existingStart = new Date(existingBooking.session_date);
+            const existingEnd = new Date(existingStart.getTime() + (existingBooking.duration_minutes || 60) * 60 * 1000);
+
+            // Check if times overlap
+            const hasOverlap = sessionStart < existingEnd && sessionEnd > existingStart;
+
+            if (hasOverlap) {
+              console.warn('[bookings POST] Room conflict detected:', {
+                room_id,
+                therapist_id,
+                existingBooking: { id: existingBooking.id, therapist_id: existingBooking.therapist_id, status: existingBooking.booking_status },
+                requestedTime: { start: sessionStart.toISOString(), end: sessionEnd.toISOString() },
+                existingTime: { start: existingStart.toISOString(), end: existingEnd.toISOString() },
+              });
+              return NextResponse.json(
+                { error: `Room is already booked during this time slot by another therapist. Cannot create overlapping bookings.` },
+                { status: 409 }
+              );
+            }
+          }
+        }
+      } catch (err) {
+        console.error('[bookings POST] Room conflict check exception:', err);
+        return NextResponse.json({ error: 'Room conflict check failed', details: String(err) }, { status: 500 });
+      }
+    }
+
     // Calculate payment deadline (24 hours from now)
     const now = new Date();
     const paymentDeadline = new Date(now.getTime() + 24 * 60 * 60 * 1000);
