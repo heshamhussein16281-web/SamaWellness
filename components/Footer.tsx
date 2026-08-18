@@ -10,7 +10,7 @@ export default function Footer() {
       <footer className="site-footer">
         <div className="footer__band">
 
-          <a href="#home" className="footer__brand">
+          <a href="/" className="footer__brand">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo.png" alt="Sama Wellness Therapy" className="footer__logo" />
             <span className="footer__brand-name">Sama Wellness Therapy</span>
