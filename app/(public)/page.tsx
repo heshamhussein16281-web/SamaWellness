@@ -1,8 +1,14 @@
 "use client";
 import { useEffect } from "react";
+import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import ValuesStrip from "@/components/ValuesStrip";
-import TeaserGrid from "@/components/TeaserGrid";
+import Services from "@/components/Services";
+import Process from "@/components/Process";
+import Team from "@/components/Team";
+import RoomsEnvironment from "@/components/RoomsEnvironment";
+import AskCounselorSama from "@/components/AskCounselorSama";
+import Footer from "@/components/Footer";
+import ContactButton from "@/components/ContactButton";
 
 export default function Home() {
   useEffect(() => {
@@ -18,10 +24,18 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="home-tight">
-      <Hero />
-      <ValuesStrip />
-      <TeaserGrid />
-    </div>
+    <>
+      <Navbar />
+      <main>
+        <Hero />
+        <Services />
+        <Process />
+        <Team />
+        <RoomsEnvironment />
+        <AskCounselorSama />
+      </main>
+      <Footer />
+      <ContactButton />
+    </>
   );
 }

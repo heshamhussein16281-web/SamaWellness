@@ -1,13 +1,13 @@
 /* ========================================
    NAVBAR COMPONENT
 
-   Purpose: Sticky navigation header for a multi-page site (route-based nav)
+   Purpose: Sticky navigation header with scroll-based active state
 
    Features:
    - Sticky header (175px height, zIndex 100)
-   - Active nav link underline based on current route (pathname)
+   - Active nav link underline based on scroll position
    - Desktop nav (5 items) + mobile menu toggle
-   - Each link is a real route (/, /services, /team, /rooms, /ask-sama)
+   - Smooth scroll to section with locking during animation
    - Responsive: desktop nav visible ≥769px, burger + dropdown <769px
 
    Design System Integration:
@@ -20,7 +20,10 @@
    - Underline drawn via .nav-link::after pseudo-element (CSS only)
    - No inline borderBottom — prevents double underline
    - Smooth scaleX transition in both directions
-   - Set once on mount from window.location.pathname
+
+   Scroll Detection:
+   - Debounced scroll listener (150ms)
+   - Locks updates during programmatic scroll (click navigation)
 
    Structure (BEM):
    .navbar                        — sticky header shell
@@ -36,20 +39,82 @@
 import { useState, useEffect } from "react";
 
 const links = [
-  { label: "HOME",         href: "/" },
-  { label: "OUR SERVICES", href: "/services" },
-  { label: "THE TEAM",     href: "/team" },
-  { label: "ROOMS",        href: "/rooms" },
-  { label: "ASK SAMA",     href: "/ask-sama" },
+  { label: "HOME",        href: "home"     },
+  { label: "OUR SERVICES",href: "services" },
+  { label: "THE PROCESS", href: "process"  },
+  { label: "THE TEAM",    href: "team"     },
+  { label: "ROOMS",       href: "rooms"    },
+  { label: "ASK SAMA",    href: "ask-sama" },
 ];
 
 export default function Navbar() {
   const [open,   setOpen]   = useState(false);
-  const [active, setActive] = useState("/");
+  const [active, setActive] = useState("home");
 
   useEffect(() => {
-    setActive(window.location.pathname);
+    let scrollTimer: ReturnType<typeof setTimeout> | null = null;
+    let isScrollingProgrammatically = false;
+
+    const handleScroll = () => {
+      if (isScrollingProgrammatically) return;
+      if (scrollTimer) clearTimeout(scrollTimer);
+
+      scrollTimer = setTimeout(() => {
+        const scrollY = window.scrollY + 200;
+        for (let i = links.length - 1; i >= 0; i--) {
+          const el = document.getElementById(links[i].href);
+          if (el && el.offsetTop <= scrollY) {
+            setActive(links[i].href);
+            break;
+          }
+        }
+      }, 150);
+    };
+
+    (window as any).__setNavScrolling = (val: boolean) => {
+      isScrollingProgrammatically = val;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (scrollTimer) clearTimeout(scrollTimer);
+    };
   }, []);
+
+  const handleClick = (e: React.MouseEvent, href: string) => {
+    e.preventDefault();
+    const el = document.getElementById(href);
+    if (el) {
+      const navbarEl = document.querySelector(".navbar") as HTMLElement | null;
+      const navbarHeight = navbarEl ? navbarEl.offsetHeight : 175;
+
+      let top: number;
+      const elementOffset = el.getBoundingClientRect().top + window.scrollY;
+
+      if (href === "home") {
+        // For home: scroll to show hero content below navbar
+        // Desktop: 120px, Mobile: 60px (adjusted for mobile navbar height)
+        top = window.innerWidth > 768 ? 120 : 60;
+      } else if (href === "rooms") {
+        // For rooms: scroll to show header, photos, and brief descriptions in one view
+        top = Math.max(0, elementOffset - navbarHeight);
+      } else if (href === "ask-sama") {
+        // For ask-sama: scroll to show the section with proper navbar clearance
+        top = Math.max(0, elementOffset - navbarHeight - 30);
+      } else {
+        // For other sections: scroll to position that accounts for navbar
+        // Subtract navbar height so content appears below it
+        top = Math.max(0, elementOffset - navbarHeight - 20);
+      }
+
+      (window as any).__setNavScrolling?.(true);
+      setActive(href);
+      window.scrollTo({ top, behavior: "smooth" });
+      setTimeout(() => (window as any).__setNavScrolling?.(false), 900);
+    }
+    setOpen(false);
+  };
 
   return (
     <header
@@ -68,8 +133,8 @@ export default function Navbar() {
 
       {/* Logo */}
       <a
-        href="/"
-        onClick={() => setOpen(false)}
+        href="#home"
+        onClick={(e) => handleClick(e, "home")}
         className="navbar__logo-link logo-link"
         style={{
           position: "absolute",
@@ -115,8 +180,8 @@ export default function Navbar() {
         {links.map((l) => (
           <a
             key={l.href}
-            href={l.href}
-            onClick={() => setOpen(false)}
+            href={`#${l.href}`}
+            onClick={(e) => handleClick(e, l.href)}
             className={`nav-link${active === l.href ? " active" : ""}`}
             style={{
               fontFamily: "var(--font-ui)",
@@ -164,8 +229,8 @@ export default function Navbar() {
           {links.map((l) => (
             <a
               key={l.href}
-              href={l.href}
-              onClick={() => setOpen(false)}
+              href={`#${l.href}`}
+              onClick={(e) => handleClick(e, l.href)}
               className={`nav-link navbar__mobile-link${active === l.href ? " active" : ""}`}
             >
               {l.label}

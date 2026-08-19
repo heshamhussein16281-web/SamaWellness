@@ -1,7 +1,4 @@
 import type { Metadata } from "next";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import ContactButton from "@/components/ContactButton";
 
 export const metadata: Metadata = {
   title: "Sama Wellness Therapy",
@@ -12,12 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <>
-      <Navbar />
-      <main>{children}</main>
-      <Footer />
-      <ContactButton />
-    </>
-  );
+  return children;
 }
