@@ -27,7 +27,7 @@ const josefinSans = Josefin_Sans({
 
 export const metadata: Metadata = {
   title: "Sama Wellness Therapy",
-  description: "Professional Care Tailored to Your Journey",
+  description: "Founded by Sama Eissa, Clinical Director & Licensed Therapist. Professional individual, couples, and group therapy at our New Giza clinic. Expert matching to the right therapist for your journey.",
 };
 
 export const viewport: Viewport = {
