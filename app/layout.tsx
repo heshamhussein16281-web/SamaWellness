@@ -26,7 +26,7 @@ const josefinSans = Josefin_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Therapy & Counseling in New Giza, Cairo | Sama Wellness Therapy",
+  title: "Therapist in New Giza, Cairo | Sama Wellness Therapy",
   description: "Individual, couples & group therapy in New Giza, Cairo. Licensed therapists matched to your needs. Book a free 15-min assessment with Sama Wellness Therapy.",
 };
 

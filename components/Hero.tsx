@@ -37,7 +37,7 @@ export default function Hero() {
       />
 
       {/* Professional Care — centered in left space next to photo */}
-      <p className="hero-tagline" style={{
+      <h1 className="hero-tagline" style={{
         position: "absolute",
         top: "606px",
         left: "26%",
@@ -52,7 +52,7 @@ export default function Hero() {
         lineHeight: 1.3,
       }}>
         Professional Care Tailored to Your Journey
-      </p>
+      </h1>
 
       {/* Room image — no rounding, no fade, exact match to original */}
       <div className="hero-room" style={{
