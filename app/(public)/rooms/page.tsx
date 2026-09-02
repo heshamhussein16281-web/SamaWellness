@@ -1,6 +1,17 @@
 /* Rooms Page — Locked Variant A (Editorial Story)
    Navbar + Footer + ContactButton provided by (public)/layout.tsx */
+import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
+
+export const metadata: Metadata = {
+  title: "Our Therapy Rooms — Serenity & Horizon | Sama Wellness Therapy",
+  description: "Step inside our two therapy rooms — Serenity and Horizon — designed as calm, healing environments at Sama Wellness Therapy in New Giza, Cairo.",
+  openGraph: {
+    title: "Our Therapy Rooms — Serenity & Horizon | Sama Wellness Therapy",
+    description: "Step inside our two therapy rooms designed as calm, healing environments at Sama Wellness in New Giza, Cairo.",
+    url: "https://samawellnesstherapy.com/rooms",
+  },
+};
 import ScrollReveal from "@/components/ScrollReveal";
 import RoomsGalleryIntro from "@/components/RoomsGalleryIntro";
 import RoomsEditorial from "@/components/RoomsEditorial";

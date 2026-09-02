@@ -1,6 +1,17 @@
 /* Team Page — Locked Variant B
    Navbar + Footer + ContactButton provided by (public)/layout.tsx */
+import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
+
+export const metadata: Metadata = {
+  title: "Meet the Team — 8 Licensed Therapists | Sama Wellness Therapy",
+  description: "Meet the 8 licensed therapists at Sama Wellness Therapy in New Giza, Cairo. Led by Clinical Director Sama Eissa, each therapist is personally matched to your needs.",
+  openGraph: {
+    title: "Meet the Team — 8 Licensed Therapists | Sama Wellness Therapy",
+    description: "Meet the 8 licensed therapists at Sama Wellness Therapy in New Giza, Cairo. Led by Clinical Director Sama Eissa.",
+    url: "https://samawellnesstherapy.com/team",
+  },
+};
 import ScrollReveal from "@/components/ScrollReveal";
 import TeamIntroSplit from "@/components/TeamIntroSplit";
 import Team from "@/components/Team";
