@@ -42,7 +42,7 @@ export const teasers: Teaser[] = [
   },
   {
     href: "/rooms",
-    image: "/rooms-serenity.jpg",
+    image: "/rooms-horizon.jpg",
     title: "Our Therapy Spaces",
     desc: "Thoughtfully designed environments for healing.",
     cta: "See our spaces",

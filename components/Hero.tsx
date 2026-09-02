@@ -1,6 +1,6 @@
 export default function Hero() {
   return (
-    <section id="home" className="hero-section" style={{ backgroundColor: "#F5F2EE", minHeight: "987px", position: "relative", overflow: "hidden" }}>
+    <section id="home" className="hero-section" style={{ backgroundColor: "#F5F2EE", minHeight: "770px", position: "relative", overflow: "hidden" }}>
 
       {/* ELEVATE — exact: 32px, letterSpacing 4.81px, color rgb(45,74,70) */}
       <p className="hero-text-elevate" style={{
