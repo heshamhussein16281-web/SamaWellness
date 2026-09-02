@@ -36,15 +36,15 @@ export default function Hero() {
         }}
       />
 
-      {/* Professional Care — centered in left space next to photo */}
+      {/* Professional Care — constrained to left column (0 to 50%) */}
       <h1 className="hero-tagline" style={{
         position: "absolute",
-        top: "606px",
-        left: "26%",
-        transform: "translateX(-50%)",
-        width: "clamp(400px, 40vw, 684px)",
+        top: "540px",
+        left: "2%",
+        width: "48%",
         fontFamily: "var(--font-ui)",
-        fontSize: "clamp(28px, 2.65vw, 45px)",
+        fontSize: "clamp(24px, 2.2vw, 38px)",
+        zIndex: 2,
         fontWeight: 300,
         color: "rgb(75, 99, 95)",
         textAlign: "center",
@@ -53,6 +53,55 @@ export default function Hero() {
       }}>
         Professional Care Tailored to Your Journey
       </h1>
+
+      {/* Hero CTA button + subtext — constrained to left column */}
+      <div className="hero-cta-wrap" style={{
+        position: "absolute",
+        top: "640px",
+        left: "2%",
+        width: "48%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: "0.625rem",
+        zIndex: 2,
+      }}>
+        <a
+          href="https://api.whatsapp.com/send?phone=201130946556&text=I%27d%20like%20to%20book%20an%20assessment"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hero-cta"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            fontFamily: "var(--font-ui)",
+            fontSize: "clamp(14px, 1.1vw, 18px)",
+            fontWeight: 400,
+            letterSpacing: "1.5px",
+            textTransform: "uppercase",
+            color: "var(--color-linen)",
+            backgroundColor: "var(--color-burgundy)",
+            padding: "16px 40px",
+            borderRadius: "var(--radius-sm)",
+            textDecoration: "none",
+            transition: "var(--transition-base)",
+            whiteSpace: "nowrap",
+          }}
+        >
+          Book Your Assessment
+        </a>
+        <p style={{
+          fontFamily: "var(--font-body)",
+          fontSize: "clamp(12px, 0.9vw, 15px)",
+          color: "var(--color-tagline)",
+          margin: 0,
+          fontStyle: "italic",
+          opacity: 0.85,
+        }}>
+          A free 15-minute call to match you with the right therapist
+        </p>
+      </div>
 
       {/* Room image — no rounding, no fade, exact match to original */}
       <div className="hero-room" style={{

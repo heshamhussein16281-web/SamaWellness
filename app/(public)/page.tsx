@@ -1,41 +1,47 @@
+/* Homepage — Locked multi-page structure
+   Hero → ValuesStrip → HowItWorksIcons → TeaserGrid → StatsStripDark → TestimonialsRotating
+   Navbar + Footer + ContactButton provided by (public)/layout.tsx */
 "use client";
 import { useEffect } from "react";
-import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import Services from "@/components/Services";
-import Process from "@/components/Process";
-import Team from "@/components/Team";
-import RoomsEnvironment from "@/components/RoomsEnvironment";
-import AskCounselorSama from "@/components/AskCounselorSama";
-import Footer from "@/components/Footer";
-import ContactButton from "@/components/ContactButton";
+import ScrollReveal from "@/components/ScrollReveal";
+import ValuesStrip from "@/components/ValuesStrip";
+import HowItWorksIcons from "@/components/HowItWorksIcons";
+import TeaserGrid from "@/components/TeaserGrid";
+import StatsStripDark from "@/components/StatsStripDark";
+import TestimonialsRotating from "@/components/TestimonialsRotating";
+import FinalCTA from "@/components/FinalCTA";
 
 export default function Home() {
   useEffect(() => {
-    // On page load, scroll to show full hero section
-    // Use setTimeout to ensure DOM is fully rendered
     const scrollTimer = setTimeout(() => {
-      // Adjust scroll position based on viewport: desktop 120px, mobile 60px
       const scrollTop = window.innerWidth > 768 ? 120 : 60;
       window.scrollTo({ top: scrollTop, behavior: "auto" });
     }, 100);
-
     return () => clearTimeout(scrollTimer);
   }, []);
 
   return (
     <>
-      <Navbar />
-      <main>
-        <Hero />
-        <Services />
-        <Process />
-        <Team />
-        <RoomsEnvironment />
-        <AskCounselorSama />
-      </main>
-      <Footer />
-      <ContactButton />
+      <Hero />
+      <ScrollReveal>
+        <ValuesStrip />
+      </ScrollReveal>
+      <ScrollReveal>
+        <HowItWorksIcons />
+      </ScrollReveal>
+      <ScrollReveal>
+        <TeaserGrid />
+      </ScrollReveal>
+      <ScrollReveal>
+        <StatsStripDark />
+      </ScrollReveal>
+      <ScrollReveal>
+        <TestimonialsRotating />
+      </ScrollReveal>
+      <ScrollReveal>
+        <FinalCTA />
+      </ScrollReveal>
     </>
   );
 }

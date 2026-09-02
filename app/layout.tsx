@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
-import { Gilda_Display, Nunito_Sans, Josefin_Sans } from "next/font/google";
+import { Gilda_Display, Nunito_Sans, Josefin_Sans, Tajawal } from "next/font/google";
 import { QueryClientProviderWrapper } from "@/lib/providers";
 import "./globals.css";
 
@@ -22,6 +22,13 @@ const josefinSans = Josefin_Sans({
   weight: ["300", "400"],
   subsets: ["latin"],
   variable: "--font-josefin",
+  display: "swap",
+});
+
+const tajawal = Tajawal({
+  weight: ["300", "400", "500", "700"],
+  subsets: ["arabic", "latin"],
+  variable: "--font-tajawal",
   display: "swap",
 });
 
@@ -88,7 +95,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           />
         </noscript>
       </head>
-      <body className={`${gildaDisplay.variable} ${nunitoSans.variable} ${josefinSans.variable}`}>
+      <body className={`${gildaDisplay.variable} ${nunitoSans.variable} ${josefinSans.variable} ${tajawal.variable}`}>
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe

@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import NavbarMultiPage from "@/components/NavbarMultiPage";
+import Footer from "@/components/Footer";
+import ContactButton from "@/components/ContactButton";
 
 export const metadata: Metadata = {
   title: "Therapist in New Giza, Cairo | Sama Wellness Therapy",
@@ -86,7 +89,10 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      {children}
+      <NavbarMultiPage />
+      <main>{children}</main>
+      <Footer />
+      <ContactButton />
     </>
   );
 }

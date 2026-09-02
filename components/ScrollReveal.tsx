@@ -1,37 +1,58 @@
+/* ========================================
+   SCROLL REVEAL COMPONENT
+
+   Wraps any section to add fade-up-on-scroll.
+   IntersectionObserver + CSS animation. No library.
+
+   Usage:
+     <ScrollReveal>
+       <ValuesStrip />
+     </ScrollReveal>
+
+     <ScrollReveal delay={150}>
+       <HowItWorks />
+     </ScrollReveal>
+   ======================================== */
 "use client";
-import { useEffect, useRef } from "react";
+
+import { useEffect, useRef, useState, ReactNode } from "react";
 
 interface ScrollRevealProps {
-  children: React.ReactNode;
-  className?: string;
+  children: ReactNode;
+  delay?: number;
 }
 
-export default function ScrollReveal({ children, className }: ScrollRevealProps) {
+export default function ScrollReveal({
+  children,
+  delay = 0,
+}: ScrollRevealProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    const el = ref.current;
+    if (!el) return;
 
     const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(e => {
-          if (e.isIntersecting) {
-            e.target.classList.add("revealed");
-            observer.unobserve(e.target); // only animate once
-          }
-        });
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(el);
+        }
       },
-      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+      { threshold: 0.01, rootMargin: "0px 0px -20px 0px" }
     );
 
-    const els = ref.current?.querySelectorAll(".reveal") || [];
-    els.forEach(el => observer.observe(el));
-
+    observer.observe(el);
     return () => observer.disconnect();
   }, []);
 
   return (
-    <div ref={ref} className={className}>
+    <div
+      ref={ref}
+      className={`scroll-reveal ${isVisible ? "scroll-reveal--visible" : ""}`}
+      style={{ transitionDelay: `${delay}ms` }}
+    >
       {children}
     </div>
   );
