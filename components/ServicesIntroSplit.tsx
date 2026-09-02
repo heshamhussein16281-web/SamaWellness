@@ -19,7 +19,7 @@ export default function ServicesIntroSplit() {
         </div>
         <div className="services-intro-split__image-wrap">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/rooms-serenity.jpg" alt="Therapy space at Sama Wellness" className="services-intro-split__image" />
+          <img src="/rooms-serenity1.jpg" alt="Therapy space at Sama Wellness" className="services-intro-split__image" />
         </div>
       </div>
     </section>
