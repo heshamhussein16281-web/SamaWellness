@@ -24,7 +24,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "Your first session is the foundation of your therapeutic journey. Here's what actually happens — and why it's simpler and more reassuring than you think.",
     category: "Therapy Insights",
-    image: "/blog/images/first-session.jpg",
+    image: "/BLOG/images/first-session.jpg",
     readTime: "5 min read",
     date: "September 2026",
     author: "Counselor Sama",
@@ -79,7 +79,7 @@ If you've been wondering whether it's the right time to start, the honest answer
     excerpt:
       "It's not conflict that destroys relationships — it's contempt. Gottman's research reveals the silent killer of connection and what to do about it.",
     category: "Relationships",
-    image: "/blog/images/relationship-breakdown.jpg",
+    image: "/BLOG/images/relationship-breakdown.jpg",
     readTime: "4 min read",
     date: "September 2026",
     author: "Counselor Sama",
@@ -120,7 +120,7 @@ At Sama Wellness Therapy, our founder Sama Eissa is a Gottman-trained couples th
     excerpt:
       "Therapy doesn't mean handing your decisions to someone else. Let's address the myths that keep people from getting help.",
     category: "Therapy Insights",
-    image: "/blog/images/therapy-misconceptions.jpg",
+    image: "/BLOG/images/therapy-misconceptions.jpg",
     readTime: "5 min read",
     date: "September 2026",
     author: "Counselor Sama",
@@ -171,7 +171,7 @@ At Sama Wellness Therapy, we work with clients across New Giza and Sheikh Zayed 
     excerpt:
       "Relationships are built continuously, not found complete. Ongoing maintenance prevents deeper damage than crisis intervention alone.",
     category: "Relationships",
-    image: "/blog/images/couples-therapy.jpg",
+    image: "/BLOG/images/couples-therapy.jpg",
     readTime: "4 min read",
     date: "August 2026",
     author: "Counselor Sama",
@@ -214,7 +214,7 @@ At Sama Wellness Therapy, couples come to us at every stage — some in real dis
     excerpt:
       "People stay because familiar relational patterns from childhood feel natural, even when harmful. Understanding this is the first step to breaking free.",
     category: "Relationships",
-    image: "/blog/images/narcissist-patterns.jpg",
+    image: "/BLOG/images/narcissist-patterns.jpg",
     readTime: "4 min read",
     date: "August 2026",
     author: "Counselor Sama",
@@ -256,7 +256,7 @@ At Sama Wellness Therapy, our therapists work with individuals navigating exactl
     excerpt:
       "It's not disloyal to discuss family struggles honestly in therapy. Parents are human with their own unresolved experiences they may have passed down.",
     category: "Therapy Insights",
-    image: "/blog/images/family-therapy.jpg",
+    image: "/BLOG/images/family-therapy.jpg",
     readTime: "4 min read",
     date: "August 2026",
     author: "Counselor Sama",
@@ -297,7 +297,7 @@ At Sama Wellness Therapy, we understand that family dynamics are often central t
     excerpt:
       "People-pleasing is a pattern you can change, not a personality trait.",
     category: "Self-Care",
-    image: "/blog/images/people-pleasing.jpg",
+    image: "/BLOG/images/people-pleasing.jpg",
     readTime: "5 min read",
     date: "July 2026",
     author: "Counselor Sama",
@@ -345,7 +345,7 @@ At Sama Wellness Therapy, our individual therapy sessions are built around exact
     excerpt:
       "Faith and therapy ask different questions, not competing ones. Seeking mental health support doesn't weaken your faith.",
     category: "Faith & Wellness",
-    image: "/blog/images/faith-therapy.jpg",
+    image: "/BLOG/images/faith-therapy.jpg",
     readTime: "4 min read",
     date: "July 2026",
     author: "Counselor Sama",

@@ -11,7 +11,7 @@ export const blogPostsAr: BlogPost[] = [
     excerpt:
       "أول جلسة هي الأساس اللي باقي رحلتك العلاجية هتُبنى عليه. إليك إيه اللي بيحصل فعلًا — وليه هو أبسط وأكتر طمأنة مما تتخيل.",
     category: "رؤى علاجية",
-    image: "/blog/images/first-session.jpg",
+    image: "/BLOG/images/first-session.jpg",
     readTime: "٥ دقائق قراءة",
     date: "سبتمبر ٢٠٢٦",
     author: "المعالجة سما",
@@ -65,7 +65,7 @@ export const blogPostsAr: BlogPost[] = [
     excerpt:
       "مش الخلافات هي اللي بتدمر العلاقات — الاحتقار هو القاتل الصامت. أبحاث جوتمان بتكشف إيه اللي ممكن تعمله.",
     category: "العلاقات",
-    image: "/blog/images/relationship-breakdown.jpg",
+    image: "/BLOG/images/relationship-breakdown.jpg",
     readTime: "٤ دقائق قراءة",
     date: "سبتمبر ٢٠٢٦",
     author: "المعالجة سما",
@@ -106,7 +106,7 @@ export const blogPostsAr: BlogPost[] = [
     excerpt:
       "العلاج النفسي مش معناه إنك بتسلّم قراراتك لحد تاني. خلينا نواجه الخرافات اللي بتمنع الناس من طلب المساعدة.",
     category: "رؤى علاجية",
-    image: "/blog/images/therapy-misconceptions.jpg",
+    image: "/BLOG/images/therapy-misconceptions.jpg",
     readTime: "٥ دقائق قراءة",
     date: "سبتمبر ٢٠٢٦",
     author: "المعالجة سما",
@@ -156,7 +156,7 @@ export const blogPostsAr: BlogPost[] = [
     excerpt:
       "العلاقات بتتبني باستمرار، مش بتتلاقي جاهزة. الصيانة المستمرة بتمنع ضرر أعمق من التدخل وقت الأزمة.",
     category: "العلاقات",
-    image: "/blog/images/couples-therapy.jpg",
+    image: "/BLOG/images/couples-therapy.jpg",
     readTime: "٤ دقائق قراءة",
     date: "أغسطس ٢٠٢٦",
     author: "المعالجة سما",
@@ -202,7 +202,7 @@ export const blogPostsAr: BlogPost[] = [
     excerpt:
       "الناس بتفضل لأن أنماط العلاقات المألوفة من الطفولة بتحسسهم بالطبيعية، حتى لو مؤذية. فهم ده هو الخطوة الأولى.",
     category: "العلاقات",
-    image: "/blog/images/narcissist-patterns.jpg",
+    image: "/BLOG/images/narcissist-patterns.jpg",
     readTime: "٤ دقائق قراءة",
     date: "أغسطس ٢٠٢٦",
     author: "المعالجة سما",
@@ -244,7 +244,7 @@ export const blogPostsAr: BlogPost[] = [
     excerpt:
       "مش خيانة إنك تتكلم عن صراعات عيلتك بصدق في العلاج. الوالدين بشر عندهم تجارب لم تُحل ممكن يكونوا نقلوها.",
     category: "رؤى علاجية",
-    image: "/blog/images/family-therapy.jpg",
+    image: "/BLOG/images/family-therapy.jpg",
     readTime: "٤ دقائق قراءة",
     date: "أغسطس ٢٠٢٦",
     author: "المعالجة سما",
@@ -284,7 +284,7 @@ export const blogPostsAr: BlogPost[] = [
     excerpt:
       "إرضاء الآخرين نمط ممكن تغيره، مش سمة شخصية.",
     category: "العناية بالذات",
-    image: "/blog/images/people-pleasing.jpg",
+    image: "/BLOG/images/people-pleasing.jpg",
     readTime: "٥ دقائق قراءة",
     date: "يوليو ٢٠٢٦",
     author: "المعالجة سما",
@@ -332,7 +332,7 @@ export const blogPostsAr: BlogPost[] = [
     excerpt:
       "الإيمان والعلاج بيسألوا أسئلة مختلفة، مش متنافسة. طلب دعم الصحة النفسية مش بيضعف إيمانك.",
     category: "الإيمان والعافية",
-    image: "/blog/images/faith-therapy.jpg",
+    image: "/BLOG/images/faith-therapy.jpg",
     readTime: "٤ دقائق قراءة",
     date: "يوليو ٢٠٢٦",
     author: "المعالجة سما",
