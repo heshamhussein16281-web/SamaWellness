@@ -18,6 +18,7 @@ const links = [
   { label: "OUR SERVICES", href: "/services" },
   { label: "THE TEAM",     href: "/team"     },
   { label: "ROOMS",        href: "/rooms"    },
+  { label: "BLOG",         href: "/blog"     },
   { label: "FAQ & ASK SAMA", href: "/ask"    },
 ];
 

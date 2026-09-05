@@ -9,6 +9,7 @@ const links = [
   { label: "خدماتنا", href: "/ar/services" },
   { label: "الفريق", href: "/ar/team" },
   { label: "الغرف", href: "/ar/rooms" },
+  { label: "المدونة", href: "/ar/blog" },
   { label: "الأسئلة الشائعة", href: "/ar/ask" },
 ];
 
