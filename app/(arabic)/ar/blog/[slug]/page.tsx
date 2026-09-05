@@ -1,10 +1,13 @@
 import { Metadata } from "next";
+import Script from "next/script";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { blogPostsAr, getPostBySlugAr } from "@/lib/blog-data-ar";
 import ScrollReveal from "@/components/ScrollReveal";
 import FinalCTA from "@/components/FinalCTA";
+
+const SITE_URL = "https://samawellnesstherapy.com";
 
 export function generateStaticParams() {
   return blogPostsAr.map((post) => ({ slug: post.slug }));
@@ -18,17 +21,29 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = getPostBySlugAr(slug);
   if (!post) return {};
+  const canonicalUrl = `${SITE_URL}/ar/blog/${slug}`;
   return {
     title: post.metaTitle,
     description: post.metaDescription,
+    alternates: {
+      canonical: canonicalUrl,
+      languages: {
+        "ar": canonicalUrl,
+        "en": `${SITE_URL}/blog/${slug}`,
+      },
+    },
     openGraph: {
       title: post.metaTitle,
       description: post.metaDescription,
       type: "article",
+      url: canonicalUrl,
       locale: "ar_EG",
+      siteName: "سما ويلنس ثيرابي",
+      publishedTime: post.date,
+      authors: [post.author],
       images: [
         {
-          url: `https://samawellnesstherapy.com${post.image}`,
+          url: `${SITE_URL}${post.image}`,
           width: 1200,
           height: 630,
           alt: post.title,
@@ -39,7 +54,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: post.metaTitle,
       description: post.metaDescription,
-      images: [`https://samawellnesstherapy.com${post.image}`],
+      images: [`${SITE_URL}${post.image}`],
     },
   };
 }
@@ -142,8 +157,42 @@ export default async function BlogPostPageAr({
     .filter((p) => p.slug !== post.slug)
     .slice(0, 3);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.metaDescription,
+    image: `${SITE_URL}${post.image}`,
+    author: {
+      "@type": "Person",
+      name: post.author,
+      url: `${SITE_URL}/ar/team`,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "سما ويلنس ثيرابي",
+      url: SITE_URL,
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE_URL}/logo.png`,
+      },
+    },
+    datePublished: post.date,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${SITE_URL}/ar/blog/${slug}`,
+    },
+    inLanguage: "ar",
+  };
+
   return (
     <>
+      <Script
+        id="blog-jsonld-ar"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <style>{`
         .blog-post-related { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
         .blog-post-card { transition: box-shadow 0.3s ease, transform 0.2s ease; cursor: pointer; text-decoration: none; color: inherit; display: block; }

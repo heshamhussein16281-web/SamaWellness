@@ -1,28 +1,207 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <!-- English Pages -->
   <url>
     <loc>https://samawellnesstherapy.com/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://samawellnesstherapy.com/" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://samawellnesstherapy.com/ar" />
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://samawellnesstherapy.com/services</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://samawellnesstherapy.com/services" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://samawellnesstherapy.com/ar/services" />
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://samawellnesstherapy.com/team</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://samawellnesstherapy.com/team" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://samawellnesstherapy.com/ar/team" />
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://samawellnesstherapy.com/rooms</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://samawellnesstherapy.com/rooms" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://samawellnesstherapy.com/ar/rooms" />
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://samawellnesstherapy.com/ask</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://samawellnesstherapy.com/ask" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://samawellnesstherapy.com/ar/ask" />
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
+  </url>
+
+  <!-- English Blog -->
+  <url>
+    <loc>https://samawellnesstherapy.com/blog</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://samawellnesstherapy.com/blog" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://samawellnesstherapy.com/ar/blog" />
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://samawellnesstherapy.com/blog/first-therapy-session-what-to-expect</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://samawellnesstherapy.com/blog/first-therapy-session-what-to-expect" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://samawellnesstherapy.com/ar/blog/first-therapy-session-what-to-expect" />
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://samawellnesstherapy.com/blog/contempt-predicts-relationship-breakdown-gottman</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://samawellnesstherapy.com/blog/contempt-predicts-relationship-breakdown-gottman" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://samawellnesstherapy.com/ar/blog/contempt-predicts-relationship-breakdown-gottman" />
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://samawellnesstherapy.com/blog/common-misconceptions-about-therapy-egypt</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://samawellnesstherapy.com/blog/common-misconceptions-about-therapy-egypt" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://samawellnesstherapy.com/ar/blog/common-misconceptions-about-therapy-egypt" />
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://samawellnesstherapy.com/blog/couples-therapy-not-just-for-crisis</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://samawellnesstherapy.com/blog/couples-therapy-not-just-for-crisis" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://samawellnesstherapy.com/ar/blog/couples-therapy-not-just-for-crisis" />
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://samawellnesstherapy.com/blog/why-people-stay-with-narcissistic-partners</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://samawellnesstherapy.com/blog/why-people-stay-with-narcissistic-partners" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://samawellnesstherapy.com/ar/blog/why-people-stay-with-narcissistic-partners" />
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://samawellnesstherapy.com/blog/talking-about-family-in-therapy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://samawellnesstherapy.com/blog/talking-about-family-in-therapy" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://samawellnesstherapy.com/ar/blog/talking-about-family-in-therapy" />
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://samawellnesstherapy.com/blog/psychology-of-people-pleasing</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://samawellnesstherapy.com/blog/psychology-of-people-pleasing" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://samawellnesstherapy.com/ar/blog/psychology-of-people-pleasing" />
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://samawellnesstherapy.com/blog/can-you-be-religious-and-go-to-therapy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://samawellnesstherapy.com/blog/can-you-be-religious-and-go-to-therapy" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://samawellnesstherapy.com/ar/blog/can-you-be-religious-and-go-to-therapy" />
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Arabic Pages -->
+  <url>
+    <loc>https://samawellnesstherapy.com/ar</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://samawellnesstherapy.com/ar" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://samawellnesstherapy.com/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://samawellnesstherapy.com/ar/services</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://samawellnesstherapy.com/ar/services" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://samawellnesstherapy.com/services" />
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://samawellnesstherapy.com/ar/team</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://samawellnesstherapy.com/ar/team" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://samawellnesstherapy.com/team" />
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://samawellnesstherapy.com/ar/rooms</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://samawellnesstherapy.com/ar/rooms" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://samawellnesstherapy.com/rooms" />
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://samawellnesstherapy.com/ar/ask</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://samawellnesstherapy.com/ar/ask" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://samawellnesstherapy.com/ask" />
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Arabic Blog -->
+  <url>
+    <loc>https://samawellnesstherapy.com/ar/blog</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://samawellnesstherapy.com/ar/blog" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://samawellnesstherapy.com/blog" />
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://samawellnesstherapy.com/ar/blog/first-therapy-session-what-to-expect</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://samawellnesstherapy.com/ar/blog/first-therapy-session-what-to-expect" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://samawellnesstherapy.com/blog/first-therapy-session-what-to-expect" />
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://samawellnesstherapy.com/ar/blog/contempt-predicts-relationship-breakdown-gottman</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://samawellnesstherapy.com/ar/blog/contempt-predicts-relationship-breakdown-gottman" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://samawellnesstherapy.com/blog/contempt-predicts-relationship-breakdown-gottman" />
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://samawellnesstherapy.com/ar/blog/common-misconceptions-about-therapy-egypt</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://samawellnesstherapy.com/ar/blog/common-misconceptions-about-therapy-egypt" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://samawellnesstherapy.com/blog/common-misconceptions-about-therapy-egypt" />
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://samawellnesstherapy.com/ar/blog/couples-therapy-not-just-for-crisis</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://samawellnesstherapy.com/ar/blog/couples-therapy-not-just-for-crisis" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://samawellnesstherapy.com/blog/couples-therapy-not-just-for-crisis" />
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://samawellnesstherapy.com/ar/blog/why-people-stay-with-narcissistic-partners</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://samawellnesstherapy.com/ar/blog/why-people-stay-with-narcissistic-partners" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://samawellnesstherapy.com/blog/why-people-stay-with-narcissistic-partners" />
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://samawellnesstherapy.com/ar/blog/talking-about-family-in-therapy</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://samawellnesstherapy.com/ar/blog/talking-about-family-in-therapy" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://samawellnesstherapy.com/blog/talking-about-family-in-therapy" />
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://samawellnesstherapy.com/ar/blog/psychology-of-people-pleasing</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://samawellnesstherapy.com/ar/blog/psychology-of-people-pleasing" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://samawellnesstherapy.com/blog/psychology-of-people-pleasing" />
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://samawellnesstherapy.com/ar/blog/can-you-be-religious-and-go-to-therapy</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://samawellnesstherapy.com/ar/blog/can-you-be-religious-and-go-to-therapy" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://samawellnesstherapy.com/blog/can-you-be-religious-and-go-to-therapy" />
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
 </urlset>
