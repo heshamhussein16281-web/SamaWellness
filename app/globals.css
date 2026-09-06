@@ -2046,6 +2046,7 @@ textarea.form-input {
   }
   .navbar__logo-link img { width: 130px !important; height: 130px !important; }
   .navbar__mobile-toggle { top: 65px !important; transform: translateY(-50%) !important; }
+  .navbar__mobile-lang { display: inline-flex !important; }
   .navbar__mobile-menu { top: 130px !important; }
   section[id] { scroll-margin-top: 105px; }
 
@@ -4112,6 +4113,10 @@ textarea.form-input {
   }
   [dir="rtl"] .navbar__mobile-toggle {
     left: 20px !important;
+    right: auto !important;
+  }
+  [dir="rtl"] .navbar__mobile-lang {
+    left: 60px !important;
     right: auto !important;
   }
   [dir="rtl"] .contact-floating-btn {

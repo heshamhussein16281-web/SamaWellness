@@ -105,6 +105,32 @@ export default function NavbarAr() {
         </Link>
       </nav>
 
+      {/* Mobile language switch — always visible next to burger */}
+      <Link
+        href="/"
+        className="navbar__mobile-lang"
+        aria-label="English"
+        style={{
+          position: "absolute",
+          left: "60px",
+          top: "65px",
+          transform: "translateY(-50%)",
+          fontFamily: "var(--font-ui)",
+          fontSize: "13px",
+          fontWeight: 400,
+          color: "var(--color-nav-text)",
+          textDecoration: "none",
+          border: "1px solid var(--color-sand)",
+          borderRadius: "6px",
+          padding: "5px 10px",
+          lineHeight: 1,
+          letterSpacing: "0.03em",
+          display: "none",
+        }}
+      >
+        EN
+      </Link>
+
       {/* Mobile toggle — flipped to left for RTL */}
       <button
         className="navbar__mobile-toggle"
@@ -147,13 +173,6 @@ export default function NavbarAr() {
                 {l.label}
               </Link>
             ))}
-            <Link
-              href="/"
-              className="lang-switch"
-              style={{ marginTop: "8px", alignSelf: "flex-start" }}
-            >
-              English
-            </Link>
           </div>
         </>
       )}

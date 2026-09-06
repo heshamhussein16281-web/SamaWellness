@@ -137,6 +137,31 @@ export default function NavbarMultiPage() {
 
       </nav>
 
+      {/* Mobile language switch — always visible next to burger */}
+      <Link
+        href="/ar"
+        className="navbar__mobile-lang"
+        aria-label="عربي"
+        style={{
+          position: "absolute",
+          right: "60px",
+          top: "65px",
+          transform: "translateY(-50%)",
+          fontFamily: "var(--font-tajawal)",
+          fontSize: "15px",
+          fontWeight: 500,
+          color: "var(--color-nav-text)",
+          textDecoration: "none",
+          border: "1px solid var(--color-sand)",
+          borderRadius: "6px",
+          padding: "5px 10px",
+          lineHeight: 1,
+          display: "none",
+        }}
+      >
+        ع
+      </Link>
+
       {/* Mobile toggle */}
       <button
         className="navbar__mobile-toggle"
@@ -176,14 +201,6 @@ export default function NavbarMultiPage() {
                 {l.label}
               </Link>
             ))}
-            <Link
-              href="/ar"
-              onClick={() => setOpen(false)}
-              className="nav-link navbar__mobile-link"
-              style={{ fontFamily: "var(--font-tajawal, var(--font-ui))" }}
-            >
-              عربي
-            </Link>
           </div>
         </>
       )}
