@@ -2150,7 +2150,7 @@ textarea.form-input {
   }
   .hero-text-elevate {
     position: relative !important;
-    top: auto !important; left: auto !important;
+    top: auto !important; left: auto !important; right: auto !important;
     transform: none !important;
     font-size: 18px !important;
     letter-spacing: 0.1em !important;
@@ -2160,7 +2160,7 @@ textarea.form-input {
   }
   .hero-room {
     position: relative !important;
-    top: auto !important; left: auto !important;
+    top: auto !important; left: auto !important; right: auto !important;
     transform: none !important;
     width: 88vw !important;
     height: 88vw !important;
@@ -2168,7 +2168,7 @@ textarea.form-input {
   }
   .hero-tagline {
     position: relative !important;
-    top: auto !important; left: auto !important;
+    top: auto !important; left: auto !important; right: auto !important;
     transform: none !important;
     width: 82vw !important;
     text-align: center !important;
@@ -2177,7 +2177,7 @@ textarea.form-input {
   }
   .hero-cta-wrap {
     position: relative !important;
-    top: auto !important; left: auto !important;
+    top: auto !important; left: auto !important; right: auto !important;
     transform: none !important;
     width: 88vw !important;
     order: 4 !important;
