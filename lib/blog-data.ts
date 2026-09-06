@@ -377,6 +377,80 @@ Recognizing that these two things exist on different planes — one spiritual, o
 
 At Sama Wellness Therapy, we work with clients across New Giza and Sheikh Zayed who hold their faith as a genuine, important part of their identity — and we never ask anyone to set that aside to benefit from therapy. Sessions are private, respectful, and entirely centered on you, in both Arabic and English.`,
   },
+  {
+    slug: "how-to-choose-the-right-therapist",
+    title: "How to Choose the Right Therapist for You",
+    metaTitle:
+      "How to Choose the Right Therapist | Sama Wellness Therapy, New Giza",
+    metaDescription:
+      "Not every therapist is the right fit. Learn what to look for when choosing a therapist — from specialization to personal connection — and why the match matters.",
+    excerpt:
+      "Finding a therapist isn't just about credentials. The right match depends on your specific concern, the approach that suits you, and whether you feel genuinely heard.",
+    category: "Therapy Insights",
+    image: "/BLOG/images/choosing-therapist.jpg",
+    readTime: "5 min read",
+    date: "September 2026",
+    author: "Counselor Sama",
+    content: `Deciding to start therapy is one step. Choosing the right therapist is a completely different one — and in many ways, it's the step that determines whether therapy actually works for you.
+
+Most people pick a therapist the way they'd pick a restaurant: based on proximity, a recommendation, or whoever shows up first online. But therapy isn't a commodity. The person sitting across from you shapes the entire experience — and research consistently shows that the therapeutic relationship is one of the strongest predictors of positive outcomes.
+
+## Why the Match Matters More Than the Method
+
+There's a well-documented finding in psychotherapy research called the **common factors model**. It suggests that the specific technique a therapist uses — whether CBT, psychodynamic, or humanistic — accounts for a relatively small percentage of therapeutic outcomes. What matters significantly more is the quality of the relationship between therapist and client.
+
+That doesn't mean technique is irrelevant. It means that even the best technique, delivered by a therapist you don't connect with, is unlikely to produce the results you're looking for.
+
+This is why choosing a therapist isn't just about finding someone qualified. It's about finding someone qualified *for you*.
+
+## What to Actually Look For
+
+## 1. Specialization That Matches Your Concern
+
+Therapists aren't interchangeable. Someone trained in trauma-focused care works differently from someone whose primary experience is with couples. If you're dealing with anxiety, a therapist who specializes in mood disorders will approach your sessions differently from one who primarily works with relationship conflict.
+
+Before you book, ask: **what does this therapist specialize in, and does it align with what I'm going through?**
+
+## 2. An Approach You Can Work With
+
+Different therapeutic approaches suit different people. Some clients want structured homework and measurable goals (CBT). Others benefit from open-ended exploration of patterns and past experiences (psychodynamic). Some need a combination.
+
+You don't need to become an expert in therapeutic modalities — but it helps to know whether you want someone directive or someone who lets you lead. A good therapist will explain their approach early on so you can decide if it resonates.
+
+## 3. A Feeling of Safety — Not Just Comfort
+
+The right therapist won't always make you feel comfortable. Growth involves discomfort. But you should feel **safe** — safe enough to be honest, safe enough to push back, safe enough to say "I don't think that's right for me."
+
+If you leave a session feeling judged, dismissed, or like you're performing for your therapist, that's a signal worth paying attention to.
+
+## 4. Practical Compatibility
+
+This one is often overlooked: does the therapist's schedule work with yours? Are sessions in a location (or format) that's accessible? Is the fee structure transparent and sustainable for you over time?
+
+Therapy isn't a one-time event. It's a process that requires consistency, and practical barriers can quietly erode that consistency if they're not addressed upfront.
+
+## The Assessment Approach
+
+At Sama Wellness Therapy, we don't leave the matching process to chance. Every new client begins with a **personal assessment** — a 15-minute conversation led by Counselor Sama — before being matched with a therapist.
+
+This isn't an intake form. It's a real conversation designed to understand:
+
+- What you're going through specifically
+- What kind of therapeutic approach is likely to suit you
+- Which therapist on our team is the best fit — based on specialization, communication style, and your preferences
+
+The goal is simple: by the time you sit down for your first full session, you're sitting across from someone who was chosen *for you*, not assigned at random.
+
+## When It's Not the Right Fit
+
+Sometimes, even with the best matching process, a therapist isn't the right fit. That's not a failure — it's information.
+
+If after two or three sessions you feel like you're not connecting, it's worth raising it directly. A good therapist will welcome that conversation, not take it personally. And if a change is needed, it's far better to make it early than to stay in a therapeutic relationship that isn't serving you.
+
+## Serving New Giza & Sheikh Zayed
+
+Sama Wellness Therapy is based in New Giza Medi-Town, serving clients across New Giza, Sheikh Zayed, and the wider West Cairo area. Our team of 8 licensed therapists covers individual therapy, couples therapy (Gottman Method), CBT, DBT, and trauma-focused care — and every client is personally matched through Counselor Sama's assessment process to ensure the right fit from session one.`,
+  },
 ];
 
 export function getPostBySlug(slug: string): BlogPost | undefined {

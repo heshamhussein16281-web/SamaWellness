@@ -102,6 +102,13 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://www.samawellnesstherapy.com/blog/how-to-choose-the-right-therapist</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.samawellnesstherapy.com/blog/how-to-choose-the-right-therapist" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.samawellnesstherapy.com/ar/blog/how-to-choose-the-right-therapist" />
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 
   <!-- Arabic Pages -->
   <url>
@@ -201,6 +208,13 @@
     <loc>https://www.samawellnesstherapy.com/ar/blog/can-you-be-religious-and-go-to-therapy</loc>
     <xhtml:link rel="alternate" hreflang="ar" href="https://www.samawellnesstherapy.com/ar/blog/can-you-be-religious-and-go-to-therapy" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.samawellnesstherapy.com/blog/can-you-be-religious-and-go-to-therapy" />
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.samawellnesstherapy.com/ar/blog/how-to-choose-the-right-therapist</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.samawellnesstherapy.com/ar/blog/how-to-choose-the-right-therapist" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.samawellnesstherapy.com/blog/how-to-choose-the-right-therapist" />
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
