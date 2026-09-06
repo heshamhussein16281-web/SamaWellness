@@ -7,9 +7,14 @@ import ScrollReveal from "@/components/ScrollReveal";
 export const metadata: Metadata = {
   title: "الأسئلة الشائعة واسألي الكاونسلر سما | ساما ويلنس ثيرابي",
   description: "اعرف إجابات الأسئلة الشائعة عن العلاج النفسي واسألي الكاونسلر سما مباشرة. تعرف على عملية التقييم والسرية وإيه اللي تتوقعه في ساما ويلنس ثيرابي.",
+  alternates: {
+    canonical: "/ar/ask",
+    languages: { ar: "/ar/ask", en: "/ask" },
+  },
   openGraph: {
     title: "الأسئلة الشائعة واسألي الكاونسلر سما | ساما ويلنس ثيرابي",
     description: "اعرف إجابات الأسئلة الشائعة عن العلاج النفسي واسألي الكاونسلر سما مباشرة في ساما ويلنس ثيرابي.",
+    url: "https://www.samawellnesstherapy.com/ar/ask",
   },
 };
 import AskSamaGalleryIntroAr from "@/components/ar/AskSamaGalleryIntroAr";

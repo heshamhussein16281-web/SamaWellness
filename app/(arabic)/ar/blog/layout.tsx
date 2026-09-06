@@ -5,17 +5,17 @@ export const metadata: Metadata = {
   description:
     "رؤى من معالجين مرخصين حول العلاج النفسي، العلاقات، العناية بالذات، والإيمان والعافية. سما ويلنس ثيرابي في نيو جيزة والشيخ زايد، القاهرة.",
   alternates: {
-    canonical: "https://samawellnesstherapy.com/ar/blog",
+    canonical: "/ar/blog",
     languages: {
-      ar: "https://samawellnesstherapy.com/ar/blog",
-      en: "https://samawellnesstherapy.com/blog",
+      ar: "/ar/blog",
+      en: "/blog",
     },
   },
   openGraph: {
     title: "مدونة الصحة النفسية | سما ويلنس ثيرابي",
     description:
       "رؤى من معالجين مرخصين حول العلاج النفسي، العلاقات، العناية بالذات، والإيمان والعافية.",
-    url: "https://samawellnesstherapy.com/ar/blog",
+    url: "https://www.samawellnesstherapy.com/ar/blog",
     siteName: "سما ويلنس ثيرابي",
     locale: "ar_EG",
     type: "website",

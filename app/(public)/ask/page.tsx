@@ -6,10 +6,14 @@ import PageHero from "@/components/PageHero";
 export const metadata: Metadata = {
   title: "FAQ & Ask Counselor Sama | Sama Wellness Therapy",
   description: "Find answers to common therapy questions and ask Counselor Sama directly. Learn about our assessment process, confidentiality, and what to expect at Sama Wellness Therapy.",
+  alternates: {
+    canonical: "/ask",
+    languages: { en: "/ask", ar: "/ar/ask" },
+  },
   openGraph: {
     title: "FAQ & Ask Counselor Sama | Sama Wellness Therapy",
     description: "Find answers to common therapy questions and ask Counselor Sama directly at Sama Wellness Therapy in New Giza, Cairo.",
-    url: "https://samawellnesstherapy.com/ask",
+    url: "https://www.samawellnesstherapy.com/ask",
   },
 };
 import ScrollReveal from "@/components/ScrollReveal";

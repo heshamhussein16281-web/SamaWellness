@@ -6,10 +6,14 @@ import PageHero from "@/components/PageHero";
 export const metadata: Metadata = {
   title: "Our Therapy Rooms — Serenity & Horizon | Sama Wellness Therapy",
   description: "Step inside our two therapy rooms — Serenity and Horizon — designed as calm, healing environments at Sama Wellness Therapy in New Giza, Cairo.",
+  alternates: {
+    canonical: "/rooms",
+    languages: { en: "/rooms", ar: "/ar/rooms" },
+  },
   openGraph: {
     title: "Our Therapy Rooms — Serenity & Horizon | Sama Wellness Therapy",
     description: "Step inside our two therapy rooms designed as calm, healing environments at Sama Wellness in New Giza, Cairo.",
-    url: "https://samawellnesstherapy.com/rooms",
+    url: "https://www.samawellnesstherapy.com/rooms",
   },
 };
 import ScrollReveal from "@/components/ScrollReveal";

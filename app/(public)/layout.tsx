@@ -7,16 +7,23 @@ import ContactButton from "@/components/ContactButton";
 export const metadata: Metadata = {
   title: "Therapist in New Giza, Cairo | Sama Wellness Therapy",
   description: "Individual, couples & group therapy in New Giza, Cairo. Licensed therapists matched to your needs. Book a free 15-min assessment with Sama Wellness Therapy.",
+  alternates: {
+    canonical: "/",
+    languages: {
+      en: "/",
+      ar: "/ar",
+    },
+  },
   openGraph: {
     title: "Therapist in New Giza, Cairo | Sama Wellness Therapy",
     description: "Individual, couples & group therapy in New Giza, Cairo. Licensed therapists personally matched to your needs by Clinical Director Sama Eissa.",
-    url: "https://samawellnesstherapy.com",
+    url: "https://www.samawellnesstherapy.com",
     siteName: "Sama Wellness Therapy",
     locale: "en_EG",
     type: "website",
     images: [
       {
-        url: "https://samawellnesstherapy.com/room.jpg",
+        url: "https://www.samawellnesstherapy.com/room.jpg",
         width: 1200,
         height: 630,
         alt: "Sama Wellness Therapy — therapy room in New Giza, Cairo",
@@ -27,7 +34,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Therapist in New Giza, Cairo | Sama Wellness Therapy",
     description: "Individual, couples & group therapy in New Giza, Cairo. Licensed therapists personally matched to your needs.",
-    images: ["https://samawellnesstherapy.com/room.jpg"],
+    images: ["https://www.samawellnesstherapy.com/room.jpg"],
   },
   other: {
     'facebook-domain-verification': 'bq5lk7pmejyijqs9tvokifgdhf9u2c',
@@ -39,9 +46,9 @@ const jsonLd = {
   "@type": "MedicalBusiness",
   "name": "Sama Wellness Therapy",
   "description": "Individual, couples & group therapy in New Giza, Cairo. Licensed therapists personally matched to your needs by Clinical Director Sama Eissa.",
-  "url": "https://samawellnesstherapy.com",
-  "logo": "https://samawellnesstherapy.com/logo-hero.png",
-  "image": "https://samawellnesstherapy.com/room.jpg",
+  "url": "https://www.samawellnesstherapy.com",
+  "logo": "https://www.samawellnesstherapy.com/logo-hero.png",
+  "image": "https://www.samawellnesstherapy.com/room.jpg",
   "telephone": "+201130946556",
   "address": {
     "@type": "PostalAddress",

@@ -7,9 +7,14 @@ import ScrollReveal from "@/components/ScrollReveal";
 export const metadata: Metadata = {
   title: "خدماتنا — علاج فردي، زوجي وجماعي | ساما ويلنس ثيرابي",
   description: "اكتشف خدمات العلاج الفردي والزوجي والجماعي في ساما ويلنس ثيرابي بنيو جيزة، القاهرة. كل عميل بيتم اختيار المعالج المناسب ليه من خلال تقييم مجاني.",
+  alternates: {
+    canonical: "/ar/services",
+    languages: { ar: "/ar/services", en: "/services" },
+  },
   openGraph: {
     title: "خدماتنا — علاج فردي، زوجي وجماعي | ساما ويلنس ثيرابي",
     description: "اكتشف خدمات العلاج الفردي والزوجي والجماعي في ساما ويلنس ثيرابي بنيو جيزة، القاهرة.",
+    url: "https://www.samawellnesstherapy.com/ar/services",
   },
 };
 import ServicesIntroSplitAr from "@/components/ar/ServicesIntroSplitAr";

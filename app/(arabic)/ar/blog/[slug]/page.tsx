@@ -7,7 +7,7 @@ import { blogPostsAr, getPostBySlugAr } from "@/lib/blog-data-ar";
 import ScrollReveal from "@/components/ScrollReveal";
 import FinalCTA from "@/components/FinalCTA";
 
-const SITE_URL = "https://samawellnesstherapy.com";
+const SITE_URL = "https://www.samawellnesstherapy.com";
 
 export function generateStaticParams() {
   return blogPostsAr.map((post) => ({ slug: post.slug }));

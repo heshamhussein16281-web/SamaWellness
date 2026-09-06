@@ -20,7 +20,7 @@ export const blogPosts: BlogPost[] = [
     metaTitle:
       "What to Expect in Your First Therapy Session | Sama Wellness Therapy, New Giza",
     metaDescription:
-      "Wondering what happens in your first therapy session? Here's exactly what to expect — from what your therapist will ask to how a successful first session sets the direction for your entire journey. Serving New Giza & Sheikh Zayed.",
+      "Wondering what happens in your first therapy session? Here's what to expect — from what your therapist will ask to how it sets the direction for your journey.",
     excerpt:
       "Your first session is the foundation of your therapeutic journey. Here's what actually happens — and why it's simpler and more reassuring than you think.",
     category: "Therapy Insights",
@@ -75,7 +75,7 @@ If you've been wondering whether it's the right time to start, the honest answer
     metaTitle:
       "Contempt in Relationships: The #1 Predictor of Divorce | Gottman Method Therapist, New Giza",
     metaDescription:
-      "Discover why contempt — not conflict or communication issues — is the strongest predictor of relationship breakdown, according to Gottman research. Learn how Gottman Method couples therapy in New Giza & Sheikh Zayed can help.",
+      "Contempt — not conflict — is the strongest predictor of relationship breakdown, according to Gottman research. Learn how couples therapy can help.",
     excerpt:
       "It's not conflict that destroys relationships — it's contempt. Gottman's research reveals the silent killer of connection and what to do about it.",
     category: "Relationships",
@@ -116,7 +116,7 @@ At Sama Wellness Therapy, our founder Sama Eissa is a Gottman-trained couples th
     metaTitle:
       "Common Misconceptions About Therapy in Egypt | Sama Wellness Therapy",
     metaDescription:
-      "Think therapy means someone else decides what's right for you? Here are the most common misconceptions about therapy in Egypt — and what therapy actually is. Serving New Giza & Sheikh Zayed.",
+      "Think therapy means someone else decides what's right for you? Here are the most common misconceptions about therapy in Egypt — and what it actually is.",
     excerpt:
       "Therapy doesn't mean handing your decisions to someone else. Let's address the myths that keep people from getting help.",
     category: "Therapy Insights",
@@ -167,7 +167,7 @@ At Sama Wellness Therapy, we work with clients across New Giza and Sheikh Zayed 
     metaTitle:
       "Couples Therapy Isn't Just for Crisis | Gottman Couples Therapist, New Giza & Sheikh Zayed",
     metaDescription:
-      "Think couples therapy is only for relationships about to end? Learn why relationships need ongoing maintenance — not just crisis intervention — and how couples therapy in New Giza & Sheikh Zayed can help.",
+      "Think couples therapy is only for relationships about to end? Learn why relationships need ongoing maintenance — not just crisis intervention.",
     excerpt:
       "Relationships are built continuously, not found complete. Ongoing maintenance prevents deeper damage than crisis intervention alone.",
     category: "Relationships",
@@ -210,7 +210,7 @@ At Sama Wellness Therapy, couples come to us at every stage — some in real dis
     metaTitle:
       "Why Do People Stay With Narcissistic Partners? | Sama Wellness Therapy, New Giza",
     metaDescription:
-      "Understanding why people stay in relationships with narcissistic partners — and why breaking the pattern starts with recognizing why it feels familiar. Couples & individual therapy in New Giza & Sheikh Zayed.",
+      "Why do people stay with narcissistic partners? Breaking the pattern starts with recognizing why it feels familiar. Individual therapy in New Giza.",
     excerpt:
       "People stay because familiar relational patterns from childhood feel natural, even when harmful. Understanding this is the first step to breaking free.",
     category: "Relationships",
@@ -252,7 +252,7 @@ At Sama Wellness Therapy, our therapists work with individuals navigating exactl
     metaTitle:
       "Is It Wrong to Talk About Your Family in Therapy? | Sama Wellness Therapy, New Giza",
     metaDescription:
-      "Many clients feel guilty discussing their family negatively in therapy. Here's why that's not disloyalty — it's simply telling your story honestly. Individual therapy in New Giza & Sheikh Zayed.",
+      "Many clients feel guilty discussing family in therapy. Here's why that's not disloyalty — it's simply telling your story honestly.",
     excerpt:
       "It's not disloyal to discuss family struggles honestly in therapy. Parents are human with their own unresolved experiences they may have passed down.",
     category: "Therapy Insights",
@@ -293,7 +293,7 @@ At Sama Wellness Therapy, we understand that family dynamics are often central t
     metaTitle:
       "The Psychology of People-Pleasing | Sama Wellness Therapy, New Giza",
     metaDescription:
-      "People-pleasing often gets mistaken for kindness — but it's frequently a sign of low self-esteem, not generosity. Learn what's really behind it. Individual therapy in New Giza & Sheikh Zayed.",
+      "People-pleasing often gets mistaken for kindness — but it's frequently a sign of low self-esteem, not generosity. Learn what's really behind it.",
     excerpt:
       "People-pleasing is a pattern you can change, not a personality trait.",
     category: "Self-Care",
@@ -341,7 +341,7 @@ At Sama Wellness Therapy, our individual therapy sessions are built around exact
     metaTitle:
       "Can You Be Religious and Still Go to Therapy? | Sama Wellness Therapy, New Giza",
     metaDescription:
-      "Does going to therapy mean your faith isn't strong enough? Here's why faith and therapy were never meant to compete. Bilingual individual therapy in New Giza & Sheikh Zayed.",
+      "Does going to therapy mean your faith isn't strong enough? Here's why faith and therapy were never meant to compete — they ask different questions.",
     excerpt:
       "Faith and therapy ask different questions, not competing ones. Seeking mental health support doesn't weaken your faith.",
     category: "Faith & Wellness",
