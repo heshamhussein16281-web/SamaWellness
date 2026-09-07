@@ -1,4 +1,5 @@
 import Image from "next/image";
+import HeroBookingCTA from "./HeroBookingCTA";
 
 export default function Hero() {
   return (
@@ -71,31 +72,7 @@ export default function Hero() {
         gap: "0.625rem",
         zIndex: 2,
       }}>
-        <a
-          href="https://api.whatsapp.com/send?phone=201130946556&text=I%27d%20like%20to%20book%20an%20assessment"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hero-cta"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            fontFamily: "var(--font-ui)",
-            fontSize: "clamp(14px, 1.1vw, 18px)",
-            fontWeight: 400,
-            letterSpacing: "1.5px",
-            textTransform: "uppercase",
-            color: "var(--color-linen)",
-            backgroundColor: "var(--color-burgundy)",
-            padding: "16px 40px",
-            borderRadius: "var(--radius-sm)",
-            textDecoration: "none",
-            transition: "var(--transition-base)",
-            whiteSpace: "nowrap",
-          }}
-        >
-          Book Your Assessment
-        </a>
+        <HeroBookingCTA />
         <p style={{
           fontFamily: "var(--font-body)",
           fontSize: "clamp(12px, 0.9vw, 15px)",

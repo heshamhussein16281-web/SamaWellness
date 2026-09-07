@@ -1,6 +1,7 @@
 export async function sendEmailNotification(params: {
   subject: string;
   html: string;
+  to?: string | string[];
 }) {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
@@ -15,7 +16,7 @@ export async function sendEmailNotification(params: {
     },
     body: JSON.stringify({
       from: "Sama Wellness Therapy <noreply@samawellnesstherapy.com>",
-      to: "info@samawellnesstherapy.com",
+      to: params.to ?? "info@samawellnesstherapy.com",
       subject: params.subject,
       html: params.html,
     }),

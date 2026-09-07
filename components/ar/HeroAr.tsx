@@ -1,4 +1,5 @@
 import Image from "next/image";
+import HeroBookingCTAAr from "./HeroBookingCTAAr";
 
 export default function HeroAr() {
   return (
@@ -74,31 +75,7 @@ export default function HeroAr() {
         gap: "0.625rem",
         zIndex: 2,
       }}>
-        <a
-          href="https://api.whatsapp.com/send?phone=201130946556&text=%D8%A3%D9%86%D8%A7%20%D8%B9%D8%A7%D9%8A%D8%B2%2F%D8%A9%20%D8%A3%D8%AD%D8%AC%D8%B2%20%D8%AA%D9%82%D9%8A%D9%8A%D9%85"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hero-cta"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            fontFamily: "var(--font-ui)",
-            fontSize: "clamp(14px, 1.1vw, 18px)",
-            fontWeight: 400,
-            letterSpacing: "1.5px",
-            /* textTransform not applicable for Arabic */
-            color: "var(--color-linen)",
-            backgroundColor: "var(--color-burgundy)",
-            padding: "16px 40px",
-            borderRadius: "var(--radius-sm)",
-            textDecoration: "none",
-            transition: "var(--transition-base)",
-            whiteSpace: "nowrap",
-          }}
-        >
-          احجز تقييمك
-        </a>
+        <HeroBookingCTAAr />
         <p style={{
           fontFamily: "var(--font-body)",
           fontSize: "clamp(12px, 0.9vw, 15px)",

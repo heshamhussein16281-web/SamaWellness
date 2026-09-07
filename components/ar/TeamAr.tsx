@@ -38,12 +38,10 @@ function TherapistCardAr({ therapist }: { therapist: typeof therapists[0] }) {
         <p className="team-card__approach">{therapist.approach}</p>
       </div>
 
-      {showBooking && (
-        <BookingModalAr
-          therapist={therapist}
-          onClose={() => setShowBooking(false)}
-        />
-      )}
+      <BookingModalAr
+        isOpen={showBooking}
+        onClose={() => setShowBooking(false)}
+      />
 
       <div className="team-card__bio-section">
         <div className={`team-card__bio-container${expanded ? " expanded" : ""}`}>

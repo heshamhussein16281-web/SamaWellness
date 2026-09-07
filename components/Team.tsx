@@ -101,12 +101,10 @@ function TherapistCard({ therapist }: { therapist: typeof therapists[0] }) {
         <p className="team-card__approach">{therapist.approach}</p>
       </div>
 
-      {showBooking && (
-        <BookingModal
-          therapist={therapist}
-          onClose={() => setShowBooking(false)}
-        />
-      )}
+      <BookingModal
+        isOpen={showBooking}
+        onClose={() => setShowBooking(false)}
+      />
 
       {/* ───────────────────────────────────
           Bio (Grid: row 3, cols 1-2)

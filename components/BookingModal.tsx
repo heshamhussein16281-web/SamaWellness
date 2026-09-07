@@ -1,187 +1,190 @@
 "use client";
-import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
-import type { Therapist } from "@/lib/team-data";
+import { useState, useEffect, useRef } from "react";
 
-/**
- * BookingModal — Client booking request form
- *
- * Structure (BEM):
- *   .booking-modal-overlay
- *     └─ .booking-modal
- *        ├─ .booking-modal__header (therapist photo/name/title + close btn)
- *        └─ .booking-modal__body
- *           ├─ form fields (full name, mobile, optional email)
- *           └─ .booking-modal__success (shown after submit)
- */
-export default function BookingModal({
-  therapist,
-  onClose,
-}: {
-  therapist: Therapist;
+interface BookingModalProps {
+  isOpen: boolean;
   onClose: () => void;
-}) {
-  const [fullName, setFullName] = useState("");
-  const [mobile, setMobile] = useState("");
-  const [email, setEmail] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState("");
-  const [mounted, setMounted] = useState(false);
+}
+
+export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [preferredTime, setPreferredTime] = useState("");
+  const [note, setNote] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const nameRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setMounted(true);
-    document.body.style.overflow = "hidden";
-    return () => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+      setTimeout(() => nameRef.current?.focus(), 350);
+    } else {
       document.body.style.overflow = "";
-    };
-  }, []);
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [isOpen]);
 
-  async function handleSubmit(e: React.FormEvent) {
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    if (isOpen) window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [isOpen, onClose]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!fullName.trim() || !mobile.trim()) return;
-
-    setSubmitting(true);
-    setError("");
+    setStatus("sending");
 
     try {
-      const res = await fetch("/api/booking-requests", {
+      const res = await fetch("/api/booking", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          therapist_id: therapist.id,
-          therapist_name: therapist.name,
-          full_name: fullName.trim(),
-          mobile: mobile.trim(),
-          email: email.trim() || undefined,
+          name,
+          phone,
+          preferred_time: preferredTime || null,
+          note: note || null,
+          source: "booking_modal",
         }),
       });
 
       if (!res.ok) throw new Error("Request failed");
-
-      setSubmitted(true);
+      setStatus("success");
     } catch {
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setSubmitting(false);
+      setStatus("error");
     }
-  }
+  };
 
-  if (!mounted) return null;
+  const resetAndClose = () => {
+    setName("");
+    setPhone("");
+    setPreferredTime("");
+    setNote("");
+    setStatus("idle");
+    onClose();
+  };
 
-  return createPortal(
-    <div className="booking-modal-overlay" onClick={onClose}>
+  if (!isOpen) return null;
+
+  return (
+    <div className="booking-modal-overlay" onClick={resetAndClose}>
       <div className="booking-modal" onClick={(e) => e.stopPropagation()}>
-        {submitted ? (
+        <button onClick={resetAndClose} className="booking-modal__close" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
+
+        {status === "success" ? (
           <div className="booking-modal__success">
-            <div className="booking-modal__success-icon">✓</div>
-            <h3 className="booking-modal__success-title">Request Sent</h3>
-            <p className="booking-modal__success-message">
-              Thanks, {fullName.split(" ")[0]}! Our clinic will be in touch with
-              you shortly to book your session with {therapist.name}.
+            <div className="booking-modal__success-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--color-olive)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+            </div>
+            <h2 className="booking-modal__heading">We&apos;ll Be in Touch</h2>
+            <p className="booking-modal__desc">
+              Our team will reach out within a few hours to schedule your free 15-minute assessment with Counselor Sama.
             </p>
-            <button className="booking-modal__cta" onClick={onClose}>
+            <button onClick={resetAndClose} className="booking-modal__btn booking-modal__btn--outline">
               Close
             </button>
           </div>
         ) : (
           <>
-            <div className="booking-modal__header">
-              <button
-                className="booking-modal__close"
-                onClick={onClose}
-                aria-label="Close"
-              >
-                ✕
-              </button>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={therapist.image}
-                alt={therapist.name}
-                className="booking-modal__photo"
-              />
-              <h3 className="booking-modal__name">{therapist.name}</h3>
-              <p className="booking-modal__title">{therapist.title}</p>
-            </div>
+            <h2 className="booking-modal__heading">Book Your Free Assessment</h2>
+            <p className="booking-modal__desc">
+              Leave your details and we&apos;ll call you to schedule a free 15-minute assessment with Counselor Sama.
+            </p>
 
-            <div className="booking-modal__body">
-              <p className="booking-modal__intro">
-                Leave your details and our clinic will be in touch with you to
-                book your session.
-              </p>
+            <form onSubmit={handleSubmit} className="booking-modal__form">
+              <div className="booking-modal__field">
+                <label htmlFor="booking-name" className="booking-modal__label">Name</label>
+                <input
+                  ref={nameRef}
+                  id="booking-name"
+                  type="text"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Your full name"
+                  className="booking-modal__input"
+                />
+              </div>
 
-              <form onSubmit={handleSubmit}>
-                <div className="booking-modal__field">
-                  <label
-                    className="booking-modal__label"
-                    htmlFor="booking-full-name"
-                  >
-                    Full Name *
-                  </label>
-                  <input
-                    id="booking-full-name"
-                    className="booking-modal__input"
-                    type="text"
-                    placeholder="Your full name"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    required
-                  />
-                </div>
+              <div className="booking-modal__field">
+                <label htmlFor="booking-phone" className="booking-modal__label">Phone / WhatsApp</label>
+                <input
+                  id="booking-phone"
+                  type="tel"
+                  required
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="e.g. 01130946556"
+                  className="booking-modal__input"
+                />
+              </div>
 
-                <div className="booking-modal__field">
-                  <label
-                    className="booking-modal__label"
-                    htmlFor="booking-mobile"
-                  >
-                    Mobile Number *
-                  </label>
-                  <input
-                    id="booking-mobile"
-                    className="booking-modal__input"
-                    type="tel"
-                    placeholder="+20 1XX XXX XXXX"
-                    value={mobile}
-                    onChange={(e) => setMobile(e.target.value)}
-                    required
-                  />
-                </div>
-
-                <div className="booking-modal__field">
-                  <label
-                    className="booking-modal__label"
-                    htmlFor="booking-email"
-                  >
-                    Email <span className="booking-modal__optional">(optional)</span>
-                  </label>
-                  <input
-                    id="booking-email"
-                    className="booking-modal__input"
-                    type="email"
-                    placeholder="you@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-
-                {error && <p className="booking-modal__error">{error}</p>}
-
-                <button
-                  type="submit"
-                  className="booking-modal__cta"
-                  disabled={submitting}
+              <div className="booking-modal__field">
+                <label htmlFor="booking-time" className="booking-modal__label">Preferred Time</label>
+                <select
+                  id="booking-time"
+                  value={preferredTime}
+                  onChange={(e) => setPreferredTime(e.target.value)}
+                  className="booking-modal__select"
                 >
-                  {submitting ? "Sending..." : "Request Booking"}
-                </button>
-                <p className="booking-modal__footnote">
-                  We&apos;ll never share your details with anyone else.
+                  <option value="">No preference</option>
+                  <option value="morning">Morning (9 AM – 12 PM)</option>
+                  <option value="afternoon">Afternoon (12 – 5 PM)</option>
+                  <option value="evening">Evening (5 – 9 PM)</option>
+                </select>
+              </div>
+
+              <div className="booking-modal__field">
+                <label htmlFor="booking-note" className="booking-modal__label">
+                  Anything you&apos;d like us to know? <span className="booking-modal__optional">(optional)</span>
+                </label>
+                <textarea
+                  id="booking-note"
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  placeholder="Brief concern, preferred therapist gender, etc."
+                  rows={2}
+                  className="booking-modal__textarea"
+                />
+              </div>
+
+              {status === "error" && (
+                <p className="booking-modal__error">
+                  Something went wrong. Please try again or message us on{" "}
+                  <a href="https://api.whatsapp.com/send?phone=201130946556&text=I%27d%20like%20to%20book%20an%20assessment" target="_blank" rel="noopener noreferrer">
+                    WhatsApp
+                  </a>.
                 </p>
-              </form>
-            </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={status === "sending"}
+                className="booking-modal__btn"
+              >
+                {status === "sending" ? "Sending…" : "Request Callback"}
+              </button>
+
+              <p className="booking-modal__footer">
+                Prefer to message directly?{" "}
+                <a
+                  href="https://api.whatsapp.com/send?phone=201130946556&text=I%27d%20like%20to%20book%20an%20assessment"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Chat on WhatsApp →
+                </a>
+              </p>
+            </form>
           </>
         )}
       </div>
-    </div>,
-    document.body
+    </div>
   );
 }
