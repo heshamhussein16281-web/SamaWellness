@@ -83,7 +83,7 @@ const jsonLd = {
   },
   "numberOfEmployees": {
     "@type": "QuantitativeValue",
-    "value": 8
+    "value": 9
   },
   "priceRange": "$$"
 };

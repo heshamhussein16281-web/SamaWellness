@@ -16,7 +16,7 @@ export default function TeamIntroSplit() {
             assesses every client and hand-selects their therapist.
           </p>
           <p className="services-intro-split__desc">
-            Our team of 8 licensed therapists shares that same philosophy — no generic approaches,
+            Our team of 9 licensed therapists shares that same philosophy — no generic approaches,
             no random assignments. Just deeply personal, evidence-based care.
           </p>
         </div>

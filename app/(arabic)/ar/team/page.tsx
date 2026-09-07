@@ -5,14 +5,14 @@ import PageHeroAr from "@/components/ar/PageHeroAr";
 import ScrollReveal from "@/components/ScrollReveal";
 
 export const metadata: Metadata = {
-  title: "تعرف على الفريق — ٨ معالجين مرخصين | ساما ويلنس ثيرابي",
+  title: "تعرف على الفريق — ٩ معالجين مرخصين | ساما ويلنس ثيرابي",
   description: "تعرف على فريق المعالجين المرخصين في ساما ويلنس ثيرابي بنيو جيزة، القاهرة. بقيادة الكاونسلر سما عيسى، كل معالج بيتم اختياره شخصياً حسب احتياجاتك.",
   alternates: {
     canonical: "/ar/team",
     languages: { ar: "/ar/team", en: "/team" },
   },
   openGraph: {
-    title: "تعرف على الفريق — ٨ معالجين مرخصين | ساما ويلنس ثيرابي",
+    title: "تعرف على الفريق — ٩ معالجين مرخصين | ساما ويلنس ثيرابي",
     description: "تعرف على فريق المعالجين المرخصين في ساما ويلنس ثيرابي بنيو جيزة، القاهرة.",
     url: "https://www.samawellnesstherapy.com/ar/team",
   },

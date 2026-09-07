@@ -44,7 +44,7 @@ const faqData: FAQCategory[] = [
     items: [
       {
         q: "How do you match me with the right therapist?",
-        a: "Counselor Sama conducts every assessment herself. She considers your specific concerns, personality, therapy goals, and preferences — then matches you with one of our eight licensed therapists based on their specializations and approach. This personal matching process is one of the things our clients value most — it means you're not randomly assigned; you're thoughtfully paired.",
+        a: "Counselor Sama conducts every assessment herself. She considers your specific concerns, personality, therapy goals, and preferences — then matches you with one of our nine licensed therapists based on their specializations and approach. This personal matching process is one of the things our clients value most — it means you're not randomly assigned; you're thoughtfully paired.",
       },
       {
         q: "Can I request a specific therapist, or switch if the fit isn't right?",

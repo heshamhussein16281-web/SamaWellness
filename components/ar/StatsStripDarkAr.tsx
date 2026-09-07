@@ -1,7 +1,7 @@
 const stats = [
-  { number: "٨",      label: "معالجين متخصصين" },
-  { number: "+٨٬٠٠٠", label: "ساعة علاج" },
-  { number: "+١٥",    label: "سنة خبرة مجمعة" },
+  { number: "٩",       label: "معالجين متخصصين" },
+  { number: "+١٠٬٠٠٠", label: "ساعة علاج" },
+  { number: "+٢٠",     label: "سنة خبرة مجمعة" },
 ];
 
 export default function StatsStripDarkAr() {

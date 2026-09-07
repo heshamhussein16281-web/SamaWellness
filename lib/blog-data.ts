@@ -449,7 +449,7 @@ If after two or three sessions you feel like you're not connecting, it's worth r
 
 ## Serving New Giza & Sheikh Zayed
 
-Sama Wellness Therapy is based in New Giza Medi-Town, serving clients across New Giza, Sheikh Zayed, and the wider West Cairo area. Our team of 8 licensed therapists covers individual therapy, couples therapy (Gottman Method), CBT, DBT, and trauma-focused care — and every client is personally matched through Counselor Sama's assessment process to ensure the right fit from session one.`,
+Sama Wellness Therapy is based in New Giza Medi-Town, serving clients across New Giza, Sheikh Zayed, and the wider West Cairo area. Our team of 9 licensed therapists covers individual therapy, couples therapy (Gottman Method), CBT, DBT, and trauma-focused care — and every client is personally matched through Counselor Sama's assessment process to ensure the right fit from session one.`,
   },
 ];
 
