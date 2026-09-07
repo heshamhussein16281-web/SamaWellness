@@ -3225,6 +3225,67 @@ textarea.form-input {
 }
 
 /* ========================================
+   MID-PAGE CTA STRIP
+   ======================================== */
+
+.mid-cta {
+  background: linear-gradient(135deg, rgba(123, 45, 62, 0.06) 0%, rgba(123, 45, 62, 0.03) 100%);
+  border-top: 1px solid rgba(123, 45, 62, 0.1);
+  border-bottom: 1px solid rgba(123, 45, 62, 0.1);
+  padding: 22px var(--space-lg);
+}
+
+.mid-cta__inner {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.mid-cta__text {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  color: var(--color-charcoal);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.mid-cta__link {
+  font-family: var(--font-ui);
+  font-weight: 400;
+  color: var(--color-burgundy);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(123, 45, 62, 0.3);
+  padding-bottom: 1px;
+  transition: var(--transition-base);
+  white-space: nowrap;
+}
+
+.mid-cta__link:hover {
+  border-bottom-color: var(--color-burgundy);
+}
+
+[dir="rtl"] .mid-cta__text {
+  font-family: var(--font-tajawal);
+}
+
+[dir="rtl"] .mid-cta__link {
+  font-family: var(--font-tajawal);
+}
+
+@media (max-width: 640px) {
+  .mid-cta {
+    padding: 18px var(--space-md);
+  }
+  .mid-cta__text {
+    font-size: 0.95rem;
+  }
+  .mid-cta__link {
+    display: inline-block;
+    margin-top: 4px;
+  }
+}
+
+/* ========================================
    FINAL CTA COMPONENT (preview only)
    ======================================== */
 

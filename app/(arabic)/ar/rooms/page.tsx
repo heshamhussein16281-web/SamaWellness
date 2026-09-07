@@ -21,6 +21,7 @@ import RoomsGalleryIntroAr from "@/components/ar/RoomsGalleryIntroAr";
 import RoomsEditorialAr from "@/components/ar/RoomsEditorialAr";
 import RoomsValuesAr from "@/components/ar/RoomsValuesAr";
 import TestimonialsRoomsAr from "@/components/ar/TestimonialsRoomsAr";
+import MidCTAAr from "@/components/ar/MidCTAAr";
 import FinalCTAAr from "@/components/ar/FinalCTAAr";
 
 export default function RoomsPageAr() {
@@ -33,6 +34,7 @@ export default function RoomsPageAr() {
       <ScrollReveal>
         <RoomsEditorialAr />
       </ScrollReveal>
+      <MidCTAAr />
       <ScrollReveal>
         <RoomsValuesAr />
       </ScrollReveal>

@@ -10,6 +10,7 @@ import HowItWorksIcons from "@/components/HowItWorksIcons";
 import TeaserGrid from "@/components/TeaserGrid";
 import StatsStripDark from "@/components/StatsStripDark";
 import TestimonialsRotating from "@/components/TestimonialsRotating";
+import MidCTA from "@/components/MidCTA";
 import FinalCTA from "@/components/FinalCTA";
 
 export default function Home() {
@@ -30,6 +31,7 @@ export default function Home() {
       <ScrollReveal>
         <HowItWorksIcons />
       </ScrollReveal>
+      <MidCTA />
       <ScrollReveal>
         <TeaserGrid />
       </ScrollReveal>

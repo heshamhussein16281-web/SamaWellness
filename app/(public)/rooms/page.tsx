@@ -21,6 +21,7 @@ import RoomsGalleryIntro from "@/components/RoomsGalleryIntro";
 import RoomsEditorial from "@/components/RoomsEditorial";
 import RoomsValues from "@/components/RoomsValues";
 import TestimonialsRotating from "@/components/TestimonialsRotating";
+import MidCTA from "@/components/MidCTA";
 import FinalCTA from "@/components/FinalCTA";
 
 const roomTestimonials = [
@@ -39,6 +40,7 @@ export default function RoomsPage() {
       <ScrollReveal>
         <RoomsEditorial />
       </ScrollReveal>
+      <MidCTA />
       <ScrollReveal>
         <RoomsValues />
       </ScrollReveal>

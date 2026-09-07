@@ -22,6 +22,7 @@ import Services from "@/components/Services";
 import Process from "@/components/Process";
 import WhoIsThisForGrid from "@/components/WhoIsThisForGrid";
 import TestimonialsServices from "@/components/TestimonialsServices";
+import MidCTA from "@/components/MidCTA";
 import FinalCTA from "@/components/FinalCTA";
 
 export default function ServicesPage() {
@@ -34,6 +35,7 @@ export default function ServicesPage() {
       <ScrollReveal>
         <Services />
       </ScrollReveal>
+      <MidCTA />
       <ScrollReveal>
         <Process />
       </ScrollReveal>

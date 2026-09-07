@@ -10,6 +10,7 @@ import HowItWorksIconsAr from "@/components/ar/HowItWorksIconsAr";
 import TeaserGridAr from "@/components/ar/TeaserGridAr";
 import StatsStripDarkAr from "@/components/ar/StatsStripDarkAr";
 import TestimonialsRotatingAr from "@/components/ar/TestimonialsRotatingAr";
+import MidCTAAr from "@/components/ar/MidCTAAr";
 import FinalCTAAr from "@/components/ar/FinalCTAAr";
 
 export default function HomeAr() {
@@ -30,6 +31,7 @@ export default function HomeAr() {
       <ScrollReveal>
         <HowItWorksIconsAr />
       </ScrollReveal>
+      <MidCTAAr />
       <ScrollReveal>
         <TeaserGridAr />
       </ScrollReveal>

@@ -21,6 +21,7 @@ import TeamIntroSplitAr from "@/components/ar/TeamIntroSplitAr";
 import TeamAr from "@/components/ar/TeamAr";
 import TeamApproachAr from "@/components/ar/TeamApproachAr";
 import TestimonialsTeamAr from "@/components/ar/TestimonialsTeamAr";
+import MidCTAAr from "@/components/ar/MidCTAAr";
 import FinalCTAAr from "@/components/ar/FinalCTAAr";
 
 export default function TeamPageAr() {
@@ -33,6 +34,7 @@ export default function TeamPageAr() {
       <ScrollReveal>
         <TeamAr />
       </ScrollReveal>
+      <MidCTAAr />
       <ScrollReveal>
         <TeamApproachAr />
       </ScrollReveal>

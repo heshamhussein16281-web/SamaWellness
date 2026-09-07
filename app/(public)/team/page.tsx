@@ -21,6 +21,7 @@ import TeamIntroSplit from "@/components/TeamIntroSplit";
 import Team from "@/components/Team";
 import TeamApproach from "@/components/TeamApproach";
 import TestimonialsTeam from "@/components/TestimonialsTeam";
+import MidCTA from "@/components/MidCTA";
 import FinalCTA from "@/components/FinalCTA";
 
 export default function TeamPage() {
@@ -33,6 +34,7 @@ export default function TeamPage() {
       <ScrollReveal>
         <Team />
       </ScrollReveal>
+      <MidCTA />
       <ScrollReveal>
         <TeamApproach />
       </ScrollReveal>

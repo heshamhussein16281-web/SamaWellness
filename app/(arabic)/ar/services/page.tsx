@@ -22,6 +22,7 @@ import ServicesAr from "@/components/ar/ServicesAr";
 import ProcessAr from "@/components/ar/ProcessAr";
 import WhoIsThisForGridAr from "@/components/ar/WhoIsThisForGridAr";
 import TestimonialsServicesAr from "@/components/ar/TestimonialsServicesAr";
+import MidCTAAr from "@/components/ar/MidCTAAr";
 import FinalCTAAr from "@/components/ar/FinalCTAAr";
 
 export default function ServicesPageAr() {
@@ -34,6 +35,7 @@ export default function ServicesPageAr() {
       <ScrollReveal>
         <ServicesAr />
       </ScrollReveal>
+      <MidCTAAr />
       <ScrollReveal>
         <ProcessAr />
       </ScrollReveal>
