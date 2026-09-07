@@ -24,14 +24,17 @@ export async function POST(req: Request) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
 
+  // Map booking fields to existing contact_submissions columns:
+  // first_name ← name, last_name ← phone, email ← phone (for lookup),
+  // topic ← source + preferred time, message ← note
+  const topicStr = `Booking Request${preferred_time ? ` (${TIME_LABELS[preferred_time] || preferred_time})` : ""}`;
   const { error: dbError } = await supabase.from("contact_submissions").insert([
     {
-      name,
-      phone,
-      preferred_time: preferred_time || null,
-      note: note || null,
-      source: source || "booking_modal",
-      created_at: new Date().toISOString(),
+      first_name: name,
+      last_name: phone,
+      email: `${source || "booking_modal"}@booking`,
+      topic: topicStr,
+      message: note || `Assessment booking request. Phone: ${phone}`,
     },
   ]);
 
