@@ -1,12 +1,15 @@
+import Image from "next/image";
+
 export default function Hero() {
   return (
     <section id="home" className="hero-section" style={{ backgroundColor: "#F5F2EE", minHeight: "770px", position: "relative", overflow: "hidden" }}>
 
-      {/* ELEVATE — exact: 32px, letterSpacing 4.81px, color rgb(45,74,70) */}
+      {/* ELEVATE — constrained to left column so it never overlaps the hero photo */}
       <p className="hero-text-elevate" style={{
         position: "absolute",
         top: "38px",
-        left: "131px",
+        left: "2%",
+        width: "48%",
         fontFamily: "var(--font-ui)",
         fontSize: "clamp(18px, 1.875vw, 32px)",
         fontWeight: 300,
@@ -14,16 +17,18 @@ export default function Hero() {
         color: "rgb(45, 74, 70)",
         textTransform: "uppercase",
         margin: 0,
-        whiteSpace: "nowrap",
+        textAlign: "center",
       }}>
         ELEVATE YOUR MENTAL WELLNESS
       </p>
 
       {/* Hero logo — centered in left space next to photo (0% to 52%) */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
         src="/logo-hero.png"
         alt="Sama Wellness Therapy"
+        width={543}
+        height={543}
+        priority
         className="hero-logo"
         style={{
           position: "absolute",
@@ -113,10 +118,13 @@ export default function Hero() {
         borderRadius: "10.7px",
         overflow: "clip",
       }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src="/room.jpg"
           alt="Sama Wellness Therapy room"
+          width={673}
+          height={671}
+          priority
+          sizes="(max-width: 768px) 100vw, 673px"
           style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", borderRadius: "10.7px" }}
         />
       </div>

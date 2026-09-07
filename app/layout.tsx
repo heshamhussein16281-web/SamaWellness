@@ -58,7 +58,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
-              if(!/^\\/(preview|dashboard)/.test(window.location.pathname)){
+              if(window.location.hostname==='www.samawellnesstherapy.com'&&!/^\\/(preview|dashboard)/.test(window.location.pathname)){
               (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
               new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
               j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -75,7 +75,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
-              if(!/^\\/(preview|dashboard)/.test(window.location.pathname)){
+              if(window.location.hostname==='www.samawellnesstherapy.com'&&!/^\\/(preview|dashboard)/.test(window.location.pathname)){
               !function(f,b,e,v,n,t,s)
               {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
               n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -121,7 +121,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
-              if(!/^\\/(preview|dashboard)/.test(window.location.pathname)){
+              if(window.location.hostname==='www.samawellnesstherapy.com'&&!/^\\/(preview|dashboard)/.test(window.location.pathname)){
               (function(c,l,a,r,i,t,y){
                 c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
                 t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;

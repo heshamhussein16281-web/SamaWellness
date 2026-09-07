@@ -1,12 +1,12 @@
 /* Team Intro — Option B: Sama photo left, philosophy right */
+import Image from "next/image";
 
 export default function TeamIntroSplit() {
   return (
     <section className="services-intro-split" aria-label="About Our Team">
       <div className="services-intro-split__inner">
         <div className="services-intro-split__image-wrap">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/sama2_nobg.png" alt="Sama Eissa — Clinical Director" className="services-intro-split__image" style={{ objectFit: "contain", backgroundColor: "var(--color-sand)" }} />
+          <Image src="/sama2_nobg.png" alt="Sama Eissa — Clinical Director" width={500} height={600} priority className="services-intro-split__image" style={{ objectFit: "contain", backgroundColor: "var(--color-sand)" }} />
         </div>
         <div className="services-intro-split__text">
           <h2 className="services-intro-split__heading">Led by Counselor Sama</h2>

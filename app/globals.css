@@ -1437,7 +1437,9 @@ textarea.form-input {
   display: block;
   transition: transform 0.7s var(--transition-base);
 }
-.service-card__image-wrap:hover .service-card__image { transform: scale(1.04); }
+@media (hover: hover) {
+  .service-card__image-wrap:hover .service-card__image { transform: scale(1.04); }
+}
 .service-card__body {
   padding: var(--space-md) var(--services-card-pad) var(--services-card-pad);
   display: flex;
@@ -2960,50 +2962,45 @@ textarea.form-input {
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* ── Values card subtle hover ── */
-.values-strip__card {
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-}
+/* ── Decorative hover effects — desktop pointer devices only ──
+   Wrapped in @media(hover:hover) so touch/in-app browsers (Instagram WebView)
+   don't trigger sticky hover states that look like broken buttons. */
+@media (hover: hover) {
+  .values-strip__card {
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .values-strip__card:hover {
+    transform: translateY(-4px);
+  }
+  .values-strip__icon {
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .values-strip__card:hover .values-strip__icon {
+    transform: scale(1.08);
+  }
 
-.values-strip__card:hover {
-  transform: translateY(-4px);
-}
+  .how-it-works__step {
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .how-it-works__step:hover {
+    transform: translateY(-4px);
+  }
+  .how-it-works--icons .how-it-works__icon {
+    transition:
+      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .how-it-works__step:hover .how-it-works__icon {
+    transform: scale(1.1);
+    box-shadow: 0 8px 24px rgba(123, 45, 62, 0.35);
+  }
 
-.values-strip__icon {
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.values-strip__card:hover .values-strip__icon {
-  transform: scale(1.08);
-}
-
-/* ── How It Works icon pulse on hover ── */
-.how-it-works__step {
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.how-it-works__step:hover {
-  transform: translateY(-4px);
-}
-
-.how-it-works--icons .how-it-works__icon {
-  transition:
-    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.how-it-works__step:hover .how-it-works__icon {
-  transform: scale(1.1);
-  box-shadow: 0 8px 24px rgba(123, 45, 62, 0.35);
-}
-
-/* ── Stats number subtle scale on hover ── */
-.stats-strip__item {
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.stats-strip__item:hover .stats-strip__number {
-  transform: scale(1.08);
+  .stats-strip__item {
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .stats-strip__item:hover .stats-strip__number {
+    transform: scale(1.08);
+  }
 }
 
 .stats-strip__number {
@@ -3749,11 +3746,15 @@ textarea.form-input {
   border-radius: 14px;
   padding: 36px 28px;
   box-shadow: 0 2px 16px rgba(0, 0, 0, 0.05);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
-.rooms-values__card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+@media (hover: hover) {
+  .rooms-values__card {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .rooms-values__card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+  }
 }
 .rooms-values__icon {
   color: var(--color-burgundy);

@@ -1,8 +1,10 @@
+import Image from "next/image";
+
 export default function HeroAr() {
   return (
     <section id="home" className="hero-section" style={{ backgroundColor: "#F5F2EE", minHeight: "770px", position: "relative", overflow: "hidden" }}>
 
-      {/* ELEVATE — exact: 32px, letterSpacing 4.81px, color rgb(45,74,70) */}
+      {/* ELEVATE — constrained to right column for RTL */}
       <p className="hero-text-elevate" style={{
         position: "absolute",
         top: "38px",
@@ -16,16 +18,17 @@ export default function HeroAr() {
         color: "rgb(45, 74, 70)",
         margin: 0,
         textAlign: "center",
-        whiteSpace: "nowrap",
       }}>
         ارتقِ بصحتك النفسية
       </p>
 
       {/* Hero logo — centered in right space next to photo for RTL */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
         src="/logo-hero.png"
         alt="ساما ويلنس ثيرابي"
+        width={543}
+        height={543}
+        priority
         className="hero-logo"
         style={{
           position: "absolute",
@@ -119,10 +122,13 @@ export default function HeroAr() {
         borderRadius: "10.7px",
         overflow: "clip",
       }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src="/room.jpg"
           alt="غرفة ساما ويلنس ثيرابي"
+          width={673}
+          height={671}
+          priority
+          sizes="(max-width: 768px) 100vw, 673px"
           style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", borderRadius: "10.7px" }}
         />
       </div>
