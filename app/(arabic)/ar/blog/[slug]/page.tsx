@@ -321,7 +321,7 @@ export default async function BlogPostPageAr({
             تواصل مع سما ويلنس ثيرابي لحجز مكالمة تقييم مجانية مدتها ١٥ دقيقة.
           </p>
           <a
-            href="https://wa.me/201130946556"
+            href="https://api.whatsapp.com/send?phone=201130946556&text=%D8%A3%D9%86%D8%A7%20%D8%B9%D8%A7%D9%8A%D8%B2%2F%D8%A9%20%D8%A3%D8%AD%D8%AC%D8%B2%20%D8%AA%D9%82%D9%8A%D9%8A%D9%85"
             target="_blank"
             rel="noopener noreferrer"
             style={{

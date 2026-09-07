@@ -324,7 +324,7 @@ export default async function BlogPostPage({
             call.
           </p>
           <a
-            href="https://wa.me/201130946556"
+            href="https://api.whatsapp.com/send?phone=201130946556&text=I%27d%20like%20to%20book%20an%20assessment"
             target="_blank"
             rel="noopener noreferrer"
             style={{
