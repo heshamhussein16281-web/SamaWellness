@@ -3354,12 +3354,12 @@ textarea.form-input {
   background: rgba(0, 0, 0, 0.5);
   z-index: 1100;
   animation: fadeIn 0.25s ease;
-  /* Full-overlay scroll so iOS doesn't trap scroll inside a flex child */
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  /* Use flex column + margin:auto on child to center without breaking scroll */
   display: flex;
-  align-items: flex-end;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 .booking-modal {
@@ -3371,17 +3371,19 @@ textarea.form-input {
   box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.15);
   position: relative;
   animation: slideUp 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-  /* Let the modal grow naturally; the overlay scrolls if it overflows */
   flex-shrink: 0;
+  /* Push to bottom on mobile */
+  margin-top: auto;
 }
 
 @media (min-width: 640px) {
-  .booking-modal-overlay { align-items: center; }
   .booking-modal {
     border-radius: 20px;
-    margin: 28px 0;
-    max-height: 90vh;
-    overflow-y: auto;
+    /* margin:auto on both sides centers vertically when short, scrolls when tall */
+    margin: auto;
+    /* Ensure some breathing room at top/bottom */
+    margin-top: auto;
+    margin-bottom: auto;
   }
 }
 
