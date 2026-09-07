@@ -5,7 +5,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { blogPostsAr, getPostBySlugAr } from "@/lib/blog-data-ar";
 import ScrollReveal from "@/components/ScrollReveal";
-import FinalCTA from "@/components/FinalCTA";
+import FinalCTAAr from "@/components/ar/FinalCTAAr";
 
 const SITE_URL = "https://www.samawellnesstherapy.com";
 
@@ -420,7 +420,7 @@ export default async function BlogPostPageAr({
       </section>
 
       <ScrollReveal>
-        <FinalCTA />
+        <FinalCTAAr />
       </ScrollReveal>
     </>
   );

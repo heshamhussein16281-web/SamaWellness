@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import PageHero from "@/components/PageHero";
 import ScrollReveal from "@/components/ScrollReveal";
-import FinalCTA from "@/components/FinalCTA";
+import FinalCTAAr from "@/components/ar/FinalCTAAr";
 import { getFeaturedPostsAr, getGridPostsAr } from "@/lib/blog-data-ar";
 
 const categories = [
@@ -324,7 +324,7 @@ export default function BlogPageAr() {
       </section>
 
       <ScrollReveal>
-        <FinalCTA />
+        <FinalCTAAr />
       </ScrollReveal>
     </>
   );
