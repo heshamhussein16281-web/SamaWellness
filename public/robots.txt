@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /preview/
+Disallow: /dashboard/
 
-Sitemap: https://samawellnesstherapy.com/sitemap.xml
+Sitemap: https://www.samawellnesstherapy.com/sitemap.xml
