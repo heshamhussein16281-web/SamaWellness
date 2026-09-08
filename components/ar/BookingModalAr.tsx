@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 
 interface BookingModalArProps {
   isOpen: boolean;
@@ -65,7 +66,7 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
 
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <div className="booking-modal-overlay" onClick={resetAndClose}>
       <div className="booking-modal booking-modal--rtl" onClick={(e) => e.stopPropagation()}>
         <button onClick={resetAndClose} className="booking-modal__close" aria-label="إغلاق">
@@ -186,6 +187,7 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
           </>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
