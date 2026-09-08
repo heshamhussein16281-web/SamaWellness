@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { blogPostsAr, getPostBySlugAr } from "@/lib/blog-data-ar";
 import ScrollReveal from "@/components/ScrollReveal";
 import FinalCTAAr from "@/components/ar/FinalCTAAr";
+import BlogCTAAr from "@/components/ar/BlogCTAAr";
 
 const SITE_URL = "https://www.samawellnesstherapy.com";
 
@@ -289,55 +290,7 @@ export default async function BlogPostPageAr({
         {renderMarkdown(post.content)}
 
         {/* CTA */}
-        <div
-          style={{
-            marginTop: "48px",
-            padding: "28px 24px",
-            backgroundColor: "var(--color-linen)",
-            borderRadius: "12px",
-            borderRight: "4px solid var(--color-burgundy)",
-          }}
-        >
-          <p
-            style={{
-              fontFamily: "var(--font-tajawal)",
-              fontSize: "1.15rem",
-              color: "var(--color-charcoal)",
-              marginBottom: "8px",
-              fontWeight: 400,
-            }}
-          >
-            جاهز تاخد أول خطوة؟
-          </p>
-          <p
-            style={{
-              fontFamily: "var(--font-tajawal)",
-              fontSize: "14px",
-              color: "#666",
-              marginBottom: "16px",
-              lineHeight: 1.8,
-            }}
-          >
-            تواصل مع سما ويلنس ثيرابي لحجز مكالمة تقييم مجانية مدتها ١٥ دقيقة.
-          </p>
-          <a
-            href="https://api.whatsapp.com/send?phone=201130946556&text=%D8%A3%D9%86%D8%A7%20%D8%B9%D8%A7%D9%8A%D8%B2%2F%D8%A9%20%D8%A3%D8%AD%D8%AC%D8%B2%20%D8%AA%D9%82%D9%8A%D9%8A%D9%85"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: "inline-block",
-              padding: "12px 28px",
-              backgroundColor: "var(--color-burgundy)",
-              color: "#fff",
-              borderRadius: "8px",
-              fontFamily: "var(--font-tajawal)",
-              fontSize: "13px",
-              textDecoration: "none",
-            }}
-          >
-            احجز تقييمك
-          </a>
-        </div>
+        <BlogCTAAr />
       </article>
 
       {/* Related Articles */}
