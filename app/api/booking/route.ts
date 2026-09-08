@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { sendEmailNotification } from "@/lib/email";
 
 const NOTIFICATION_EMAIL = "samawellnesstherapy@gmail.com";
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbxNm36kxoTnyjXUEST1N98vesUTXagjAHuG59QsVWEGHPWUADhg86t9olXnmvBOVY46fQ/exec";
 
 const TIME_LABELS: Record<string, string> = {
   morning: "Morning (9 AM – 12 PM)",
@@ -79,6 +80,18 @@ export async function POST(req: Request) {
     });
   } catch (emailError) {
     console.error("Email send failed:", emailError);
+    // Don't fail the request — data is already saved in Supabase
+  }
+
+  // Push to Google Sheet
+  try {
+    await fetch(GOOGLE_SHEET_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, phone, preferred_time: timeDisplay, note: note || "", source: source || "booking_modal" }),
+    });
+  } catch (sheetError) {
+    console.error("Google Sheet push failed:", sheetError);
     // Don't fail the request — data is already saved in Supabase
   }
 

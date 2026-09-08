@@ -2,6 +2,8 @@ import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 import { sendEmailNotification } from "@/lib/email";
 
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbxNm36kxoTnyjXUEST1N98vesUTXagjAHuG59QsVWEGHPWUADhg86t9olXnmvBOVY46fQ/exec";
+
 export async function POST(req: Request) {
   const body = await req.json();
   const { first_name, last_name, email, topic, message } = body;
@@ -49,6 +51,17 @@ export async function POST(req: Request) {
   } catch (emailError) {
     console.error("Email send failed:", emailError);
     // Don't fail the request if email fails - data is still in Supabase
+  }
+
+  // Push to Google Sheet
+  try {
+    await fetch(GOOGLE_SHEET_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: `${first_name} ${last_name}`, phone: email, preferred_time: topic, note: message, source: "contact_form" }),
+    });
+  } catch (sheetError) {
+    console.error("Google Sheet push failed:", sheetError);
   }
 
   return NextResponse.json({ success: true });
