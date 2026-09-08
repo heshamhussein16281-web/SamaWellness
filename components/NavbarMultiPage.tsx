@@ -26,6 +26,8 @@ export default function NavbarMultiPage() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
+  const arHref = pathname.startsWith("/blog/") ? `/ar${pathname}` : "/ar";
+
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
     return pathname.startsWith(href);
@@ -116,7 +118,7 @@ export default function NavbarMultiPage() {
 
         {/* Language switcher */}
         <Link
-          href="/ar"
+          href={arHref}
           className="lang-switch"
           style={{
             fontFamily: "var(--font-ui)",
@@ -139,7 +141,7 @@ export default function NavbarMultiPage() {
 
       {/* Mobile language switch — always visible next to burger */}
       <Link
-        href="/ar"
+        href={arHref}
         className="navbar__mobile-lang"
         aria-label="عربي"
         style={{

@@ -17,6 +17,8 @@ export default function NavbarAr() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
+  const enHref = pathname.startsWith("/ar/blog/") ? pathname.replace("/ar/blog/", "/blog/") : "/";
+
   const isActive = (href: string) => {
     if (href === "/ar") return pathname === "/ar";
     return pathname.startsWith(href);
@@ -100,14 +102,14 @@ export default function NavbarAr() {
         ))}
 
         {/* Language switcher */}
-        <Link href="/" className="lang-switch" title="Switch to English">
+        <Link href={enHref} className="lang-switch" title="Switch to English">
           EN
         </Link>
       </nav>
 
       {/* Mobile language switch — always visible next to burger */}
       <Link
-        href="/"
+        href={enHref}
         className="navbar__mobile-lang"
         aria-label="English"
         style={{
