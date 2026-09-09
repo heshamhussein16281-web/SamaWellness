@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: "اكتشف خدمات العلاج الفردي والزوجي والجماعي في ساما ويلنس ثيرابي بنيو جيزة، القاهرة. كل عميل بيتم اختيار المعالج المناسب ليه من خلال تقييم مجاني.",
   alternates: {
     canonical: "/ar/services",
-    languages: { ar: "/ar/services", en: "/services" },
+    languages: { ar: "/ar/services", en: "/services", "x-default": "/services" },
   },
   openGraph: {
     title: "خدماتنا — علاج فردي، زوجي وجماعي | ساما ويلنس ثيرابي",

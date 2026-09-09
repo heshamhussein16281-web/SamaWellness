@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: "اكتشف غرف العلاج في ساما ويلنس ثيرابي — سيرينيتي وهورايزون — مساحات مصممة للهدوء والتعافي في نيو جيزة، القاهرة.",
   alternates: {
     canonical: "/ar/rooms",
-    languages: { ar: "/ar/rooms", en: "/rooms" },
+    languages: { ar: "/ar/rooms", en: "/rooms", "x-default": "/rooms" },
   },
   openGraph: {
     title: "غرف العلاج — سيرينيتي وهورايزون | ساما ويلنس ثيرابي",

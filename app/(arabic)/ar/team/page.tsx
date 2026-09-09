@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: "تعرف على فريق المعالجين المرخصين في ساما ويلنس ثيرابي بنيو جيزة، القاهرة. بقيادة الكاونسلر سما عيسى، كل معالج بيتم اختياره شخصياً حسب احتياجاتك.",
   alternates: {
     canonical: "/ar/team",
-    languages: { ar: "/ar/team", en: "/team" },
+    languages: { ar: "/ar/team", en: "/team", "x-default": "/team" },
   },
   openGraph: {
     title: "تعرف على الفريق — ٩ معالجين مرخصين | ساما ويلنس ثيرابي",

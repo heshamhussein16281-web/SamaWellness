@@ -5,10 +5,10 @@ import PageHero from "@/components/PageHero";
 
 export const metadata: Metadata = {
   title: "Meet the Team — 9 Licensed Therapists | Sama Wellness Therapy",
-  description: "Meet the 9 licensed therapists at Sama Wellness Therapy in New Giza, Cairo. Led by Clinical Director Sama Eissa, each therapist is personally matched to your needs.",
+  description: "Meet the 9 licensed therapists at Sama Wellness Therapy, New Giza. Led by Counselor Sama Eissa, each therapist is matched to your needs.",
   alternates: {
     canonical: "/team",
-    languages: { en: "/team", ar: "/ar/team" },
+    languages: { en: "/team", ar: "/ar/team", "x-default": "/team" },
   },
   openGraph: {
     title: "Meet the Team — 9 Licensed Therapists | Sama Wellness Therapy",

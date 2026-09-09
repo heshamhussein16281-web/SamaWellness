@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: "Step inside our two therapy rooms — Serenity and Horizon — designed as calm, healing environments at Sama Wellness Therapy in New Giza, Cairo.",
   alternates: {
     canonical: "/rooms",
-    languages: { en: "/rooms", ar: "/ar/rooms" },
+    languages: { en: "/rooms", ar: "/ar/rooms", "x-default": "/rooms" },
   },
   openGraph: {
     title: "Our Therapy Rooms — Serenity & Horizon | Sama Wellness Therapy",
