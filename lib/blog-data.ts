@@ -451,6 +451,68 @@ If after two or three sessions you feel like you're not connecting, it's worth r
 
 Sama Wellness Therapy is based in New Giza Medi-Town, serving clients across New Giza, Sheikh Zayed, and the wider West Cairo area. Our team of 9 licensed therapists covers individual therapy, couples therapy (Gottman Method), CBT, DBT, and trauma-focused care — and every client is personally matched through Counselor Sama's assessment process to ensure the right fit from session one.`,
   },
+  {
+    slug: "therapeutic-techniques-and-therapist-credentials",
+    title: "Therapeutic Techniques We Offer: A Guide to Our Team's Expertise",
+    metaTitle:
+      "Therapy Techniques & Therapist Credentials in New Giza & Sheikh Zayed | Sama Wellness Therapy",
+    metaDescription:
+      "From Gottman Method couples therapy to CBT, DBT, and trauma-focused care — explore the therapeutic techniques and credentialed therapists available at Sama Wellness Therapy.",
+    excerpt:
+      "Not all therapy looks the same — and it shouldn't. Here's a guide to the therapeutic techniques available at Sama Wellness Therapy, and which therapists bring each one.",
+    category: "Therapy Insights",
+    image: "/BLOG/images/techniques-infographic.png",
+    readTime: "6 min read",
+    date: "September 2026",
+    author: "Counselor Sama",
+    content: `Not all therapy looks the same — and it shouldn't. Different concerns respond to different therapeutic techniques, which is exactly why having a team of therapists with distinct, credentialed specialties matters more than having one generalist trying to cover everything.
+
+Here's a guide to the therapeutic techniques available at Sama Wellness Therapy, and which of our therapists bring each one to the table.
+
+## Gottman Method Couples Therapy
+
+Gottman Method is a research-based approach to couples therapy, built on decades of relationship research identifying the specific patterns — like contempt, criticism, and defensiveness — that predict relationship breakdown. Rather than treating each disagreement as an isolated event, Gottman Method couples therapy works directly on rebuilding the respect, admiration, and connection that stable relationships depend on.
+
+## Gestalt Therapy
+
+Gestalt therapy focuses on present-moment awareness — helping clients understand how they're experiencing a situation right now, rather than only analyzing it intellectually. It's particularly effective for clients working through self-understanding and emotional awareness.
+
+## Cognitive Behavioral Therapy (CBT)
+
+CBT is one of the most widely researched therapeutic techniques, focused on identifying and reshaping the connection between thoughts, feelings, and behaviors. It's particularly effective for anxiety, depression, and specific negative thought patterns that repeat across situations.
+
+## Dialectical Behavior Therapy (DBT)
+
+DBT builds on CBT with a specific focus on emotional regulation, distress tolerance, and interpersonal effectiveness — often used for clients experiencing intense emotional responses, self-destructive patterns, or difficulty managing overwhelming feelings.
+
+## Trauma-Focused Therapy
+
+Trauma-focused therapy addresses how past distressing experiences continue to shape present-day emotional responses, relationships, and behavior. This includes structured approaches to processing PTSD, as well as broader trauma-informed care.
+
+## Schema Therapy
+
+Schema therapy focuses on identifying deep-rooted patterns — often formed in childhood — that continue to shape how a person relates to themselves and others as adults. It's particularly useful for long-standing relational patterns that haven't responded well to shorter-term approaches.
+
+## Psychosexual & Relationship Therapy
+
+Psychosexual therapy addresses the intersection of intimacy, sexual health, and relationship dynamics — a specialty that remains rare to find in Cairo, and one we're glad to be able to offer.
+
+## Addiction Counseling
+
+Addiction counseling addresses substance use and behavioral addiction through both individual and, where appropriate, family-inclusive counseling.
+
+## Family & Marriage Counseling
+
+For clients navigating family dynamics or marriage-related concerns, family and marriage counseling brings a dedicated specialty to the team.
+
+## Why Having Multiple Specialties on One Team Matters
+
+A single therapist, however skilled, can't be a genuine specialist in every therapeutic technique. Having a team that spans Gottman Method, Gestalt therapy, CBT, DBT, trauma-focused care, schema therapy, psychosexual therapy, and addiction counseling means that whatever you're bringing to therapy, there's a real chance it matches someone's actual area of depth — not just their general practice.
+
+## Therapy Techniques Available in New Giza & Sheikh Zayed
+
+All of our therapists are based at our clinic in New Giza Medi-Town, serving clients across New Giza, Sheikh Zayed, and the wider West Cairo area — in both Arabic and English, depending on what feels most comfortable for you.`,
+  },
 ];
 
 export function getPostBySlug(slug: string): BlogPost | undefined {
