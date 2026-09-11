@@ -5,8 +5,8 @@ import Footer from "@/components/Footer";
 import ContactButton from "@/components/ContactButton";
 
 export const metadata: Metadata = {
-  title: "Therapist in New Giza, Cairo | Sama Wellness Therapy",
-  description: "Individual, couples & group therapy in New Giza, Cairo. Licensed therapists matched to your needs. Book a free 15-min assessment with Sama Wellness Therapy.",
+  title: "Therapist in New Giza & Sheikh Zayed, Cairo | Sama Wellness Therapy",
+  description: "Individual, couples & group therapy in New Giza & Sheikh Zayed, Cairo. Licensed therapists matched to your needs. Book a free assessment.",
   alternates: {
     canonical: "/",
     languages: {
@@ -15,8 +15,8 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Therapist in New Giza, Cairo | Sama Wellness Therapy",
-    description: "Individual, couples & group therapy in New Giza, Cairo. Licensed therapists personally matched to your needs by Clinical Director Sama Eissa.",
+    title: "Therapist in New Giza & Sheikh Zayed, Cairo | Sama Wellness Therapy",
+    description: "Individual, couples & group therapy in New Giza & Sheikh Zayed, Cairo. Licensed therapists personally matched to your needs.",
     url: "https://www.samawellnesstherapy.com",
     siteName: "Sama Wellness Therapy",
     locale: "en_EG",
@@ -26,14 +26,14 @@ export const metadata: Metadata = {
         url: "https://www.samawellnesstherapy.com/room.jpg",
         width: 1200,
         height: 630,
-        alt: "Sama Wellness Therapy — therapy room in New Giza, Cairo",
+        alt: "Sama Wellness Therapy — therapy room in New Giza & Sheikh Zayed, Cairo",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Therapist in New Giza, Cairo | Sama Wellness Therapy",
-    description: "Individual, couples & group therapy in New Giza, Cairo. Licensed therapists personally matched to your needs.",
+    title: "Therapist in New Giza & Sheikh Zayed, Cairo | Sama Wellness Therapy",
+    description: "Individual, couples & group therapy in New Giza & Sheikh Zayed, Cairo. Licensed therapists personally matched to your needs.",
     images: ["https://www.samawellnesstherapy.com/room.jpg"],
   },
   other: {
@@ -45,7 +45,7 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "MedicalBusiness",
   "name": "Sama Wellness Therapy",
-  "description": "Individual, couples & group therapy in New Giza, Cairo. Licensed therapists personally matched to your needs by Clinical Director Sama Eissa.",
+  "description": "Individual, couples & group therapy in New Giza & Sheikh Zayed, Cairo. Licensed therapists personally matched to your needs.",
   "url": "https://www.samawellnesstherapy.com",
   "logo": "https://www.samawellnesstherapy.com/logo-hero.png",
   "image": "https://www.samawellnesstherapy.com/room.jpg",
