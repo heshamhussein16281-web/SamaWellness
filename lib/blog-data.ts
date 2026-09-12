@@ -513,6 +513,162 @@ A single therapist, however skilled, can't be a genuine specialist in every ther
 
 All of our therapists are based at our clinic in New Giza Medi-Town, serving clients across New Giza, Sheikh Zayed, and the wider West Cairo area — in both Arabic and English, depending on what feels most comfortable for you.`,
   },
+  {
+    slug: "gottman-method-couples-therapy-explained",
+    title: "What Is Gottman Method Couples Therapy, and How Does It Work?",
+    metaTitle:
+      "Gottman Method Couples Therapy Explained | Sama Wellness Therapy, New Giza & Sheikh Zayed",
+    metaDescription:
+      "What is Gottman Method couples therapy, and how does it actually work? Learn about the research-based approach used at Sama Wellness Therapy in New Giza & Sheikh Zayed.",
+    excerpt:
+      "Not all couples therapy is built the same way. Gottman Method takes a different starting point: decades of research into what actually predicts whether a relationship thrives or breaks down.",
+    category: "Relationships",
+    image: "/BLOG/images/gottman-method-house-illustration.jpg",
+    readTime: "6 min read",
+    date: "September 2026",
+    author: "Counselor Sama",
+    content: `Not all couples therapy is built the same way. Some approaches focus mainly on communication exercises in the room; others lean on general conflict-resolution techniques. Gottman Method takes a different starting point entirely: decades of direct observation and research into what actually predicts whether a relationship thrives or breaks down.
+
+## Where Gottman Method Comes From
+
+Gottman Method is based on research conducted by Dr. John Gottman, who spent decades studying real couples — observing how they communicated, argued, repaired conflict, and stayed connected over time. That research identified specific, observable patterns that reliably predict relationship outcomes, rather than relying on general theory alone.
+
+This is part of what makes Gottman Method distinct: it's not a loosely applied philosophy, but a structured approach built on identifiable patterns — like contempt, criticism, defensiveness, and stonewalling — that consistently show up in relationships heading toward breakdown, and their opposites, which show up in relationships that stay strong.
+
+## The Four Horsemen
+
+Gottman named four destructive communication patterns **the Four Horsemen**, a direct reference to the Four Horsemen of the Apocalypse — since in his research, these four are the strongest predictors that a relationship is heading toward its end.
+
+They are: **criticism** (attacking a partner's character rather than a specific behavior), **contempt** (disrespect — sarcasm, mockery, a tone of superiority), **defensiveness** (deflecting blame instead of hearing the concern), and **stonewalling** (emotionally shutting down instead of staying engaged). Of the four, contempt is the single strongest predictor of divorce. Recognizing which Horsemen show up most in a relationship is often one of the first, most clarifying steps in therapy.
+
+## The Sound Relationship House
+
+Gottman Method is also built around a model called **the Sound Relationship House** — a framework that pictures a strong relationship as a house built level by level: love maps, fondness and admiration, turning toward each other, a positive perspective, managing conflict, shared dreams, and shared meaning — all resting on trust and commitment as the foundation.
+
+Gottman Method therapy works through this house level by level, rather than jumping straight to conflict resolution without the foundation underneath it.
+
+## What Gottman Method Actually Looks Like in a Session
+
+A Gottman-trained therapist isn't just listening for what a couple argues about — they're listening for the *pattern* underneath it, and where in the Sound Relationship House the relationship needs the most support. Sessions typically involve:
+
+- Identifying each partner's specific communication patterns, including ones neither partner may be fully aware of
+- Rebuilding the levels of the Sound Relationship House that have weakened over time
+- Practical tools for repairing conflict in the moment, rather than just avoiding it
+- Strengthening admiration and respect between partners, which research shows is one of the strongest protective factors in a relationship
+
+## Who Gottman Method Is For
+
+Gottman Method isn't only for couples in crisis. It's equally suited to:
+
+- Couples wanting to strengthen an already-good relationship
+- Couples navigating a specific rupture — an affair, a major disagreement, a loss of trust
+- Premarital couples wanting to build strong patterns before problems take root
+- Long-term couples going through a major life transition together
+
+## Gottman Method at Sama Wellness Therapy
+
+Our founder and clinical director, Sama Eissa, is certified in Gottman Method and works directly with couples using this approach — identifying the specific patterns at play in a relationship, and building the tools to shift them, rather than treating each disagreement as an isolated event.
+
+Sessions are available for couples across New Giza, Sheikh Zayed, and the wider Cairo area, in both Arabic and English.`,
+  },
+  {
+    slug: "understanding-trauma",
+    title: "Understanding Trauma: What It Is, and How It Shows Up in Daily Life",
+    metaTitle:
+      "Understanding Trauma & Trauma-Focused Therapy | Sama Wellness Therapy, New Giza & Sheikh Zayed",
+    metaDescription:
+      "What is trauma, really? Learn what trauma is, how it shows up in daily life, and how trauma-focused therapy at Sama Wellness Therapy can help.",
+    excerpt:
+      "The word \"trauma\" gets used often, but it's frequently misunderstood. Understanding what it actually is can be the first step toward recognizing it in your own life.",
+    category: "Therapy Insights",
+    image: "/BLOG/images/trauma-focused-therapy-illustration.jpg",
+    readTime: "5 min read",
+    date: "September 2026",
+    author: "Counselor Sama",
+    content: `The word "trauma" gets used often, but it's frequently misunderstood. Many people assume trauma only refers to catastrophic, life-threatening events — an accident, an assault, a war. In reality, trauma is broader and more common than that, and understanding what it actually is can be the first step toward recognizing it in your own life.
+
+## What Trauma Actually Is
+
+Trauma is the lasting emotional and psychological impact left by a distressing or deeply upsetting experience — one that overwhelms a person's ability to cope with it at the time. It's not necessarily about how dangerous or extreme an event was objectively; it's about how it affected the specific person who lived through it.
+
+In many ways, trauma can be understood as an internal conflict that was never fully resolved. Something happened that the mind wasn't able to process, make sense of, or come to terms with in the moment — and rather than settling, it stays unresolved beneath the surface, continuing to influence how a person thinks, feels, and reacts long after the original experience has passed.
+
+This is why two people can go through a similar experience, and one may carry lasting trauma from it while the other doesn't — trauma is shaped by the individual's response, not just by the event itself. It can come from something sudden and dramatic, or from something quieter and more prolonged — an unstable childhood environment, an emotionally unavailable parent, a relationship that chipped away at a person's sense of safety over time.
+
+## How Trauma Shows Up in Daily Life
+
+Trauma doesn't stay in the past. It often continues to shape a person's present-day emotional responses, relationships, and behavior — frequently in ways they're not fully aware of. It can show up as:
+
+- Intense anxiety or emotional reactions to situations that seem, on the surface, relatively minor
+- Difficulty trusting others, or repeating relationship patterns a person consciously doesn't want
+- A persistent sense of unease or hypervigilance that doesn't seem tied to anything happening right now
+- Physical symptoms — tension, sleep difficulties, a nervous system that stays "on alert" even when there's no real threat present
+- Avoidance of certain people, places, or situations without always understanding exactly why
+
+These responses aren't a sign of weakness or overreaction. They're the nervous system doing what it learned to do to protect itself — even when that protection is no longer needed in the present.
+
+## How Trauma-Focused Therapy Helps
+
+This is where trauma-focused therapy comes in — as one specific, structured way of helping a person process what wasn't fully processed at the time, and helping the nervous system learn that the present is genuinely different from the past.
+
+Rather than treating trauma the same way as general talk therapy would, trauma-focused therapy accounts for how trauma affects memory, the body, and a person's sense of safety — not just their thoughts. It typically involves building safety and stability first, understanding how the nervous system responds to perceived threat, and gradually working through traumatic material at a pace the person can genuinely tolerate — never rushed, and always led by what the client is ready for.
+
+## Support in New Giza & Sheikh Zayed
+
+At Sama Wellness Therapy, trauma-informed care is one of our core specialties, with therapists on our team — including Marina Rowes, who focuses specifically on trauma and PTSD — trained to work with clients navigating exactly this kind of history. Sessions are available at our New Giza clinic, serving clients across New Giza, Sheikh Zayed, and the wider West Cairo area, in both Arabic and English.`,
+  },
+  {
+    slug: "understanding-anxiety-and-therapy",
+    title: "Understanding Anxiety, and How Therapy Can Help",
+    metaTitle:
+      "Anxiety Therapy in New Giza & Sheikh Zayed | Sama Wellness Therapy",
+    metaDescription:
+      "Constant worry, racing thoughts, or a body that won't relax? Learn how anxiety therapy works at Sama Wellness Therapy in New Giza & Sheikh Zayed.",
+    excerpt:
+      "Anxiety doesn't always look like panic. Sometimes it's a constant low hum of worry, a racing mind at 2 a.m., or a body that stays tense even when nothing is wrong.",
+    category: "Self-Care",
+    image: "/BLOG/images/anxiety-therapy-illustration.jpg",
+    readTime: "5 min read",
+    date: "September 2026",
+    author: "Counselor Sama",
+    content: `Anxiety doesn't always look like panic. Sometimes it's a constant low hum of worry in the background of everyday life. Sometimes it's a racing mind at 2 a.m., or a body that stays tense even when nothing is actively wrong. Understanding anxiety — what it actually is, and what genuinely helps — is often the first step toward managing it.
+
+## What Anxiety Actually Is
+
+Anxiety is the mind and body's alarm system — designed, in principle, to protect us from real danger. The difficulty is that this system can become overactive, responding to everyday stress, uncertainty, or even thoughts alone as though they were an immediate threat. When that happens consistently, anxiety stops being a helpful signal and starts interfering with daily life, relationships, sleep, and overall wellbeing.
+
+There's an important reframe worth holding onto here: anxiety, even at its most uncomfortable, usually carries a good intention underneath it. It's often trying to protect you from something, prepare you for something, or point you toward something that genuinely needs your attention. In many cases, anxious thoughts are really a conversation with yourself that you've been avoiding having directly — so instead, it surfaces as a looping, uncomfortable stream of "what if" thoughts rather than a clear, single conversation you can actually sit with and resolve.
+
+Anxiety can show up as:
+
+- Persistent worry that's hard to switch off, even when there's no clear immediate problem
+- Physical symptoms — a racing heart, tension, difficulty sleeping, stomach issues
+- Avoidance of situations that trigger anxious feelings, which can quietly shrink a person's life over time
+- Difficulty concentrating, or a mind that jumps between worst-case scenarios
+
+## How Therapy Actually Helps With Anxiety
+
+Anxiety therapy isn't about eliminating anxiety completely — some anxiety is a normal, even useful, part of being human. The goal is to change your relationship to it: understanding where it comes from, reducing its intensity and frequency, and building real tools to manage it when it shows up.
+
+Two of the most well-researched approaches for anxiety are:
+
+**Cognitive Behavioral Therapy (CBT)** — works by identifying the specific thought patterns that feed anxiety, and building practical tools to interrupt and reshape them. CBT is particularly effective for anxiety rooted in specific worry patterns or negative thought cycles.
+
+**Dialectical Behavior Therapy (DBT)** — builds on CBT with a stronger focus on emotional regulation and distress tolerance, particularly useful when anxiety comes with intense, hard-to-manage emotional responses.
+
+## What Anxiety Therapy Looks Like in Practice
+
+Sessions addressing anxiety typically involve:
+
+- Understanding your specific anxiety triggers and patterns, rather than treating "anxiety" as one generic thing
+- Learning practical tools to manage anxious moments as they happen
+- Gradually working with, rather than avoiding, the situations anxiety has caused you to shrink away from
+- Addressing any deeper patterns — perfectionism, people-pleasing, unresolved past experiences — that may be feeding the anxiety underneath
+
+## Anxiety Therapy in New Giza & Sheikh Zayed
+
+At Sama Wellness Therapy, several of our therapists are trained in CBT and DBT, working with clients experiencing anxiety at every level of intensity — from everyday overthinking to anxiety that's significantly affecting daily life. Sessions are available at our New Giza clinic, serving clients across New Giza, Sheikh Zayed, and the wider Cairo area, in both Arabic and English.`,
+  },
 ];
 
 export function getPostBySlug(slug: string): BlogPost | undefined {
