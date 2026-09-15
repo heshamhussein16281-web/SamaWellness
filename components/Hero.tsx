@@ -3,7 +3,7 @@ import HeroBookingCTA from "./HeroBookingCTA";
 
 export default function Hero() {
   return (
-    <section id="home" className="hero-section" style={{ backgroundColor: "#F5F2EE", minHeight: "770px", position: "relative", overflow: "hidden" }}>
+    <section id="home" className="hero-section" style={{ backgroundColor: "#F5F2EE", minHeight: "770px", position: "relative", overflow: "clip" }}>
 
       {/* ELEVATE — constrained to left column so it never overlaps the hero photo */}
       <p className="hero-text-elevate" style={{
@@ -14,7 +14,7 @@ export default function Hero() {
         fontFamily: "var(--font-ui)",
         fontSize: "clamp(18px, 1.875vw, 32px)",
         fontWeight: 300,
-        letterSpacing: "4.81px",
+        letterSpacing: "clamp(2px, 0.35vw, 4.81px)",
         color: "rgb(45, 74, 70)",
         textTransform: "uppercase",
         margin: 0,

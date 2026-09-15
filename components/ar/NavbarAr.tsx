@@ -74,8 +74,8 @@ export default function NavbarAr() {
           flexDirection: "row",
           flexWrap: "nowrap",
           alignItems: "center",
-          justifyContent: "space-between",
-          columnGap: "32px",
+          justifyContent: "flex-end",
+          columnGap: "clamp(12px, 2vw, 32px)",
           rowGap: "12px",
         }}
       >
@@ -86,9 +86,9 @@ export default function NavbarAr() {
             className={`nav-link${isActive(l.href) ? " active" : ""}`}
             style={{
               fontFamily: "var(--font-tajawal)",
-              fontSize: "21px",
+              fontSize: "clamp(15px, 1.4vw, 21px)",
               fontWeight: 400,
-              lineHeight: "29.52px",
+              lineHeight: 1.3,
               letterSpacing: "0",
               color: "var(--color-nav-text)",
               whiteSpace: "nowrap",

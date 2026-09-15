@@ -82,14 +82,14 @@ export default function NavbarMultiPage() {
         style={{
           position: "absolute",
           left: "265px",
+          right: "24px",
           top: "42px",
-          width: "1159px",
           height: "84px",
           flexDirection: "row",
           flexWrap: "nowrap",
           alignItems: "center",
-          justifyContent: "space-between",
-          columnGap: "32px",
+          justifyContent: "flex-end",
+          columnGap: "clamp(12px, 2vw, 32px)",
           rowGap: "12px",
         }}
       >
@@ -100,9 +100,9 @@ export default function NavbarMultiPage() {
             className={`nav-link${isActive(l.href) ? " active" : ""}`}
             style={{
               fontFamily: "var(--font-ui)",
-              fontSize: "22.7px",
+              fontSize: "clamp(15px, 1.5vw, 22.7px)",
               fontWeight: 300,
-              lineHeight: "29.52px",
+              lineHeight: 1.3,
               letterSpacing: "-0.02em",
               color: "var(--color-nav-text)",
               textTransform: "uppercase",
