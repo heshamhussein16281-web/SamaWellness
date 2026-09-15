@@ -100,9 +100,9 @@ export default function NavbarMultiPage() {
             className={`nav-link${isActive(l.href) ? " active" : ""}`}
             style={{
               fontFamily: "var(--font-ui)",
-              fontSize: "clamp(15px, 1.5vw, 22.7px)",
+              fontSize: "22.7px",
               fontWeight: 300,
-              lineHeight: 1.3,
+              lineHeight: "29.52px",
               letterSpacing: "-0.02em",
               color: "var(--color-nav-text)",
               textTransform: "uppercase",

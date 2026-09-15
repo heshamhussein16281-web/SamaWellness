@@ -86,9 +86,9 @@ export default function NavbarAr() {
             className={`nav-link${isActive(l.href) ? " active" : ""}`}
             style={{
               fontFamily: "var(--font-tajawal)",
-              fontSize: "clamp(15px, 1.4vw, 21px)",
+              fontSize: "21px",
               fontWeight: 400,
-              lineHeight: 1.3,
+              lineHeight: "29.52px",
               letterSpacing: "0",
               color: "var(--color-nav-text)",
               whiteSpace: "nowrap",

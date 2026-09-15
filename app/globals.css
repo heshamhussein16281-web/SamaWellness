@@ -1801,10 +1801,18 @@ textarea.form-input {
    RESPONSIVE BREAKPOINTS
    ════════════════════════════════════════════════════════════════ */
 
-/* Desktop: ≥769px */
-@media (min-width: 769px) {
+/* Desktop: ≥1500px — nav items (6 links + language switch) need this width to sit at full size without shrinking */
+@media (min-width: 1500px) {
   .navbar__desktop-nav    { display: flex; }
   .navbar__mobile-toggle  { display: none; }
+}
+
+/* 769px–1499px: use the menu button instead of a cramped, shrinking desktop nav row.
+   Keeps the normal-size header (175px navbar, 182px logo) — only the compact
+   phone treatment below still shrinks those, scoped to ≤768px. */
+@media (max-width: 1499px) {
+  .navbar__desktop-nav    { display: none; }
+  .navbar__mobile-toggle  { display: flex; }
 }
 
 /* Mobile: ≤768px */
