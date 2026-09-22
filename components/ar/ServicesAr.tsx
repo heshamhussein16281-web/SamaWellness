@@ -48,6 +48,13 @@ export default function ServicesAr() {
           </article>
         ))}
       </div>
+
+      {/* Online availability strip */}
+      <div className="services-online-strip">
+        <span className="services-online-strip__pill">
+          ✦ جميع خدماتنا متاحة حضورياً وأونلاين ✦
+        </span>
+      </div>
       </div>
     </section>
   );

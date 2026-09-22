@@ -131,6 +131,13 @@ export default function Services() {
           </article>
         ))}
       </div>
+
+      {/* Online availability strip */}
+      <div className="services-online-strip">
+        <span className="services-online-strip__pill">
+          ✦ All our services are available in-person &amp; online ✦
+        </span>
+      </div>
       </div>
     </section>
   );
