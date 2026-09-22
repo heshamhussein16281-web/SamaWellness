@@ -30,7 +30,7 @@ export const teasers: Teaser[] = [
     href: "/services",
     image: "/individual-therapy.jpg",
     title: "Our Services",
-    desc: "Individual, couple, and group therapy in a safe clinical space.",
+    desc: "Individual, couple, and group therapy — in-person or online.",
     cta: "Explore our services",
   },
   {

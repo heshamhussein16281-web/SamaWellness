@@ -13,7 +13,7 @@ export const teasers: Teaser[] = [
     href: "/ar/services",
     image: "/individual-therapy.jpg",
     title: "خدماتنا",
-    desc: "علاج فردي، زوجي، وجماعي في مساحة إكلينيكية آمنة.",
+    desc: "علاج فردي، زوجي، وجماعي — حضورياً أو أونلاين.",
     cta: "اكتشف خدماتنا",
   },
   {
