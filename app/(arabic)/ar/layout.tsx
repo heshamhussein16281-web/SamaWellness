@@ -8,7 +8,7 @@ import HtmlLangAr from "@/components/ar/HtmlLangAr";
 export const metadata: Metadata = {
   title: "معالج نفسي في نيو جيزة، القاهرة | ساما ويلنس ثيرابي",
   description:
-    "علاج فردي وزوجي وجماعي في نيو جيزة، القاهرة. معالجين متخصصين يتم اختيارهم حسب احتياجاتك. احجز تقييم مجاني ١٥ دقيقة مع ساما ويلنس ثيرابي.",
+    "علاج فردي وزوجي وجماعي في نيو جيزة، القاهرة — حضورياً أو أونلاين في مصر والمملكة العربية السعودية. معالجين متخصصين يتم اختيارهم حسب احتياجاتك.",
   alternates: {
     canonical: "/ar",
     languages: {
@@ -55,8 +55,15 @@ const jsonLdAr = {
   inLanguage: "ar",
   availableService: [
     { "@type": "MedicalTherapy", name: "العلاج الفردي" },
-    { "@type": "MedicalTherapy", name: "العلاج الزوجي" },
+    { "@type": "MedicalTherapy", name: "العلاج الفردي (أونلاين)" },
+    { "@type": "MedicalTherapy", name: "علاج الأزواج" },
+    { "@type": "MedicalTherapy", name: "علاج الأزواج (أونلاين)" },
     { "@type": "MedicalTherapy", name: "العلاج الجماعي" },
+    { "@type": "MedicalTherapy", name: "العلاج الجماعي (أونلاين)" },
+  ],
+  areaServed: [
+    { "@type": "Country", name: "مصر" },
+    { "@type": "Country", name: "المملكة العربية السعودية" },
   ],
   founder: {
     "@type": "Person",

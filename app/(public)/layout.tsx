@@ -6,7 +6,7 @@ import ContactButton from "@/components/ContactButton";
 
 export const metadata: Metadata = {
   title: "Therapist in New Giza & Sheikh Zayed, Cairo | Sama Wellness Therapy",
-  description: "Individual, couples & group therapy in New Giza & Sheikh Zayed, Cairo. Licensed therapists matched to your needs. Book a free assessment.",
+  description: "Individual, couples & group therapy in New Giza & Sheikh Zayed, Cairo — in-person or online across Egypt & Saudi Arabia. Licensed therapists matched to your needs.",
   alternates: {
     canonical: "/",
     languages: {
@@ -74,8 +74,15 @@ const jsonLd = {
   ],
   "availableService": [
     { "@type": "MedicalTherapy", "name": "Individual Therapy" },
+    { "@type": "MedicalTherapy", "name": "Individual Therapy (Online)" },
     { "@type": "MedicalTherapy", "name": "Couples Therapy" },
-    { "@type": "MedicalTherapy", "name": "Group Therapy" }
+    { "@type": "MedicalTherapy", "name": "Couples Therapy (Online)" },
+    { "@type": "MedicalTherapy", "name": "Group Therapy" },
+    { "@type": "MedicalTherapy", "name": "Group Therapy (Online)" }
+  ],
+  "areaServed": [
+    { "@type": "Country", "name": "Egypt" },
+    { "@type": "Country", "name": "Saudi Arabia" }
   ],
   "founder": {
     "@type": "Person",

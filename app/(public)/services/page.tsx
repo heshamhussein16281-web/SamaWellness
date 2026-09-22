@@ -4,15 +4,15 @@ import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 
 export const metadata: Metadata = {
-  title: "Our Services — Individual, Couples & Group Therapy | Sama Wellness Therapy",
-  description: "Individual, couples & group therapy at Sama Wellness in New Giza & Sheikh Zayed. Every client is matched with the right therapist through a free assessment.",
+  title: "Our Services — Individual, Couples & Group Therapy, In-Person & Online | Sama Wellness Therapy",
+  description: "Individual, couples & group therapy — in-person at our New Giza clinic or online across Egypt & Saudi Arabia. Matched with the right therapist through a free assessment.",
   alternates: {
     canonical: "/services",
     languages: { en: "/services", ar: "/ar/services", "x-default": "/services" },
   },
   openGraph: {
-    title: "Our Services — Individual, Couples & Group Therapy | Sama Wellness Therapy",
-    description: "Explore individual, couples & group therapy at Sama Wellness in New Giza & Sheikh Zayed, Cairo. Each client is matched with a licensed therapist.",
+    title: "Our Services — Individual, Couples & Group Therapy, In-Person & Online | Sama Wellness Therapy",
+    description: "Individual, couples & group therapy — in-person at our New Giza clinic or online across Egypt & Saudi Arabia. Matched with the right therapist through a free assessment.",
     url: "https://www.samawellnesstherapy.com/services",
   },
 };
