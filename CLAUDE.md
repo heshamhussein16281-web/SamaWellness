@@ -42,7 +42,9 @@ Styling is split between `app/globals.css` (primary) and Tailwind utility classe
 - **Layer 3 — Components** (`.btn-outline`, `.nav-link`, `.service-card`, etc.): Self-contained visual units with full styles.
 
 **Responsive breakpoints:**
-- Desktop nav vs. mobile burger: `≥769px` / `≤768px` via `.navbar__desktop-nav` / `.navbar__mobile-toggle`
+- Desktop nav: `≥1024px` (full size at `≥1367px`, tighter 18px font at `1024px–1366px`)
+- Tablet (hamburger): `769px–1023px`
+- Mobile (compact navbar + burger): `≤768px`
 - Content reflow (services grid → 1 col, team → 2 col): `≤980px`
 - Team → 1 col: `≤560px`
 
