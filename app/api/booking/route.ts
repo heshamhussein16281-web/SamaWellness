@@ -51,10 +51,10 @@ export async function POST(req: Request) {
       body: JSON.stringify({
         name,
         phone,
-        preferred_time: preferred_time || "",
+        preferred_time: preferred_time ? (TIME_LABELS[preferred_time] || preferred_time) : "",
         session_format: session_format || "either",
         note: note || "",
-        source: source || "website",
+        source: source || "booking_modal",
       }),
     });
   } catch (sheetError) {

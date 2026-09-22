@@ -27,10 +27,22 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
     return () => { document.body.style.overflow = ""; };
   }, [isOpen]);
 
+  const resetAndClose = () => {
+    setName("");
+    setPhone("");
+    setPreferredTime("");
+    setNote("");
+    setSessionFormat("either");
+    setStatus("idle");
+    window.history.pushState({}, "", window.location.pathname);
+    onClose();
+  };
+
   useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    const handleKey = (e: KeyboardEvent) => { if (e.key === "Escape") resetAndClose(); };
     if (isOpen) window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, onClose]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -57,17 +69,6 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
     } catch {
       setStatus("error");
     }
-  };
-
-  const resetAndClose = () => {
-    setName("");
-    setPhone("");
-    setPreferredTime("");
-    setNote("");
-    setSessionFormat("either");
-    setStatus("idle");
-    window.history.pushState({}, "", window.location.pathname);
-    onClose();
   };
 
   if (!isOpen) return null;
