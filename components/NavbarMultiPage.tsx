@@ -81,7 +81,7 @@ export default function NavbarMultiPage() {
         className="navbar__desktop-nav"
         style={{
           position: "absolute",
-          left: "265px",
+          left: "240px",
           right: "24px",
           top: "42px",
           height: "84px",

@@ -70,6 +70,8 @@ export default function NavbarAr() {
         style={{
           position: "absolute",
           top: "42px",
+          right: "240px",
+          left: "24px",
           height: "84px",
           flexDirection: "row",
           flexWrap: "nowrap",
