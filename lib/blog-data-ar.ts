@@ -684,7 +684,7 @@ DBT بيبني على CBT بتركيز محدد على تنظيم المشاعر
     excerpt:
       "جلسات العلاج النفسي اونلاين أثبتت فاعليتها لكتير من الناس — بس هل هي المناسبة لحالتك؟ نظرة صادقة على إمتى الأونلاين بينفع، وإمتى الحضور الشخصي أحسن.",
     category: "رؤى علاجية",
-    image: "/blog-images/online-therapy-cover.jpg",
+    image: "/BLOG/images/online-therapy-cover.jpg",
     readTime: "٥ دقائق قراءة",
     date: "سبتمبر ٢٠٢٦",
     author: "المعالجة سما",
