@@ -3301,6 +3301,36 @@ textarea.form-input {
   min-height: 56px;
 }
 
+.booking-modal__format-group {
+  display: flex;
+  gap: 8px;
+}
+
+.booking-modal__format-btn {
+  flex: 1;
+  text-align: center;
+  padding: 10px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--color-sand);
+  background: white;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--color-charcoal);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.booking-modal__format-btn:hover {
+  border-color: var(--color-nav-text);
+}
+
+.booking-modal__format-btn--active {
+  border: 2px solid var(--color-nav-text);
+  background: rgba(45, 74, 70, 0.06);
+  color: var(--color-nav-text);
+  font-weight: 600;
+}
+
 .booking-modal__select {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.41.59L6 5.17 10.59.59 12 2l-6 6-6-6z' fill='%23999'/%3E%3C/svg%3E");

@@ -12,6 +12,7 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
   const [phone, setPhone] = useState("");
   const [preferredTime, setPreferredTime] = useState("");
   const [note, setNote] = useState("");
+  const [sessionFormat, setSessionFormat] = useState<"in-person" | "online" | "either">("either");
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const nameRef = useRef<HTMLInputElement>(null);
 
@@ -19,6 +20,7 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
     if (isOpen) {
       document.body.style.overflow = "hidden";
       setTimeout(() => nameRef.current?.focus(), 350);
+      window.history.pushState({}, "", `${window.location.pathname}?book=open`);
     } else {
       document.body.style.overflow = "";
     }
@@ -43,6 +45,7 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
           name,
           phone,
           preferred_time: preferredTime || null,
+          session_format: sessionFormat,
           note: note || null,
           source: "booking_modal_ar",
         }),
@@ -50,6 +53,7 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
 
       if (!res.ok) throw new Error("Request failed");
       setStatus("success");
+      window.history.pushState({}, "", `${window.location.pathname}?book=success`);
     } catch {
       setStatus("error");
     }
@@ -60,7 +64,9 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
     setPhone("");
     setPreferredTime("");
     setNote("");
+    setSessionFormat("either");
     setStatus("idle");
+    window.history.pushState({}, "", window.location.pathname);
     onClose();
   };
 
@@ -140,6 +146,22 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
                   <option value="afternoon">بعد الظهر (١٢ – ٥ م)</option>
                   <option value="evening">بالليل (٥ – ٩ م)</option>
                 </select>
+              </div>
+
+              <div className="booking-modal__field">
+                <label className="booking-modal__label">صيغة الجلسة</label>
+                <div className="booking-modal__format-group">
+                  {(["in-person", "online", "either"] as const).map((fmt) => (
+                    <button
+                      key={fmt}
+                      type="button"
+                      className={`booking-modal__format-btn${sessionFormat === fmt ? " booking-modal__format-btn--active" : ""}`}
+                      onClick={() => setSessionFormat(fmt)}
+                    >
+                      {fmt === "in-person" ? "حضوري" : fmt === "online" ? "أونلاين" : "أي منهما"}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <div className="booking-modal__field">

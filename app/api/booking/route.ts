@@ -10,7 +10,7 @@ const TIME_LABELS: Record<string, string> = {
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const { name, phone, preferred_time, note, source } = body;
+  const { name, phone, preferred_time, session_format, note, source } = body;
 
   if (!name || !phone) {
     return NextResponse.json({ error: "Name and phone are required." }, { status: 400 });
@@ -25,7 +25,9 @@ export async function POST(req: Request) {
   // Map booking fields to existing contact_submissions columns:
   // first_name ← name, last_name ← phone, email ← phone (for lookup),
   // topic ← source + preferred time, message ← note
-  const topicStr = `Booking Request${preferred_time ? ` (${TIME_LABELS[preferred_time] || preferred_time})` : ""}`;
+  const timeLabel = preferred_time ? ` | ${TIME_LABELS[preferred_time] || preferred_time}` : "";
+  const formatLabel = session_format && session_format !== "either" ? ` | ${session_format === "online" ? "Online" : "In-Person"}` : "";
+  const topicStr = `Booking Request${timeLabel}${formatLabel}`;
   const { error: dbError } = await supabase.from("contact_submissions").insert([
     {
       first_name: name,
@@ -41,14 +43,19 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: dbError.message }, { status: 500 });
   }
 
-  const timeDisplay = preferred_time ? (TIME_LABELS[preferred_time] || preferred_time) : "No preference";
-
   // Push to Google Sheet
   try {
     await fetch(GOOGLE_SHEET_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, phone, preferred_time: timeDisplay, note: note || "", source: source || "booking_modal" }),
+      body: JSON.stringify({
+        name,
+        phone,
+        preferred_time: preferred_time || "",
+        session_format: session_format || "either",
+        note: note || "",
+        source: source || "website",
+      }),
     });
   } catch (sheetError) {
     console.error("Google Sheet push failed:", sheetError);
