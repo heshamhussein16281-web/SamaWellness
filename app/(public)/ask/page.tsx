@@ -144,7 +144,15 @@ const faqJsonLd = {
       name: "Do you offer in-person sessions, online sessions, or both?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "We offer in-person sessions at our clinic.",
+        text: "Yes — all our services are available both in-person at our New Giza clinic and online via secure video sessions. Online sessions are available for clients in Egypt, Saudi Arabia, and the wider Middle East, in both Arabic and English. Your session format is guided by Counselor Sama during your free assessment.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How do I book an online session?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "The process is the same as booking an in-person session — start by requesting your free assessment with Counselor Sama. During the assessment, she'll understand your needs and recommend whether in-person or online is the best fit. You don't need to decide the format before reaching out.",
       },
     },
     {
