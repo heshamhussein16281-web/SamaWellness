@@ -493,9 +493,9 @@ Trauma-focused therapy addresses how past distressing experiences continue to sh
 
 Schema therapy focuses on identifying deep-rooted patterns — often formed in childhood — that continue to shape how a person relates to themselves and others as adults. It's particularly useful for long-standing relational patterns that haven't responded well to shorter-term approaches.
 
-## Intimacy & Relationship Therapy
+## Psychosexual & Relationship Therapy
 
-Intimacy and relationship therapy addresses the intersection of intimacy, emotional connection, and relationship dynamics — a specialty that remains rare to find in Cairo, and one we're glad to be able to offer.
+Psychosexual therapy addresses the intersection of intimacy, sexual health, and relationship dynamics — a specialty that remains rare to find in Cairo, and one we're glad to be able to offer.
 
 ## Addiction Counseling
 
@@ -507,7 +507,7 @@ For clients navigating family dynamics or marriage-related concerns, family and 
 
 ## Why Having Multiple Specialties on One Team Matters
 
-A single therapist, however skilled, can't be a genuine specialist in every therapeutic technique. Having a team that spans Gottman Method, Gestalt therapy, CBT, DBT, trauma-focused care, schema therapy, intimacy & relationship therapy, and addiction counseling means that whatever you're bringing to therapy, there's a real chance it matches someone's actual area of depth — not just their general practice.
+A single therapist, however skilled, can't be a genuine specialist in every therapeutic technique. Having a team that spans Gottman Method, Gestalt therapy, CBT, DBT, trauma-focused care, schema therapy, psychosexual therapy, and addiction counseling means that whatever you're bringing to therapy, there's a real chance it matches someone's actual area of depth — not just their general practice.
 
 ## Therapy Techniques Available in New Giza & Sheikh Zayed
 
