@@ -516,10 +516,9 @@ All of our therapists are based at our clinic in New Giza Medi-Town, serving cli
   {
     slug: "gottman-method-couples-therapy-explained",
     title: "What Is Gottman Method Couples Therapy, and How Does It Work?",
-    metaTitle:
-      "Gottman Method Couples Therapy Explained | Sama Wellness Therapy, New Giza & Sheikh Zayed",
+    metaTitle: "What Is Gottman Method Couples Therapy? Complete Guide",
     metaDescription:
-      "What is Gottman Method couples therapy, and how does it actually work? Learn about the research-based approach used at Sama Wellness Therapy in New Giza & Sheikh Zayed.",
+      "Discover how Gottman Method couples therapy works, what it treats, and how it can help your relationship. Book a free assessment at Sama Wellness.",
     excerpt:
       "Not all couples therapy is built the same way. Gottman Method takes a different starting point: decades of research into what actually predicts whether a relationship thrives or breaks down.",
     category: "Relationships",
