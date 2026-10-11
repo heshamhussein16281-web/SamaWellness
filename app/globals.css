@@ -1171,8 +1171,8 @@ textarea.form-input {
   right: 24px;
   transform: translateY(-50%);
   z-index: 50;
-  width: 75px;
-  height: 75px;
+  width: 58px;
+  height: 58px;
   background: #2d4a46;
   border: none;
   border-radius: 12px;
@@ -1924,8 +1924,8 @@ textarea.form-input {
 
   /* Contact floating button: smaller + bottom-right on mobile */
   .contact-floating-btn {
-    width: 56px;
-    height: 56px;
+    width: 46px;
+    height: 46px;
     top: auto;
     bottom: 24px;
     right: 16px;
