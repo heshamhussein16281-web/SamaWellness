@@ -1228,6 +1228,11 @@ textarea.form-input {
 .contact-floating-btn--whatsapp:hover {
   background: #1ebe59;
 }
+.contact-btn-icon--only {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .contact-modal-overlay {
   position: fixed;
