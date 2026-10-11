@@ -1047,6 +1047,33 @@ textarea.form-input {
   text-align: center;
 }
 
+/* Contact row — email / phone / Instagram */
+.footer__contact {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: -8px 0 0 0;
+}
+.footer__contact-link {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  color: rgba(45, 74, 70, 0.55);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+}
+.footer__contact-link:hover {
+  color: var(--color-nav-text);
+}
+.footer__contact-divider {
+  color: rgba(45, 74, 70, 0.3);
+  font-size: 11px;
+}
+
 /* Nav */
 .footer__nav {
   display: none;
@@ -1191,6 +1218,15 @@ textarea.form-input {
 /* Active state */
 .contact-floating-btn:active {
   transform: translateY(-2px);
+}
+
+/* WhatsApp-only floating button */
+.contact-floating-btn--whatsapp {
+  background: #25D366;
+  text-decoration: none;
+}
+.contact-floating-btn--whatsapp:hover {
+  background: #1ebe59;
 }
 
 .contact-modal-overlay {
@@ -3378,6 +3414,34 @@ textarea.form-input {
 }
 .booking-modal__btn--outline:hover {
   background: var(--color-burgundy);
+  color: #fff;
+}
+
+.booking-modal__btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.booking-modal__btn-group .booking-modal__btn {
+  flex: 1 1 160px;
+  margin-top: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.booking-modal__btn--whatsapp {
+  background: transparent;
+  border-color: #25D366;
+  color: #1a8f4c;
+}
+.booking-modal__btn--whatsapp:hover {
+  background: #25D366;
+  border-color: #25D366;
   color: #fff;
 }
 

@@ -12,6 +12,25 @@ export default function FooterAr() {
             <span className="footer__brand-name">Sama Wellness Therapy</span>
           </Link>
           <p className="footer__tagline">رحلتك نحو التعافي</p>
+
+          <div className="footer__contact">
+            <a href="mailto:info@samawellnesstherapy.com" className="footer__contact-link">
+              info@samawellnesstherapy.com
+            </a>
+            <span className="footer__contact-divider" aria-hidden="true">·</span>
+            <a href="tel:+201130946556" className="footer__contact-link" dir="ltr">
+              (+2) 011 3094 6556
+            </a>
+            <span className="footer__contact-divider" aria-hidden="true">·</span>
+            <a
+              href="https://www.instagram.com/sama.wellness.therapy/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer__contact-link"
+            >
+              @sama.wellness.therapy
+            </a>
+          </div>
         </div>
         <div className="footer__bottom">
           <div className="footer__bottom-inner">

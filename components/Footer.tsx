@@ -19,6 +19,26 @@ export default function Footer() {
           {/* Tagline */}
           <p className="footer__tagline">Your Journey to Healing</p>
 
+          {/* Contact info — email, phone, Instagram */}
+          <div className="footer__contact">
+            <a href="mailto:info@samawellnesstherapy.com" className="footer__contact-link">
+              info@samawellnesstherapy.com
+            </a>
+            <span className="footer__contact-divider" aria-hidden="true">·</span>
+            <a href="tel:+201130946556" className="footer__contact-link">
+              (+2) 011 3094 6556
+            </a>
+            <span className="footer__contact-divider" aria-hidden="true">·</span>
+            <a
+              href="https://www.instagram.com/sama.wellness.therapy/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer__contact-link"
+            >
+              @sama.wellness.therapy
+            </a>
+          </div>
+
         </div>
 
         <div className="footer__bottom">

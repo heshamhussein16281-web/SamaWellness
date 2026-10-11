@@ -187,24 +187,27 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                 </p>
               )}
 
-              <button
-                type="submit"
-                disabled={status === "sending"}
-                className="booking-modal__btn"
-              >
-                {status === "sending" ? "Sending…" : "Request Callback"}
-              </button>
+              <div className="booking-modal__btn-group">
+                <button
+                  type="submit"
+                  disabled={status === "sending"}
+                  className="booking-modal__btn"
+                >
+                  {status === "sending" ? "Sending…" : "Request Callback"}
+                </button>
 
-              <p className="booking-modal__footer">
-                Prefer to message directly?{" "}
                 <a
                   href="https://api.whatsapp.com/send?phone=201130946556&text=I%27d%20like%20to%20book%20an%20assessment"
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="booking-modal__btn booking-modal__btn--outline booking-modal__btn--whatsapp"
                 >
-                  Chat on WhatsApp →
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-1.746-.873-2.888-1.56-4.035-3.537-.305-.526.305-.489.873-1.629.099-.198.05-.371-.05-.52-.098-.148-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.009-.371-.011-.57-.011-.197 0-.52.075-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.148.198 2.042 3.112 4.945 4.238 2.904 1.126 2.904.751 3.424.703.52-.05 1.69-.692 1.927-1.361.238-.67.238-1.24.173-1.362-.064-.123-.242-.198-.519-.347zM12.004 2C6.486 2 2 6.486 2 12.004c0 2.098.638 4.053 1.733 5.68L2.5 22l4.436-1.213A9.956 9.956 0 0 0 12.004 22c5.518 0 10.004-4.486 10.004-10.004C22.008 6.486 17.522 2 12.004 2zm0 18.26a8.23 8.23 0 0 1-4.43-1.294l-.317-.2-3.21.878.85-3.13-.208-.321a8.233 8.233 0 0 1-1.287-4.425c0-4.556 3.707-8.262 8.262-8.262 4.555 0 8.262 3.706 8.262 8.262 0 4.555-3.707 8.262-8.262 8.262z" />
+                  </svg>
+                  Message on WhatsApp
                 </a>
-              </p>
+              </div>
             </form>
           </>
         )}
