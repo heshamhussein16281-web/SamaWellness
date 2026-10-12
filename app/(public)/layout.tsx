@@ -53,8 +53,10 @@ const jsonLd = {
   "telephone": "+201130946556",
   "address": {
     "@type": "PostalAddress",
+    "streetAddress": "Meditown - B1 - C031",
     "addressLocality": "New Giza",
-    "addressRegion": "Cairo",
+    "addressRegion": "Giza Governorate",
+    "postalCode": "12588",
     "addressCountry": "EG"
   },
   "geo": {

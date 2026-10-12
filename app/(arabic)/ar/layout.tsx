@@ -48,8 +48,10 @@ const jsonLdAr = {
   telephone: "+201130946556",
   address: {
     "@type": "PostalAddress",
+    streetAddress: "ميدتاون - B1 - C031",
     addressLocality: "New Giza - نيو جيزة",
-    addressRegion: "القاهرة",
+    addressRegion: "محافظة الجيزة",
+    postalCode: "12588",
     addressCountry: "EG",
   },
   inLanguage: "ar",

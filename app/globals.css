@@ -1047,6 +1047,22 @@ textarea.form-input {
   text-align: center;
 }
 
+/* Address */
+.footer__address {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  color: rgba(45, 74, 70, 0.55);
+  text-decoration: none;
+  text-align: center;
+  margin: -8px 0 0 0;
+  transition: color 0.2s ease;
+}
+.footer__address:hover {
+  color: var(--color-nav-text);
+}
+
 /* Contact row — email / phone / Instagram */
 .footer__contact {
   display: flex;
