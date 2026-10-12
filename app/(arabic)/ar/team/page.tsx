@@ -1,8 +1,10 @@
 /* صفحة الفريق — Arabic Team Page
    Navbar + Footer + ContactButton provided by ar/layout.tsx */
 import type { Metadata } from "next";
+import Script from "next/script";
 import PageHeroAr from "@/components/ar/PageHeroAr";
 import ScrollReveal from "@/components/ScrollReveal";
+import { therapistsAr } from "@/lib/team-data-ar";
 
 export const metadata: Metadata = {
   title: "تعرف على الفريق — ٩ معالجين مرخصين | ساما ويلنس ثيرابي",
@@ -24,9 +26,30 @@ import TestimonialsTeamAr from "@/components/ar/TestimonialsTeamAr";
 import MidCTAAr from "@/components/ar/MidCTAAr";
 import FinalCTAAr from "@/components/ar/FinalCTAAr";
 
+const teamJsonLdAr = {
+  "@context": "https://schema.org",
+  "@graph": therapistsAr.map((t) => ({
+    "@type": "Person",
+    name: t.name,
+    jobTitle: t.title,
+    description: t.approach,
+    image: `https://www.samawellnesstherapy.com${t.image}`,
+    worksFor: {
+      "@type": "MedicalBusiness",
+      name: "Sama Wellness Therapy - ساما ويلنس ثيرابي",
+      url: "https://www.samawellnesstherapy.com/ar",
+    },
+  })),
+};
+
 export default function TeamPageAr() {
   return (
     <>
+      <Script
+        id="team-json-ld-ar"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(teamJsonLdAr) }}
+      />
       <PageHeroAr eyebrow="معالجيك" title="تعرف على الفريق" />
       <ScrollReveal>
         <TeamIntroSplitAr />

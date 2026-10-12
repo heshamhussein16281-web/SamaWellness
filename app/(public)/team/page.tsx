@@ -1,7 +1,9 @@
 /* Team Page — Locked Variant B
    Navbar + Footer + ContactButton provided by (public)/layout.tsx */
 import type { Metadata } from "next";
+import Script from "next/script";
 import PageHero from "@/components/PageHero";
+import { therapists } from "@/lib/team-data";
 
 export const metadata: Metadata = {
   title: "Meet the Team — 9 Licensed Therapists | Sama Wellness Therapy",
@@ -24,9 +26,30 @@ import TestimonialsTeam from "@/components/TestimonialsTeam";
 import MidCTA from "@/components/MidCTA";
 import FinalCTA from "@/components/FinalCTA";
 
+const teamJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": therapists.map((t) => ({
+    "@type": "Person",
+    name: t.name,
+    jobTitle: t.title,
+    description: t.approach,
+    image: `https://www.samawellnesstherapy.com${t.image}`,
+    worksFor: {
+      "@type": "MedicalBusiness",
+      name: "Sama Wellness Therapy",
+      url: "https://www.samawellnesstherapy.com",
+    },
+  })),
+};
+
 export default function TeamPage() {
   return (
     <>
+      <Script
+        id="team-json-ld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(teamJsonLd) }}
+      />
       <PageHero eyebrow="Your Therapists" title="Meet the Team" />
       <ScrollReveal>
         <TeamIntroSplit />

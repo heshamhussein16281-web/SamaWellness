@@ -16,6 +16,11 @@ export const metadata: Metadata = {
     description: "علاج فردي وزوجي وجماعي في عيادتنا بنيو جيزة أو أونلاين في مصر والسعودية. كل عميل بيتم اختيار المعالج المناسب ليه من خلال تقييم مجاني.",
     url: "https://www.samawellnesstherapy.com/ar/services",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "خدماتنا — علاج فردي، زوجي وجماعي، حضورياً وأونلاين | ساما ويلنس ثيرابي",
+    description: "علاج فردي وزوجي وجماعي في عيادتنا بنيو جيزة أو أونلاين في مصر والسعودية. كل عميل بيتم اختيار المعالج المناسب ليه من خلال تقييم مجاني.",
+  },
 };
 import ServicesIntroSplitAr from "@/components/ar/ServicesIntroSplitAr";
 import ServicesAr from "@/components/ar/ServicesAr";

@@ -15,6 +15,11 @@ export const metadata: Metadata = {
     description: "Individual, couples & group therapy with licensed therapists — in New Giza or online across Egypt & Saudi Arabia. Book your free assessment today.",
     url: "https://www.samawellnesstherapy.com/services",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Therapy Services — Individual, Couples & Group Therapy | Sama Wellness",
+    description: "Individual, couples & group therapy with licensed therapists — in New Giza or online across Egypt & Saudi Arabia. Book your free assessment today.",
+  },
 };
 import ScrollReveal from "@/components/ScrollReveal";
 import ServicesIntroSplit from "@/components/ServicesIntroSplit";

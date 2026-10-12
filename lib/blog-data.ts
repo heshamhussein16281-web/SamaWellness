@@ -100,7 +100,7 @@ Contempt directly attacks that foundation. When disrespect enters a relationship
 
 Understanding contempt as a specific, identifiable pattern — rather than just "we argue a lot" — changes how a relationship can be repaired. In couples therapy, the goal isn't simply reducing conflict. It's identifying whether contempt has taken root, understanding where it came from, and rebuilding the respect and admiration that relationships depend on to feel secure.
 
-This is exactly the kind of pattern-recognition that **Gottman Method couples therapy** is built around. Rather than treating every disagreement as its own isolated problem, Gottman-trained therapists look for the underlying relational patterns — contempt, criticism, defensiveness, and stonewalling — that predict where a relationship is heading, and work directly on repairing those patterns rather than just managing individual conflicts as they arise.
+This is exactly the kind of pattern-recognition that **<a style="color:var(--color-burgundy);text-decoration:underline;" href="/blog/gottman-method-couples-therapy-explained">Gottman Method couples therapy</a>** is built around. Rather than treating every disagreement as its own isolated problem, Gottman-trained therapists look for the underlying relational patterns — contempt, criticism, defensiveness, and stonewalling — that predict where a relationship is heading, and work directly on repairing those patterns rather than just managing individual conflicts as they arise.
 
 ## If This Sounds Familiar
 
@@ -108,7 +108,7 @@ If you've noticed contempt creeping into your relationship — sarcasm that's re
 
 ## Gottman Method Couples Therapy in New Giza & Sheikh Zayed
 
-At Sama Wellness Therapy, our founder Sama Eissa is a Gottman-trained couples therapist, working with couples across New Giza, Sheikh Zayed, and the wider Cairo area. Couples therapy here isn't about assigning blame for who said what — it's about understanding the patterns that repeat between you, and building the tools to break them.`,
+At Sama Wellness Therapy, our founder Sama Eissa is a Gottman-trained couples therapist, working with couples across New Giza, Sheikh Zayed, and the wider Cairo area. <a style="color:var(--color-burgundy);text-decoration:underline;" href="/services">Couples therapy at Sama</a> isn't about assigning blame for who said what — it's about understanding the patterns that repeat between you, and building the tools to break them.`,
   },
   {
     slug: "common-misconceptions-about-therapy-egypt",
@@ -538,7 +538,7 @@ This is part of what makes Gottman Method distinct: it's not a loosely applied p
 
 Gottman named four destructive communication patterns **the Four Horsemen**, a direct reference to the Four Horsemen of the Apocalypse — since in his research, these four are the strongest predictors that a relationship is heading toward its end.
 
-They are: **criticism** (attacking a partner's character rather than a specific behavior), **contempt** (disrespect — sarcasm, mockery, a tone of superiority), **defensiveness** (deflecting blame instead of hearing the concern), and **stonewalling** (emotionally shutting down instead of staying engaged). Of the four, contempt is the single strongest predictor of divorce. Recognizing which Horsemen show up most in a relationship is often one of the first, most clarifying steps in therapy.
+They are: **criticism** (attacking a partner's character rather than a specific behavior), **contempt** (disrespect — sarcasm, mockery, a tone of superiority), **defensiveness** (deflecting blame instead of hearing the concern), and **stonewalling** (emotionally shutting down instead of staying engaged). Of the four, <a style="color:var(--color-burgundy);text-decoration:underline;" href="/blog/contempt-predicts-relationship-breakdown-gottman">contempt in relationships</a> is the single strongest predictor of divorce. Recognizing which Horsemen show up most in a relationship is often one of the first, most clarifying steps in therapy.
 
 ## The Sound Relationship House
 
@@ -566,7 +566,7 @@ Gottman Method isn't only for couples in crisis. It's equally suited to:
 
 ## Gottman Method at Sama Wellness Therapy
 
-Our founder and clinical director, Sama Eissa, is certified in Gottman Method and works directly with couples using this approach — identifying the specific patterns at play in a relationship, and building the tools to shift them, rather than treating each disagreement as an isolated event.
+Our founder and clinical director, Sama Eissa, is certified in Gottman Method and works directly with couples through <a style="color:var(--color-burgundy);text-decoration:underline;" href="/services">couples therapy at Sama</a> — identifying the specific patterns at play in a relationship, and building the tools to shift them, rather than treating each disagreement as an isolated event.
 
 Sessions are available for couples across New Giza, Sheikh Zayed, and the wider Cairo area, in both Arabic and English.`,
   },

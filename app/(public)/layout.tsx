@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Therapist in New Giza & Sheikh Zayed, Cairo | Sama Wellness Therapy",
-    description: "Individual, couples & group therapy in New Giza & Sheikh Zayed, Cairo. Licensed therapists personally matched to your needs.",
+    description: "Individual, couples & group therapy in New Giza & Sheikh Zayed, Cairo — in-person or online across Egypt & Saudi Arabia. Licensed therapists matched to your needs.",
     url: "https://www.samawellnesstherapy.com",
     siteName: "Sama Wellness Therapy",
     locale: "en_EG",
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Therapist in New Giza & Sheikh Zayed, Cairo | Sama Wellness Therapy",
-    description: "Individual, couples & group therapy in New Giza & Sheikh Zayed, Cairo. Licensed therapists personally matched to your needs.",
+    description: "Individual, couples & group therapy in New Giza & Sheikh Zayed, Cairo — in-person or online across Egypt & Saudi Arabia. Licensed therapists matched to your needs.",
     images: ["https://www.samawellnesstherapy.com/room.jpg"],
   },
   other: {
