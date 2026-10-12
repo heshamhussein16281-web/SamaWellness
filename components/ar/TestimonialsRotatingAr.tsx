@@ -3,9 +3,11 @@
 import { useState, useEffect } from "react";
 
 const defaultQuotes = [
-  { text: "تقييم الـ١٥ دقيقة فرق معايا جداً. اتوصلت بمعالج فعلاً فاهم اللي أنا بمر بيه.", author: "ن.ر." },
-  { text: "لأول مرة حسيت إن حد فعلاً سامعني — مش بيحكم عليا، مش مستعجل، بس سامعني.", author: "أ.ل." },
-  { text: "العلاج مصلحش حياتي بين يوم وليلة، بس إداني الأدوات إني أبدأ أخيراً.", author: "ك.و." },
+  { text: "من حجز الموعد لحد ما قابلت المعالجة، كل حاجة كانت محترفة. الموضوع كله كان منظم وحسيت إنه شخصي فعلاً.", author: "يوسف ح." },
+  { text: "البيئة الجميلة والمعالجين المتميزين بيخلوا المكان ده فعلاً مختلف. بوصي بيه بشدة!", author: "تارا ج." },
+  { text: "المكان مش حاسس إنه عيادة طبية تقليدية خالص. دافي، أنيق، خاص، ومرحب جداً ❤️", author: "ندى ش." },
+  { text: "منظم ومحترف جداً، هرشحه فعلاً لأي حد عايز يطور نفسه ويراجع ذاته.", author: "خالد ا." },
+  { text: "تجربة جميلة — محترفة وخاصة وسهلة الحجز. عجبني إنهم فعلاً بيدوروا على المعالج المناسب ليك مش بس بيحطوا حد عشوائي.", author: "مازن م." },
 ];
 
 export default function TestimonialsRotatingAr({ customQuotes }: { customQuotes?: { text: string; author: string }[] }) {
@@ -47,6 +49,14 @@ export default function TestimonialsRotatingAr({ customQuotes }: { customQuotes?
             />
           ))}
         </div>
+        <a
+          href="https://www.google.com/maps/search/?api=1&query=Sama+Wellness+Therapy+Meditown+New+Giza"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="testimonials__google-link"
+        >
+          اقرأ تقييمات أكتر على جوجل
+        </a>
       </div>
     </section>
   );

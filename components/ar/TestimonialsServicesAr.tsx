@@ -3,9 +3,11 @@
 import { useState, useEffect } from "react";
 
 const quotes = [
-  { text: "جيت مش عارف أتوقع إيه. بعد كام جلسة بس، بدأت أفهم نفسي بطرق ما كنتش أعرفها قبل كده.", author: "م.س." },
-  { text: "المعالج بتاعي إداني أدوات فعلاً بستخدمها في حياتي اليومية. مكانش مجرد كلام — كان نمو عملي حقيقي.", author: "ر.ح." },
-  { text: "العلاج الزوجي أنقذ علاقتنا. أخيراً اتعلمنا نسمع بعض من غير ما الموضوع يتحول لخناقة.", author: "د.أ." },
+  { text: "تجربة رائعة ومحترفة جداً.", author: "أحمد ا." },
+  { text: "أخيراً لقيت معالج فعلاً فاهمني، وده بسبب دقة عملية الاختيار قبل كده. شكراً ساما ويلنس.", author: "محمد ع." },
+  { text: "أكتر حاجة قدرتها هي الخصوصية والسرية في كل التجربة. من أول لحظة دخلت حسيت إن خصوصيتي محترمة فعلاً.", author: "ندى ن." },
+  { text: "عملية التقييم كانت محترفة جداً. سما عيسى سألت الأسئلة الصحيحة وفهمت بسرعة نوع المعالج المناسب ليا. المعالجة اللي اختارتها لي كانت فعلاً مناسبة جداً.", author: "يوسف ع." },
+  { text: "خدمة استثنائية.", author: "آلاء د." },
 ];
 
 export default function TestimonialsServicesAr() {
@@ -46,6 +48,14 @@ export default function TestimonialsServicesAr() {
             />
           ))}
         </div>
+        <a
+          href="https://www.google.com/maps/search/?api=1&query=Sama+Wellness+Therapy+Meditown+New+Giza"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="testimonials__google-link"
+        >
+          اقرأ تقييمات أكتر على جوجل
+        </a>
       </div>
     </section>
   );

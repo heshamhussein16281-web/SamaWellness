@@ -2556,6 +2556,21 @@ textarea.form-input {
   transition: background var(--transition-base);
 }
 
+.testimonials__google-link {
+  display: inline-block;
+  margin-top: var(--space-md);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--color-burgundy);
+  text-decoration: underline;
+  transition: opacity 0.2s ease;
+}
+.testimonials__google-link:hover {
+  opacity: 0.75;
+}
+
 .testimonials__dot--active {
   background: var(--color-burgundy);
 }

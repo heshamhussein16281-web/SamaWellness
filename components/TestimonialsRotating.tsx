@@ -4,9 +4,11 @@
 import { useState, useEffect } from "react";
 
 const quotes = [
-  { text: "The 15-minute assessment made all the difference. I was matched with a therapist who truly understood what I was going through.", author: "N.R." },
-  { text: "For the first time, I felt truly heard — not judged, not rushed, just heard.", author: "A.L." },
-  { text: "Therapy didn't fix my life overnight, but it gave me the tools to finally start.", author: "K.W." },
+  { text: "From booking the appointment to meeting the therapist, everything was handled professionally. The whole experience felt very organized and personal.", author: "Yousef H." },
+  { text: "The beautiful environment and top-notch therapists make this place really special. Highly recommended!", author: "Tara J." },
+  { text: "It doesn't feel like a traditional medical clinic at all. It's warm, elegant, private, and very welcoming.", author: "Nada S." },
+  { text: "Well organized and professional — I'd definitely recommend it to anyone seeking to self-develop and reflect.", author: "Khaled E." },
+  { text: "Great experience — professional, private, and easy to book. Loved that they actually match you to a therapist instead of just assigning one.", author: "Mazen M." },
 ];
 
 export default function TestimonialsRotating({ customQuotes }: { customQuotes?: { text: string; author: string }[] }) {
@@ -48,6 +50,14 @@ export default function TestimonialsRotating({ customQuotes }: { customQuotes?: 
             />
           ))}
         </div>
+        <a
+          href="https://www.google.com/maps/search/?api=1&query=Sama+Wellness+Therapy+Meditown+New+Giza"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="testimonials__google-link"
+        >
+          Read more reviews on Google
+        </a>
       </div>
     </section>
   );

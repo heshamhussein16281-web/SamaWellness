@@ -4,9 +4,11 @@
 import { useState, useEffect } from "react";
 
 const quotes = [
-  { text: "I came in not knowing what to expect. After just a few sessions, I started understanding myself in ways I never had before.", author: "M.S." },
-  { text: "My therapist gave me tools I actually use in my daily life. It wasn't just talking — it was real, practical growth.", author: "R.H." },
-  { text: "Couple therapy saved our relationship. We finally learned how to listen to each other without it turning into a fight.", author: "D.A." },
+  { text: "Amazing and professional experience.", author: "Ahmed E." },
+  { text: "Finally found a therapist who actually gets it, thanks to how carefully they match you first. Thank you, Sama Wellness.", author: "Mohammed A." },
+  { text: "What I appreciated most was how private and confidential the whole experience felt. From the moment I walked in, I felt my privacy was genuinely respected.", author: "Nada N." },
+  { text: "The assessment process was very professional. Sama Eissa asked the right questions and clearly understood which type of therapist would be most suitable for me. The therapist I was matched with turned out to be an excellent fit.", author: "Yousef A." },
+  { text: "Exceptional service.", author: "Alaa D." },
 ];
 
 export default function TestimonialsServices() {
@@ -47,6 +49,14 @@ export default function TestimonialsServices() {
             />
           ))}
         </div>
+        <a
+          href="https://www.google.com/maps/search/?api=1&query=Sama+Wellness+Therapy+Meditown+New+Giza"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="testimonials__google-link"
+        >
+          Read more reviews on Google
+        </a>
       </div>
     </section>
   );
