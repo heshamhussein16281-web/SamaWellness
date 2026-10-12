@@ -4,11 +4,11 @@
 import { useState, useEffect } from "react";
 
 const quotes = [
-  { text: "From booking the appointment to meeting the therapist, everything was handled professionally. The whole experience felt very organized and personal.", author: "Yousef H." },
-  { text: "The beautiful environment and top-notch therapists make this place really special. Highly recommended!", author: "Tara J." },
-  { text: "It doesn't feel like a traditional medical clinic at all. It's warm, elegant, private, and very welcoming.", author: "Nada S." },
-  { text: "Well organized and professional — I'd definitely recommend it to anyone seeking to self-develop and reflect.", author: "Khaled E." },
-  { text: "Great experience — professional, private, and easy to book. Loved that they actually match you to a therapist instead of just assigning one.", author: "Mazen M." },
+  { text: "From booking the appointment to meeting the therapist, everything was handled professionally. The whole experience felt very organized and personal.", author: "Y.H." },
+  { text: "The beautiful environment and top-notch therapists make this place really special. Highly recommended!", author: "T.J." },
+  { text: "It doesn't feel like a traditional medical clinic at all. It's warm, elegant, private, and very welcoming.", author: "N.S." },
+  { text: "Well organized and professional — I'd definitely recommend it to anyone seeking to self-develop and reflect.", author: "K.E." },
+  { text: "Great experience — professional, private, and easy to book. Loved that they actually match you to a therapist instead of just assigning one.", author: "M.M." },
 ];
 
 export default function TestimonialsRotating({ customQuotes }: { customQuotes?: { text: string; author: string }[] }) {

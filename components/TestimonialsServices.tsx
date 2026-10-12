@@ -4,11 +4,11 @@
 import { useState, useEffect } from "react";
 
 const quotes = [
-  { text: "Amazing and professional experience.", author: "Ahmed E." },
-  { text: "Finally found a therapist who actually gets it, thanks to how carefully they match you first. Thank you, Sama Wellness.", author: "Mohammed A." },
-  { text: "What I appreciated most was how private and confidential the whole experience felt. From the moment I walked in, I felt my privacy was genuinely respected.", author: "Nada N." },
-  { text: "The assessment process was very professional. Sama Eissa asked the right questions and clearly understood which type of therapist would be most suitable for me. The therapist I was matched with turned out to be an excellent fit.", author: "Yousef A." },
-  { text: "Exceptional service.", author: "Alaa D." },
+  { text: "Amazing and professional experience.", author: "A.E." },
+  { text: "Finally found a therapist who actually gets it, thanks to how carefully they match you first. Thank you, Sama Wellness.", author: "M.A." },
+  { text: "What I appreciated most was how private and confidential the whole experience felt. From the moment I walked in, I felt my privacy was genuinely respected.", author: "N.N." },
+  { text: "The assessment process was very professional. Sama Eissa asked the right questions and clearly understood which type of therapist would be most suitable for me. The therapist I was matched with turned out to be an excellent fit.", author: "Y.A." },
+  { text: "Exceptional service.", author: "A.D." },
 ];
 
 export default function TestimonialsServices() {
