@@ -730,6 +730,78 @@ You don't need to decide between online and in-person before reaching out. That'
 
 **Interested in exploring whether online therapy is right for you?** Reach out to Sama Wellness Therapy — 0113 094 6556. We serve clients in-person at our New Giza clinic and online across Egypt, Saudi Arabia, and the Middle East, in both Arabic and English.`,
   },
+  {
+    slug: "premarital-counseling-communication-conflict",
+    title: "Premarital Counseling: Learning to Communicate and Handle Conflict Before the Wedding",
+    metaTitle: "Premarital Counseling for Communication & Conflict | New Giza & Sheikh Zayed | Sama Wellness Therapy",
+    metaDescription: "Every couple argues — what matters is how. Premarital counseling helps engaged couples build healthy communication and conflict management skills before marriage. Gottman-based sessions in New Giza & Sheikh Zayed, and online.",
+    excerpt: "Every couple argues — what matters is how. Premarital counseling teaches engaged couples the communication and conflict skills that research shows predict whether a relationship lasts.",
+    category: "Relationships",
+    image: "/BLOG/images/premarital-counseling-communication.jpg",
+    readTime: "6 min read",
+    date: "October 2026",
+    author: "Counselor Sama",
+    content: `Every couple argues. Engaged couples sometimes worry that disagreements are a bad sign — that if they were truly right for each other, they wouldn't fight about money, family, or how to spend a Friday.
+
+The research says otherwise. Healthy couples disagree all the time. What separates relationships that last from those that struggle isn't *whether* a couple argues — it's *how*. And the way you communicate and handle conflict is a skill, which means it can be learned. **Premarital counseling** is one of the best places to learn it, before the habits of marriage are set.
+
+## Why Communication Patterns Form Early
+
+The way a couple handles their first real disagreements tends to become the template for the years that follow. Who raises the issue, how they raise it, whether the other person listens or defends, and how — or whether — the conversation ends: these patterns form quickly, usually without either partner choosing them.
+
+Most of us also bring a conflict style from our families. One partner may have grown up in a home where problems were discussed loudly and resolved quickly. The other may have grown up in a home where conflict was avoided and things were "left to cool down." Neither is wrong — but without understanding each other's style, both partners can end up feeling misunderstood.
+
+## What Gottman Research Teaches About Conflict
+
+In Gottman Method research, Dr. John Gottman found that certain communication patterns reliably predict whether a relationship will struggle. He called them **the Four Horsemen**:
+
+- **Criticism** — attacking your partner's character instead of describing a specific behavior ("You never think about anyone but yourself")
+- **Contempt** — sarcasm, eye-rolling, mockery, or a tone of superiority; the strongest single predictor of divorce
+- **Defensiveness** — deflecting or counter-attacking instead of hearing the concern
+- **Stonewalling** — shutting down, going silent, or walking away emotionally in the middle of a conflict
+
+The good news is that each one has an antidote — and those antidotes can be practiced long before the wedding.
+
+## The Skills Premarital Counseling Builds
+
+Premarital counseling focused on communication and conflict usually works on a few core skills:
+
+- **A gentle start-up** — raising a concern by describing how you feel and what you need, rather than blaming. "I felt left out when plans were made without me — can we decide these things together?" lands very differently from "You always ignore me."
+- **Listening to understand, not to reply** — reflecting back what your partner said before responding, so both of you feel heard.
+- **Repair attempts** — small words or gestures ("Let me try that again," a touch, a bit of humor) that de-escalate a conversation before it spirals. Couples who repair well recover from conflict faster.
+- **Taking a break the right way** — recognizing when one of you is too overwhelmed to talk productively (what Gottman calls *flooding*), pausing for at least 20 minutes, and agreeing to come back to the conversation.
+- **Accepting influence** — being genuinely open to your partner's perspective, and letting it shape the decision.
+
+## Not Every Problem Needs to Be Solved
+
+One of Gottman's most reassuring findings is that most conflicts between couples are **perpetual problems** — ongoing differences rooted in personality, values, or upbringing that never fully go away. One partner may always be more social; one may always be more careful with money.
+
+Healthy couples don't solve these problems. They learn to talk about them with understanding and humor, without each conversation turning into the same painful argument. Premarital counseling helps you tell the difference between problems you can solve and differences you'll need to manage together — and how to do both.
+
+## The Conversations Worth Having Before Marriage
+
+Communication skills are easiest to practice on real topics. Premarital sessions often give couples a safe space to talk through the subjects most likely to cause conflict later:
+
+- Money, spending, and financial decisions
+- The role of each family, visits, and boundaries with in-laws
+- Children — whether, when, and how you hope to raise them
+- Careers, ambition, and how you'll handle change
+- How each of you shows love, and what you need when you're stressed
+
+The goal isn't to agree on everything. It's to know how to disagree well.
+
+## Premarital Counseling in New Giza & Sheikh Zayed — and Online
+
+At Sama Wellness Therapy, our founder and clinical director Sama Eissa works with engaged and newly married couples using Gottman Method couples therapy, alongside relationship therapist Samar Samy. Sessions focus on practical communication and conflict management skills that couples can use from the first conversation.
+
+Sessions are available in person at our New Giza clinic, serving couples across New Giza, Sheikh Zayed, and the wider Cairo area — and online for couples across Egypt, Saudi Arabia, and the Middle East, including couples where one partner lives or travels abroad. All sessions are available in Arabic and English.
+
+You don't need to be having problems to start. Your free 15-minute assessment with Counselor Sama is where that starts.
+
+---
+
+**The way you handle conflict matters more than whether you have it — and it can be learned.** Reach out to Sama Wellness Therapy — 0113 094 6556. In person at our New Giza clinic, and online across Egypt, Saudi Arabia, and the Middle East.`,
+  },
 ];
 
 export function getPostBySlug(slug: string): BlogPost | undefined {
