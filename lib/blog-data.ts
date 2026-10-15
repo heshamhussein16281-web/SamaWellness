@@ -802,6 +802,105 @@ You don't need to be having problems to start. Your free 15-minute assessment wi
 
 **The way you handle conflict matters more than whether you have it — and it can be learned.** Reach out to Sama Wellness Therapy — 0113 094 6556. In person at our New Giza clinic, and online across Egypt, Saudi Arabia, and the Middle East.`,
   },
+  {
+    slug: "therapy-for-athletes-elite-performance",
+    title: "From Good to Elite: How Therapy Helps Athletes Reach Their Next Level",
+    metaTitle: "Therapy for Athletes: The Mental Edge for Elite Performance | Sama Wellness Therapy, New Giza",
+    metaDescription: "At the top level, everyone is talented. Learn how therapy and CBT build the focus and confidence that take good athletes further. New Giza & online.",
+    excerpt: "When the physical gap between competitors shrinks, the mental gap decides the result. Therapy and CBT help athletes build consistency under pressure, steady confidence, and faster recovery from setbacks.",
+    category: "Therapy Insights",
+    image: "/BLOG/images/therapy-for-athletes.jpg",
+    readTime: "7 min read",
+    date: "October 2026",
+    author: "Counselor Sama",
+    content: `At the highest level of sport, everyone is talented. Everyone trains hard, eats right, and has good coaching. So what separates the athlete who makes the national team, the final, or the Olympics from the one who comes very close?
+
+More and more, the answer is the mind.
+
+When the physical gap between competitors becomes small, the mental gap becomes the difference. That's why elite athletes around the world now train their minds with the same seriousness they bring to the gym and the pitch — not because something is wrong, but because they want to get even better. Therapy, and especially **Cognitive Behavioral Therapy (CBT)**, is one of the most practical ways to do that.
+
+## Why the Mental Game Matters More as You Rise
+
+The higher you go, the more the margins shrink. A hundredth of a second, one point, one decision. At that level, small mental shifts — staying focused for one more minute, recovering from a mistake one play faster, trusting your preparation when the stakes are highest — can be what decides the result.
+
+The demands also grow. More travel, bigger stages, selection pressure, media attention, sponsors, and a training load that leaves little room for anything else. Athletes who reach the top tend to be the ones who learn to manage all of this, not just their sport.
+
+## What Therapy Can Help High-Performing Athletes Build
+
+Working with a therapist isn't only for athletes who are struggling. For athletes who are already performing well, it's a way to build the mental skills that support the next step:
+
+- **Consistency under pressure** — performing on the big stage the way you perform in training, by learning to keep nerves in the range that helps rather than hurts
+- **Focus and attention control** — staying fully in the present play, and bringing your attention back quickly when it drifts to the scoreboard, the crowd, or the last mistake
+- **Steady, earned confidence** — confidence built on preparation and process, so it doesn't rise and fall with every result
+- **Faster recovery from setbacks** — treating a mistake, a loss, or a bad session as information to learn from, rather than something that follows you into the next game
+- **Clear goals and sustainable motivation** — connecting your training to what genuinely matters to you, so drive lasts across long seasons and years of preparation
+- **Composure in big moments** — finals, trials, selection days, and the first time competing at a new level
+- **Balance outside the sport** — handling relationships, studies or work, travel, and expectations, so life off the field supports your performance instead of draining it
+
+## Unleashing Talent That Beliefs Are Holding Back
+
+Some athletes have far more talent than their results show. Coaches see it in training. Teammates see it. Sometimes the athlete feels it too — and yet, when it counts, something holds them back.
+
+Very often, that "something" is a belief. Beliefs we hold about ourselves quietly shape what we try, how freely we play, and how far we let ourselves go. In sport, some of the most common ones sound like:
+
+- *"I'm not the kind of player who wins big games."*
+- *"Players like me don't make it to that level."*
+- *"If I give everything and still lose, it proves I'm not good enough."*
+- *"I need to be perfect before I'm allowed to take risks."*
+- *"I always fall apart in finals."*
+
+Many of these beliefs form early — from a harsh coach, a comparison with a sibling or teammate, a painful loss at a young age, or messages from home about what success means. Over time they start to feel like facts. An athlete may hold back without realizing it: playing safe instead of expressing their game, avoiding responsibility in key moments, or easing off just before the finish line, so that a loss never truly tests their ability.
+
+Therapy helps bring these beliefs into the open, understand where they came from, and test them against real evidence — through CBT, and where a pattern runs deeper, through approaches such as schema therapy. As those beliefs loosen, athletes often find that the talent was there all along. What changes is that they finally let themselves use it.
+
+## How CBT Works With Athletes
+
+CBT is built on a simple idea: the way we interpret a situation shapes how we feel and what we do next. In high-level sport, that connection is easy to see. Two equally talented athletes walk into the same final. One thinks, *"This is what I've trained for."* The other thinks, *"I can't afford to get this wrong."* Same moment — very different bodies, and often very different results.
+
+With athletes, CBT typically focuses on:
+
+- **Performance-focused self-talk** — short, deliberate cue words and statements that keep attention on the task
+- **Spotting thinking traps** — such as all-or-nothing thinking ("Anything less than first is a failure") or overgeneralizing from one bad performance
+- **Process goals alongside outcome goals** — giving equal weight to what's in your control: preparation, decisions, effort, and execution
+- **Separating performance from self-worth** — so you can take risks, compete freely, and grow, without every result feeling like a verdict on who you are
+- **Gradual exposure to pressure** — practicing pressure situations in training so the brain learns to stay calm when they happen for real
+
+## Other Tools That Support Peak Performance
+
+Depending on the athlete and the sport, CBT is often combined with:
+
+- **Mindfulness** — training attention to stay in the moment, a skill that transfers directly to competition
+- **Mental rehearsal and imagery** — vividly rehearsing skills, game situations, and big moments, a technique widely used in elite sport
+- **Breathing and arousal regulation** — practiced techniques to bring your body to its best performance state on demand
+- **DBT skills** — emotion regulation for athletes whose intensity sometimes works against them, on the field or with teammates
+
+## A Simple Pre-Performance Routine Worth Saving
+
+Many top athletes rely on a short, repeatable routine before key moments — a free throw, a serve, a start, a penalty. One example:
+
+- **Breathe** — one slow breath in, and a longer breath out
+- **Notice** — name what you feel, without judging it: "Nervous and ready."
+- **Cue** — choose one word linked to your task (e.g. "smooth," "explode," "see it")
+- **Commit** — act on it fully, and let the result take care of itself
+
+Like any skill, it works best when it's practiced every day in training, so it's automatic when it matters.
+
+## You Don't Need a Problem to Start
+
+Athletes work with strength coaches, nutritionists, and physiotherapists not because they're failing, but because they want an edge. Therapy can play the same role for the mind. Sessions are built around your goals, your sport, and your season — whether you're preparing for a major championship, chasing selection, moving up to a professional level, or simply wanting to compete with more freedom and enjoyment.
+
+## Therapy for Athletes at Sama Wellness Therapy
+
+At our clinic in New Giza, serving athletes and sporting families from Sheikh Zayed, 6th of October, and across West Cairo, therapists on our team use CBT, DBT, and mindfulness-based approaches to help athletes build the mental side of their performance. Counseling psychologists Alia El Meteni and Haidy El Masry work with adolescents and adults, which suits both established athletes and young athletes in competitive academies.
+
+Because high-level athletes travel for camps and competitions, sessions are also available online across Egypt, Saudi Arabia, and the Middle East, in Arabic and English — so the work continues wherever your season takes you.
+
+If you're already good, and you're ready to find out how much further you can go — if that's where you are right now, that's exactly what sessions are for.
+
+---
+
+**The athletes who go furthest train their minds as seriously as their bodies.** Reach out to Sama Wellness Therapy — 0113 094 6556. In person at our New Giza clinic, and online across Egypt, Saudi Arabia, and the Middle East.`,
+  },
 ];
 
 export function getPostBySlug(slug: string): BlogPost | undefined {
