@@ -41,7 +41,7 @@ export async function generateMetadata({
       url: canonicalUrl,
       locale: "en_EG",
       siteName: "Sama Wellness Therapy",
-      publishedTime: post.date,
+      publishedTime: post.publishDate,
       authors: [post.author],
       images: [
         {

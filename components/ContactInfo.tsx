@@ -22,7 +22,7 @@ export default function ContactInfo() {
           <div className="contact-info-block">
             <h3 className="contact-info-block-heading">Phone</h3>
             <a href="tel:+201130946556" className="contact-info-block-link">
-              (+2) 01130946556
+              +20 113 094 6556
             </a>
           </div>
 

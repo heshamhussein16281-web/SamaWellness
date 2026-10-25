@@ -8,6 +8,7 @@ export interface BlogPost {
   image: string;
   readTime: string;
   date: string;
+  publishDate: string;
   author: string;
   featured?: boolean;
   content: string;
@@ -27,6 +28,7 @@ export const blogPosts: BlogPost[] = [
     image: "/BLOG/images/first-session.jpg",
     readTime: "5 min read",
     date: "September 2026",
+    publishDate: "2026-09-01",
     author: "Counselor Sama",
     featured: true,
     content: `Booking your first therapy session can feel like stepping into the unknown. Will you be asked to relive painful memories right away? Will you be judged? Will you even know what to say?
@@ -82,6 +84,7 @@ If you've been wondering whether it's the right time to start, the honest answer
     image: "/BLOG/images/relationship-breakdown.jpg",
     readTime: "4 min read",
     date: "September 2026",
+    publishDate: "2026-09-02",
     author: "Counselor Sama",
     featured: true,
     content: `Most people assume relationships fail because of conflict — too many arguments, too many unresolved issues. The research says otherwise. According to Dr. John Gottman's decades of relationship research, the single strongest predictor that a relationship or marriage will fail isn't conflict at all. It's **contempt**.
@@ -123,6 +126,7 @@ At Sama Wellness Therapy, our founder Sama Eissa is a Gottman-trained couples th
     image: "/BLOG/images/therapy-misconceptions.jpg",
     readTime: "5 min read",
     date: "September 2026",
+    publishDate: "2026-09-03",
     author: "Counselor Sama",
     content: `One of the most common misconceptions about therapy — especially in Egypt, where the idea is still relatively new for many families — is that going to therapy means handing your decisions over to someone else. That a therapist will tell you what's right, what's wrong, or what to do next.
 
@@ -174,6 +178,7 @@ At Sama Wellness Therapy, we work with clients across New Giza and Sheikh Zayed 
     image: "/BLOG/images/couples-therapy.jpg",
     readTime: "4 min read",
     date: "August 2026",
+    publishDate: "2026-08-15",
     author: "Counselor Sama",
     content: `Couples therapy is often thought of as a last resort — something you turn to only when a relationship is already falling apart, right before separation or divorce becomes the alternative. But that framing misses something important: relationships aren't things you find already complete. They're things you build, continuously.
 
@@ -217,6 +222,7 @@ At Sama Wellness Therapy, couples come to us at every stage — some in real dis
     image: "/BLOG/images/narcissist-patterns.jpg",
     readTime: "4 min read",
     date: "August 2026",
+    publishDate: "2026-08-16",
     author: "Counselor Sama",
     content: `From the outside, it can be hard to understand why someone stays in a relationship that's clearly causing them harm. Friends and family often see the damage clearly — but the person inside the relationship frequently doesn't experience it the same way observers do. Understanding why requires looking past the relationship itself, to what makes it feel familiar in the first place.
 
@@ -259,6 +265,7 @@ At Sama Wellness Therapy, our therapists work with individuals navigating exactl
     image: "/BLOG/images/family-therapy.jpg",
     readTime: "4 min read",
     date: "August 2026",
+    publishDate: "2026-08-17",
     author: "Counselor Sama",
     content: `Many clients feel a real sense of guilt or discomfort when a conversation in therapy turns to their family — particularly when it involves describing something a parent did that caused pain. It can feel disloyal, even wrong, to speak about the people who raised you in anything but a positive light.
 
@@ -300,6 +307,7 @@ At Sama Wellness Therapy, we understand that family dynamics are often central t
     image: "/BLOG/images/people-pleasing.jpg",
     readTime: "5 min read",
     date: "July 2026",
+    publishDate: "2026-07-15",
     author: "Counselor Sama",
     content: `People-pleasing is often praised as a virtue — a sign of a kind, easygoing, considerate personality. But when the drive to avoid upsetting anyone becomes constant and automatic, it's usually not kindness at work. It's something else entirely.
 
@@ -348,6 +356,7 @@ At Sama Wellness Therapy, our individual therapy sessions are built around exact
     image: "/BLOG/images/faith-therapy.jpg",
     readTime: "4 min read",
     date: "July 2026",
+    publishDate: "2026-07-16",
     author: "Counselor Sama",
     content: `It's a question we hear often, sometimes directly, sometimes in the comments under our own content: **does going to therapy mean my faith isn't strong enough?** For many people considering therapy in Egypt, this isn't a minor hesitation — it can be the single biggest thing standing between them and reaching out for support.
 
@@ -390,6 +399,7 @@ At Sama Wellness Therapy, we work with clients across New Giza and Sheikh Zayed 
     image: "/BLOG/images/choosing-therapist.jpg",
     readTime: "5 min read",
     date: "September 2026",
+    publishDate: "2026-09-06",
     author: "Counselor Sama",
     content: `Deciding to start therapy is one step. Choosing the right therapist is a completely different one — and in many ways, it's the step that determines whether therapy actually works for you.
 
@@ -464,6 +474,7 @@ Sama Wellness Therapy is based in New Giza Medi-Town, serving clients across New
     image: "/BLOG/images/techniques-infographic.png",
     readTime: "6 min read",
     date: "September 2026",
+    publishDate: "2026-09-07",
     author: "Counselor Sama",
     content: `Not all therapy looks the same — and it shouldn't. Different concerns respond to different therapeutic techniques, which is exactly why having a team of therapists with distinct, credentialed specialties matters more than having one generalist trying to cover everything.
 
@@ -525,6 +536,7 @@ All of our therapists are based at our clinic in New Giza Medi-Town, serving cli
     image: "/BLOG/images/gottman-method-house-illustration.jpg",
     readTime: "6 min read",
     date: "September 2026",
+    publishDate: "2026-09-08",
     author: "Counselor Sama",
     content: `Not all couples therapy is built the same way. Some approaches focus mainly on communication exercises in the room; others lean on general conflict-resolution techniques. Gottman Method takes a different starting point entirely: decades of direct observation and research into what actually predicts whether a relationship thrives or breaks down.
 
@@ -583,6 +595,7 @@ Sessions are available for couples across New Giza, Sheikh Zayed, and the wider 
     image: "/BLOG/images/trauma-focused-therapy-illustration.jpg",
     readTime: "5 min read",
     date: "September 2026",
+    publishDate: "2026-09-09",
     author: "Counselor Sama",
     content: `The word "trauma" gets used often, but it's frequently misunderstood. Many people assume trauma only refers to catastrophic, life-threatening events — an accident, an assault, a war. In reality, trauma is broader and more common than that, and understanding what it actually is can be the first step toward recognizing it in your own life.
 
@@ -629,6 +642,7 @@ At Sama Wellness Therapy, trauma-informed care is one of our core specialties, w
     image: "/BLOG/images/anxiety-therapy-illustration.jpg",
     readTime: "5 min read",
     date: "September 2026",
+    publishDate: "2026-09-10",
     author: "Counselor Sama",
     content: `Anxiety doesn't always look like panic. Sometimes it's a constant low hum of worry in the background of everyday life. Sometimes it's a racing mind at 2 a.m., or a body that stays tense even when nothing is actively wrong. Understanding anxiety — what it actually is, and what genuinely helps — is often the first step toward managing it.
 
@@ -678,6 +692,7 @@ At Sama Wellness Therapy, several of our therapists are trained in CBT and DBT, 
     image: "/BLOG/images/online-therapy-cover.jpg",
     readTime: "5 min read",
     date: "September 2026",
+    publishDate: "2026-09-22",
     author: "Counselor Sama",
     content: `A few years ago, the idea of sitting with a therapist through a screen felt like a compromise — something you did when you couldn't get to a clinic. That perception has shifted significantly. Online therapy has proven to be an effective option for many mental health concerns, including anxiety, depression, relationship difficulties, and stress management — making quality therapeutic support accessible to people who might not otherwise have it.
 
@@ -728,7 +743,7 @@ You don't need to decide between online and in-person before reaching out. That'
 
 ---
 
-**Interested in exploring whether online therapy is right for you?** Reach out to Sama Wellness Therapy — 0113 094 6556. We serve clients in-person at our New Giza clinic and online across Egypt, Saudi Arabia, and the Middle East, in both Arabic and English.`,
+**Interested in exploring whether online therapy is right for you?** Reach out to Sama Wellness Therapy — +20 113 094 6556. We serve clients in-person at our New Giza clinic and online across Egypt, Saudi Arabia, and the Middle East, in both Arabic and English.`,
   },
   {
     slug: "premarital-counseling-communication-conflict",
@@ -740,6 +755,7 @@ You don't need to decide between online and in-person before reaching out. That'
     image: "/BLOG/images/premarital-counseling-communication.jpg",
     readTime: "6 min read",
     date: "October 2026",
+    publishDate: "2026-10-13",
     author: "Counselor Sama",
     content: `Every couple argues. Engaged couples sometimes worry that disagreements are a bad sign — that if they were truly right for each other, they wouldn't fight about money, family, or how to spend a Friday.
 
@@ -753,10 +769,10 @@ Most of us also bring a conflict style from our families. One partner may have g
 
 ## What Gottman Research Teaches About Conflict
 
-In Gottman Method research, Dr. John Gottman found that certain communication patterns reliably predict whether a relationship will struggle. He called them **the Four Horsemen**:
+In <a style="color:var(--color-burgundy);text-decoration:underline;" href="/blog/gottman-method-couples-therapy-explained">Gottman Method</a> research, Dr. John Gottman found that certain communication patterns reliably predict whether a relationship will struggle. He called them **the Four Horsemen**:
 
 - **Criticism** — attacking your partner's character instead of describing a specific behavior ("You never think about anyone but yourself")
-- **Contempt** — sarcasm, eye-rolling, mockery, or a tone of superiority; the strongest single predictor of divorce
+- **<a style="color:var(--color-burgundy);text-decoration:underline;" href="/blog/contempt-predicts-relationship-breakdown-gottman">Contempt</a>** — sarcasm, eye-rolling, mockery, or a tone of superiority; the strongest single predictor of divorce
 - **Defensiveness** — deflecting or counter-attacking instead of hearing the concern
 - **Stonewalling** — shutting down, going silent, or walking away emotionally in the middle of a conflict
 
@@ -792,7 +808,7 @@ The goal isn't to agree on everything. It's to know how to disagree well.
 
 ## Premarital Counseling in New Giza & Sheikh Zayed — and Online
 
-At Sama Wellness Therapy, our founder and clinical director Sama Eissa works with engaged and newly married couples using Gottman Method couples therapy, alongside relationship therapist Samar Samy. Sessions focus on practical communication and conflict management skills that couples can use from the first conversation.
+At Sama Wellness Therapy, our founder and clinical director Sama Eissa works with engaged and newly married couples using <a style="color:var(--color-burgundy);text-decoration:underline;" href="/services">Gottman Method couples therapy</a>, alongside relationship therapist Samar Samy. Sessions focus on practical communication and conflict management skills that couples can use from the first conversation.
 
 Sessions are available in person at our New Giza clinic, serving couples across New Giza, Sheikh Zayed, and the wider Cairo area — and online for couples across Egypt, Saudi Arabia, and the Middle East, including couples where one partner lives or travels abroad. All sessions are available in Arabic and English.
 
@@ -800,7 +816,7 @@ You don't need to be having problems to start. Your free 15-minute assessment wi
 
 ---
 
-**The way you handle conflict matters more than whether you have it — and it can be learned.** Reach out to Sama Wellness Therapy — 0113 094 6556. In person at our New Giza clinic, and online across Egypt, Saudi Arabia, and the Middle East.`,
+**The way you handle conflict matters more than whether you have it — and it can be learned.** Reach out to Sama Wellness Therapy — +20 113 094 6556. In person at our New Giza clinic, and online across Egypt, Saudi Arabia, and the Middle East.`,
   },
   {
     slug: "therapy-for-athletes-elite-performance",
@@ -812,6 +828,7 @@ You don't need to be having problems to start. Your free 15-minute assessment wi
     image: "/BLOG/images/therapy-for-athletes.jpg",
     readTime: "7 min read",
     date: "October 2026",
+    publishDate: "2026-10-15",
     author: "Counselor Sama",
     content: `At the highest level of sport, everyone is talented. Everyone trains hard, eats right, and has good coaching. So what separates the athlete who makes the national team, the final, or the Olympics from the one who comes very close?
 
@@ -851,7 +868,7 @@ Very often, that "something" is a belief. Beliefs we hold about ourselves quietl
 
 Many of these beliefs form early — from a harsh coach, a comparison with a sibling or teammate, a painful loss at a young age, or messages from home about what success means. Over time they start to feel like facts. An athlete may hold back without realizing it: playing safe instead of expressing their game, avoiding responsibility in key moments, or easing off just before the finish line, so that a loss never truly tests their ability.
 
-Therapy helps bring these beliefs into the open, understand where they came from, and test them against real evidence — through CBT, and where a pattern runs deeper, through approaches such as schema therapy. As those beliefs loosen, athletes often find that the talent was there all along. What changes is that they finally let themselves use it.
+Therapy helps bring these beliefs into the open, understand where they came from, and test them against real evidence — through CBT, and where a pattern runs deeper, through approaches such as <a style="color:var(--color-burgundy);text-decoration:underline;" href="/blog/therapeutic-techniques-and-therapist-credentials">schema therapy</a>. As those beliefs loosen, athletes often find that the talent was there all along. What changes is that they finally let themselves use it.
 
 ## How CBT Works With Athletes
 
@@ -891,7 +908,7 @@ Athletes work with strength coaches, nutritionists, and physiotherapists not bec
 
 ## Therapy for Athletes at Sama Wellness Therapy
 
-At our clinic in New Giza, serving athletes and sporting families from Sheikh Zayed, 6th of October, and across West Cairo, therapists on our team use CBT, DBT, and mindfulness-based approaches to help athletes build the mental side of their performance. Counseling psychologists Alia El Meteni and Haidy El Masry work with adolescents and adults, which suits both established athletes and young athletes in competitive academies.
+At our clinic in New Giza, serving athletes and sporting families from Sheikh Zayed, 6th of October, and across West Cairo, therapists on our team use CBT, DBT, and mindfulness-based approaches to help athletes build the mental side of their performance. Counseling psychologists <a style="color:var(--color-burgundy);text-decoration:underline;" href="/team">Alia El Meteni and Haidy El Masry</a> work with adolescents and adults, which suits both established athletes and young athletes in competitive academies.
 
 Because high-level athletes travel for camps and competitions, sessions are also available online across Egypt, Saudi Arabia, and the Middle East, in Arabic and English — so the work continues wherever your season takes you.
 
@@ -899,7 +916,7 @@ If you're already good, and you're ready to find out how much further you can go
 
 ---
 
-**The athletes who go furthest train their minds as seriously as their bodies.** Reach out to Sama Wellness Therapy — 0113 094 6556. In person at our New Giza clinic, and online across Egypt, Saudi Arabia, and the Middle East.`,
+**The athletes who go furthest train their minds as seriously as their bodies.** Reach out to Sama Wellness Therapy — +20 113 094 6556. In person at our New Giza clinic, and online across Egypt, Saudi Arabia, and the Middle East.`,
   },
 ];
 

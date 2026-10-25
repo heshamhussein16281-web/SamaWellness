@@ -41,7 +41,7 @@ export async function generateMetadata({
       url: canonicalUrl,
       locale: "ar_EG",
       siteName: "سما ويلنس ثيرابي",
-      publishedTime: post.date,
+      publishedTime: post.publishDate,
       authors: [post.author],
       images: [
         {

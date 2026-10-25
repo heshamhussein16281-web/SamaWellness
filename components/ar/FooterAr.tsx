@@ -29,7 +29,7 @@ export default function FooterAr() {
             </a>
             <span className="footer__contact-divider" aria-hidden="true">·</span>
             <a href="tel:+201130946556" className="footer__contact-link" dir="ltr">
-              (+2) 011 3094 6556
+              +20 113 094 6556
             </a>
             <span className="footer__contact-divider" aria-hidden="true">·</span>
             <a
