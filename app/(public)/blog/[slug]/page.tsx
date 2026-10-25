@@ -178,7 +178,7 @@ export default async function BlogPostPage({
         url: `${SITE_URL}/logo.png`,
       },
     },
-    datePublished: post.date,
+    datePublished: post.publishDate,
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": `${SITE_URL}/blog/${slug}`,
