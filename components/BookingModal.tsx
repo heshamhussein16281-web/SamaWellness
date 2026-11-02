@@ -118,7 +118,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
             <h2 className="booking-modal__heading">You&apos;ve Already Reached Out</h2>
             <p className="booking-modal__desc">
               {dupSrc === "form"
-                ? "We've received your request and will contact you on WhatsApp from 01130946556 shortly — no need to send it again."
+                ? "We've received your request and will contact you on WhatsApp from 01130946556 shortly."
                 : "You've already contacted us on WhatsApp — we'll reply to you there."}
             </p>
             {dupSrc === "wa" && (

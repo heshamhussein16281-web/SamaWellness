@@ -118,7 +118,7 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
             <h2 className="booking-modal__heading">إنت تواصلت معانا بالفعل</h2>
             <p className="booking-modal__desc">
               {dupSrc === "form"
-                ? "استلمنا طلبك وهنتواصل معاك على واتساب من رقم 01130946556 قريب، مش محتاج تبعته تاني."
+                ? "استلمنا طلبك وهنتواصل معاك على واتساب من رقم 01130946556 قريب."
                 : "إنت تواصلت معانا على واتساب بالفعل، هنرد عليك هناك."}
             </p>
             {dupSrc === "wa" && (
