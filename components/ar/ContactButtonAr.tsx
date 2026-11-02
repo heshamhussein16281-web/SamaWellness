@@ -1,9 +1,40 @@
 "use client";
 
+import { useState, useEffect } from "react";
+
+const WA_BASE = "https://api.whatsapp.com/send?phone=201130946556&text=";
+const TEXT_DEFAULT = "%D8%A3%D9%86%D8%A7%20%D8%B9%D8%A7%D9%8A%D8%B2%2F%D8%A9%20%D8%A3%D8%AD%D8%AC%D8%B2%20%D8%AA%D9%82%D9%8A%D9%8A%D9%85";
+const TEXT_FORM = "%D8%A3%D9%86%D8%A7%20%D8%A8%D8%B9%D8%AA%20%D9%81%D9%88%D8%B1%D9%85%20%D8%A7%D9%84%D8%AD%D8%AC%D8%B2%20%D8%A8%D8%A7%D9%84%D9%81%D8%B9%D9%84";
+const THREE_DAYS = 3 * 24 * 60 * 60 * 1000;
+
 export default function ContactButtonAr() {
+  const [href, setHref] = useState(WA_BASE + TEXT_DEFAULT);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("sama_lead");
+      if (raw) {
+        const data = JSON.parse(raw);
+        if (Date.now() - data.ts > THREE_DAYS) {
+          localStorage.removeItem("sama_lead");
+        } else if (data.src === "form") {
+          setHref(WA_BASE + TEXT_FORM);
+        }
+      }
+    } catch {}
+  }, []);
+
   const handleClick = () => {
     try {
       const raw = localStorage.getItem("sama_lead");
+      if (raw) {
+        const data = JSON.parse(raw);
+        if (Date.now() - data.ts > THREE_DAYS) {
+          localStorage.removeItem("sama_lead");
+          localStorage.setItem("sama_lead", JSON.stringify({ ts: Date.now(), src: "wa" }));
+          return;
+        }
+      }
       if (!raw) {
         localStorage.setItem("sama_lead", JSON.stringify({ ts: Date.now(), src: "wa" }));
       }
@@ -12,7 +43,7 @@ export default function ContactButtonAr() {
 
   return (
     <a
-      href="https://api.whatsapp.com/send?phone=201130946556&text=%D8%A3%D9%86%D8%A7%20%D8%B9%D8%A7%D9%8A%D8%B2%2F%D8%A9%20%D8%A3%D8%AD%D8%AC%D8%B2%20%D8%AA%D9%82%D9%8A%D9%8A%D9%85"
+      href={href}
       target="_blank"
       rel="noopener noreferrer"
       className="contact-floating-btn contact-floating-btn--whatsapp"

@@ -31,6 +31,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
   const [note, setNote] = useState("");
   const [sessionFormat, setSessionFormat] = useState<"in-person" | "online" | "either">("either");
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error" | "duplicate">("idle");
+  const [dupSrc, setDupSrc] = useState<string | null>(null);
   const nameRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -38,6 +39,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
       document.body.style.overflow = "hidden";
       const lead = getSamaLead();
       if (lead) {
+        setDupSrc(lead.src);
         setStatus("duplicate");
       } else {
         setTimeout(() => nameRef.current?.focus(), 350);
@@ -56,6 +58,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
     setNote("");
     setSessionFormat("either");
     setStatus("idle");
+    setDupSrc(null);
     window.history.pushState({}, "", window.location.pathname);
     onClose();
   }, [onClose]);
@@ -114,8 +117,21 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
             </div>
             <h2 className="booking-modal__heading">You&apos;ve Already Reached Out</h2>
             <p className="booking-modal__desc">
-              We have your details and will contact you on WhatsApp from 01130946556 within a few hours. No need to submit again.
+              {dupSrc === "form"
+                ? "We've received your request and will contact you on WhatsApp from 01130946556 shortly — no need to send it again."
+                : "You've already contacted us on WhatsApp — we'll reply to you there."}
             </p>
+            {dupSrc === "wa" && (
+              <a
+                href="https://api.whatsapp.com/send?phone=201130946556&text=I%27d%20like%20to%20book%20an%20assessment"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="booking-modal__btn"
+                style={{ textAlign: "center", textDecoration: "none", display: "block" }}
+              >
+                Open WhatsApp
+              </a>
+            )}
             <button onClick={resetAndClose} className="booking-modal__btn booking-modal__btn--outline">
               Close
             </button>
@@ -231,8 +247,18 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                   disabled={status === "sending"}
                   className="booking-modal__btn"
                 >
-                  {status === "sending" ? "Sending…" : "Request Callback"}
+                  {status === "sending" ? "Sending…" : "Book Assessment"}
                 </button>
+                <a
+                  href="https://api.whatsapp.com/send?phone=201130946556&text=I%27d%20like%20to%20book%20an%20assessment"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="booking-modal__btn booking-modal__btn--outline"
+                  style={{ textAlign: "center", textDecoration: "none" }}
+                  onClick={() => { setSamaLead("wa"); setTimeout(resetAndClose, 300); }}
+                >
+                  Message on WhatsApp
+                </a>
               </div>
             </form>
           </>

@@ -192,7 +192,7 @@ const faqJsonLd = {
       name: "How much does a session cost?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Sessions start from EGP 2,000. The exact fee depends on the therapist and type of session; our team will confirm it when we contact you on WhatsApp.",
+        text: "Sessions start from EGP 2,000. After your assessment, we match you with the right therapist and confirm your session fee on WhatsApp.",
       },
     },
     {

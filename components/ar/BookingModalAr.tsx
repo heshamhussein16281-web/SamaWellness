@@ -31,6 +31,7 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
   const [note, setNote] = useState("");
   const [sessionFormat, setSessionFormat] = useState<"in-person" | "online" | "either">("either");
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error" | "duplicate">("idle");
+  const [dupSrc, setDupSrc] = useState<string | null>(null);
   const nameRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -38,6 +39,7 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
       document.body.style.overflow = "hidden";
       const lead = getSamaLead();
       if (lead) {
+        setDupSrc(lead.src);
         setStatus("duplicate");
       } else {
         setTimeout(() => nameRef.current?.focus(), 350);
@@ -56,6 +58,7 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
     setNote("");
     setSessionFormat("either");
     setStatus("idle");
+    setDupSrc(null);
     window.history.pushState({}, "", window.location.pathname);
     onClose();
   }, [onClose]);
@@ -114,8 +117,21 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
             </div>
             <h2 className="booking-modal__heading">إنت تواصلت معانا بالفعل</h2>
             <p className="booking-modal__desc">
-              بياناتك عندنا وهنتواصل معاك على واتساب من رقم 01130946556 خلال ساعات قليلة. مش محتاج تبعت تاني.
+              {dupSrc === "form"
+                ? "استلمنا طلبك وهنتواصل معاك على واتساب من رقم 01130946556 قريب، مش محتاج تبعته تاني."
+                : "إنت تواصلت معانا على واتساب بالفعل، هنرد عليك هناك."}
             </p>
+            {dupSrc === "wa" && (
+              <a
+                href="https://api.whatsapp.com/send?phone=201130946556&text=%D8%A3%D9%86%D8%A7%20%D8%B9%D8%A7%D9%8A%D8%B2%2F%D8%A9%20%D8%A3%D8%AD%D8%AC%D8%B2%20%D8%AA%D9%82%D9%8A%D9%8A%D9%85"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="booking-modal__btn"
+                style={{ textAlign: "center", textDecoration: "none", display: "block" }}
+              >
+                افتح واتساب
+              </a>
+            )}
             <button onClick={resetAndClose} className="booking-modal__btn booking-modal__btn--outline">
               إغلاق
             </button>
@@ -232,8 +248,18 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
                   disabled={status === "sending"}
                   className="booking-modal__btn"
                 >
-                  {status === "sending" ? "جاري الإرسال…" : "اطلب مكالمة"}
+                  {status === "sending" ? "جاري الإرسال…" : "احجز التقييم"}
                 </button>
+                <a
+                  href="https://api.whatsapp.com/send?phone=201130946556&text=%D8%A3%D9%86%D8%A7%20%D8%B9%D8%A7%D9%8A%D8%B2%2F%D8%A9%20%D8%A3%D8%AD%D8%AC%D8%B2%20%D8%AA%D9%82%D9%8A%D9%8A%D9%85"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="booking-modal__btn booking-modal__btn--outline"
+                  style={{ textAlign: "center", textDecoration: "none" }}
+                  onClick={() => { setSamaLead("wa"); setTimeout(resetAndClose, 300); }}
+                >
+                  تواصل على واتساب
+                </a>
               </div>
             </form>
           </>

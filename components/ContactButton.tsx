@@ -1,9 +1,40 @@
 "use client";
 
+import { useState, useEffect } from "react";
+
+const WA_BASE = "https://api.whatsapp.com/send?phone=201130946556&text=";
+const TEXT_DEFAULT = "I%27d%20like%20to%20book%20an%20assessment";
+const TEXT_FORM = "I%20already%20submitted%20the%20booking%20form";
+const THREE_DAYS = 3 * 24 * 60 * 60 * 1000;
+
 export default function ContactButton() {
+  const [href, setHref] = useState(WA_BASE + TEXT_DEFAULT);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("sama_lead");
+      if (raw) {
+        const data = JSON.parse(raw);
+        if (Date.now() - data.ts > THREE_DAYS) {
+          localStorage.removeItem("sama_lead");
+        } else if (data.src === "form") {
+          setHref(WA_BASE + TEXT_FORM);
+        }
+      }
+    } catch {}
+  }, []);
+
   const handleClick = () => {
     try {
       const raw = localStorage.getItem("sama_lead");
+      if (raw) {
+        const data = JSON.parse(raw);
+        if (Date.now() - data.ts > THREE_DAYS) {
+          localStorage.removeItem("sama_lead");
+          localStorage.setItem("sama_lead", JSON.stringify({ ts: Date.now(), src: "wa" }));
+          return;
+        }
+      }
       if (!raw) {
         localStorage.setItem("sama_lead", JSON.stringify({ ts: Date.now(), src: "wa" }));
       }
@@ -12,7 +43,7 @@ export default function ContactButton() {
 
   return (
     <a
-      href="https://api.whatsapp.com/send?phone=201130946556&text=I%27d%20like%20to%20book%20an%20assessment"
+      href={href}
       target="_blank"
       rel="noopener noreferrer"
       className="contact-floating-btn contact-floating-btn--whatsapp"
