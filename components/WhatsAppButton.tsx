@@ -1,7 +1,31 @@
+"use client";
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+
 export default function WhatsAppButton() {
+  const [prefill, setPrefill] = useState("");
+  const pathname = usePathname();
+  const isAr = pathname.startsWith("/ar");
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("sama_lead");
+      if (raw) {
+        const data = JSON.parse(raw);
+        if (Date.now() - data.ts < 3 * 24 * 60 * 60 * 1000 && data.src === "form") {
+          setPrefill(isAr ? "أنا بعت فورم الحجز بالفعل" : "I already submitted the booking form");
+        }
+      }
+    } catch {}
+  }, [isAr]);
+
+  const href = prefill
+    ? `https://api.whatsapp.com/send?phone=201130946556&text=${encodeURIComponent(prefill)}`
+    : "https://api.whatsapp.com/send?phone=201130946556";
+
   return (
     <a
-      href="https://api.whatsapp.com/send?phone=201130946556"
+      href={href}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat on WhatsApp"

@@ -3,7 +3,7 @@
 import { PhoneCall, UserCheck, HeartHandshake } from "lucide-react";
 
 const steps = [
-  { icon: PhoneCall, title: "Book Your Assessment", desc: "A free 15-minute call with Counselor Sama." },
+  { icon: PhoneCall, title: "Book Your Assessment", desc: "A 15-minute assessment with Counselor Sama." },
   { icon: UserCheck, title: "Get Personally Matched", desc: "Counselor Sama selects the right therapist for you." },
   { icon: HeartHandshake, title: "Begin Your Journey", desc: "Start therapy with someone who truly understands you." },
 ];

@@ -9,7 +9,7 @@ export default function ServicesIntroSplit() {
           <p className="services-intro-split__desc">
             At Sama Wellness, we believe healing starts when you feel truly understood.
             Our licensed therapists offer individual, couple, and group therapy — each
-            approach personally matched to your needs through a free 15-minute assessment
+            approach personally matched to your needs through a 15-minute assessment
             with Counselor Sama.
           </p>
           <p className="services-intro-split__desc">

@@ -2,7 +2,7 @@
 
 export default function MidCTAAr() {
   return (
-    <section className="mid-cta" aria-label="احجز تقييم مجاني">
+    <section className="mid-cta" aria-label="احجز تقييمك">
       <div className="mid-cta__inner">
         <p className="mid-cta__text">
           مش متأكد تبدأ منين؟&ensp;
@@ -12,7 +12,7 @@ export default function MidCTAAr() {
             rel="noopener noreferrer"
             className="mid-cta__link"
           >
-            احجز تقييم مجاني ١٥ دقيقة&nbsp;&larr;
+            احجز تقييم ١٥ دقيقة&nbsp;&larr;
           </a>
         </p>
       </div>

@@ -35,7 +35,7 @@ const tajawal = Tajawal({
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.samawellnesstherapy.com"),
   title: "Therapist in New Giza & Sheikh Zayed, Cairo | Sama Wellness Therapy",
-  description: "Individual, couples & group therapy in New Giza & Sheikh Zayed, Cairo. Licensed therapists matched to your needs. Book a free assessment.",
+  description: "Individual, couples & group therapy in New Giza & Sheikh Zayed, Cairo. Licensed therapists matched to your needs. Book your assessment.",
   icons: {
     icon: "/logo.png",
     apple: "/logo.png",

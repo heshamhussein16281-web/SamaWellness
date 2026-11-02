@@ -1,7 +1,7 @@
 import { PhoneCall, UserCheck, HeartHandshake } from "lucide-react";
 
 const steps = [
-  { icon: PhoneCall, title: "احجز تقييمك", desc: "مكالمة مجانية ١٥ دقيقة مع الكاونسلر سما." },
+  { icon: PhoneCall, title: "احجز تقييمك", desc: "تقييم ١٥ دقيقة مع الكاونسلر سما." },
   { icon: UserCheck, title: "معالج مُختار خصيصاً ليك", desc: "الكاونسلر سما بتختار المعالج المناسب ليك." },
   { icon: HeartHandshake, title: "ابدأ رحلتك", desc: "ابدأ العلاج مع حد فعلاً بيفهمك." },
 ];

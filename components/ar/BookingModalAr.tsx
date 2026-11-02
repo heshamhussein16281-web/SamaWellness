@@ -1,6 +1,23 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
+
+function getSamaLead(): { ts: number; src: string } | null {
+  try {
+    const raw = localStorage.getItem("sama_lead");
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    if (Date.now() - data.ts > 3 * 24 * 60 * 60 * 1000) {
+      localStorage.removeItem("sama_lead");
+      return null;
+    }
+    return data;
+  } catch { return null; }
+}
+
+function setSamaLead(src: "form" | "wa") {
+  try { localStorage.setItem("sama_lead", JSON.stringify({ ts: Date.now(), src })); } catch {}
+}
 
 interface BookingModalArProps {
   isOpen: boolean;
@@ -13,13 +30,18 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
   const [preferredTime, setPreferredTime] = useState("");
   const [note, setNote] = useState("");
   const [sessionFormat, setSessionFormat] = useState<"in-person" | "online" | "either">("either");
-  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error" | "duplicate">("idle");
   const nameRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
-      setTimeout(() => nameRef.current?.focus(), 350);
+      const lead = getSamaLead();
+      if (lead) {
+        setStatus("duplicate");
+      } else {
+        setTimeout(() => nameRef.current?.focus(), 350);
+      }
       window.history.pushState({}, "", `${window.location.pathname}?book=open`);
     } else {
       document.body.style.overflow = "";
@@ -27,7 +49,7 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
     return () => { document.body.style.overflow = ""; };
   }, [isOpen]);
 
-  const resetAndClose = () => {
+  const resetAndClose = useCallback(() => {
     setName("");
     setPhone("");
     setPreferredTime("");
@@ -36,14 +58,13 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
     setStatus("idle");
     window.history.pushState({}, "", window.location.pathname);
     onClose();
-  };
+  }, [onClose]);
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => { if (e.key === "Escape") resetAndClose(); };
     if (isOpen) window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, onClose]);
+  }, [isOpen, resetAndClose]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,6 +85,7 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
       });
 
       if (!res.ok) throw new Error("Request failed");
+      setSamaLead("form");
       setStatus("success");
       window.history.pushState({}, "", `${window.location.pathname}?book=success`);
     } catch {
@@ -82,7 +104,23 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
           </svg>
         </button>
 
-        {status === "success" ? (
+        {status === "duplicate" ? (
+          <div className="booking-modal__success">
+            <div className="booking-modal__success-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--color-olive)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+            </div>
+            <h2 className="booking-modal__heading">إنت تواصلت معانا بالفعل</h2>
+            <p className="booking-modal__desc">
+              بياناتك عندنا وهنتواصل معاك على واتساب من رقم 01130946556 خلال ساعات قليلة. مش محتاج تبعت تاني.
+            </p>
+            <button onClick={resetAndClose} className="booking-modal__btn booking-modal__btn--outline">
+              إغلاق
+            </button>
+          </div>
+        ) : status === "success" ? (
           <div className="booking-modal__success">
             <div className="booking-modal__success-icon">
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--color-olive)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -92,7 +130,7 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
             </div>
             <h2 className="booking-modal__heading">هنتواصل معاك قريب</h2>
             <p className="booking-modal__desc">
-              فريقنا هيتواصل معاك في خلال ساعات قليلة لحجز تقييمك المجاني مع الكاونسلر سما.
+              هنتواصل معاك على واتساب من رقم 01130946556 خلال ساعات قليلة عشان نحدد معاد التقييم، مش محتاج تبعتلنا رسالة.
             </p>
             <button onClick={resetAndClose} className="booking-modal__btn booking-modal__btn--outline">
               إغلاق
@@ -100,9 +138,9 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
           </div>
         ) : (
           <>
-            <h2 className="booking-modal__heading">احجز تقييمك المجاني</h2>
+            <h2 className="booking-modal__heading">احجز تقييمك</h2>
             <p className="booking-modal__desc">
-              سيب بياناتك وهنتصل بيك لحجز تقييم مجاني ١٥ دقيقة مع الكاونسلر سما.
+              احجز تقييم 15 دقيقة مع الأخصائية سما عشان نختارلك المعالج المناسب. التقييم جزء من جلستك الأولى.
             </p>
 
             <form onSubmit={handleSubmit} className="booking-modal__form">
@@ -196,18 +234,6 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
                 >
                   {status === "sending" ? "جاري الإرسال…" : "اطلب مكالمة"}
                 </button>
-
-                <a
-                  href="https://api.whatsapp.com/send?phone=201130946556&text=%D8%A3%D9%86%D8%A7%20%D8%B9%D8%A7%D9%8A%D8%B2%2F%D8%A9%20%D8%A3%D8%AD%D8%AC%D8%B2%20%D8%AA%D9%82%D9%8A%D9%8A%D9%85"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="booking-modal__btn booking-modal__btn--outline booking-modal__btn--whatsapp"
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-1.746-.873-2.888-1.56-4.035-3.537-.305-.526.305-.489.873-1.629.099-.198.05-.371-.05-.52-.098-.148-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.009-.371-.011-.57-.011-.197 0-.52.075-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.148.198 2.042 3.112 4.945 4.238 2.904 1.126 2.904.751 3.424.703.52-.05 1.69-.692 1.927-1.361.238-.67.238-1.24.173-1.362-.064-.123-.242-.198-.519-.347zM12.004 2C6.486 2 2 6.486 2 12.004c0 2.098.638 4.053 1.733 5.68L2.5 22l4.436-1.213A9.956 9.956 0 0 0 12.004 22c5.518 0 10.004-4.486 10.004-10.004C22.008 6.486 17.522 2 12.004 2zm0 18.26a8.23 8.23 0 0 1-4.43-1.294l-.317-.2-3.21.878.85-3.13-.208-.321a8.233 8.233 0 0 1-1.287-4.425c0-4.556 3.707-8.262 8.262-8.262 4.555 0 8.262 3.706 8.262 8.262 0 4.555-3.707 8.262-8.262 8.262z" />
-                  </svg>
-                  كلمنا على واتساب
-                </a>
               </div>
             </form>
           </>

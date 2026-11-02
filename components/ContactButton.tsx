@@ -1,4 +1,15 @@
+"use client";
+
 export default function ContactButton() {
+  const handleClick = () => {
+    try {
+      const raw = localStorage.getItem("sama_lead");
+      if (!raw) {
+        localStorage.setItem("sama_lead", JSON.stringify({ ts: Date.now(), src: "wa" }));
+      }
+    } catch {}
+  };
+
   return (
     <a
       href="https://api.whatsapp.com/send?phone=201130946556&text=I%27d%20like%20to%20book%20an%20assessment"
@@ -6,6 +17,7 @@ export default function ContactButton() {
       rel="noopener noreferrer"
       className="contact-floating-btn contact-floating-btn--whatsapp"
       title="Chat on WhatsApp"
+      onClick={handleClick}
     >
       <div className="contact-btn-icon contact-btn-icon--only">
         <svg width="38" height="38" fill="white" viewBox="0 0 24 24">

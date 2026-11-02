@@ -84,7 +84,7 @@ export default function HeroAr() {
           fontStyle: "italic",
           opacity: 0.85,
         }}>
-          مكالمة مجانية ١٥ دقيقة لاختيار المعالج المناسب ليك
+          تقييم ١٥ دقيقة لاختيار المعالج المناسب ليك
         </p>
       </div>
 

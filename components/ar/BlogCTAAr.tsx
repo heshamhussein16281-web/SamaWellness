@@ -34,7 +34,7 @@ export default function BlogCTAAr() {
           lineHeight: 1.8,
         }}
       >
-        تواصل مع سما ويلنس ثيرابي لحجز مكالمة تقييم مجانية مدتها ١٥ دقيقة.
+        تواصل مع سما ويلنس ثيرابي لحجز تقييم ١٥ دقيقة.
       </p>
       <button
         onClick={() => setOpen(true)}

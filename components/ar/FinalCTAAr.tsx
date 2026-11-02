@@ -11,7 +11,7 @@ export default function FinalCTAAr() {
         <div className="final-cta__inner">
           <h2 className="final-cta__heading">مستعد تاخد الخطوة الأولى؟</h2>
           <p className="final-cta__desc">
-            احجز تقييم مجاني ١٥ دقيقة وهنختارلك المعالج المناسب.
+            احجز تقييم ١٥ دقيقة وهنختارلك المعالج المناسب.
           </p>
           <button
             onClick={() => setIsModalOpen(true)}

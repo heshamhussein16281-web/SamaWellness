@@ -81,7 +81,7 @@ export default function Hero() {
           fontStyle: "italic",
           opacity: 0.85,
         }}>
-          A free 15-minute call to match you with the right therapist
+          A 15-minute assessment to match you with the right therapist
         </p>
       </div>
 

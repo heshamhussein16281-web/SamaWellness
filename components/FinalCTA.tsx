@@ -12,7 +12,7 @@ export default function FinalCTA() {
         <div className="final-cta__inner">
           <h2 className="final-cta__heading">Ready to Take the First Step?</h2>
           <p className="final-cta__desc">
-            Book a free 15-minute assessment and get matched with the right therapist.
+            Book a 15-minute assessment and get matched with the right therapist.
           </p>
           <button
             onClick={() => setIsModalOpen(true)}
