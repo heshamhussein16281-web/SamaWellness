@@ -918,6 +918,106 @@ If you're already good, and you're ready to find out how much further you can go
 
 **The athletes who go furthest train their minds as seriously as their bodies.** Reach out to Sama Wellness Therapy — +20 113 094 6556. In person at our New Giza clinic, and online across Egypt, Saudi Arabia, and the Middle East.`,
   },
+  {
+    slug: "addiction-treatment-egypt",
+    title: "How Addiction Is Treated: A Clear Guide to Recovery, From Substances to Screens",
+    metaTitle: "Addiction Treatment & Counseling in New Giza | Sama Wellness Therapy",
+    metaDescription: "Can every kind of addiction be treated? Learn how recovery works — from substances to gambling and gaming — and what treatment involves. New Giza & online.",
+    excerpt: "Addiction can involve substances, behaviors, or both — and each follows a similar cycle in the brain. This guide explains what addiction actually is, why willpower alone rarely works, and how evidence-based treatment helps.",
+    category: "Therapy Insights",
+    image: "/BLOG/images/addiction-treatment.jpg",
+    readTime: "8 min read",
+    date: "November 2026",
+    publishDate: "2026-11-02",
+    author: "Counselor Sama",
+    content: `What do cocaine, a glass of whisky, a betting app, and a video game have in common?
+
+On the surface, very little. But inside the brain, they can follow the same path. Each can become a reliable way to feel relief, comfort, or excitement — until a person finds they keep returning to it even when it's costing them their health, money, relationships, or peace of mind.
+
+That shared path is also why addiction, in all its forms, can be treated. Not with willpower alone, and not overnight — but with the right understanding, the right methods, and the right support. This guide explains how.
+
+## What Addiction Actually Is
+
+Addiction is a pattern of continuing to use a substance or repeat a behavior despite clear harm, along with growing difficulty controlling it. Three features usually show up together:
+
+- **Loss of control** — using more, more often, or for longer than intended, and struggling to cut down
+- **Continuing despite consequences** — at work, at home, in relationships, or with health
+- **Cravings and dependence** — strong urges, and discomfort or withdrawal when stopping
+
+It isn't a moral failing or a lack of character. Over time, the brain's reward system learns to rely on the substance or behavior to feel "normal," and ordinary sources of pleasure — family, work, hobbies — start to matter less. Understanding that is the starting point for real recovery.
+
+## The Many Faces of Addiction
+
+Addiction can involve substances, behaviors, or both:
+
+- **Alcohol**
+- **Cocaine**
+- **Party and recreational drugs**
+- **Cannabis and hashish**
+- **Prescription medications** — such as anti-anxiety medication, sleeping pills, and stimulant medications used to stay focused
+- **Other drugs**
+- **Gambling and sports-betting apps**
+- **Gaming**
+- **Compulsive sexual behavior**, including excessive pornography use
+- **Social media and phone use**
+- **Compulsive shopping**
+
+Some of these are harder to talk about than others. Compulsive sexual behavior, including excessive pornography use, often carries so much shame that people stay silent for years, even with a partner. It follows the same cycle as any other addiction — and it responds to the same kind of confidential, non-judgmental treatment.
+
+The substance or behavior differs, but the underlying cycle — trigger, craving, use, short-term relief, regret — is often strikingly similar. That's why evidence-based treatment methods can be adapted to almost any form of addiction.
+
+## Signs It May Be Time to Get Help
+
+A few honest questions worth saving and asking yourself — or thinking about for someone you love:
+
+- Have I tried to cut down or stop, and found I couldn't?
+- Do I use more, or for longer, than I planned?
+- Am I hiding how much I use from the people close to me?
+- Has it caused problems with my work, studies, money, or relationships?
+- Do I feel restless, irritable, or unwell when I stop?
+- Has it become my main way of coping with stress, sadness, or boredom?
+
+If several of these feel familiar, it doesn't mean all is lost. It means this is a good moment to talk to someone who understands addiction.
+
+## Why "Just Stop" Rarely Works
+
+Most people struggling with addiction have already tried to stop — often many times. The difficulty isn't a lack of desire to change. It's that addiction usually began as a **solution**: a way to calm anxiety, numb painful memories, escape pressure, fill loneliness, or simply feel something.
+
+Take that solution away without replacing it, and the pull to return is enormous. Effective treatment works on both levels at once: the habit itself, and the need it was meeting.
+
+## How Addiction Is Treated
+
+Effective addiction treatment isn't one technique — it's a combination of evidence-based approaches, matched to the person and the stage of recovery they're in. At Sama Wellness Therapy, treatment draws on:
+
+- **Client-centered motivational work** — many people arrive unsure whether they're ready to change. Rather than pressure or lectures, this approach helps a person explore their own reasons for change, which is what makes change last.
+- **Cognitive Behavioral Therapy (CBT)** — identifying the triggers, thoughts, and situations that lead to use, and building practical skills to handle cravings, stress, and difficult emotions differently.
+- **Relapse prevention** — mapping high-risk situations, recognizing early warning signs, and building a clear plan for what to do when cravings or setbacks happen.
+- **Couples and family counseling** — addiction affects everyone at home. Involving family helps rebuild trust, set healthy boundaries, end cycles of blame and enabling, and turn the family into part of the recovery.
+- **Harm reduction, where appropriate** — meeting people where they are, reducing risk and damage while working toward longer-term goals.
+- **Treating what sits underneath** — anxiety, depression, trauma, or grief often travel alongside addiction. Our wider team of psychologists can support these alongside addiction counseling.
+
+## When Medical Support Is Needed
+
+For some substances — particularly alcohol, sleeping pills, and anti-anxiety medications — stopping suddenly can be medically dangerous. In these cases, safe recovery may begin with medically supervised withdrawal. Part of good addiction care is recognizing when this is needed, and guiding the person to the right level of medical support before or alongside counseling.
+
+## Recovery Is a Process, Not a Single Moment
+
+Recovery rarely follows a straight line. Setbacks are common, and in good treatment they're treated as information — a chance to understand what happened and strengthen the plan — not as failure or a reason to give up.
+
+What changes over time is real: fewer and weaker cravings, better ways to cope, rebuilt relationships, and a life that slowly fills back up with the things that matter.
+
+## Addiction Counseling at Sama Wellness Therapy
+
+Addiction counseling at Sama Wellness Therapy is led by **Kareem Nagi**, a certified addiction counsellor who has worked at the substance misuse unit of Behman Hospital since 2013, where he previously served as Head of the Addiction Team. Kareem has supported individuals, couples, families, and groups across all stages of recovery — in both inpatient and outpatient settings — and brings a client-centered approach grounded in CBT and relapse prevention.
+
+At our clinic in New Giza, serving clients and families from Sheikh Zayed, 6th of October, and across West Cairo, every conversation is completely confidential. Sessions are available in Arabic and English, in person or online across Egypt, Saudi Arabia, and the Middle East — including for families supporting a loved one from another city or country.
+
+Whether you're worried about yourself or about someone you love — if that's where you are right now, that's exactly what sessions are for.
+
+---
+
+**Every form of addiction follows a pattern — and patterns can be changed.** Reach out to Sama Wellness Therapy — 0113 094 6556. In person at our New Giza clinic, and online across Egypt, Saudi Arabia, and the Middle East.`,
+  },
 ];
 
 export function getPostBySlug(slug: string): BlogPost | undefined {
