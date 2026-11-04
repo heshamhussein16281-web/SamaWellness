@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 
 const links = [
   { label: "الرئيسية", href: "/ar" },
@@ -51,9 +52,12 @@ export default function NavbarAr() {
           zIndex: 10,
         }}
       >
-        <img
-          src="/logo.png"
+        <Image
+          src="/logo.webp"
           alt="ساما ويلنس ثيرابي"
+          width={182}
+          height={182}
+          sizes="(max-width: 768px) 130px, 182px"
           style={{
             width: "182px",
             height: "182px",

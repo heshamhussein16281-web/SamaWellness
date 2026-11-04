@@ -27,6 +27,7 @@
    ======================================== */
 
 "use client";
+import Image from "next/image";
 
 /**
  * Service Data
@@ -44,17 +45,17 @@ const services = [
   {
     title: "Individual Therapy",
     desc: "Focused one-on-one sessions helping you explore personal challenges, manage stress, and develop healthy coping strategies in a safe clinical space.",
-    image: "/individual-therapy.jpg",
+    image: "/individual-therapy.webp",
   },
   {
     title: "Couple Therapy",
     desc: "Professional guidance for partners looking to improve communication, resolve recurring conflicts, and build a stronger relational foundation together.",
-    image: "/couple-therapy.jpg",
+    image: "/couple-therapy.webp",
   },
   {
     title: "Group Therapy",
     desc: "Healing within a clinically guided community. Shared experiences provide mutual support and diverse perspectives on your path to wellness.",
-    image: "/group-therapy.jpg",
+    image: "/group-therapy.webp",
   },
 ];
 
@@ -112,10 +113,12 @@ export default function Services() {
                 Image Frame (220px height, zoom on hover)
                 ────────────────────────────── */}
             <div className="service-card__image-wrap">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={s.image}
                 alt={s.title}
+                width={678}
+                height={510}
+                sizes="(max-width: 980px) 100vw, 380px"
                 className="service-card__image"
               />
             </div>

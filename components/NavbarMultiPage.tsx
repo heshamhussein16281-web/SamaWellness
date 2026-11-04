@@ -12,6 +12,7 @@
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 
 const links = [
   { label: "HOME",         href: "/"         },
@@ -62,10 +63,12 @@ export default function NavbarMultiPage() {
           zIndex: 10,
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/logo.png"
+        <Image
+          src="/logo.webp"
           alt="Sama Wellness Therapy"
+          width={182}
+          height={182}
+          sizes="(max-width: 768px) 130px, 182px"
           style={{
             width: "182px",
             height: "182px",

@@ -16,10 +16,13 @@
    ======================================== */
 
 import Link from "next/link";
+import Image from "next/image";
 
 export type Teaser = {
   href: string;
   image: string;
+  imageWidth: number;
+  imageHeight: number;
   title: string;
   desc: string;
   cta: string;
@@ -28,28 +31,36 @@ export type Teaser = {
 export const teasers: Teaser[] = [
   {
     href: "/services",
-    image: "/individual-therapy.jpg",
+    image: "/individual-therapy.webp",
+    imageWidth: 678,
+    imageHeight: 510,
     title: "Our Services",
     desc: "Individual, couple, and group therapy — in-person or online.",
     cta: "Explore our services",
   },
   {
     href: "/team",
-    image: "/team%20photo.jpg",
+    image: "/team-photo.webp",
+    imageWidth: 993,
+    imageHeight: 1240,
     title: "The Team Dedicated to Your Wellness",
     desc: "Meet the therapists guiding your journey to healing.",
     cta: "Meet the team",
   },
   {
     href: "/rooms",
-    image: "/rooms-serenity1.jpg",
+    image: "/rooms-serenity1.webp",
+    imageWidth: 1240,
+    imageHeight: 828,
     title: "Our Therapy Spaces",
     desc: "Thoughtfully designed environments for healing.",
     cta: "See our spaces",
   },
   {
     href: "/ask",
-    image: "/sama2_nobg.png",
+    image: "/sama2_nobg.webp",
+    imageWidth: 640,
+    imageHeight: 523,
     title: "Ask Counselor Sama",
     desc: "Share a wellness question and get authentic guidance.",
     cta: "Ask a question",
@@ -63,8 +74,14 @@ export default function TeaserGrid({ items = teasers }: { items?: Teaser[] }) {
         {items.map((t) => (
           <Link key={t.href} href={t.href} className="teaser-card">
             <div className="teaser-card__image-wrap">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={t.image} alt={t.title} className="teaser-card__image" />
+              <Image
+                src={t.image}
+                alt={t.title}
+                width={t.imageWidth}
+                height={t.imageHeight}
+                sizes="(max-width: 560px) 100vw, (max-width: 980px) 50vw, 630px"
+                className="teaser-card__image"
+              />
             </div>
             <div className="teaser-card__body">
               <h3 className="teaser-card__title">{t.title}</h3>

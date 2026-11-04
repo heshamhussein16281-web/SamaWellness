@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -11,8 +12,7 @@ export default function Footer() {
         <div className="footer__band">
 
           <a href="/" className="footer__brand">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="Sama Wellness Therapy" className="footer__logo" />
+            <Image src="/logo.webp" alt="Sama Wellness Therapy" width={260} height={260} sizes="260px" className="footer__logo" />
             <span className="footer__brand-name">Sama Wellness Therapy</span>
           </a>
 

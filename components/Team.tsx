@@ -26,6 +26,7 @@
 
 "use client";
 import { useState } from "react";
+import Image from "next/image";
 import { therapists } from "@/lib/team-data";
 import BookingModal from "@/components/BookingModal";
 
@@ -71,10 +72,12 @@ function TherapistCard({ therapist }: { therapist: typeof therapists[0] }) {
           Photo Frame (Grid: rows 1-2, col 1)
           ─────────────────────────────────── */}
       <div className="team-card__photo-wrap">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src={therapist.image}
           alt={therapist.name}
+          width={therapist.imageWidth}
+          height={therapist.imageHeight}
+          sizes="160px"
           className="team-card__photo"
         />
       </div>

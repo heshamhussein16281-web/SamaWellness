@@ -1,8 +1,11 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export type Teaser = {
   href: string;
   image: string;
+  imageWidth: number;
+  imageHeight: number;
   title: string;
   desc: string;
   cta: string;
@@ -11,28 +14,36 @@ export type Teaser = {
 export const teasers: Teaser[] = [
   {
     href: "/ar/services",
-    image: "/individual-therapy.jpg",
+    image: "/individual-therapy.webp",
+    imageWidth: 678,
+    imageHeight: 510,
     title: "خدماتنا",
     desc: "علاج فردي، زوجي، وجماعي — حضورياً أو أونلاين.",
     cta: "اكتشف خدماتنا",
   },
   {
     href: "/ar/team",
-    image: "/team%20photo.jpg",
+    image: "/team-photo.webp",
+    imageWidth: 993,
+    imageHeight: 1240,
     title: "الفريق المهتم بصحتك",
     desc: "تعرف على المعالجين اللي هيرافقوك في رحلة التعافي.",
     cta: "تعرف على الفريق",
   },
   {
     href: "/ar/rooms",
-    image: "/rooms-serenity1.jpg",
+    image: "/rooms-serenity1.webp",
+    imageWidth: 1240,
+    imageHeight: 828,
     title: "مساحات العلاج",
     desc: "بيئات مصممة بعناية للشفاء.",
     cta: "شوف المساحات",
   },
   {
     href: "/ar/ask",
-    image: "/sama2_nobg.png",
+    image: "/sama2_nobg.webp",
+    imageWidth: 640,
+    imageHeight: 523,
     title: "اسألي الكاونسلر سما",
     desc: "شاركنا سؤال عن الصحة النفسية واحصل على إرشاد حقيقي.",
     cta: "اسأل سؤال",
@@ -46,8 +57,14 @@ export default function TeaserGridAr({ items = teasers }: { items?: Teaser[] }) 
         {items.map((t) => (
           <Link key={t.href} href={t.href} className="teaser-card">
             <div className="teaser-card__image-wrap">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={t.image} alt={t.title} className="teaser-card__image" />
+              <Image
+                src={t.image}
+                alt={t.title}
+                width={t.imageWidth}
+                height={t.imageHeight}
+                sizes="(max-width: 560px) 100vw, (max-width: 980px) 50vw, 630px"
+                className="teaser-card__image"
+              />
             </div>
             <div className="teaser-card__body">
               <h3 className="teaser-card__title">{t.title}</h3>

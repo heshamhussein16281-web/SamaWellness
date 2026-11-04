@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Image from "next/image";
 
 const topics = ["القلق والتوتر", "العلاقات", "العناية بالنفس", "التأمل والوعي", "النمو الشخصي", "أخرى"];
 
@@ -123,10 +124,12 @@ export default function AskCounselorSamaAr() {
 
         {/* Left in RTL — Sama Photo */}
         <div className="ask-sama-photo-col">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/sama2_nobg.png"
+          <Image
+            src="/sama2_nobg.webp"
             alt="سما عيسى — المؤسسة والكاونسلر"
+            width={640}
+            height={523}
+            sizes="(max-width: 768px) 143px, 560px"
             className="ask-sama-photo"
           />
         </div>

@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Image from "next/image";
 import { therapistsAr as therapists } from "@/lib/team-data-ar";
 import BookingModalAr from "./BookingModalAr";
 
@@ -11,10 +12,12 @@ function TherapistCardAr({ therapist }: { therapist: typeof therapists[0] }) {
     <article className="team-card">
 
       <div className="team-card__photo-wrap">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src={therapist.image}
           alt={therapist.name}
+          width={therapist.imageWidth}
+          height={therapist.imageHeight}
+          sizes="160px"
           className="team-card__photo"
         />
       </div>

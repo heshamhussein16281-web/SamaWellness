@@ -1,20 +1,21 @@
 "use client";
+import Image from "next/image";
 
 const services = [
   {
     title: "العلاج الفردي",
     desc: "جلسات فردية مركزة بتساعدك تستكشف التحديات الشخصية، تدير الضغط، وتطور استراتيجيات تأقلم صحية في مساحة إكلينيكية آمنة.",
-    image: "/individual-therapy.jpg",
+    image: "/individual-therapy.webp",
   },
   {
     title: "العلاج الزوجي",
     desc: "إرشاد متخصص للأزواج اللي عايزين يحسنوا التواصل، يحلوا الخلافات المتكررة، ويبنوا أساس أقوى لعلاقتهم.",
-    image: "/couple-therapy.jpg",
+    image: "/couple-therapy.webp",
   },
   {
     title: "العلاج الجماعي",
     desc: "تعافي في مجتمع بإشراف إكلينيكي. التجارب المشتركة بتوفر دعم متبادل ووجهات نظر متنوعة في رحلتك للصحة النفسية.",
-    image: "/group-therapy.jpg",
+    image: "/group-therapy.webp",
   },
 ];
 
@@ -34,10 +35,12 @@ export default function ServicesAr() {
         {services.map((s, i) => (
           <article key={i} className="service-card">
             <div className="service-card__image-wrap">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={s.image}
                 alt={s.title}
+                width={678}
+                height={510}
+                sizes="(max-width: 980px) 100vw, 380px"
                 className="service-card__image"
               />
             </div>

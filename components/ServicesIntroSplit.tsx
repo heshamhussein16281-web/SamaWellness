@@ -1,4 +1,5 @@
 /* Services Intro — Option B: Text left, image right */
+import Image from "next/image";
 
 export default function ServicesIntroSplit() {
   return (
@@ -18,8 +19,14 @@ export default function ServicesIntroSplit() {
           </p>
         </div>
         <div className="services-intro-split__image-wrap">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/rooms-serenity1.jpg" alt="Therapy space at Sama Wellness" className="services-intro-split__image" />
+          <Image
+            src="/rooms-serenity1.webp"
+            alt="Therapy space at Sama Wellness"
+            width={1240}
+            height={828}
+            sizes="(max-width: 768px) 100vw, 550px"
+            className="services-intro-split__image"
+          />
         </div>
       </div>
     </section>

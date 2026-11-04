@@ -1,16 +1,17 @@
 "use client";
+import Image from "next/image";
 
 const steps = [
   {
-    image: "/initial-form.jpg",
+    image: "/initial-form.webp",
     title: "Initial Screening Form",
   },
   {
-    image: "/assessment.jpg",
+    image: "/assessment.webp",
     title: "15-Min assessment with counsellor Sama",
   },
   {
-    image: "/matched-therapist.jpg",
+    image: "/matched-therapist.webp",
     title: "Matched Therapist",
   },
 ];
@@ -41,10 +42,12 @@ export default function Process() {
 
               {/* Icon box */}
               <div style={{ backgroundColor: "#EAE4DD", padding: "40px clamp(20px, 8vw, 55px)", marginBottom: "32px", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src={s.image}
                   alt={s.title}
+                  width={171}
+                  height={171}
+                  sizes="171px"
                   style={{ width: "171px", height: "171px", objectFit: "contain", display: "block" }}
                 />
               </div>

@@ -25,7 +25,7 @@ export default function HeroAr() {
 
       {/* Hero logo — centered in right space next to photo for RTL */}
       <Image
-        src="/logo-hero.png"
+        src="/logo-hero.webp"
         alt="ساما ويلنس ثيرابي"
         width={543}
         height={543}
@@ -100,7 +100,7 @@ export default function HeroAr() {
         overflow: "clip",
       }}>
         <Image
-          src="/room.jpg"
+          src="/room.webp"
           alt="غرفة ساما ويلنس ثيرابي"
           width={673}
           height={671}

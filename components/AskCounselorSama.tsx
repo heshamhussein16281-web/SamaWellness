@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Image from "next/image";
 
 const topics = ["Anxiety & Stress", "Relationships", "Self-Care", "Mindfulness", "Personal Growth", "Other"];
 
@@ -123,10 +124,12 @@ export default function AskCounselorSama() {
 
         {/* Right — Sama Photo */}
         <div className="ask-sama-photo-col">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/sama2_nobg.png"
+          <Image
+            src="/sama2_nobg.webp"
             alt="Sama Eissa - Founder & Counselor"
+            width={640}
+            height={523}
+            sizes="(max-width: 768px) 143px, 560px"
             className="ask-sama-photo"
           />
         </div>

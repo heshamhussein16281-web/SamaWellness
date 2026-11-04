@@ -215,7 +215,7 @@ export default async function BlogPostPageAr({
           src={post.image}
           alt={post.title}
           fill
-          priority
+          sizes="100vw"
           style={{ objectFit: "cover" }}
         />
         <div

@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function ServicesIntroSplitAr() {
   return (
     <section className="services-intro-split" aria-label="منهجنا">
@@ -12,8 +14,14 @@ export default function ServicesIntroSplitAr() {
           </p>
         </div>
         <div className="services-intro-split__image-wrap">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/rooms-serenity1.jpg" alt="مساحة العلاج في ساما ويلنس" className="services-intro-split__image" />
+          <Image
+            src="/rooms-serenity1.webp"
+            alt="مساحة العلاج في ساما ويلنس"
+            width={1240}
+            height={828}
+            sizes="(max-width: 768px) 100vw, 550px"
+            className="services-intro-split__image"
+          />
         </div>
       </div>
     </section>
