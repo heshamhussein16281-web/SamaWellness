@@ -31,7 +31,7 @@ export type Teaser = {
 export const teasers: Teaser[] = [
   {
     href: "/services",
-    image: "/individual-therapy.webp",
+    image: "/individual-therapy-v3.webp",
     imageWidth: 678,
     imageHeight: 510,
     title: "Our Services",
@@ -40,7 +40,7 @@ export const teasers: Teaser[] = [
   },
   {
     href: "/team",
-    image: "/team-photo.webp",
+    image: "/team-photo-v3.webp",
     imageWidth: 993,
     imageHeight: 1240,
     title: "The Team Dedicated to Your Wellness",
@@ -49,7 +49,7 @@ export const teasers: Teaser[] = [
   },
   {
     href: "/rooms",
-    image: "/rooms-serenity1.webp",
+    image: "/rooms-serenity1-v3.webp",
     imageWidth: 1240,
     imageHeight: 828,
     title: "Our Therapy Spaces",
@@ -58,7 +58,7 @@ export const teasers: Teaser[] = [
   },
   {
     href: "/ask",
-    image: "/sama2_nobg.webp",
+    image: "/sama2_nobg-v3.webp",
     imageWidth: 640,
     imageHeight: 523,
     title: "Ask Counselor Sama",

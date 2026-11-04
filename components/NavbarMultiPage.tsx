@@ -64,7 +64,7 @@ export default function NavbarMultiPage() {
         }}
       >
         <Image
-          src="/logo.webp"
+          src="/logo-v3.webp"
           alt="Sama Wellness Therapy"
           width={182}
           height={182}

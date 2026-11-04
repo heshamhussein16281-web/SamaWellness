@@ -125,7 +125,7 @@ export default function AskCounselorSama() {
         {/* Right — Sama Photo */}
         <div className="ask-sama-photo-col">
           <Image
-            src="/sama2_nobg.webp"
+            src="/sama2_nobg-v3.webp"
             alt="Sama Eissa - Founder & Counselor"
             width={640}
             height={523}

@@ -45,17 +45,17 @@ const services = [
   {
     title: "Individual Therapy",
     desc: "Focused one-on-one sessions helping you explore personal challenges, manage stress, and develop healthy coping strategies in a safe clinical space.",
-    image: "/individual-therapy.webp",
+    image: "/individual-therapy-v3.webp",
   },
   {
     title: "Couple Therapy",
     desc: "Professional guidance for partners looking to improve communication, resolve recurring conflicts, and build a stronger relational foundation together.",
-    image: "/couple-therapy.webp",
+    image: "/couple-therapy-v3.webp",
   },
   {
     title: "Group Therapy",
     desc: "Healing within a clinically guided community. Shared experiences provide mutual support and diverse perspectives on your path to wellness.",
-    image: "/group-therapy.webp",
+    image: "/group-therapy-v3.webp",
   },
 ];
 

@@ -9,7 +9,7 @@ export default function FooterAr() {
       <footer className="site-footer">
         <div className="footer__band">
           <Link href="/ar" className="footer__brand">
-            <Image src="/logo.webp" alt="ساما ويلنس ثيرابي" width={260} height={260} sizes="260px" className="footer__logo" />
+            <Image src="/logo-v3.webp" alt="ساما ويلنس ثيرابي" width={260} height={260} sizes="260px" className="footer__logo" />
             <span className="footer__brand-name">Sama Wellness Therapy</span>
           </Link>
           <p className="footer__tagline">رحلتك نحو التعافي</p>

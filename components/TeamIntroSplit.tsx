@@ -6,7 +6,7 @@ export default function TeamIntroSplit() {
     <section className="services-intro-split" aria-label="About Our Team">
       <div className="services-intro-split__inner">
         <div className="services-intro-split__image-wrap">
-          <Image src="/sama2_nobg.webp" alt="Sama Eissa — Clinical Director" width={500} height={600} className="services-intro-split__image" style={{ objectFit: "contain", backgroundColor: "var(--color-sand)" }} />
+          <Image src="/sama2_nobg-v3.webp" alt="Sama Eissa — Clinical Director" width={500} height={600} className="services-intro-split__image" style={{ objectFit: "contain", backgroundColor: "var(--color-sand)" }} />
         </div>
         <div className="services-intro-split__text">
           <h2 className="services-intro-split__heading">Led by Counselor Sama</h2>

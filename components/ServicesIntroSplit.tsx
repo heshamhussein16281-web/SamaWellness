@@ -20,7 +20,7 @@ export default function ServicesIntroSplit() {
         </div>
         <div className="services-intro-split__image-wrap">
           <Image
-            src="/rooms-serenity1.webp"
+            src="/rooms-serenity1-v3.webp"
             alt="Therapy space at Sama Wellness"
             width={1240}
             height={828}

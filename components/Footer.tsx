@@ -12,7 +12,7 @@ export default function Footer() {
         <div className="footer__band">
 
           <a href="/" className="footer__brand">
-            <Image src="/logo.webp" alt="Sama Wellness Therapy" width={260} height={260} sizes="260px" className="footer__logo" />
+            <Image src="/logo-v3.webp" alt="Sama Wellness Therapy" width={260} height={260} sizes="260px" className="footer__logo" />
             <span className="footer__brand-name">Sama Wellness Therapy</span>
           </a>
 

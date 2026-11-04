@@ -3,15 +3,15 @@ import Image from "next/image";
 
 const steps = [
   {
-    image: "/initial-form.webp",
+    image: "/initial-form-v3.webp",
     title: "Initial Screening Form",
   },
   {
-    image: "/assessment.webp",
+    image: "/assessment-v3.webp",
     title: "15-Min assessment with counsellor Sama",
   },
   {
-    image: "/matched-therapist.webp",
+    image: "/matched-therapist-v3.webp",
     title: "Matched Therapist",
   },
 ];
