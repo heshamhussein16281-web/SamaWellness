@@ -53,7 +53,7 @@ export default function NavbarAr() {
         }}
       >
         <Image
-          src="/logo.webp"
+          src="/logo-v3.webp"
           alt="ساما ويلنس ثيرابي"
           width={182}
           height={182}

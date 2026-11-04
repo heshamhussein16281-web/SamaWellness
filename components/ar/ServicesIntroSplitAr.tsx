@@ -15,7 +15,7 @@ export default function ServicesIntroSplitAr() {
         </div>
         <div className="services-intro-split__image-wrap">
           <Image
-            src="/rooms-serenity1.webp"
+            src="/rooms-serenity1-v3.webp"
             alt="مساحة العلاج في ساما ويلنس"
             width={1240}
             height={828}

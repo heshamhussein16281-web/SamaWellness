@@ -14,7 +14,7 @@ export type Teaser = {
 export const teasers: Teaser[] = [
   {
     href: "/ar/services",
-    image: "/individual-therapy.webp",
+    image: "/individual-therapy-v3.webp",
     imageWidth: 678,
     imageHeight: 510,
     title: "خدماتنا",
@@ -23,7 +23,7 @@ export const teasers: Teaser[] = [
   },
   {
     href: "/ar/team",
-    image: "/team-photo.webp",
+    image: "/team-photo-v3.webp",
     imageWidth: 993,
     imageHeight: 1240,
     title: "الفريق المهتم بصحتك",
@@ -32,7 +32,7 @@ export const teasers: Teaser[] = [
   },
   {
     href: "/ar/rooms",
-    image: "/rooms-serenity1.webp",
+    image: "/rooms-serenity1-v3.webp",
     imageWidth: 1240,
     imageHeight: 828,
     title: "مساحات العلاج",
@@ -41,7 +41,7 @@ export const teasers: Teaser[] = [
   },
   {
     href: "/ar/ask",
-    image: "/sama2_nobg.webp",
+    image: "/sama2_nobg-v3.webp",
     imageWidth: 640,
     imageHeight: 523,
     title: "اسألي الكاونسلر سما",

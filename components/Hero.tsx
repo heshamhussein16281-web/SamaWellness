@@ -25,7 +25,7 @@ export default function Hero() {
 
       {/* Hero logo — centered in left space next to photo (0% to 52%) */}
       <Image
-        src="/logo-hero.webp"
+        src="/logo-hero-v3.webp"
         alt="Sama Wellness Therapy"
         width={543}
         height={543}
@@ -96,7 +96,7 @@ export default function Hero() {
         overflow: "clip",
       }}>
         <Image
-          src="/room.webp"
+          src="/room-v3.webp"
           alt="Sama Wellness Therapy room"
           width={673}
           height={671}

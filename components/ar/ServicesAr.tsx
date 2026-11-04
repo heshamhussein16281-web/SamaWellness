@@ -5,17 +5,17 @@ const services = [
   {
     title: "العلاج الفردي",
     desc: "جلسات فردية مركزة بتساعدك تستكشف التحديات الشخصية، تدير الضغط، وتطور استراتيجيات تأقلم صحية في مساحة إكلينيكية آمنة.",
-    image: "/individual-therapy.webp",
+    image: "/individual-therapy-v3.webp",
   },
   {
     title: "العلاج الزوجي",
     desc: "إرشاد متخصص للأزواج اللي عايزين يحسنوا التواصل، يحلوا الخلافات المتكررة، ويبنوا أساس أقوى لعلاقتهم.",
-    image: "/couple-therapy.webp",
+    image: "/couple-therapy-v3.webp",
   },
   {
     title: "العلاج الجماعي",
     desc: "تعافي في مجتمع بإشراف إكلينيكي. التجارب المشتركة بتوفر دعم متبادل ووجهات نظر متنوعة في رحلتك للصحة النفسية.",
-    image: "/group-therapy.webp",
+    image: "/group-therapy-v3.webp",
   },
 ];
 

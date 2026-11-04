@@ -65,7 +65,7 @@ export default function LoginPage() {
       <div style={{ background: 'white', padding: '40px', borderRadius: '8px', width: '100%', maxWidth: '360px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
 
         <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-          <Image src="/logo.webp" alt="Logo" width={175} height={175} sizes="175px" />
+          <Image src="/logo-v3.webp" alt="Logo" width={175} height={175} sizes="175px" />
         </div>
 
         <h1 style={{ fontSize: '24px', textAlign: 'center', margin: '0 0 10px 0', color: '#2d4a46' }}>Sama Wellness</h1>

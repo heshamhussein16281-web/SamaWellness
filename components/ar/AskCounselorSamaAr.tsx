@@ -125,7 +125,7 @@ export default function AskCounselorSamaAr() {
         {/* Left in RTL — Sama Photo */}
         <div className="ask-sama-photo-col">
           <Image
-            src="/sama2_nobg.webp"
+            src="/sama2_nobg-v3.webp"
             alt="سما عيسى — المؤسسة والكاونسلر"
             width={640}
             height={523}

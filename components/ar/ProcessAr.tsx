@@ -3,15 +3,15 @@ import Image from "next/image";
 
 const steps = [
   {
-    image: "/initial-form.webp",
+    image: "/initial-form-v3.webp",
     title: "استمارة الفحص الأولي",
   },
   {
-    image: "/assessment.webp",
+    image: "/assessment-v3.webp",
     title: "تقييم ١٥ دقيقة مع الكاونسلر سما",
   },
   {
-    image: "/matched-therapist.webp",
+    image: "/matched-therapist-v3.webp",
     title: "المعالج المناسب ليك",
   },
 ];
