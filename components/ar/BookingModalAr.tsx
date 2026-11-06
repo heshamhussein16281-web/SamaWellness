@@ -99,8 +99,8 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
   if (!isOpen) return null;
 
   return createPortal(
-    <div className="booking-modal-overlay" onClick={resetAndClose}>
-      <div className="booking-modal booking-modal--rtl" onClick={(e) => e.stopPropagation()}>
+    <div className="booking-modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) resetAndClose(); }}>
+      <div className="booking-modal booking-modal--rtl">
         <button onClick={resetAndClose} className="booking-modal__close" aria-label="إغلاق">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
             <path d="M18 6L6 18M6 6l12 12" />

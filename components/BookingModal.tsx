@@ -99,8 +99,8 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
   if (!isOpen) return null;
 
   return createPortal(
-    <div className="booking-modal-overlay" onClick={resetAndClose}>
-      <div className="booking-modal" onClick={(e) => e.stopPropagation()}>
+    <div className="booking-modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) resetAndClose(); }}>
+      <div className="booking-modal">
         <button onClick={resetAndClose} className="booking-modal__close" aria-label="Close">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
             <path d="M18 6L6 18M6 6l12 12" />
