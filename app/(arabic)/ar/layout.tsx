@@ -10,11 +10,24 @@ import HtmlLangAr from "@/components/ar/HtmlLangAr";
 // var(--font-tajawal) in Arabic components and globals.css RTL overrides). Scoped
 // here, to the /ar route group only, so it's never downloaded/preloaded on English
 // pages where it was previously dead weight.
+//
+// preload: false — next/font's default preload:true emits a <link rel="preload">
+// for every weight x subset combination (4 weights x 2 subsets = 8 files), each
+// treated as high-priority by the browser. Those 8 preloads were landing in <head>
+// ahead of the hero room photo's own fetchPriority="high" preload, competing for
+// the same early bandwidth on mobile and delaying the photo's actual paint enough
+// to occasionally blow past PageSpeed Insights' capture window (observed as a
+// reproducible NO_LCP lab result on /ar, not seen on / since Action 3 removed its
+// fonts entirely). Disabling preload doesn't stop Tajawal from loading or rendering
+// — display:"swap" already shows the fallback font immediately and swaps in Tajawal
+// whenever each weight's file arrives, same as any non-preloaded webfont. It just
+// stops those 8 requests from racing the hero image for priority at document start.
 const tajawal = Tajawal({
   weight: ["300", "400", "500", "700"],
   subsets: ["arabic", "latin"],
   variable: "--font-tajawal",
   display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {
