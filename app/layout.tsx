@@ -1,36 +1,17 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
-import { Gilda_Display, Nunito_Sans, Josefin_Sans, Tajawal } from "next/font/google";
 import { QueryClientProviderWrapper } from "@/lib/providers";
 import "./globals.css";
 
-const gildaDisplay = Gilda_Display({
-  weight: ["400"],
-  subsets: ["latin"],
-  variable: "--font-gilda",
-  display: "swap",
-});
-
-const nunitoSans = Nunito_Sans({
-  weight: ["300", "400"],
-  subsets: ["latin"],
-  variable: "--font-nunito",
-  display: "swap",
-});
-
-const josefinSans = Josefin_Sans({
-  weight: ["300", "400"],
-  subsets: ["latin"],
-  variable: "--font-josefin",
-  display: "swap",
-});
-
-const tajawal = Tajawal({
-  weight: ["300", "400", "500", "700"],
-  subsets: ["arabic", "latin"],
-  variable: "--font-tajawal",
-  display: "swap",
-});
+// NOTE: Gilda Display, Nunito Sans, and Josefin Sans were previously loaded here via
+// next/font, but were never actually applied — globals.css references them through
+// --font-display/--font-body/--font-ui using their literal Google Fonts names, which
+// never matched the mangled @font-face names next/font generates. Every page has
+// always rendered in the fallback fonts (Georgia / system-ui / sans-serif). Removed
+// to stop downloading/preloading ~72KB of fonts that were never visible. Tajawal is
+// the only font actually wired up (referenced directly via var(--font-tajawal) in
+// Arabic components) and is now loaded only in app/(arabic)/ar/layout.tsx, scoped to
+// the routes that use it.
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.samawellnesstherapy.com"),
@@ -100,7 +81,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           />
         </noscript>
       </head>
-      <body className={`${gildaDisplay.variable} ${nunitoSans.variable} ${josefinSans.variable} ${tajawal.variable}`}>
+      <body>
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe

@@ -1,9 +1,21 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import { Tajawal } from "next/font/google";
 import NavbarAr from "@/components/ar/NavbarAr";
 import FooterAr from "@/components/ar/FooterAr";
 import ContactButtonAr from "@/components/ar/ContactButtonAr";
 import HtmlLangAr from "@/components/ar/HtmlLangAr";
+
+// Tajawal is the only font that's actually rendered (referenced directly via
+// var(--font-tajawal) in Arabic components and globals.css RTL overrides). Scoped
+// here, to the /ar route group only, so it's never downloaded/preloaded on English
+// pages where it was previously dead weight.
+const tajawal = Tajawal({
+  weight: ["300", "400", "500", "700"],
+  subsets: ["arabic", "latin"],
+  variable: "--font-tajawal",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "معالج نفسي في نيو جيزة، القاهرة | ساما ويلنس ثيرابي",
@@ -80,7 +92,7 @@ export default function ArabicPublicLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div dir="rtl" lang="ar">
+    <div dir="rtl" lang="ar" className={tajawal.variable}>
       <HtmlLangAr />
       <Script
         id="json-ld-ar"
