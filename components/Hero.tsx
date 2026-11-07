@@ -29,7 +29,7 @@ export default function Hero() {
         alt="Sama Wellness Therapy"
         width={543}
         height={543}
-        priority
+        loading="eager"
         className="hero-logo"
         style={{
           position: "absolute",
