@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
+import { appendSourceSuffix, getLeadSource } from "@/lib/sourceTag";
 
 function getSamaLead(): { ts: number; src: string } | null {
   try {
@@ -84,6 +85,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
           session_format: sessionFormat,
           note: note || null,
           source: "booking_modal",
+          lead_source: getLeadSource(),
         }),
       });
 
@@ -123,7 +125,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
             </p>
             {dupSrc === "wa" && (
               <a
-                href="https://api.whatsapp.com/send?phone=201130946556&text=I%27d%20like%20to%20book%20an%20assessment"
+                href={`https://api.whatsapp.com/send?phone=201130946556&text=${appendSourceSuffix("I%27d%20like%20to%20book%20an%20assessment")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="booking-modal__btn"
@@ -235,7 +237,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
               {status === "error" && (
                 <p className="booking-modal__error">
                   Something went wrong. Please try again or message us on{" "}
-                  <a href="https://api.whatsapp.com/send?phone=201130946556&text=I%27d%20like%20to%20book%20an%20assessment" target="_blank" rel="noopener noreferrer">
+                  <a href={`https://api.whatsapp.com/send?phone=201130946556&text=${appendSourceSuffix("I%27d%20like%20to%20book%20an%20assessment")}`} target="_blank" rel="noopener noreferrer">
                     WhatsApp
                   </a>.
                 </p>
@@ -250,7 +252,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                   {status === "sending" ? "Sending…" : "Book Assessment"}
                 </button>
                 <a
-                  href="https://api.whatsapp.com/send?phone=201130946556&text=I%27d%20like%20to%20book%20an%20assessment"
+                  href={`https://api.whatsapp.com/send?phone=201130946556&text=${appendSourceSuffix("I%27d%20like%20to%20book%20an%20assessment")}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="booking-modal__btn booking-modal__btn--outline"

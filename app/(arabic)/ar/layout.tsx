@@ -5,6 +5,7 @@ import NavbarAr from "@/components/ar/NavbarAr";
 import FooterAr from "@/components/ar/FooterAr";
 import ContactButtonAr from "@/components/ar/ContactButtonAr";
 import HtmlLangAr from "@/components/ar/HtmlLangAr";
+import SourceTagCapture from "@/components/SourceTagCapture";
 
 // Tajawal is the only font that's actually rendered (referenced directly via
 // var(--font-tajawal) in Arabic components and globals.css RTL overrides). Scoped
@@ -107,6 +108,7 @@ export default function ArabicPublicLayout({
   return (
     <div dir="rtl" lang="ar" className={tajawal.variable}>
       <HtmlLangAr />
+      <SourceTagCapture />
       <Script
         id="json-ld-ar"
         type="application/ld+json"

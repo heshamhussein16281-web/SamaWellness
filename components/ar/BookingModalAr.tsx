@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
+import { appendSourceSuffix, getLeadSource } from "@/lib/sourceTag";
 
 function getSamaLead(): { ts: number; src: string } | null {
   try {
@@ -84,6 +85,7 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
           session_format: sessionFormat,
           note: note || null,
           source: "booking_modal_ar",
+          lead_source: getLeadSource(),
         }),
       });
 
@@ -123,7 +125,7 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
             </p>
             {dupSrc === "wa" && (
               <a
-                href="https://api.whatsapp.com/send?phone=201130946556&text=%D8%A3%D9%86%D8%A7%20%D8%B9%D8%A7%D9%8A%D8%B2%2F%D8%A9%20%D8%A3%D8%AD%D8%AC%D8%B2%20%D8%AA%D9%82%D9%8A%D9%8A%D9%85"
+                href={`https://api.whatsapp.com/send?phone=201130946556&text=${appendSourceSuffix("%D8%A3%D9%86%D8%A7%20%D8%B9%D8%A7%D9%8A%D8%B2%2F%D8%A9%20%D8%A3%D8%AD%D8%AC%D8%B2%20%D8%AA%D9%82%D9%8A%D9%8A%D9%85")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="booking-modal__btn"
@@ -236,7 +238,7 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
               {status === "error" && (
                 <p className="booking-modal__error">
                   حصل مشكلة. حاول/ي تاني أو كلمنا على{" "}
-                  <a href="https://api.whatsapp.com/send?phone=201130946556&text=%D8%A3%D9%86%D8%A7%20%D8%B9%D8%A7%D9%8A%D8%B2%2F%D8%A9%20%D8%A3%D8%AD%D8%AC%D8%B2%20%D8%AA%D9%82%D9%8A%D9%8A%D9%85" target="_blank" rel="noopener noreferrer">
+                  <a href={`https://api.whatsapp.com/send?phone=201130946556&text=${appendSourceSuffix("%D8%A3%D9%86%D8%A7%20%D8%B9%D8%A7%D9%8A%D8%B2%2F%D8%A9%20%D8%A3%D8%AD%D8%AC%D8%B2%20%D8%AA%D9%82%D9%8A%D9%8A%D9%85")}`} target="_blank" rel="noopener noreferrer">
                     واتساب
                   </a>.
                 </p>
@@ -251,7 +253,7 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
                   {status === "sending" ? "جاري الإرسال…" : "احجز التقييم"}
                 </button>
                 <a
-                  href="https://api.whatsapp.com/send?phone=201130946556&text=%D8%A3%D9%86%D8%A7%20%D8%B9%D8%A7%D9%8A%D8%B2%2F%D8%A9%20%D8%A3%D8%AD%D8%AC%D8%B2%20%D8%AA%D9%82%D9%8A%D9%8A%D9%85"
+                  href={`https://api.whatsapp.com/send?phone=201130946556&text=${appendSourceSuffix("%D8%A3%D9%86%D8%A7%20%D8%B9%D8%A7%D9%8A%D8%B2%2F%D8%A9%20%D8%A3%D8%AD%D8%AC%D8%B2%20%D8%AA%D9%82%D9%8A%D9%8A%D9%85")}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="booking-modal__btn booking-modal__btn--outline"

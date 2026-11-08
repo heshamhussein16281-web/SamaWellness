@@ -1,13 +1,31 @@
-/* Mid-page CTA (Arabic) — lightweight booking nudge at ~50% scroll depth */
+/* Mid-page CTA (Arabic) — lightweight booking nudge at ~50% scroll depth.
+
+   "use client" only so the WhatsApp link can read the Google Ads source
+   tag from localStorage (see lib/sourceTag.ts) and append the " ·G" marker
+   when applicable — no other behavior changes. href starts at the plain
+   default (matches server-rendered markup) and is patched in useEffect
+   after mount, avoiding any hydration mismatch. */
+"use client";
+import { useState, useEffect } from "react";
+import { appendSourceSuffix } from "@/lib/sourceTag";
+
+const WA_BASE = "https://api.whatsapp.com/send?phone=201130946556&text=";
+const TEXT_DEFAULT = "%D8%A3%D8%AD%D8%A8%20%D8%A3%D8%AD%D8%AC%D8%B2%20%D8%AA%D9%82%D9%8A%D9%8A%D9%85";
 
 export default function MidCTAAr() {
+  const [href, setHref] = useState(WA_BASE + TEXT_DEFAULT);
+
+  useEffect(() => {
+    setHref(WA_BASE + appendSourceSuffix(TEXT_DEFAULT));
+  }, []);
+
   return (
     <section className="mid-cta" aria-label="احجز تقييمك">
       <div className="mid-cta__inner">
         <p className="mid-cta__text">
           مش متأكد تبدأ منين؟&ensp;
           <a
-            href="https://api.whatsapp.com/send?phone=201130946556&text=%D8%A3%D8%AD%D8%A8%20%D8%A3%D8%AD%D8%AC%D8%B2%20%D8%AA%D9%82%D9%8A%D9%8A%D9%85"
+            href={href}
             target="_blank"
             rel="noopener noreferrer"
             className="mid-cta__link"
