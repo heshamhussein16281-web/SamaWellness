@@ -3,6 +3,7 @@ import Script from "next/script";
 import NavbarMultiPage from "@/components/NavbarMultiPage";
 import Footer from "@/components/Footer";
 import ContactButton from "@/components/ContactButton";
+import SourceTagCapture from "@/components/SourceTagCapture";
 
 export const metadata: Metadata = {
   title: "Therapist in New Giza & Sheikh Zayed, Cairo | Sama Wellness Therapy",
@@ -106,6 +107,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <SourceTagCapture />
       <NavbarMultiPage />
       <main>{children}</main>
       <Footer />

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { appendSourceSuffix } from "@/lib/sourceTag";
 
 const WA_BASE = "https://api.whatsapp.com/send?phone=201130946556&text=";
 const TEXT_DEFAULT = "I%27d%20like%20to%20book%20an%20assessment";
@@ -11,6 +12,7 @@ export default function ContactButton() {
   const [href, setHref] = useState(WA_BASE + TEXT_DEFAULT);
 
   useEffect(() => {
+    let text = TEXT_DEFAULT;
     try {
       const raw = localStorage.getItem("sama_lead");
       if (raw) {
@@ -18,10 +20,11 @@ export default function ContactButton() {
         if (Date.now() - data.ts > THREE_DAYS) {
           localStorage.removeItem("sama_lead");
         } else if (data.src === "form") {
-          setHref(WA_BASE + TEXT_FORM);
+          text = TEXT_FORM;
         }
       }
     } catch {}
+    setHref(WA_BASE + appendSourceSuffix(text));
   }, []);
 
   const handleClick = () => {

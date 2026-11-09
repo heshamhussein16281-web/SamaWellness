@@ -10,11 +10,16 @@ const TIME_LABELS: Record<string, string> = {
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const { name, phone, preferred_time, session_format, note, source } = body;
+  const { name, phone, preferred_time, session_format, note, source, lead_source } = body;
 
   if (!name || !phone) {
     return NextResponse.json({ error: "Name and phone are required." }, { status: 400 });
   }
+
+  // NOTE: lead_source ("google_ads" / "direct") is NOT written to Supabase below —
+  // the contact_submissions table has no lead_source column. It's only forwarded
+  // to the Google Sheet (schema-less JSON) so reception can see it there. Adding
+  // it to Supabase would need a migration (see Action 6 summary) — ask first.
 
   // Store in Supabase
   const supabase = createClient(
@@ -55,6 +60,7 @@ export async function POST(req: Request) {
         session_format: session_format || "either",
         note: note || "",
         source: source || "booking_modal",
+        lead_source: lead_source || "direct",
       }),
     });
   } catch (sheetError) {
