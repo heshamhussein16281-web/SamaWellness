@@ -24,6 +24,7 @@ export const metadata: Metadata = {
 import ScrollReveal from "@/components/ScrollReveal";
 import ServicesIntroSplit from "@/components/ServicesIntroSplit";
 import Services from "@/components/Services";
+import WhatWeTreat from "@/components/WhatWeTreat";
 import Process from "@/components/Process";
 import WhoIsThisForGrid from "@/components/WhoIsThisForGrid";
 import TestimonialsServices from "@/components/TestimonialsServices";
@@ -39,6 +40,9 @@ export default function ServicesPage() {
       </ScrollReveal>
       <ScrollReveal>
         <Services />
+      </ScrollReveal>
+      <ScrollReveal>
+        <WhatWeTreat />
       </ScrollReveal>
       <MidCTA />
       <ScrollReveal>

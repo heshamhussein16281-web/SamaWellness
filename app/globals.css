@@ -3043,6 +3043,75 @@ textarea.form-input {
 }
 
 /* ========================================
+   WHAT WE TREAT — CONDITIONS CHIP GRID
+   ======================================== */
+
+.what-we-treat {
+  padding: var(--space-2xl) var(--space-lg);
+  background: var(--color-linen);
+}
+
+.what-we-treat__inner {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.what-we-treat__heading {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  color: var(--color-charcoal);
+  margin: 0 0 var(--space-xs);
+}
+
+.what-we-treat__intro {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--color-charcoal);
+  opacity: 0.7;
+  margin: 0 0 var(--space-xl);
+}
+
+.what-we-treat__chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-sm);
+}
+
+.what-we-treat__chip {
+  display: inline-block;
+  background: rgba(123, 45, 62, 0.07);
+  color: var(--color-nav-text);
+  padding: 10px 20px;
+  border-radius: 24px;
+  font-family: var(--font-ui);
+  font-size: 15px;
+  letter-spacing: 0.3px;
+}
+
+.what-we-treat__note {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--color-charcoal);
+  opacity: 0.65;
+  margin: var(--space-xl) 0 0;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 768px) {
+  .what-we-treat__chips {
+    gap: var(--space-xs);
+  }
+  .what-we-treat__chip {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+}
+
+/* ========================================
    WHO IS THIS FOR — ICON GRID (preview only)
    ======================================== */
 
