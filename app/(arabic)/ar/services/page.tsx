@@ -24,6 +24,7 @@ export const metadata: Metadata = {
 };
 import ServicesIntroSplitAr from "@/components/ar/ServicesIntroSplitAr";
 import ServicesAr from "@/components/ar/ServicesAr";
+import WhatWeTreatAr from "@/components/ar/WhatWeTreatAr";
 import ProcessAr from "@/components/ar/ProcessAr";
 import WhoIsThisForGridAr from "@/components/ar/WhoIsThisForGridAr";
 import TestimonialsServicesAr from "@/components/ar/TestimonialsServicesAr";
@@ -39,6 +40,9 @@ export default function ServicesPageAr() {
       </ScrollReveal>
       <ScrollReveal>
         <ServicesAr />
+      </ScrollReveal>
+      <ScrollReveal>
+        <WhatWeTreatAr />
       </ScrollReveal>
       <MidCTAAr />
       <ScrollReveal>
