@@ -12,6 +12,11 @@ export interface BlogPost {
   author: string;
   featured?: boolean;
   content: string;
+  // Optional: when present, the post's [slug]/page.tsx emits FAQPage JSON-LD
+  // (in addition to the standard Article JSON-LD) for rich-result eligibility.
+  // Only add this for posts with a genuine "Frequently Asked Questions"
+  // section in `content` — keep the two in sync.
+  faqs?: { question: string; answer: string }[];
 }
 
 export const blogPosts: BlogPost[] = [
@@ -1038,6 +1043,28 @@ Whether you're worried about yourself or about someone you love — if that's wh
     //   "DBT"             -> /blog/dbt-therapy-explained
     //   "schema therapy"  -> /blog/schema-therapy-repeating-patterns
     // Mirror the same change in lib/blog-data-ar.ts (AR equivalents of the same words).
+    faqs: [
+      {
+        question: "How long does CBT take?",
+        answer:
+          "CBT is usually shorter-term than many therapies. Many people work on a specific issue over roughly 8 to 20 sessions, though it depends on what you're dealing with.",
+      },
+      {
+        question: "Is CBT effective?",
+        answer:
+          "Yes. CBT is one of the most studied forms of psychotherapy, with strong evidence for anxiety, depression, OCD and many other difficulties.",
+      },
+      {
+        question: 'Is CBT only about "thinking positive"?',
+        answer:
+          "No. CBT isn't about replacing problems with cheerful thoughts. It's about thinking more accurately and flexibly, and then acting in ways that help you, even when things are genuinely hard.",
+      },
+      {
+        question: "Can CBT be done online?",
+        answer:
+          "Yes. CBT works well online, and many clients choose online sessions for convenience.",
+      },
+    ],
     content: `If you've ever looked into therapy, you've probably seen the letters CBT. It's one of the most widely used and most researched forms of therapy in the world, and for good reason. **CBT therapy**, or Cognitive Behavioral Therapy, is practical, structured, and focused on helping you change what's happening now, not just understand what happened before.
 
 So what actually happens in CBT, and is it right for you?

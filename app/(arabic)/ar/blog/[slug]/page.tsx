@@ -187,6 +187,22 @@ export default async function BlogPostPageAr({
     inLanguage: "ar",
   };
 
+  const faqJsonLd =
+    post.faqs && post.faqs.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: post.faqs.map((faq) => ({
+            "@type": "Question",
+            name: faq.question,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: faq.answer,
+            },
+          })),
+        }
+      : null;
+
   return (
     <>
       <Script
@@ -194,6 +210,13 @@ export default async function BlogPostPageAr({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      {faqJsonLd && (
+        <Script
+          id="blog-faq-jsonld-ar"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
 
       <style>{`
         .blog-post-related { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
