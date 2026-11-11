@@ -78,6 +78,14 @@ export default function RoomsEditorial() {
                   width={room.dims[1][0]}
                   height={room.dims[1][1]}
                   sizes={room.sizes}
+                  // Action 12: this is the actual LCP element on /rooms (confirmed via
+                  // Lighthouse's lcp-discovery-insight during Action 11 verification) —
+                  // its portrait crop (1600x2394) reserves a taller box than the --main
+                  // photo's landscape crop on mobile, making it the largest rendered
+                  // element at LCP-eval time. Next/Image lazy-loads by default, which
+                  // was producing LCP ~3.7s. priority sets loading=eager + fetchpriority
+                  // high and preloads it, only for the first room (i === 0, above the fold).
+                  priority={i === 0}
                   className="rooms-editorial__photo rooms-editorial__photo--secondary"
                 />
               </div>

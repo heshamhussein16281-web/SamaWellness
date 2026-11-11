@@ -73,6 +73,9 @@ export default function RoomsEditorialAr() {
                   width={room.dims[1][0]}
                   height={room.dims[1][1]}
                   sizes={room.sizes}
+                  // Action 12: see RoomsEditorial.tsx for why this is the actual LCP
+                  // element (not the --main photo) and why priority is scoped to i===0.
+                  priority={i === 0}
                   className="rooms-editorial__photo rooms-editorial__photo--secondary"
                 />
               </div>
