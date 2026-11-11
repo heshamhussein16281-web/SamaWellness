@@ -12,6 +12,11 @@ export interface BlogPost {
   author: string;
   featured?: boolean;
   content: string;
+  // Optional: when present, the post's [slug]/page.tsx emits FAQPage JSON-LD
+  // (in addition to the standard Article JSON-LD) for rich-result eligibility.
+  // Only add this for posts with a genuine "Frequently Asked Questions"
+  // section in `content` — keep the two in sync.
+  faqs?: { question: string; answer: string }[];
 }
 
 export const blogPosts: BlogPost[] = [
@@ -1017,6 +1022,123 @@ Whether you're worried about yourself or about someone you love — if that's wh
 ---
 
 **Every form of addiction follows a pattern — and patterns can be changed.** Reach out to Sama Wellness Therapy — 0113 094 6556. In person at our New Giza clinic, and online across Egypt, Saudi Arabia, and the Middle East.`,
+  },
+  {
+    slug: "cbt-therapy-explained",
+    title: "What Is CBT (Cognitive Behavioral Therapy), and How Does It Work?",
+    metaTitle: "CBT Therapy: How Cognitive Behavioral Therapy Works | Sama",
+    metaDescription:
+      "What is CBT therapy? Learn how cognitive behavioral therapy works, what it helps with, what a CBT session looks like, and how long it usually takes.",
+    excerpt:
+      "Your thoughts, feelings and actions are connected. CBT helps you see the loop you're stuck in, and gives you practical tools to step out of it.",
+    category: "Therapy Insights",
+    image: "/BLOG/images/cbt-therapy-explained.png",
+    readTime: "6 min read",
+    date: "November 2026",
+    publishDate: "2026-11-11",
+    author: "Counselor Sama",
+    // NOTE: three internal links from the original content brief were removed
+    // because the target posts don't exist yet — add them back in once published:
+    //   "Depression"     -> /blog/sadness-vs-depression
+    //   "DBT"             -> /blog/dbt-therapy-explained
+    //   "schema therapy"  -> /blog/schema-therapy-repeating-patterns
+    // Mirror the same change in lib/blog-data-ar.ts (AR equivalents of the same words).
+    faqs: [
+      {
+        question: "How long does CBT take?",
+        answer:
+          "CBT is usually shorter-term than many therapies. Many people work on a specific issue over roughly 8 to 20 sessions, though it depends on what you're dealing with.",
+      },
+      {
+        question: "Is CBT effective?",
+        answer:
+          "Yes. CBT is one of the most studied forms of psychotherapy, with strong evidence for anxiety, depression, OCD and many other difficulties.",
+      },
+      {
+        question: 'Is CBT only about "thinking positive"?',
+        answer:
+          "No. CBT isn't about replacing problems with cheerful thoughts. It's about thinking more accurately and flexibly, and then acting in ways that help you, even when things are genuinely hard.",
+      },
+      {
+        question: "Can CBT be done online?",
+        answer:
+          "Yes. CBT works well online, and many clients choose online sessions for convenience.",
+      },
+    ],
+    content: `If you've ever looked into therapy, you've probably seen the letters CBT. It's one of the most widely used and most researched forms of therapy in the world, and for good reason. **CBT therapy**, or Cognitive Behavioral Therapy, is practical, structured, and focused on helping you change what's happening now, not just understand what happened before.
+
+So what actually happens in CBT, and is it right for you?
+
+## What Is Cognitive Behavioral Therapy?
+
+CBT was developed in the 1960s by psychiatrist Dr. Aaron Beck. He noticed that people struggling with depression often had automatic, negative thoughts running in the background, such as "I always fail" or "Nobody really cares about me." Those thoughts shaped how they felt, and how they felt shaped what they did.
+
+CBT is built on one simple idea: **your thoughts, feelings and behaviors are connected.** Change one, and the others start to shift too.
+
+## The Thought–Feeling–Behavior Loop
+
+Here's how the loop often works:
+
+- **A situation:** a friend doesn't reply to your message.
+- **An automatic thought:** "They're annoyed with me."
+- **A feeling:** anxiety, hurt, maybe shame.
+- **A behavior:** you go quiet, avoid them, or keep checking your phone.
+
+The avoidance then seems to confirm the thought, and the loop tightens. CBT helps you slow that loop down, notice the thought, and ask whether it's the only explanation. Maybe they're just busy.
+
+## What CBT Can Help With
+
+CBT has strong research support for a wide range of difficulties, including:
+
+- <a style="color:var(--color-burgundy);text-decoration:underline;" href="/blog/understanding-anxiety-and-therapy">Anxiety</a>, panic attacks and constant worry
+- Depression and persistent low mood
+- OCD (obsessive-compulsive disorder)
+- Social anxiety and fear of judgment
+- Stress, burnout and perfectionism
+- Sleep problems and insomnia
+- Low self-esteem and harsh self-criticism
+
+It's also used alongside other approaches — DBT is built on CBT and adds skills for very intense emotions, and schema therapy extends it to deeper, long-standing patterns.
+
+## What a CBT Session Looks Like
+
+CBT sessions are collaborative and goal-focused. A typical session might include:
+
+- **Setting an agenda together:** what you most want to work on today
+- **Reviewing the week:** what happened, and what you noticed
+- **Working on a specific situation:** looking at the thoughts and feelings involved, and testing how accurate or helpful those thoughts are
+- **Learning a skill:** for example, catching thinking traps, gradual exposure to something you've been avoiding, or problem-solving
+- **Agreeing on practice:** a small, realistic exercise to try before the next session
+
+That between-session practice is a big part of why CBT works. The changes happen in your real life, not only in the therapy room.
+
+## Common CBT Techniques
+
+- **Thought records:** writing down a difficult moment, the thought behind it, and a more balanced alternative
+- **Cognitive restructuring:** spotting thinking traps, such as catastrophizing ("this will be a disaster") or mind-reading ("they think I'm useless")
+- **Behavioral activation:** reconnecting with meaningful activities to lift low mood
+- **Exposure:** facing feared situations step by step, so anxiety loses its grip
+- **Problem-solving:** breaking overwhelming problems into manageable steps
+
+## Frequently Asked Questions
+
+**How long does CBT take?** CBT is usually shorter-term than many therapies. Many people work on a specific issue over roughly 8 to 20 sessions, though it depends on what you're dealing with.
+
+**Is CBT effective?** Yes. CBT is one of the most studied forms of psychotherapy, with strong evidence for anxiety, depression, OCD and many other difficulties.
+
+**Is CBT only about "thinking positive"?** No. CBT isn't about replacing problems with cheerful thoughts. It's about thinking more accurately and flexibly, and then acting in ways that help you, even when things are genuinely hard.
+
+**Can CBT be done online?** Yes. CBT works well online, and many clients choose online sessions for convenience.
+
+## CBT in New Giza & Sheikh Zayed
+
+At Sama Wellness Therapy, CBT is one of the core approaches <a style="color:var(--color-burgundy);text-decoration:underline;" href="/team">our team</a> uses, including Dr. Sara El Shakankiri, Alia El Meteni, Mohamed Torkey, Haidy El Masry and Kareem Nagi. You can see how it fits alongside our other methods in our <a style="color:var(--color-burgundy);text-decoration:underline;" href="/blog/therapeutic-techniques-and-therapist-credentials">guide to therapeutic techniques</a>. Sessions are available across New Giza, Sheikh Zayed and the wider Cairo area, in Arabic and English, in person or online.
+
+Your first step is a 15-minute assessment with Counselor Sama, part of your first session, to match you with the right therapist and approach. If you're ready to work on what's happening now, that's exactly what sessions are for.
+
+---
+
+**Your thoughts aren't always facts, and you can learn to tell the difference.** Reach out to Sama Wellness Therapy — +20 113 094 6556. In person at our New Giza clinic, and online across Egypt and the Middle East.`,
   },
 ];
 
