@@ -34,7 +34,8 @@ export default function RoomsEditorialAr() {
       tagline: "مساحة لتهدئة العقل",
       description: "إضاءة كهرمانية دافئة، أثاث ناعم، ولوحات فنية مقصودة — عقل، جسد، روح — بتضبط الأجواء من أول ما تدخل. سيرينيتي اتصممت للعملاء اللي بيلاقوا الراحة في الدفء والحميمية. لمسات الكرز وأرفف عائمة بلمسات نباتية بتخلق مساحة حاسسها شخصية، مش إكلينيكية.",
       images: ["/rooms-serenity1-v3.webp", "/rooms-serenity2-v3.webp"],
-      dims: [[1240, 828], [600, 401]] as [number, number][],
+      // Real natural dimensions of the -v3 files (see RoomsEditorial.tsx for why).
+      dims: [[1280, 855], [1600, 2394]] as [number, number][],
       sizes: "(max-width: 980px) 50vw, 284px",
       alts: ["غرفة سيرينيتي — أريكة مريحة مع لوحة عقل جسد روح", "غرفة سيرينيتي — كرسي مع أزهار الكرز ونبات"],
     },
@@ -43,7 +44,7 @@ export default function RoomsEditorialAr() {
       tagline: "مساحة لرؤية أوضح",
       description: "ضوء طبيعي بيدخل من شباك كبير يطل على خضرة، بيملا الغرفة بانفتاح وطاقة هادئة. أثاث أزرق جريء وخردلي دافئ بيخلق جو مستقر ونابض بالحياة. هورايزون اتصممت للعملاء اللي بيستمدوا قوتهم من النور والمساحة والألوان.",
       images: ["/rooms-horizon1-v3.webp", "/rooms-horizon2-v3.webp"],
-      dims: [[450, 600], [345, 460]] as [number, number][],
+      dims: [[960, 1280], [1086, 1448]] as [number, number][],
       sizes: "(max-width: 980px) 50vw, 230px",
       alts: ["غرفة هورايزون — مساحة مضيئة بأريكة خردلية وكراسي زرقاء", "غرفة هورايزون — كرسي معالج أزرق داكن مع ورود صفراء"],
     },
@@ -55,22 +56,26 @@ export default function RoomsEditorialAr() {
         <div key={room.name} className={`rooms-editorial__room ${i % 2 === 1 ? "rooms-editorial__room--reversed" : ""}`}>
           <div className="rooms-editorial__room-inner">
             <div className="rooms-editorial__photos">
-              <Image
-                src={room.images[0]}
-                alt={room.alts[0]}
-                width={room.dims[0][0]}
-                height={room.dims[0][1]}
-                sizes={room.sizes}
-                className="rooms-editorial__photo rooms-editorial__photo--main"
-              />
-              <Image
-                src={room.images[1]}
-                alt={room.alts[1]}
-                width={room.dims[1][0]}
-                height={room.dims[1][1]}
-                sizes={room.sizes}
-                className="rooms-editorial__photo rooms-editorial__photo--secondary"
-              />
+              <div className="rooms-editorial__photo-frame rooms-editorial__photo-frame--main">
+                <Image
+                  src={room.images[0]}
+                  alt={room.alts[0]}
+                  width={room.dims[0][0]}
+                  height={room.dims[0][1]}
+                  sizes={room.sizes}
+                  className="rooms-editorial__photo rooms-editorial__photo--main"
+                />
+              </div>
+              <div className="rooms-editorial__photo-frame rooms-editorial__photo-frame--secondary">
+                <Image
+                  src={room.images[1]}
+                  alt={room.alts[1]}
+                  width={room.dims[1][0]}
+                  height={room.dims[1][1]}
+                  sizes={room.sizes}
+                  className="rooms-editorial__photo rooms-editorial__photo--secondary"
+                />
+              </div>
             </div>
             <div className="rooms-editorial__text">
               <p className="rooms-editorial__tagline">{room.tagline}</p>
