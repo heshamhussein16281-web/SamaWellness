@@ -12,23 +12,24 @@ import SourceTagCapture from "@/components/SourceTagCapture";
 // here, to the /ar route group only, so it's never downloaded/preloaded on English
 // pages where it was previously dead weight.
 //
-// preload: false — next/font's default preload:true emits a <link rel="preload">
-// for every weight x subset combination (4 weights x 2 subsets = 8 files), each
-// treated as high-priority by the browser. Those 8 preloads were landing in <head>
-// ahead of the hero room photo's own fetchPriority="high" preload, competing for
-// the same early bandwidth on mobile and delaying the photo's actual paint enough
-// to occasionally blow past PageSpeed Insights' capture window (observed as a
-// reproducible NO_LCP lab result on /ar, not seen on / since Action 3 removed its
-// fonts entirely). Disabling preload doesn't stop Tajawal from loading or rendering
-// — display:"swap" already shows the fallback font immediately and swaps in Tajawal
-// whenever each weight's file arrives, same as any non-preloaded webfont. It just
-// stops those 8 requests from racing the hero image for priority at document start.
+// subsets: ["arabic"] only (no "latin") — Arabic body copy doesn't need the Latin
+// glyph set, and dropping it halves the file count (4 files instead of 8).
+//
+// preload: true (Action 11) — Action 2b (7 Nov) set preload:false because the
+// default preload:true emitted 8 <link rel="preload"> tags (4 weights x 2 subsets)
+// that raced the hero room photo's fetchPriority="high" preload for early bandwidth
+// on mobile, occasionally causing NO_LCP. With the subset trimmed to 4 Arabic-only
+// files, preload is back on: all 4 weights now arrive early instead of swapping in
+// late (which was shifting values-strip/teaser-section/testimonials/final-cta by
+// ~240px total as Tajawal landed below the fold — real-user CLS 0.41 on /ar). If a
+// future Lighthouse run on /ar regresses to NO_LCP or LCP > 2.5s, revert this to
+// preload:false and add min-height to the affected section text blocks instead.
 const tajawal = Tajawal({
   weight: ["300", "400", "500", "700"],
-  subsets: ["arabic", "latin"],
+  subsets: ["arabic"],
   variable: "--font-tajawal",
   display: "swap",
-  preload: false,
+  preload: true,
 });
 
 export const metadata: Metadata = {
