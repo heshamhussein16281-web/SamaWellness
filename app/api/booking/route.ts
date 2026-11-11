@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
+import { validatePhone } from "@/lib/phone";
 const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbxNm36kxoTnyjXUEST1N98vesUTXagjAHuG59QsVWEGHPWUADhg86t9olXnmvBOVY46fQ/exec";
 
 const TIME_LABELS: Record<string, string> = {
@@ -10,23 +11,6 @@ const TIME_LABELS: Record<string, string> = {
 
 const DUPLICATE_WINDOW_MS = 3 * 24 * 60 * 60 * 1000; // 3 days
 
-// Normalize a phone number to a canonical "01xxxxxxxxx" form so the same
-// person submitting as 01012345678 / +201012345678 / 00201012345678 /
-// 201012345678 (with either Western or Arabic-Indic digits) is recognized
-// as the same lead.
-function normalizePhone(raw: string): string {
-  // Convert Arabic-Indic digits (٠-٩) to ASCII 0-9.
-  const asciiDigits = raw.replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660));
-  // Strip everything that isn't a digit.
-  let digits = asciiDigits.replace(/\D/g, "");
-  if (digits.startsWith("002")) {
-    digits = digits.slice(3);
-  } else if (digits.startsWith("2") && digits.length === 12) {
-    digits = digits.slice(1);
-  }
-  return digits;
-}
-
 export async function POST(req: Request) {
   const body = await req.json();
   const { name, phone, preferred_time, session_format, note, source, lead_source } = body;
@@ -35,7 +19,17 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Name and phone are required." }, { status: 400 });
   }
 
-  const normalizedPhone = normalizePhone(phone);
+  // Action 13: reject wrong-length / malformed numbers server-side so a bad
+  // lead can never be saved, even if the client-side check was bypassed
+  // (direct API call, stale cached JS, etc). Normalizes to "01xxxxxxxxx"
+  // for Egypt or "+<countrycode>…" for international — this becomes the
+  // canonical stored + deduped value, same shape the old ad-hoc
+  // normalizePhone() used to produce for Egyptian numbers.
+  const phoneCheck = validatePhone(phone);
+  if (!phoneCheck.valid) {
+    return NextResponse.json({ error: "invalid_phone" }, { status: 400 });
+  }
+  const normalizedPhone = phoneCheck.normalized;
 
   // NOTE: lead_source ("google_ads" / "direct") is NOT written to Supabase below —
   // the contact_submissions table has no lead_source column. It's only forwarded
@@ -67,7 +61,7 @@ export async function POST(req: Request) {
     console.error("Supabase duplicate lookup error:", lookupError);
     // Fail open on the lookup (don't block a legitimate booking because the
     // duplicate check itself errored) — proceed to insert as normal below.
-  } else if (recentRows?.some((row) => normalizePhone(row.last_name || "") === normalizedPhone)) {
+  } else if (recentRows?.some((row) => validatePhone(row.last_name || "").normalized === normalizedPhone)) {
     return NextResponse.json({ success: true, duplicate: true });
   }
 
@@ -83,7 +77,7 @@ export async function POST(req: Request) {
       last_name: normalizedPhone,
       email: `${source || "booking_modal"}@booking`,
       topic: topicStr,
-      message: note || `Assessment booking request. Phone: ${phone}`,
+      message: note || `Assessment booking request. Phone: ${normalizedPhone}`,
     },
   ]);
 
@@ -99,7 +93,7 @@ export async function POST(req: Request) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         name,
-        phone,
+        phone: normalizedPhone,
         preferred_time: preferred_time ? (TIME_LABELS[preferred_time] || preferred_time) : "",
         session_format: session_format || "either",
         note: note || "",

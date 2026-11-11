@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { appendSourceSuffix, getLeadSource } from "@/lib/sourceTag";
+import { validatePhone, PHONE_ERROR_AR } from "@/lib/phone";
 
 function getSamaLead(): { ts: number; src: string } | null {
   try {
@@ -33,6 +34,7 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
   const [sessionFormat, setSessionFormat] = useState<"in-person" | "online" | "either">("either");
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error" | "duplicate">("idle");
   const [dupSrc, setDupSrc] = useState<string | null>(null);
+  const [phoneError, setPhoneError] = useState<string | null>(null);
   const nameRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -60,9 +62,15 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
     setSessionFormat("either");
     setStatus("idle");
     setDupSrc(null);
+    setPhoneError(null);
     window.history.pushState({}, "", window.location.pathname);
     onClose();
   }, [onClose]);
+
+  const handlePhoneBlur = () => {
+    if (!phone) return; // let the "required" attribute handle the empty case
+    setPhoneError(validatePhone(phone).valid ? null : PHONE_ERROR_AR);
+  };
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => { if (e.key === "Escape") resetAndClose(); };
@@ -72,6 +80,13 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const phoneCheck = validatePhone(phone);
+    if (!phoneCheck.valid) {
+      setPhoneError(PHONE_ERROR_AR);
+      return;
+    }
+    setPhoneError(null);
     setStatus("sending");
 
     try {
@@ -80,7 +95,7 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name,
-          phone,
+          phone: phoneCheck.normalized,
           preferred_time: preferredTime || null,
           session_format: sessionFormat,
           note: note || null,
@@ -89,7 +104,15 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
         }),
       });
 
-      if (!res.ok) throw new Error("Request failed");
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => null);
+        if (errBody?.error === "invalid_phone") {
+          setPhoneError(PHONE_ERROR_AR);
+          setStatus("idle");
+          return;
+        }
+        throw new Error("Request failed");
+      }
       const data = await res.json();
       setSamaLead("form");
       if (data?.duplicate) {
@@ -189,13 +212,20 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
                 <input
                   id="booking-phone-ar"
                   type="tel"
+                  inputMode="tel"
                   required
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  onChange={(e) => { setPhone(e.target.value); if (phoneError) setPhoneError(null); }}
+                  onBlur={handlePhoneBlur}
                   placeholder="مثال: ٠١١٣٠٩٤٦٥٥٦"
                   className="booking-modal__input"
                   dir="ltr"
+                  aria-invalid={phoneError ? true : undefined}
+                  aria-describedby={phoneError ? "booking-phone-ar-error" : undefined}
                 />
+                {phoneError && (
+                  <p id="booking-phone-ar-error" className="booking-modal__field-error">{phoneError}</p>
+                )}
               </div>
 
               <div className="booking-modal__field">
