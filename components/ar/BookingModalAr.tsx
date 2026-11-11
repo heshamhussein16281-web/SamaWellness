@@ -90,9 +90,17 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
       });
 
       if (!res.ok) throw new Error("Request failed");
+      const data = await res.json();
       setSamaLead("form");
-      setStatus("success");
-      window.history.pushState({}, "", `${window.location.pathname}?book=success`);
+      if (data?.duplicate) {
+        setDupSrc("form");
+        setStatus("duplicate");
+        // Don't push ?book=success for a duplicate — avoids double-counting
+        // a GA4/Google Ads conversion for the same lead.
+      } else {
+        setStatus("success");
+        window.history.pushState({}, "", `${window.location.pathname}?book=success`);
+      }
     } catch {
       setStatus("error");
     }
@@ -120,7 +128,7 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
             <h2 className="booking-modal__heading">إنت تواصلت معانا بالفعل</h2>
             <p className="booking-modal__desc">
               {dupSrc === "form"
-                ? "استلمنا طلبك وهنتواصل معاك على واتساب من رقم 01130946556 قريب."
+                ? "استلمنا طلبك وهنتواصل معاك على واتساب من رقم 01130946556 قريب — مش محتاج تبعت تاني."
                 : "إنت تواصلت معانا على واتساب بالفعل، هنرد عليك هناك."}
             </p>
             {dupSrc === "wa" && (
