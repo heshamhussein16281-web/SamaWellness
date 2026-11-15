@@ -48,7 +48,7 @@ const faqJsonLd = {
       name: "I've never been to therapy before — what should I expect?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Your journey begins with a 15-minute assessment with Counselor Sama, who will listen to what you're going through and personally match you with the therapist best suited to your needs. Your first session is a chance to share your story at your own pace — there's no pressure to dive deep right away. Your therapist will guide the conversation, help you feel comfortable, and together you'll start shaping a path forward.",
+        text: "Your journey begins with a free 15-minute assessment call with Counselor Sama, who will listen to what you're going through and personally match you with the therapist best suited to your needs. Your first session is a chance to share your story at your own pace — there's no pressure to dive deep right away. Your therapist will guide the conversation, help you feel comfortable, and together you'll start shaping a path forward.",
       },
     },
     {
@@ -64,7 +64,7 @@ const faqJsonLd = {
       name: "How do I know which type of therapy is right for me — individual, couples, or teen?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "That's exactly what the assessment is for. Counselor Sama will talk with you about what you're experiencing and recommend the best approach — whether that's individual sessions for personal growth, couples therapy to strengthen your relationship, or teen therapy tailored to younger clients. You don't need to figure it out alone.",
+        text: "That's exactly what the free assessment call is for. Counselor Sama will talk with you about what you're experiencing and recommend the best approach — whether that's individual sessions for personal growth, couples therapy to strengthen your relationship, or teen therapy tailored to younger clients. You don't need to figure it out alone.",
       },
     },
     {
@@ -152,7 +152,7 @@ const faqJsonLd = {
       name: "How do I book an online session?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "The process is the same as booking an in-person session — start by requesting your assessment with Counselor Sama. During the assessment, she'll understand your needs and recommend whether in-person or online is the best fit. You don't need to decide the format before reaching out.",
+        text: "The process is the same as booking an in-person session — start by requesting your free assessment with Counselor Sama. During the assessment, she'll understand your needs and recommend whether in-person or online is the best fit. You don't need to decide the format before reaching out.",
       },
     },
     {

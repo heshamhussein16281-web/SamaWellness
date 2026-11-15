@@ -187,9 +187,9 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
           </div>
         ) : (
           <>
-            <h2 className="booking-modal__heading">احجز تقييمك</h2>
+            <h2 className="booking-modal__heading">احجز تقييمك المجاني</h2>
             <p className="booking-modal__desc">
-              احجز تقييم 15 دقيقة مع الأخصائية سما عشان نختارلك المعالج المناسب. التقييم جزء من جلستك الأولى.
+              احجز تقييم مجاني ١٥ دقيقة مع الأخصائية سما عشان نختارلك المعالج المناسب.
             </p>
 
             <form onSubmit={handleSubmit} className="booking-modal__form">

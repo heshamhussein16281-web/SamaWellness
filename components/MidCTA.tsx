@@ -21,7 +21,7 @@ export default function MidCTA() {
   }, []);
 
   return (
-    <section className="mid-cta" aria-label="Book an assessment">
+    <section className="mid-cta" aria-label="Book a free assessment">
       <div className="mid-cta__inner">
         <p className="mid-cta__text">
           Not sure where to start?&ensp;
@@ -31,7 +31,7 @@ export default function MidCTA() {
             rel="noopener noreferrer"
             className="mid-cta__link"
           >
-            Book a 15-min assessment&nbsp;&rarr;
+            Book a free 15-min assessment&nbsp;&rarr;
           </a>
         </p>
       </div>

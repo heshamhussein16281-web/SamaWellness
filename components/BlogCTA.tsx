@@ -34,7 +34,7 @@ export default function BlogCTA() {
           lineHeight: 1.6,
         }}
       >
-        Reach out to Sama Wellness Therapy to book your 15-minute assessment.
+        Reach out to Sama Wellness Therapy for a free 15-minute assessment call.
       </p>
       <button
         onClick={() => setOpen(true)}

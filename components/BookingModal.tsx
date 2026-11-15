@@ -187,9 +187,9 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
           </div>
         ) : (
           <>
-            <h2 className="booking-modal__heading">Book Your Assessment</h2>
+            <h2 className="booking-modal__heading">Book Your Free Assessment</h2>
             <p className="booking-modal__desc">
-              Schedule a 15-minute assessment with Counselor Sama to match you with the right therapist. The assessment is part of your first session.
+              Book a free 15-minute assessment with Counselor Sama so we can match you with the right therapist.
             </p>
 
             <form onSubmit={handleSubmit} className="booking-modal__form">
