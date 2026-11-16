@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Tajawal } from "next/font/google";
 import NavbarAr from "@/components/ar/NavbarAr";
@@ -33,6 +33,11 @@ const tajawal = Tajawal({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.samawellnesstherapy.com"),
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
   title: "معالج نفسي في نيو جيزة، القاهرة | ساما ويلنس ثيرابي",
   description:
     "علاج فردي وزوجي وجماعي في نيو جيزة، القاهرة — حضورياً أو أونلاين في مصر والمملكة العربية السعودية. معالجين متخصصين يتم اختيارهم حسب احتياجاتك.",
@@ -99,6 +104,12 @@ const jsonLdAr = {
     name: "Sama Eissa - سما عيسى",
     jobTitle: "المؤسسة والمديرة الإكلينيكية",
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function ArabicPublicLayout({

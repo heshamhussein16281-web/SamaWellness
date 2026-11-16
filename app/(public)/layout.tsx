@@ -1,11 +1,17 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import NavbarMultiPage from "@/components/NavbarMultiPage";
 import Footer from "@/components/Footer";
 import ContactButton from "@/components/ContactButton";
 import SourceTagCapture from "@/components/SourceTagCapture";
+import RootHtmlShell from "@/components/RootHtmlShell";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.samawellnesstherapy.com"),
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
   title: "Therapist in New Giza & Sheikh Zayed, Cairo | Sama Wellness Therapy",
   description: "Individual, couples & group therapy in New Giza & Sheikh Zayed, Cairo — in-person or online across Egypt & Saudi Arabia. Licensed therapists matched to your needs.",
   alternates: {
@@ -99,9 +105,15 @@ const jsonLd = {
   "priceRange": "$$"
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
+    <RootHtmlShell lang="en">
       <Script
         id="json-ld"
         type="application/ld+json"
@@ -112,6 +124,6 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
       <main>{children}</main>
       <Footer />
       <ContactButton />
-    </>
+    </RootHtmlShell>
   );
 }

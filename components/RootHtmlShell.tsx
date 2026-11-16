@@ -1,37 +1,27 @@
-import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { QueryClientProviderWrapper } from "@/lib/providers";
-import "./globals.css";
+import "@/app/globals.css";
 
-// NOTE: Gilda Display, Nunito Sans, and Josefin Sans were previously loaded here via
-// next/font, but were never actually applied — globals.css references them through
-// --font-display/--font-body/--font-ui using their literal Google Fonts names, which
-// never matched the mangled @font-face names next/font generates. Every page has
-// always rendered in the fallback fonts (Georgia / system-ui / sans-serif). Removed
-// to stop downloading/preloading ~72KB of fonts that were never visible. Tajawal is
-// the only font actually wired up (referenced directly via var(--font-tajawal) in
-// Arabic components) and is now loaded only in app/(arabic)/ar/layout.tsx, scoped to
-// the routes that use it.
-
-export const metadata: Metadata = {
-  metadataBase: new URL("https://www.samawellnesstherapy.com"),
-  title: "Therapist in New Giza & Sheikh Zayed, Cairo | Sama Wellness Therapy",
-  description: "Individual, couples & group therapy in New Giza & Sheikh Zayed, Cairo. Licensed therapists matched to your needs. Book a free assessment.",
-  icons: {
-    icon: "/logo.png",
-    apple: "/logo.png",
-  },
-};
-
-export const viewport: Viewport = {
-  width: "device-width",
-  initialScale: 1,
-  viewportFit: "cover",
-};
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+// Shared <html>/<body> scaffold used by every top-level root layout in the app
+// (public marketing site, Arabic marketing site, clinic app, dashboards, preview
+// sandbox). Next.js only allows ONE <html> tag per rendered route, owned by
+// whichever layout is the "root" for that top-level segment — so to give the
+// Arabic routes a server-rendered lang="ar" dir="rtl" (instead of the old
+// client-side-only fix in HtmlLangAr.tsx), every top-level segment needs its own
+// root layout. This component centralizes the part that must stay byte-for-byte
+// identical across all of them (tracking scripts, React Query provider, global
+// CSS) so only the `lang`/`dir` actually varies between callers.
+export default function RootHtmlShell({
+  lang,
+  dir,
+  children,
+}: {
+  lang: "en" | "ar";
+  dir?: "rtl";
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en">
+    <html lang={lang} dir={dir}>
       <head>
         {/* Google Tag Manager — skip on /preview/ and /dashboard/ */}
         <Script
