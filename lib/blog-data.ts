@@ -114,7 +114,7 @@ This is exactly the kind of pattern-recognition that **<a style="color:var(--col
 
 If you've noticed contempt creeping into your relationship — sarcasm that's replaced real conversation, a tone of disrespect that wasn't always there — that's not a sign the relationship is beyond repair. It's a sign worth paying attention to, and one of the most treatable patterns in couples therapy when addressed directly.
 
-## Gottman Method Couples Therapy in New Giza & Sheikh Zayed
+## Gottman Method Couples Therapy in New Giza, near Sheikh Zayed
 
 At Sama Wellness Therapy, our founder Sama Eissa is a Gottman-trained couples therapist, working with couples across New Giza, Sheikh Zayed, and the wider Cairo area. <a style="color:var(--color-burgundy);text-decoration:underline;" href="/services">Couples therapy at Sama</a> isn't about assigning blame for who said what — it's about understanding the patterns that repeat between you, and building the tools to break them.`,
   },
@@ -174,7 +174,7 @@ At Sama Wellness Therapy, we work with clients across New Giza and Sheikh Zayed 
     title:
       "Why Couples Therapy Isn't Just for Relationships in Crisis",
     metaTitle:
-      "Couples Therapy Isn't Just for Crisis | Gottman Couples Therapist, New Giza & Sheikh Zayed",
+      "Couples Therapy Isn't Just for Crisis | Gottman Couples Therapist, New Giza, near Sheikh Zayed",
     metaDescription:
       "Think couples therapy is only for relationships about to end? Learn why relationships need ongoing maintenance — not just crisis intervention.",
     excerpt:
@@ -209,7 +209,7 @@ Couples who come to therapy proactively — not in the middle of a crisis — of
 
 This is especially true with **Gottman Method couples therapy**, which is built around ongoing relationship health — not just crisis intervention. The framework gives couples concrete tools for maintaining connection, admiration, and respect as an ongoing practice, not a one-time fix.
 
-## Couples Therapy in New Giza & Sheikh Zayed
+## Couples Therapy in New Giza, near Sheikh Zayed
 
 At Sama Wellness Therapy, couples come to us at every stage — some in real distress, but many simply wanting to strengthen a relationship that's already good, or navigate a life transition together with more intention. Both are valid, valuable reasons to book a session.`,
   },
@@ -253,7 +253,7 @@ Therapy addressing this pattern typically involves:
 
 In many ways, it's about awareness. Once you become aware of your patterns, that awareness itself opens the gate to real change. Therapy helps you get there — much like a light bulb switching on in a dark room, suddenly casting light on a problem that was always there, just unseen.
 
-## Support in New Giza & Sheikh Zayed
+## Support in New Giza, near Sheikh Zayed
 
 At Sama Wellness Therapy, our therapists work with individuals navigating exactly these patterns — whether currently in a difficult relationship, processing one that's ended, or wanting to understand why certain relational dynamics keep repeating.`,
   },
@@ -294,7 +294,7 @@ Therapy is a judgment-free space. The goal was never to make you love your paren
 
 This matters because the past shouldn't be the thing quietly controlling your present. Talking honestly about your family, in a private and supportive space, isn't betrayal. It's simply telling your story truthfully — and you have every right to tell it honestly, without shame or guilt.
 
-## Individual Therapy in New Giza & Sheikh Zayed
+## Individual Therapy in New Giza, near Sheikh Zayed
 
 At Sama Wellness Therapy, we understand that family dynamics are often central to the work clients come in to do — and we hold that conversation with the care and confidentiality it deserves.`,
   },
@@ -344,7 +344,7 @@ Therapy addressing people-pleasing typically focuses on building genuine self-es
 
 This is steady, incremental work — not a single realization, but a pattern built session by session, the same way the original pattern was built over time.
 
-## Individual Therapy in New Giza & Sheikh Zayed
+## Individual Therapy in New Giza, near Sheikh Zayed
 
 At Sama Wellness Therapy, our individual therapy sessions are built around exactly this kind of pattern work — helping clients understand not just what they're doing, but why, and how to build something more sustainable in its place.`,
   },
@@ -470,7 +470,7 @@ Sama Wellness Therapy is based in New Giza Meditown, serving clients across New 
     slug: "therapeutic-techniques-and-therapist-credentials",
     title: "Therapeutic Techniques We Offer: A Guide to Our Team's Expertise",
     metaTitle:
-      "Therapy Techniques & Therapist Credentials in New Giza & Sheikh Zayed | Sama Wellness Therapy",
+      "Therapy Techniques & Therapist Credentials in New Giza, near Sheikh Zayed | Sama Wellness Therapy",
     metaDescription:
       "From Gottman Method couples therapy to CBT, DBT, and trauma-focused care — explore the therapeutic techniques and credentialed therapists available at Sama Wellness Therapy.",
     excerpt:
@@ -525,7 +525,7 @@ For clients navigating family dynamics or marriage-related concerns, family and 
 
 A single therapist, however skilled, can't be a genuine specialist in every therapeutic technique. Having a team that spans Gottman Method, Gestalt therapy, CBT, DBT, trauma-focused care, schema therapy, psychosexual therapy, and addiction counseling means that whatever you're bringing to therapy, there's a real chance it matches someone's actual area of depth — not just their general practice.
 
-## Therapy Techniques Available in New Giza & Sheikh Zayed
+## Therapy Techniques Available in New Giza, near Sheikh Zayed
 
 All of our therapists are based at our clinic in New Giza Meditown, serving clients across New Giza, Sheikh Zayed, and the wider West Cairo area — in both Arabic and English, depending on what feels most comfortable for you.`,
   },
@@ -591,7 +591,7 @@ Sessions are available for couples across New Giza, Sheikh Zayed, and the wider 
     slug: "understanding-trauma",
     title: "Understanding Trauma: What It Is, and How It Shows Up in Daily Life",
     metaTitle:
-      "Understanding Trauma & Trauma-Focused Therapy | Sama Wellness Therapy, New Giza & Sheikh Zayed",
+      "Understanding Trauma & Trauma-Focused Therapy | Sama Wellness Therapy, New Giza, near Sheikh Zayed",
     metaDescription:
       "What is trauma, really? Learn what trauma is, how it shows up in daily life, and how trauma-focused therapy at Sama Wellness Therapy can help.",
     excerpt:
@@ -630,7 +630,7 @@ This is where trauma-focused therapy comes in — as one specific, structured wa
 
 Rather than treating trauma the same way as general talk therapy would, trauma-focused therapy accounts for how trauma affects memory, the body, and a person's sense of safety — not just their thoughts. It typically involves building safety and stability first, understanding how the nervous system responds to perceived threat, and gradually working through traumatic material at a pace the person can genuinely tolerate — never rushed, and always led by what the client is ready for.
 
-## Support in New Giza & Sheikh Zayed
+## Support in New Giza, near Sheikh Zayed
 
 At Sama Wellness Therapy, trauma-informed care is one of our core specialties, with therapists on our team — including Marina Rowes, who focuses specifically on trauma and PTSD — trained to work with clients navigating exactly this kind of history. Sessions are available at our New Giza clinic, serving clients across New Giza, Sheikh Zayed, and the wider West Cairo area, in both Arabic and English.`,
   },
@@ -638,9 +638,9 @@ At Sama Wellness Therapy, trauma-informed care is one of our core specialties, w
     slug: "understanding-anxiety-and-therapy",
     title: "Understanding Anxiety, and How Therapy Can Help",
     metaTitle:
-      "Anxiety Therapy in New Giza & Sheikh Zayed | Sama Wellness Therapy",
+      "Anxiety Therapy in New Giza, near Sheikh Zayed | Sama Wellness Therapy",
     metaDescription:
-      "Constant worry, racing thoughts, or a body that won't relax? Learn how anxiety therapy works at Sama Wellness Therapy in New Giza & Sheikh Zayed.",
+      "Constant worry, racing thoughts, or a body that won't relax? Learn how anxiety therapy works at Sama Wellness Therapy in New Giza, near Sheikh Zayed.",
     excerpt:
       "Anxiety doesn't always look like panic. Sometimes it's a constant low hum of worry, a racing mind at 2 a.m., or a body that stays tense even when nothing is wrong.",
     category: "Self-Care",
@@ -683,7 +683,7 @@ Sessions addressing anxiety typically involve:
 - Gradually working with, rather than avoiding, the situations anxiety has caused you to shrink away from
 - Addressing any deeper patterns — perfectionism, people-pleasing, unresolved past experiences — that may be feeding the anxiety underneath
 
-## Anxiety Therapy in New Giza & Sheikh Zayed
+## Anxiety Therapy in New Giza, near Sheikh Zayed
 
 At Sama Wellness Therapy, several of our therapists are trained in CBT and DBT, working with clients experiencing anxiety at every level of intensity — from everyday overthinking to anxiety that's significantly affecting daily life. Sessions are available at our New Giza clinic, serving clients across New Giza, Sheikh Zayed, and the wider Cairo area, in both Arabic and English.`,
   },
@@ -811,7 +811,7 @@ Communication skills are easiest to practice on real topics. Premarital sessions
 
 The goal isn't to agree on everything. It's to know how to disagree well.
 
-## Premarital Counseling in New Giza & Sheikh Zayed — and Online
+## Premarital Counseling in New Giza, near Sheikh Zayed — and Online
 
 At Sama Wellness Therapy, our founder and clinical director Sama Eissa works with engaged and newly married couples using <a style="color:var(--color-burgundy);text-decoration:underline;" href="/services">Gottman Method couples therapy</a>, alongside relationship therapist Samar Samy. Sessions focus on practical communication and conflict management skills that couples can use from the first conversation.
 
@@ -1130,7 +1130,7 @@ That between-session practice is a big part of why CBT works. The changes happen
 
 **Can CBT be done online?** Yes. CBT works well online, and many clients choose online sessions for convenience.
 
-## CBT in New Giza & Sheikh Zayed
+## CBT in New Giza, near Sheikh Zayed
 
 At Sama Wellness Therapy, CBT is one of the core approaches <a style="color:var(--color-burgundy);text-decoration:underline;" href="/team">our team</a> uses, including Dr. Sara El Shakankiri, Alia El Meteni, Mohamed Torkey, Haidy El Masry and Kareem Nagi. You can see how it fits alongside our other methods in our <a style="color:var(--color-burgundy);text-decoration:underline;" href="/blog/therapeutic-techniques-and-therapist-credentials">guide to therapeutic techniques</a>. Sessions are available across New Giza, Sheikh Zayed and the wider Cairo area, in Arabic and English, in person or online.
 

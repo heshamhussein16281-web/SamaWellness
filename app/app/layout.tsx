@@ -10,9 +10,9 @@ import RootHtmlShell from '@/components/RootHtmlShell';
 // RootHtmlShell), just scoped to this segment instead of inherited.
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.samawellnesstherapy.com'),
-  title: 'Therapist in New Giza & Sheikh Zayed, Cairo | Sama Wellness Therapy',
+  title: 'Therapist in New Giza, near Sheikh Zayed, Cairo | Sama Wellness Therapy',
   description:
-    'Individual, couples & group therapy in New Giza & Sheikh Zayed, Cairo. Licensed therapists matched to your needs. Book a free assessment.',
+    'Individual, couples & group therapy in New Giza, near Sheikh Zayed, Cairo. Licensed therapists matched to your needs. Book a free assessment.',
   icons: {
     icon: '/logo.png',
     apple: '/logo.png',
