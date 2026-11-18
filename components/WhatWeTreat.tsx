@@ -34,7 +34,7 @@ export default function WhatWeTreat() {
           ))}
         </div>
         <p className="what-we-treat__note">
-          Approaches include CBT, DBT, Schema Therapy, EMDR, Gestalt and psychoanalytic therapy —
+          Approaches include <a href="/blog/cbt-therapy-explained">CBT</a>, DBT, Schema Therapy, EMDR, Gestalt and psychoanalytic therapy —
           your therapist is matched to you after your 15-minute assessment.
         </p>
       </div>

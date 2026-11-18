@@ -15,13 +15,13 @@ export default function FooterAr() {
           <p className="footer__tagline">رحلتك نحو التعافي</p>
 
           <a
-            href="https://www.google.com/maps/search/?api=1&query=Meditown+B1+C031+New+Giza+Giza+Governorate+12588"
+            href="https://www.google.com/maps/search/?api=1&query=Meditown+B1+C031+New+Giza+6th+of+October+Giza+Governorate+12588"
             target="_blank"
             rel="noopener noreferrer"
             className="footer__address"
             dir="ltr"
           >
-            ميدتاون - B1 - C031، نيو جيزة، محافظة الجيزة 12588
+            ميدتاون - B1 - C031، نيو جيزة، ٦ أكتوبر، محافظة الجيزة 12588
           </a>
 
           <div className="footer__contact">

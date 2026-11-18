@@ -71,7 +71,7 @@ This structure applies whether you're coming in for individual therapy, couples 
 
 ## Serving New Giza & Sheikh Zayed
 
-Sama Wellness Therapy is based in New Giza Medi-Town, offering individual and couples therapy to clients across New Giza, Sheikh Zayed, and the wider West Cairo area. Our team includes therapists trained in Gottman Method couples therapy, CBT, DBT, and trauma-focused care — matched to what you specifically need, starting from that very first conversation.
+Sama Wellness Therapy is based in New Giza Meditown, offering individual and couples therapy to clients across New Giza, Sheikh Zayed, and the wider West Cairo area. Our team includes therapists trained in Gottman Method couples therapy, CBT, DBT, and trauma-focused care — matched to what you specifically need, starting from that very first conversation.
 
 If you've been wondering whether it's the right time to start, the honest answer is: you don't need a crisis to justify booking a first session. You just need the willingness to have one honest conversation about where you are.`,
   },
@@ -464,7 +464,7 @@ If after two or three sessions you feel like you're not connecting, it's worth r
 
 ## Serving New Giza & Sheikh Zayed
 
-Sama Wellness Therapy is based in New Giza Medi-Town, serving clients across New Giza, Sheikh Zayed, and the wider West Cairo area. Our team of 9 licensed therapists covers individual therapy, couples therapy (Gottman Method), CBT, DBT, and trauma-focused care — and every client is personally matched through Counselor Sama's assessment process to ensure the right fit from session one.`,
+Sama Wellness Therapy is based in New Giza Meditown, serving clients across New Giza, Sheikh Zayed, and the wider West Cairo area. Our team of 9 licensed therapists covers individual therapy, couples therapy (Gottman Method), CBT, DBT, and trauma-focused care — and every client is personally matched through Counselor Sama's assessment process to ensure the right fit from session one.`,
   },
   {
     slug: "therapeutic-techniques-and-therapist-credentials",
@@ -495,7 +495,7 @@ Gestalt therapy focuses on present-moment awareness — helping clients understa
 
 ## Cognitive Behavioral Therapy (CBT)
 
-CBT is one of the most widely researched therapeutic techniques, focused on identifying and reshaping the connection between thoughts, feelings, and behaviors. It's particularly effective for anxiety, depression, and specific negative thought patterns that repeat across situations.
+<a href="/blog/cbt-therapy-explained">CBT</a> is one of the most widely researched therapeutic techniques, focused on identifying and reshaping the connection between thoughts, feelings, and behaviors. It's particularly effective for anxiety, depression, and specific negative thought patterns that repeat across situations.
 
 ## Dialectical Behavior Therapy (DBT)
 
@@ -527,7 +527,7 @@ A single therapist, however skilled, can't be a genuine specialist in every ther
 
 ## Therapy Techniques Available in New Giza & Sheikh Zayed
 
-All of our therapists are based at our clinic in New Giza Medi-Town, serving clients across New Giza, Sheikh Zayed, and the wider West Cairo area — in both Arabic and English, depending on what feels most comfortable for you.`,
+All of our therapists are based at our clinic in New Giza Meditown, serving clients across New Giza, Sheikh Zayed, and the wider West Cairo area — in both Arabic and English, depending on what feels most comfortable for you.`,
   },
   {
     slug: "gottman-method-couples-therapy-explained",
@@ -670,7 +670,7 @@ Anxiety therapy isn't about eliminating anxiety completely — some anxiety is a
 
 Two of the most well-researched approaches for anxiety are:
 
-**Cognitive Behavioral Therapy (CBT)** — works by identifying the specific thought patterns that feed anxiety, and building practical tools to interrupt and reshape them. CBT is particularly effective for anxiety rooted in specific worry patterns or negative thought cycles.
+**Cognitive Behavioral Therapy (<a href="/blog/cbt-therapy-explained">CBT</a>)** — works by identifying the specific thought patterns that feed anxiety, and building practical tools to interrupt and reshape them. CBT is particularly effective for anxiety rooted in specific worry patterns or negative thought cycles.
 
 **Dialectical Behavior Therapy (DBT)** — builds on CBT with a stronger focus on emotional regulation and distress tolerance, particularly useful when anxiety comes with intense, hard-to-manage emotional responses.
 
@@ -753,8 +753,8 @@ You don't need to decide between online and in-person before reaching out. That'
   {
     slug: "premarital-counseling-communication-conflict",
     title: "Premarital Counseling: Learning to Communicate and Handle Conflict Before the Wedding",
-    metaTitle: "Premarital Counseling for Communication & Conflict | New Giza & Sheikh Zayed | Sama Wellness Therapy",
-    metaDescription: "Every couple argues — what matters is how. Premarital counseling helps engaged couples build healthy communication and conflict management skills before marriage. Gottman-based sessions in New Giza & Sheikh Zayed, and online.",
+    metaTitle: "Premarital Counseling: Communication & Conflict Skills",
+    metaDescription: "What premarital counseling covers and how couples learn to communicate and handle conflict before marriage. Free 15-minute assessment in Cairo or online.",
     excerpt: "Every couple argues — what matters is how. Premarital counseling teaches engaged couples the communication and conflict skills that research shows predict whether a relationship lasts.",
     category: "Relationships",
     image: "/BLOG/images/premarital-counseling-communication.jpg",

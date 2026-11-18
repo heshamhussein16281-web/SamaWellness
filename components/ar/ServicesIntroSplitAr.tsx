@@ -12,6 +12,11 @@ export default function ServicesIntroSplitAr() {
           <p className="services-intro-split__desc">
             سواء بتواجه قلق، تحديات في العلاقات، أو بتدور على مساحة حد يسمعك — إحنا هنا نمشي جنبك.
           </p>
+          <p className="services-intro-split__desc">
+            الجلسات حضوري في عيادتنا بنيو جيزة، قريبة من الشيخ زايد و٦ أكتوبر. وبتشمل الخدمات
+            العلاج الفردي والاستشارات الزوجية والجلسات الجماعية. ولعملائنا خارج الجيزة أو في
+            السعودية، الجلسات متاحة أونلاين.
+          </p>
         </div>
         <div className="services-intro-split__image-wrap">
           <Image

@@ -6,15 +6,15 @@ import PageHero from "@/components/PageHero";
 import { therapists } from "@/lib/team-data";
 
 export const metadata: Metadata = {
-  title: "Meet the Team — 9 Licensed Therapists | Sama Wellness Therapy",
-  description: "Meet the 9 licensed therapists at Sama Wellness Therapy, New Giza. Led by Counselor Sama Eissa, each therapist is matched to your needs.",
+  title: "Licensed Therapists in New Giza & Online | Sama Wellness",
+  description: "Meet our licensed therapists at our New Giza clinic, near Sheikh Zayed & 6th of October. Individual and couples therapy, starting with a free 15-min assessment to match you with the right therapist.",
   alternates: {
     canonical: "/team",
     languages: { en: "/team", ar: "/ar/team", "x-default": "/team" },
   },
   openGraph: {
-    title: "Meet the Team — 9 Licensed Therapists | Sama Wellness Therapy",
-    description: "Meet the 9 licensed therapists at Sama Wellness Therapy in New Giza, Cairo. Led by Clinical Director Sama Eissa.",
+    title: "Licensed Therapists in New Giza & Online | Sama Wellness",
+    description: "Meet our licensed therapists at our New Giza clinic, near Sheikh Zayed & 6th of October. Individual and couples therapy, starting with a free 15-min assessment to match you with the right therapist.",
     url: "https://www.samawellnesstherapy.com/team",
   },
 };

@@ -17,6 +17,14 @@ export default function HowItWorksIconsAr() {
   return (
     <section className="how-it-works how-it-works--icons" aria-label="إزاي بنشتغل">
       <h2 className="how-it-works__heading">إزاي بنشتغل</h2>
+      <p
+        className="how-it-works__desc"
+        style={{ textAlign: "center", maxWidth: "680px", margin: "0 auto var(--space-xl)" }}
+      >
+        عيادتنا في نيو جيزة، قريبة من الشيخ زايد و٦ أكتوبر. بنقدّم علاج نفسي فردي واستشارات
+        زوجية وجلسات جماعية، وبتبدأ بتقييم مجاني ١٥ دقيقة بنختارلك بعده المعالج الأنسب. ولو إنت
+        خارج الجيزة أو في السعودية، الجلسات متاحة أونلاين.
+      </p>
       <div className="how-it-works__grid">
         {steps.map((s, i) => {
           const icon = (

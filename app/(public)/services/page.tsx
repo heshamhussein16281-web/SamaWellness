@@ -4,21 +4,21 @@ import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 
 export const metadata: Metadata = {
-  title: "Therapy Services — Individual, Couples & Group Therapy | Sama Wellness",
-  description: "Individual, couples & group therapy with licensed therapists — in New Giza or online across Egypt & Saudi Arabia. Book your free assessment today.",
+  title: "Therapy Services in New Giza & Online | Sama Wellness",
+  description: "Individual, couples & group therapy with licensed therapists at our New Giza clinic, near Sheikh Zayed & 6th of October, or online. Free 15-min assessment.",
   alternates: {
     canonical: "/services",
     languages: { en: "/services", ar: "/ar/services", "x-default": "/services" },
   },
   openGraph: {
-    title: "Therapy Services — Individual, Couples & Group Therapy | Sama Wellness",
-    description: "Individual, couples & group therapy with licensed therapists — in New Giza or online across Egypt & Saudi Arabia. Book your free assessment today.",
+    title: "Therapy Services in New Giza & Online | Sama Wellness",
+    description: "Individual, couples & group therapy with licensed therapists at our New Giza clinic, near Sheikh Zayed & 6th of October, or online. Free 15-min assessment.",
     url: "https://www.samawellnesstherapy.com/services",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Therapy Services — Individual, Couples & Group Therapy | Sama Wellness",
-    description: "Individual, couples & group therapy with licensed therapists — in New Giza or online across Egypt & Saudi Arabia. Book your free assessment today.",
+    title: "Therapy Services in New Giza & Online | Sama Wellness",
+    description: "Individual, couples & group therapy with licensed therapists at our New Giza clinic, near Sheikh Zayed & 6th of October, or online. Free 15-min assessment.",
   },
 };
 import ScrollReveal from "@/components/ScrollReveal";

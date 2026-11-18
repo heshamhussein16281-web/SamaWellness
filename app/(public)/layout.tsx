@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     icon: "/logo.png",
     apple: "/logo.png",
   },
-  title: "Therapist in New Giza & Sheikh Zayed, Cairo | Sama Wellness Therapy",
-  description: "Individual, couples & group therapy in New Giza & Sheikh Zayed, Cairo — in-person or online across Egypt & Saudi Arabia. Licensed therapists matched to your needs.",
+  title: "Therapist in New Giza, near Sheikh Zayed, Cairo | Sama Wellness Therapy",
+  description: "Individual, couples & group therapy in New Giza, near Sheikh Zayed, Cairo — in-person or online across Egypt & Saudi Arabia. Licensed therapists matched to your needs.",
   alternates: {
     canonical: "/",
     languages: {
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Therapist in New Giza & Sheikh Zayed, Cairo | Sama Wellness Therapy",
-    description: "Individual, couples & group therapy in New Giza & Sheikh Zayed, Cairo — in-person or online across Egypt & Saudi Arabia. Licensed therapists matched to your needs.",
+    title: "Therapist in New Giza, near Sheikh Zayed, Cairo | Sama Wellness Therapy",
+    description: "Individual, couples & group therapy in New Giza, near Sheikh Zayed, Cairo — in-person or online across Egypt & Saudi Arabia. Licensed therapists matched to your needs.",
     url: "https://www.samawellnesstherapy.com",
     siteName: "Sama Wellness Therapy",
     locale: "en_EG",
@@ -40,8 +40,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Therapist in New Giza & Sheikh Zayed, Cairo | Sama Wellness Therapy",
-    description: "Individual, couples & group therapy in New Giza & Sheikh Zayed, Cairo — in-person or online across Egypt & Saudi Arabia. Licensed therapists matched to your needs.",
+    title: "Therapist in New Giza, near Sheikh Zayed, Cairo | Sama Wellness Therapy",
+    description: "Individual, couples & group therapy in New Giza, near Sheikh Zayed, Cairo — in-person or online across Egypt & Saudi Arabia. Licensed therapists matched to your needs.",
     images: ["https://www.samawellnesstherapy.com/room.jpg"],
   },
   other: {
@@ -60,8 +60,8 @@ const jsonLd = {
   "telephone": "+201130946556",
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "Meditown - B1 - C031",
-    "addressLocality": "New Giza",
+    "streetAddress": "Meditown - B1 - C031, New Giza",
+    "addressLocality": "6th of October",
     "addressRegion": "Giza Governorate",
     "postalCode": "12588",
     "addressCountry": "EG"
