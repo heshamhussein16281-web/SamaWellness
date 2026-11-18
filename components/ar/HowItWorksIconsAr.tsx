@@ -21,9 +21,7 @@ export default function HowItWorksIconsAr() {
         className="how-it-works__desc"
         style={{ textAlign: "center", maxWidth: "680px", margin: "0 auto var(--space-xl)" }}
       >
-        عيادتنا في نيو جيزة، قريبة من الشيخ زايد و٦ أكتوبر. بنقدّم علاج نفسي فردي واستشارات
-        زوجية وجلسات جماعية، وبتبدأ بتقييم مجاني ١٥ دقيقة بنختارلك بعده المعالج الأنسب. ولو إنت
-        خارج الجيزة أو في السعودية، الجلسات متاحة أونلاين.
+        عيادتنا في نيو جيزة، قريبة من الشيخ زايد و٦ أكتوبر، والجلسات متاحة أونلاين لخارج الجيزة.
       </p>
       <div className="how-it-works__grid">
         {steps.map((s, i) => {
