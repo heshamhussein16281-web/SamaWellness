@@ -746,7 +746,6 @@ Whether you end up doing therapy online or in-person, the starting point is the 
 
 You don't need to decide between online and in-person before reaching out. That's part of what the assessment is for.
 
----
 
 **Interested in exploring whether online therapy is right for you?** Reach out to Sama Wellness Therapy — +20 113 094 6556. We serve clients in-person at our New Giza clinic and online across Egypt, Saudi Arabia, and the Middle East, in both Arabic and English.`,
   },
@@ -819,7 +818,6 @@ Sessions are available in person at our New Giza clinic, serving couples across 
 
 You don't need to be having problems to start. Your free 15-minute assessment with Counselor Sama is where that starts.
 
----
 
 **The way you handle conflict matters more than whether you have it — and it can be learned.** Reach out to Sama Wellness Therapy — +20 113 094 6556. In person at our New Giza clinic, and online across Egypt, Saudi Arabia, and the Middle East.`,
   },
@@ -919,7 +917,6 @@ Because high-level athletes travel for camps and competitions, sessions are also
 
 If you're already good, and you're ready to find out how much further you can go — if that's where you are right now, that's exactly what sessions are for.
 
----
 
 **The athletes who go furthest train their minds as seriously as their bodies.** Reach out to Sama Wellness Therapy — +20 113 094 6556. In person at our New Giza clinic, and online across Egypt, Saudi Arabia, and the Middle East.`,
   },
@@ -1019,7 +1016,6 @@ At our clinic in New Giza, serving clients and families from Sheikh Zayed, 6th o
 
 Whether you're worried about yourself or about someone you love — if that's where you are right now, that's exactly what sessions are for.
 
----
 
 **Every form of addiction follows a pattern — and patterns can be changed.** Reach out to Sama Wellness Therapy — 0113 094 6556. In person at our New Giza clinic, and online across Egypt, Saudi Arabia, and the Middle East.`,
   },
@@ -1135,7 +1131,6 @@ At Sama Wellness Therapy, CBT is one of the core approaches <a style="color:var(
 
 Your first step is a 15-minute assessment with Counselor Sama, part of your first session, to match you with the right therapist and approach. If you're ready to work on what's happening now, that's exactly what sessions are for.
 
----
 
 **Your thoughts aren't always facts, and you can learn to tell the difference.** Reach out to Sama Wellness Therapy — +20 113 094 6556. In person at our New Giza clinic, and online across Egypt and the Middle East.`,
   },
@@ -1230,7 +1225,6 @@ At Sama Wellness Therapy, several of our therapists use DBT alongside CBT and ot
 
 Not sure if DBT is the right fit? That's what your free 15-minute assessment with Counselor Sama is for. It's how we match you with the right therapist.
 
----
 
 **Your feelings make sense, and you can still learn new ways to respond.** If that's where you are right now, that's exactly what sessions are for.`,
   },
