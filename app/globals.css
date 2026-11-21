@@ -2024,7 +2024,7 @@ textarea.form-input {
     align-items: center !important;
     justify-content: center !important;
     gap: 20px !important;
-    min-height: calc(100vh - 131px) !important;
+    min-height: calc(100svh - 131px) !important;
     padding: 16px 0 !important;
     overflow: hidden !important;
   }
@@ -4497,4 +4497,62 @@ textarea.form-input {
     left: 16px;
     right: auto;
   }
+}
+
+/* Action 22 — CLS fix: reserve height for Arabic text blocks that resize
+   when the Tajawal web font swaps in from its fallback (see the font-swap
+   comment in app/(arabic)/ar/layout.tsx — previously measured real-user
+   CLS 0.41 on /ar from this exact mechanism, ~240px of shift). Each value
+   below is the block's own Tajawal-rendered (final) height at that width,
+   measured directly — so once the font has loaded, min-height is already
+   satisfied by the content and this is a visual no-op. [dir="rtl"]-scoped
+   because the swap only happens on /ar routes; English never loads this
+   font. Per-item (:nth-child) because each card/body holds different,
+   fixed text of a different length — a single shared value would leave
+   empty space under the shorter ones. The rotating testimonial quote card
+   is deliberately NOT covered here: it already resizes between quotes
+   independent of the font, so a static min-height would either be too
+   small (several quotes) or add a permanent gap under the shorter ones —
+   a real fix for it needs a per-quote height, not a CSS constant. */
+@media (max-width: 375px) {
+  [dir="rtl"] .values-strip__card:nth-child(1) { min-height: 402px; }
+  [dir="rtl"] .values-strip__card:nth-child(2) { min-height: 327px; }
+  [dir="rtl"] .values-strip__card:nth-child(3) { min-height: 370px; }
+  [dir="rtl"] .teaser-card:nth-child(1) .teaser-card__body { min-height: 155.5px; }
+  [dir="rtl"] .teaser-card:nth-child(2) .teaser-card__body { min-height: 155.5px; }
+  [dir="rtl"] .teaser-card:nth-child(3) .teaser-card__body { min-height: 134.5px; }
+  [dir="rtl"] .teaser-card:nth-child(4) .teaser-card__body { min-height: 155.5px; }
+  [dir="rtl"] .service-card:nth-child(1) .service-card__body { min-height: 142.1953125px; }
+  [dir="rtl"] .service-card:nth-child(2) .service-card__body { min-height: 121.1953125px; }
+  [dir="rtl"] .service-card:nth-child(3) .service-card__body { min-height: 142.1953125px; }
+  [dir="rtl"] .what-we-treat__chips { min-height: 402px; }
+}
+@media (min-width: 376px) and (max-width: 414px) {
+  [dir="rtl"] .values-strip__card:nth-child(1) { min-height: 359px; }
+  [dir="rtl"] .values-strip__card:nth-child(2) { min-height: 327px; }
+  [dir="rtl"] .values-strip__card:nth-child(3) { min-height: 370px; }
+  [dir="rtl"] .teaser-card:nth-child(1) .teaser-card__body { min-height: 134.5px; }
+  [dir="rtl"] .teaser-card:nth-child(2) .teaser-card__body { min-height: 155.5px; }
+  [dir="rtl"] .teaser-card:nth-child(3) .teaser-card__body { min-height: 134.5px; }
+  [dir="rtl"] .teaser-card:nth-child(4) .teaser-card__body { min-height: 155.5px; }
+  [dir="rtl"] .service-card:nth-child(1) .service-card__body { min-height: 142.1953125px; }
+  [dir="rtl"] .service-card:nth-child(2) .service-card__body { min-height: 121.1953125px; }
+  [dir="rtl"] .service-card:nth-child(3) .service-card__body { min-height: 121.1953125px; }
+  [dir="rtl"] .what-we-treat__chips { min-height: 361px; }
+}
+@media (min-width: 415px) and (max-width: 480px) {
+  [dir="rtl"] .values-strip__card:nth-child(1) { min-height: 327px; }
+  [dir="rtl"] .values-strip__card:nth-child(2) { min-height: 295px; }
+  [dir="rtl"] .values-strip__card:nth-child(3) { min-height: 295px; }
+  [dir="rtl"] .teaser-card:nth-child(1) .teaser-card__body { min-height: 134.5px; }
+  [dir="rtl"] .teaser-card:nth-child(2) .teaser-card__body { min-height: 134.5px; }
+  [dir="rtl"] .teaser-card:nth-child(3) .teaser-card__body { min-height: 134.5px; }
+  [dir="rtl"] .teaser-card:nth-child(4) .teaser-card__body { min-height: 155.5px; }
+  [dir="rtl"] .service-card:nth-child(1) .service-card__body { min-height: 121.1953125px; }
+  [dir="rtl"] .service-card:nth-child(2) .service-card__body { min-height: 121.1953125px; }
+  [dir="rtl"] .service-card:nth-child(3) .service-card__body { min-height: 121.1953125px; }
+  [dir="rtl"] .what-we-treat__chips { min-height: 320px; }
+}
+@media (max-width: 480px) {
+  [dir="rtl"] .final-cta__inner { min-height: 184.3125px; }
 }

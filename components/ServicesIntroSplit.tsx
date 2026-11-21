@@ -26,6 +26,7 @@ export default function ServicesIntroSplit() {
             height={828}
             sizes="(max-width: 768px) 100vw, 550px"
             className="services-intro-split__image"
+            priority
           />
         </div>
       </div>
