@@ -4556,3 +4556,35 @@ textarea.form-input {
 @media (max-width: 480px) {
   [dir="rtl"] .final-cta__inner { min-height: 184.3125px; }
 }
+
+/* Action 22b — same fix, extended to the 2 sections Action 22 missed:
+   how-it-works and testimonials. Measured the same way (Tajawal-rendered
+   height vs the fallback, forced by overriding --font-tajawal on the
+   dir="rtl" wrapper). how-it-works__step is per-item because at 360px one
+   step's description wraps to a 2nd line with Tajawal but not with the
+   fallback — a shared value would leave a gap under the other two.
+   testimonials__card is sized to the height of the quote shown on initial
+   load (index 0) — the only state this fix is responsible for. The card
+   still resizes when the user rotates to a different-length quote later;
+   that's pre-existing behavior independent of the font and unrelated to
+   what this fix addresses. */
+@media (max-width: 375px) {
+  [dir="rtl"] .how-it-works__heading { min-height: 33.5px; }
+  [dir="rtl"] .how-it-works__step:nth-child(1) { min-height: 262.7109375px; }
+  [dir="rtl"] .how-it-works__step:nth-child(2) { min-height: 287.03125px; }
+  [dir="rtl"] .how-it-works__step:nth-child(3) { min-height: 262.7109375px; }
+  [dir="rtl"] .testimonials__heading { min-height: 33.5px; }
+  [dir="rtl"] .testimonials__stars { min-height: 28.5px; }
+  [dir="rtl"] .testimonials__card { min-height: 218.265625px; }
+  [dir="rtl"] .testimonials__google-link { min-height: 14.5px; }
+}
+@media (min-width: 376px) and (max-width: 480px) {
+  [dir="rtl"] .how-it-works__heading { min-height: 33.5px; }
+  [dir="rtl"] .how-it-works__step:nth-child(1) { min-height: 262.7109375px; }
+  [dir="rtl"] .how-it-works__step:nth-child(2) { min-height: 262.7109375px; }
+  [dir="rtl"] .how-it-works__step:nth-child(3) { min-height: 262.7109375px; }
+  [dir="rtl"] .testimonials__heading { min-height: 33.5px; }
+  [dir="rtl"] .testimonials__stars { min-height: 28.5px; }
+  [dir="rtl"] .testimonials__card { min-height: 187.546875px; }
+  [dir="rtl"] .testimonials__google-link { min-height: 14.5px; }
+}
