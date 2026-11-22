@@ -68,6 +68,7 @@ export default function NavbarMultiPage() {
           alt="Sama Wellness Therapy"
           width={182}
           height={182}
+          priority
           sizes="(max-width: 768px) 130px, 182px"
           style={{
             width: "182px",

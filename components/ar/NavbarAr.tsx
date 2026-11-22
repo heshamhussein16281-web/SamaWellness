@@ -57,6 +57,7 @@ export default function NavbarAr() {
           alt="ساما ويلنس ثيرابي"
           width={182}
           height={182}
+          priority
           sizes="(max-width: 768px) 130px, 182px"
           style={{
             width: "182px",
