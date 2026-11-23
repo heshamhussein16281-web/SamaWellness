@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { getLeadSource } from "@/lib/sourceTag";
 import { appendLeadCode, appendLeadCodeSync, getOrCreateLeadCode, getResolvedLeadCode, logLeadClick, pageLanguage } from "@/lib/leadCode";
 import { validatePhone, PHONE_ERROR_EN } from "@/lib/phone";
 
@@ -133,7 +132,6 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
           session_format: sessionFormat,
           note: note || null,
           source: "booking_modal",
-          lead_source: getLeadSource(),
           code,
           page_language: pageLanguage(),
         }),

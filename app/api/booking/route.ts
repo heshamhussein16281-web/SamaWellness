@@ -13,7 +13,15 @@ const DUPLICATE_WINDOW_MS = 3 * 24 * 60 * 60 * 1000; // 3 days
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const { name, phone, preferred_time, session_format, note, source, lead_source, code, page_language } = body;
+  const { name, phone, preferred_time, session_format, note, source, code, page_language } = body;
+
+  // Action 25: the booking form no longer sends a separate lead_source —
+  // the code's own prefix letter (set by lib/leadCode.ts's first-touch
+  // detection, which checks the same gclid/gbraid/wbraid params the old
+  // lib/sourceTag.ts did) is the single source of truth now. Derived here
+  // rather than trusting a second client-computed value that could only
+  // ever agree or disagree with this one.
+  const leadSource = code && code[0] === "G" ? "google_ads" : "direct";
 
   if (!name || !phone) {
     return NextResponse.json({ error: "Name and phone are required." }, { status: 400 });
@@ -98,7 +106,7 @@ export async function POST(req: Request) {
         session_format: session_format || "either",
         note: note || "",
         source: source || "booking_modal",
-        lead_source: lead_source || "direct",
+        lead_source: leadSource,
       }),
     });
   } catch (sheetError) {
