@@ -1,8 +1,11 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { appendSourceSuffix, getLeadSource } from "@/lib/sourceTag";
+import { appendLeadCode, appendLeadCodeSync, getOrCreateLeadCode, getResolvedLeadCode, lockLeadCode, logLeadClick, pageLanguage } from "@/lib/leadCode";
 import { validatePhone, PHONE_ERROR_AR } from "@/lib/phone";
+
+const WA_TEXT_DEFAULT = "%D8%A3%D9%86%D8%A7%20%D8%B9%D8%A7%D9%8A%D8%B2%2F%D8%A9%20%D8%A3%D8%AD%D8%AC%D8%B2%20%D8%AA%D9%82%D9%8A%D9%8A%D9%85";
+const WA_BASE = "https://api.whatsapp.com/send?phone=201130946556&text=";
 
 function getSamaLead(): { ts: number; src: string } | null {
   try {
@@ -35,7 +38,32 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error" | "duplicate">("idle");
   const [dupSrc, setDupSrc] = useState<string | null>(null);
   const [phoneError, setPhoneError] = useState<string | null>(null);
+  const [waHref, setWaHref] = useState(WA_BASE + WA_TEXT_DEFAULT);
   const nameRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const encoded = await appendLeadCode(WA_TEXT_DEFAULT);
+      if (!cancelled) setWaHref(WA_BASE + encoded);
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  // Lead code must never delay opening WhatsApp (mobile popup blockers
+  // block window.open after any awaited gap). If the background fetch
+  // hasn't resolved yet, commit a fallback synchronously and open with
+  // it directly instead of relying on the (still-default) waHref state.
+  const handleWaClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const resolved = getResolvedLeadCode();
+    if (!resolved) {
+      e.preventDefault();
+      window.open(WA_BASE + appendLeadCodeSync(WA_TEXT_DEFAULT), "_blank", "noopener,noreferrer");
+      logLeadClick("whatsapp");
+      return;
+    }
+    logLeadClick("whatsapp", resolved);
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -90,6 +118,8 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
     setStatus("sending");
 
     try {
+      const { code, gclid, landingPage } = await getOrCreateLeadCode();
+      lockLeadCode();
       const res = await fetch("/api/booking", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -100,7 +130,10 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
           session_format: sessionFormat,
           note: note || null,
           source: "booking_modal_ar",
-          lead_source: getLeadSource(),
+          code,
+          gclid,
+          landing_page: landingPage,
+          page_language: pageLanguage(),
         }),
       });
 
@@ -151,16 +184,17 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
             <h2 className="booking-modal__heading">إنت تواصلت معانا بالفعل</h2>
             <p className="booking-modal__desc">
               {dupSrc === "form"
-                ? "استلمنا طلبك وهنتواصل معاك على واتساب من رقم 01130946556 قريب — مش محتاج تبعت تاني."
+                ? "استلمنا طلبك قبل كده — وهيتواصل معاك فريقنا قريب."
                 : "إنت تواصلت معانا على واتساب بالفعل، هنرد عليك هناك."}
             </p>
             {dupSrc === "wa" && (
               <a
-                href={`https://api.whatsapp.com/send?phone=201130946556&text=${appendSourceSuffix("%D8%A3%D9%86%D8%A7%20%D8%B9%D8%A7%D9%8A%D8%B2%2F%D8%A9%20%D8%A3%D8%AD%D8%AC%D8%B2%20%D8%AA%D9%82%D9%8A%D9%8A%D9%85")}`}
+                href={waHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="booking-modal__btn"
                 style={{ textAlign: "center", textDecoration: "none", display: "block" }}
+                onClick={handleWaClick}
               >
                 افتح واتساب
               </a>
@@ -179,7 +213,7 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
             </div>
             <h2 className="booking-modal__heading">هنتواصل معاك قريب</h2>
             <p className="booking-modal__desc">
-              هنتواصل معاك على واتساب من رقم 01130946556 خلال ساعات قليلة عشان نحدد معاد التقييم، مش محتاج تبعتلنا رسالة.
+              شكرًا ليك — استلمنا طلبك، وهيتواصل معاك فريقنا قريب.
             </p>
             <button onClick={resetAndClose} className="booking-modal__btn booking-modal__btn--outline">
               إغلاق
@@ -276,7 +310,7 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
               {status === "error" && (
                 <p className="booking-modal__error">
                   حصل مشكلة. حاول/ي تاني أو كلمنا على{" "}
-                  <a href={`https://api.whatsapp.com/send?phone=201130946556&text=${appendSourceSuffix("%D8%A3%D9%86%D8%A7%20%D8%B9%D8%A7%D9%8A%D8%B2%2F%D8%A9%20%D8%A3%D8%AD%D8%AC%D8%B2%20%D8%AA%D9%82%D9%8A%D9%8A%D9%85")}`} target="_blank" rel="noopener noreferrer">
+                  <a href={waHref} target="_blank" rel="noopener noreferrer" onClick={handleWaClick}>
                     واتساب
                   </a>.
                 </p>
@@ -291,12 +325,12 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
                   {status === "sending" ? "جاري الإرسال…" : "احجز التقييم"}
                 </button>
                 <a
-                  href={`https://api.whatsapp.com/send?phone=201130946556&text=${appendSourceSuffix("%D8%A3%D9%86%D8%A7%20%D8%B9%D8%A7%D9%8A%D8%B2%2F%D8%A9%20%D8%A3%D8%AD%D8%AC%D8%B2%20%D8%AA%D9%82%D9%8A%D9%8A%D9%85")}`}
+                  href={waHref}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="booking-modal__btn booking-modal__btn--outline"
                   style={{ textAlign: "center", textDecoration: "none" }}
-                  onClick={() => { setSamaLead("wa"); setTimeout(resetAndClose, 300); }}
+                  onClick={(e) => { handleWaClick(e); setSamaLead("wa"); setTimeout(resetAndClose, 300); }}
                 >
                   تواصل على واتساب
                 </a>

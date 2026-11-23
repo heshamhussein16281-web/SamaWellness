@@ -13,7 +13,25 @@ const DUPLICATE_WINDOW_MS = 3 * 24 * 60 * 60 * 1000; // 3 days
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const { name, phone, preferred_time, session_format, note, source, lead_source } = body;
+  const { name, phone, preferred_time, session_format, note, source, code, gclid, landing_page, page_language } = body;
+
+  // Action 25: the "Assessment form" tab's existing "Source" column used
+  // to hold which form variant was used (booking_modal / booking_modal_ar)
+  // and "lead source" held a binary google_ads/direct string. Per the
+  // user's explicit call: fold channel + form language into "Source"
+  // ("Google Ads · AR"), and put the new readable code into "lead source"
+  // instead — both derived from `code`'s own prefix letter (the single
+  // source of truth from lib/leadCode.ts's first-touch detection) plus
+  // the page language the client reports, not from a second
+  // independently-computed value.
+  const CHANNEL_LABELS: Record<string, string> = {
+    G: "Google Ads",
+    S: "Google search",
+    I: "Instagram",
+    D: "Direct",
+  };
+  const sourcePrefix = code && ["G", "S", "I", "D"].includes(code[0]) ? code[0] : "D";
+  const sourceColumnValue = `${CHANNEL_LABELS[sourcePrefix]} · ${(page_language || "en").toUpperCase()}`;
 
   if (!name || !phone) {
     return NextResponse.json({ error: "Name and phone are required." }, { status: 400 });
@@ -97,13 +115,40 @@ export async function POST(req: Request) {
         preferred_time: preferred_time ? (TIME_LABELS[preferred_time] || preferred_time) : "",
         session_format: session_format || "either",
         note: note || "",
-        source: source || "booking_modal",
-        lead_source: lead_source || "direct",
+        source: sourceColumnValue,
+        lead_source: code || "",
       }),
     });
   } catch (sheetError) {
     console.error("Google Sheet push failed:", sheetError);
     // Don't fail the request — data is already saved in Supabase
+  }
+
+  // Action 25: log this as a lead (server-side — more reliable than a
+  // client beacon for a form submission that's already going through a
+  // server round-trip). Skipped above for duplicates along with the
+  // existing Sheet push, so a repeat submission from the same phone
+  // number doesn't clutter "Leads log" either.
+  if (code) {
+    fetch(GOOGLE_SHEET_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "logLead",
+        code,
+        // The code's own prefix letter already encodes the real
+        // G/S/I/D source lib/leadCode.ts detected on first touch — more
+        // accurate here than re-deriving it from lead_source, which only
+        // distinguishes "google_ads" vs "direct".
+        source: ["G", "S", "I", "D"].includes(code[0]) ? code[0] : "D",
+        gclid: gclid || "",
+        pageLanguage: page_language || "en",
+        landingPage: landing_page || "",
+        channel: "form",
+        name,
+        phone: normalizedPhone,
+      }),
+    }).catch((err) => console.error("lead-log (booking) failed:", err));
   }
 
   return NextResponse.json({ success: true });

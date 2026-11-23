@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { appendSourceSuffix } from "@/lib/sourceTag";
+import { appendLeadCode, appendLeadCodeSync, logLeadClick, getResolvedLeadCode } from "@/lib/leadCode";
 
 const WA_BASE = "https://api.whatsapp.com/send?phone=201130946556&text=";
 const TEXT_DEFAULT = "I%27d%20like%20to%20book%20an%20assessment";
@@ -9,10 +9,11 @@ const TEXT_FORM = "I%20already%20submitted%20the%20booking%20form";
 const THREE_DAYS = 3 * 24 * 60 * 60 * 1000;
 
 export default function ContactButton() {
+  const [text, setText] = useState(TEXT_DEFAULT);
   const [href, setHref] = useState(WA_BASE + TEXT_DEFAULT);
 
   useEffect(() => {
-    let text = TEXT_DEFAULT;
+    let resolvedText = TEXT_DEFAULT;
     try {
       const raw = localStorage.getItem("sama_lead");
       if (raw) {
@@ -20,14 +21,20 @@ export default function ContactButton() {
         if (Date.now() - data.ts > THREE_DAYS) {
           localStorage.removeItem("sama_lead");
         } else if (data.src === "form") {
-          text = TEXT_FORM;
+          resolvedText = TEXT_FORM;
         }
       }
     } catch {}
-    setHref(WA_BASE + appendSourceSuffix(text));
+    setText(resolvedText);
+    let cancelled = false;
+    (async () => {
+      const encoded = await appendLeadCode(resolvedText);
+      if (!cancelled) setHref(WA_BASE + encoded);
+    })();
+    return () => { cancelled = true; };
   }, []);
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     try {
       const raw = localStorage.getItem("sama_lead");
       if (raw) {
@@ -42,6 +49,20 @@ export default function ContactButton() {
         localStorage.setItem("sama_lead", JSON.stringify({ ts: Date.now(), src: "wa" }));
       }
     } catch {}
+
+    // Lead code must never delay opening WhatsApp (mobile popup blockers
+    // block window.open after any awaited gap). If the background fetch
+    // hasn't resolved yet, commit a fallback synchronously and open with
+    // it directly instead of relying on the (still-default) href.
+    const resolved = getResolvedLeadCode();
+    if (!resolved) {
+      e.preventDefault();
+      const fallbackHref = WA_BASE + appendLeadCodeSync(text);
+      window.open(fallbackHref, "_blank", "noopener,noreferrer");
+      logLeadClick("whatsapp");
+      return;
+    }
+    logLeadClick("whatsapp", resolved);
   };
 
   return (
