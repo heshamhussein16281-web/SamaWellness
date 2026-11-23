@@ -4,7 +4,7 @@ const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbxNm36kxoTnyjX
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const { first_name, last_name, email, topic, message } = body;
+  const { first_name, last_name, email, topic, message, code, page_language } = body;
 
   if (!email || !topic || !message) {
     return NextResponse.json({ error: "Missing required fields." }, { status: 400 });
@@ -33,6 +33,27 @@ export async function POST(req: Request) {
     });
   } catch (sheetError) {
     console.error("Google Sheet push failed:", sheetError);
+  }
+
+  // Action 25: log this as a lead (server-side). Only fires if the
+  // caller sends a code — the contact form isn't currently wired to
+  // lib/leadCode.ts, so this is inert until/unless that's added.
+  if (code) {
+    fetch(GOOGLE_SHEET_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "logLead",
+        code,
+        source: ["G", "S", "I", "D"].includes(code[0]) ? code[0] : "D",
+        gclid: "",
+        pageLanguage: page_language || "en",
+        landingPage: "",
+        channel: "form",
+        name: `${first_name} ${last_name}`,
+        phone: email,
+      }),
+    }).catch((err) => console.error("lead-log (contact) failed:", err));
   }
 
   return NextResponse.json({ success: true });

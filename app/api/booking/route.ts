@@ -13,7 +13,7 @@ const DUPLICATE_WINDOW_MS = 3 * 24 * 60 * 60 * 1000; // 3 days
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const { name, phone, preferred_time, session_format, note, source, lead_source } = body;
+  const { name, phone, preferred_time, session_format, note, source, lead_source, code, page_language } = body;
 
   if (!name || !phone) {
     return NextResponse.json({ error: "Name and phone are required." }, { status: 400 });
@@ -104,6 +104,33 @@ export async function POST(req: Request) {
   } catch (sheetError) {
     console.error("Google Sheet push failed:", sheetError);
     // Don't fail the request — data is already saved in Supabase
+  }
+
+  // Action 25: log this as a lead (server-side — more reliable than a
+  // client beacon for a form submission that's already going through a
+  // server round-trip). Skipped above for duplicates along with the
+  // existing Sheet push, so a repeat submission from the same phone
+  // number doesn't clutter "Leads log" either.
+  if (code) {
+    fetch(GOOGLE_SHEET_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "logLead",
+        code,
+        // The code's own prefix letter already encodes the real
+        // G/S/I/D source lib/leadCode.ts detected on first touch — more
+        // accurate here than re-deriving it from lead_source, which only
+        // distinguishes "google_ads" vs "direct".
+        source: ["G", "S", "I", "D"].includes(code[0]) ? code[0] : "D",
+        gclid: "",
+        pageLanguage: page_language || "en",
+        landingPage: "",
+        channel: "form",
+        name,
+        phone: normalizedPhone,
+      }),
+    }).catch((err) => console.error("lead-log (booking) failed:", err));
   }
 
   return NextResponse.json({ success: true });

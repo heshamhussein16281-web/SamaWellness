@@ -1,8 +1,12 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { appendSourceSuffix, getLeadSource } from "@/lib/sourceTag";
+import { getLeadSource } from "@/lib/sourceTag";
+import { appendLeadCode, appendLeadCodeSync, getOrCreateLeadCode, getResolvedLeadCode, logLeadClick, pageLanguage } from "@/lib/leadCode";
 import { validatePhone, PHONE_ERROR_EN } from "@/lib/phone";
+
+const WA_TEXT_DEFAULT = "I%27d%20like%20to%20book%20an%20assessment";
+const WA_BASE = "https://api.whatsapp.com/send?phone=201130946556&text=";
 
 function getSamaLead(): { ts: number; src: string } | null {
   try {
@@ -35,7 +39,33 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error" | "duplicate">("idle");
   const [dupSrc, setDupSrc] = useState<string | null>(null);
   const [phoneError, setPhoneError] = useState<string | null>(null);
+  const [waHref, setWaHref] = useState(WA_BASE + WA_TEXT_DEFAULT);
+  const [leadCode, setLeadCode] = useState<string | null>(null);
   const nameRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const encoded = await appendLeadCode(WA_TEXT_DEFAULT);
+      if (!cancelled) setWaHref(WA_BASE + encoded);
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  // Lead code must never delay opening WhatsApp (mobile popup blockers
+  // block window.open after any awaited gap). If the background fetch
+  // hasn't resolved yet, commit a fallback synchronously and open with
+  // it directly instead of relying on the (still-default) waHref state.
+  const handleWaClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const resolved = getResolvedLeadCode();
+    if (!resolved) {
+      e.preventDefault();
+      window.open(WA_BASE + appendLeadCodeSync(WA_TEXT_DEFAULT), "_blank", "noopener,noreferrer");
+      logLeadClick("whatsapp");
+      return;
+    }
+    logLeadClick("whatsapp", resolved);
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -63,6 +93,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
     setStatus("idle");
     setDupSrc(null);
     setPhoneError(null);
+    setLeadCode(null);
     window.history.pushState({}, "", window.location.pathname);
     onClose();
   }, [onClose]);
@@ -90,6 +121,8 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
     setStatus("sending");
 
     try {
+      const { code } = await getOrCreateLeadCode();
+      setLeadCode(code);
       const res = await fetch("/api/booking", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -101,6 +134,8 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
           note: note || null,
           source: "booking_modal",
           lead_source: getLeadSource(),
+          code,
+          page_language: pageLanguage(),
         }),
       });
 
@@ -156,11 +191,12 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
             </p>
             {dupSrc === "wa" && (
               <a
-                href={`https://api.whatsapp.com/send?phone=201130946556&text=${appendSourceSuffix("I%27d%20like%20to%20book%20an%20assessment")}`}
+                href={waHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="booking-modal__btn"
                 style={{ textAlign: "center", textDecoration: "none", display: "block" }}
+                onClick={handleWaClick}
               >
                 Open WhatsApp
               </a>
@@ -181,6 +217,9 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
             <p className="booking-modal__desc">
               We&apos;ll contact you on WhatsApp from 01130946556 within a few hours to schedule your assessment — no need to message us.
             </p>
+            {leadCode && (
+              <p className="booking-modal__reference">Your reference: {leadCode}</p>
+            )}
             <button onClick={resetAndClose} className="booking-modal__btn booking-modal__btn--outline">
               Close
             </button>
@@ -275,7 +314,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
               {status === "error" && (
                 <p className="booking-modal__error">
                   Something went wrong. Please try again or message us on{" "}
-                  <a href={`https://api.whatsapp.com/send?phone=201130946556&text=${appendSourceSuffix("I%27d%20like%20to%20book%20an%20assessment")}`} target="_blank" rel="noopener noreferrer">
+                  <a href={waHref} target="_blank" rel="noopener noreferrer" onClick={handleWaClick}>
                     WhatsApp
                   </a>.
                 </p>
@@ -290,12 +329,12 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                   {status === "sending" ? "Sending…" : "Book Assessment"}
                 </button>
                 <a
-                  href={`https://api.whatsapp.com/send?phone=201130946556&text=${appendSourceSuffix("I%27d%20like%20to%20book%20an%20assessment")}`}
+                  href={waHref}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="booking-modal__btn booking-modal__btn--outline"
                   style={{ textAlign: "center", textDecoration: "none" }}
-                  onClick={() => { setSamaLead("wa"); setTimeout(resetAndClose, 300); }}
+                  onClick={(e) => { handleWaClick(e); setSamaLead("wa"); setTimeout(resetAndClose, 300); }}
                 >
                   Message on WhatsApp
                 </a>

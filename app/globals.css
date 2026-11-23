@@ -3436,6 +3436,13 @@ textarea.form-input {
   line-height: 1.6;
 }
 
+.booking-modal__reference {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: #777;
+  margin: -12px 0 20px;
+}
+
 .booking-modal__form {
   display: flex;
   flex-direction: column;

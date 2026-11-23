@@ -1,3 +1,6 @@
+"use client";
+import { logLeadClick } from "@/lib/leadCode";
+
 export default function ContactInfo() {
   return (
     <section id="contact" className="contact-info-section">
@@ -21,7 +24,7 @@ export default function ContactInfo() {
           {/* Phone */}
           <div className="contact-info-block">
             <h3 className="contact-info-block-heading">Phone</h3>
-            <a href="tel:+201130946556" className="contact-info-block-link">
+            <a href="tel:+201130946556" className="contact-info-block-link" onClick={() => logLeadClick("call")}>
               +20 113 094 6556
             </a>
           </div>

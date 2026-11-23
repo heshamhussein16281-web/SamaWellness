@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
+import { logLeadClick } from "@/lib/leadCode";
 
 export default function FooterAr() {
   return (
@@ -29,7 +30,7 @@ export default function FooterAr() {
               info@samawellnesstherapy.com
             </a>
             <span className="footer__contact-divider" aria-hidden="true">·</span>
-            <a href="tel:+201130946556" className="footer__contact-link" dir="ltr">
+            <a href="tel:+201130946556" className="footer__contact-link" dir="ltr" onClick={() => logLeadClick("call")}>
               +20 113 094 6556
             </a>
             <span className="footer__contact-divider" aria-hidden="true">·</span>
