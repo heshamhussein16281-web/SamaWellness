@@ -13,7 +13,7 @@ const DUPLICATE_WINDOW_MS = 3 * 24 * 60 * 60 * 1000; // 3 days
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const { name, phone, preferred_time, session_format, note, source, code, page_language } = body;
+  const { name, phone, preferred_time, session_format, note, source, code, gclid, landing_page, page_language } = body;
 
   // Action 25: the booking form no longer sends a separate lead_source —
   // the code's own prefix letter (set by lib/leadCode.ts's first-touch
@@ -131,9 +131,9 @@ export async function POST(req: Request) {
         // accurate here than re-deriving it from lead_source, which only
         // distinguishes "google_ads" vs "direct".
         source: ["G", "S", "I", "D"].includes(code[0]) ? code[0] : "D",
-        gclid: "",
+        gclid: gclid || "",
         pageLanguage: page_language || "en",
-        landingPage: "",
+        landingPage: landing_page || "",
         channel: "form",
         name,
         phone: normalizedPhone,

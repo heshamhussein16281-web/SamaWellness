@@ -120,7 +120,7 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
     setStatus("sending");
 
     try {
-      const { code } = await getOrCreateLeadCode();
+      const { code, gclid, landingPage } = await getOrCreateLeadCode();
       setLeadCode(code);
       const res = await fetch("/api/booking", {
         method: "POST",
@@ -133,6 +133,8 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
           note: note || null,
           source: "booking_modal_ar",
           code,
+          gclid,
+          landing_page: landingPage,
           page_language: pageLanguage(),
         }),
       });
