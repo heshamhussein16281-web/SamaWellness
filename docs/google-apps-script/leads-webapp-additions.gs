@@ -5,19 +5,24 @@
 // is completely untouched — it just falls through to whatever runs after
 // the lines you add below.
 //
-// You will need two new tabs in the same spreadsheet this script already
+// You will need three tabs in the same spreadsheet this script already
 // writes to:
-//   - "Counters"  — a single cell, B1, holding the last-used sequence
-//                    number (ONE global counter shared by every source
-//                    prefix, so codes look like G101, S102, D103 — the
-//                    number always increases, regardless of source).
-//                    Put the label "NextNumber" in A1 and 100 in B1.
-//                    (This script also creates it automatically on first
-//                    use if you skip this step.)
-//   - "Leads log" — header row (also auto-created on first use, but you
-//                    can create it yourself first with this exact row):
-//                    Timestamp | Code | Source | GCLID | Page Language |
-//                    Landing Page | Channel | Name | Phone | Booked | Booking Date
+//   - "Counters"     — a single cell, B1, holding the last-used sequence
+//                       number (ONE global counter shared by every source
+//                       prefix, so codes look like G101, S102, D103 — the
+//                       number always increases, regardless of source).
+//                       Put the label "NextNumber" in A1 and 100 in B1.
+//                       (Also auto-created on first use if you skip this.)
+//   - "Leads log"     — fully automatic, you never edit this by hand.
+//                       Header row (also auto-created on first use, but
+//                       you can create it yourself first with this exact
+//                       row): Timestamp | Code | Source | GCLID |
+//                       Page Language | Landing Page | Channel | Name | Phone
+//   - "Booked codes"  — the ONLY manual step for reception: when a lead
+//                       actually books, type its code into column A here.
+//                       Column B (Timestamp) fills itself automatically —
+//                       see the onEdit(e) trigger below. Header row:
+//                       Code | Timestamp
 
 function handleAction25(payload) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -51,7 +56,7 @@ function handleAction25(payload) {
       log = ss.insertSheet("Leads log");
       log.appendRow([
         "Timestamp", "Code", "Source", "GCLID", "Page Language",
-        "Landing Page", "Channel", "Name", "Phone", "Booked", "Booking Date",
+        "Landing Page", "Channel", "Name", "Phone",
       ]);
     }
     log.appendRow([
@@ -64,8 +69,6 @@ function handleAction25(payload) {
       payload.channel || "",
       payload.name || "",
       payload.phone || "",
-      "", // Booked — filled in by reception
-      "", // Booking date — filled in by reception
     ]);
     return ContentService.createTextOutput(
       JSON.stringify({ success: true })
@@ -83,3 +86,24 @@ function handleAction25(payload) {
 //   if (action25Result) return action25Result;
 //
 // Everything below that in your existing doPost stays exactly as it is.
+
+// Separate from doPost entirely — this is a spreadsheet-edit trigger, not
+// a web request handler. If you don't already have an onEdit(e) function
+// in this project, paste this as its own top-level function (Apps Script
+// runs it automatically on any edit, no wiring needed). If you DO already
+// have one, merge this body into it instead of having two onEdit functions
+// (only the last one defined would run otherwise).
+function onEdit(e) {
+  var sheet = e.range.getSheet();
+  if (sheet.getName() !== "Booked codes") return;
+  if (e.range.getRow() === 1) return; // header row
+  if (e.range.getColumn() !== 1) return; // only react to edits in column A (Code)
+
+  var row = e.range.getRow();
+  var codeValue = sheet.getRange(row, 1).getValue();
+  if (!codeValue) {
+    sheet.getRange(row, 2).clearContent(); // code cleared -> clear its timestamp too
+    return;
+  }
+  sheet.getRange(row, 2).setValue(new Date());
+}

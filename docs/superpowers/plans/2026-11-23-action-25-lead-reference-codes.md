@@ -389,102 +389,20 @@ git commit -m "Action 25: add /api/lead-log proxy for lead tracking"
 
 - [ ] **Step 1: Write the additions file**
 
-```javascript
-// docs/google-apps-script/leads-webapp-additions.gs
-//
-// ACTION 25 — paste this near the TOP of your existing doPost(e) function,
-// before your current logic. Each block returns early for its own action
-// type and does nothing otherwise, so your existing booking/contact
-// handling (which has no "action" field) is completely untouched.
-//
-// You will need two new tabs in the same spreadsheet this script already
-// writes to:
-//   - "Counters"  — a single cell, B1, holding the last-used sequence
-//                    number (start it at 100, so the first code is 101).
-//                    Put the label "NextNumber" in A1 and 100 in B1.
-//   - "Leads log" — header row (this script creates it automatically on
-//                    first use if the tab doesn't exist, but you can also
-//                    create it yourself first with this exact header row):
-//                    Timestamp | Code | Source | GCLID | Page Language |
-//                    Landing Page | Channel | Name | Phone | Booked | Booking Date
-
-function handleAction25(payload) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-
-  if (payload.action === "getNextCode") {
-    var lock = LockService.getScriptLock();
-    lock.waitLock(10000); // wait up to 10s for the lock, then proceed anyway
-    try {
-      var counters = ss.getSheetByName("Counters");
-      if (!counters) {
-        counters = ss.insertSheet("Counters");
-        counters.getRange("A1").setValue("NextNumber");
-        counters.getRange("B1").setValue(100);
-      }
-      var next = counters.getRange("B1").getValue() + 1;
-      counters.getRange("B1").setValue(next);
-      var source = (payload.source || "D").toString().toUpperCase();
-      if (["G", "S", "I", "D"].indexOf(source) === -1) source = "D";
-      var code = source + next;
-      return ContentService.createTextOutput(
-        JSON.stringify({ code: code })
-      ).setMimeType(ContentService.MimeType.JSON);
-    } finally {
-      lock.releaseLock();
-    }
-  }
-
-  if (payload.action === "logLead") {
-    var log = ss.getSheetByName("Leads log");
-    if (!log) {
-      log = ss.insertSheet("Leads log");
-      log.appendRow([
-        "Timestamp", "Code", "Source", "GCLID", "Page Language",
-        "Landing Page", "Channel", "Name", "Phone", "Booked", "Booking Date",
-      ]);
-    }
-    log.appendRow([
-      new Date(),
-      payload.code || "",
-      payload.source || "",
-      payload.gclid || "",
-      payload.pageLanguage || "",
-      payload.landingPage || "",
-      payload.channel || "",
-      payload.name || "",
-      payload.phone || "",
-      "", // Booked — filled in by reception
-      "", // Booking date — filled in by reception
-    ]);
-    return ContentService.createTextOutput(
-      JSON.stringify({ success: true })
-    ).setMimeType(ContentService.MimeType.JSON);
-  }
-
-  return null; // not an Action 25 request — let existing doPost logic continue
-}
-
-// In your existing doPost(e), add this as the FIRST lines inside the
-// function (after parsing `payload` from e.postData.contents, however
-// your existing code already does that):
-//
-//   var action25Result = handleAction25(payload);
-//   if (action25Result) return action25Result;
-//
-// Everything below that in your existing doPost stays exactly as it is.
-```
+See [docs/google-apps-script/leads-webapp-additions.gs](../../google-apps-script/leads-webapp-additions.gs) for the current, complete file — it's kept there as the single source of truth rather than duplicated here. It has three tabs now (`Counters`, `Leads log` — fully automatic — and `Booked codes`, the one manual step for reception), plus a separate `onEdit(e)` trigger that auto-timestamps a code the moment reception types it into "Booked codes".
 
 - [ ] **Step 2: Manual deployment (done by the user, not by this repo)**
 
 1. Open the Apps Script project tied to the existing `GOOGLE_SHEET_URL` webhook (Extensions → Apps Script, from the Google Sheet this project already logs bookings into).
-2. Create the `handleAction25` function from Step 1 above, pasted as a new function in the project.
+2. Paste `handleAction25` from the `.gs` file as a new function in the project.
 3. Find the existing `doPost(e)` function, and right after it parses the incoming JSON payload, add:
    ```javascript
    var action25Result = handleAction25(payload);
    if (action25Result) return action25Result;
    ```
-4. In the Sheet itself, add a "Counters" tab with `A1 = "NextNumber"`, `B1 = 100`.
-5. Deploy → Manage deployments → edit the existing deployment → "New version" → Deploy. (Must be a new version of the *same* deployment so the `/exec` URL this repo already calls stays unchanged.)
+4. Paste the `onEdit(e)` function from the `.gs` file too — a separate, standalone function (Apps Script runs it automatically on any spreadsheet edit; if you already have an `onEdit` function elsewhere in this project, merge the body in instead of having two).
+5. In the Sheet itself, add a "Counters" tab with `A1 = "NextNumber"`, `B1 = 100`, and a "Booked codes" tab with header row `Code | Timestamp`.
+6. Deploy → Manage deployments → edit the existing deployment → "New version" → Deploy. (Must be a new version of the *same* deployment so the `/exec` URL this repo already calls stays unchanged.)
 
 - [ ] **Step 3: Verification**
 
@@ -964,15 +882,24 @@ git commit -m "Action 25: pre-fetch the lead code on first page load"
 **Files:** none in this repo — this is spreadsheet configuration.
 
 - [ ] **Step 1:** Confirm Task 4's "Counters" tab exists with `A1 = "NextNumber"`, `B1 = 100`.
-- [ ] **Step 2:** Confirm the "Leads log" tab was auto-created (it will be, the first time `logLead` fires) with the header row: `Timestamp | Code | Source | GCLID | Page Language | Landing Page | Channel | Name | Phone | Booked | Booking Date`.
-- [ ] **Step 3:** Add a new tab named **"Ads upload"**. In cell `A1`, enter this formula:
+- [ ] **Step 2:** Confirm the "Leads log" tab was auto-created (it will be, the first time `logLead` fires) with the header row: `Timestamp | Code | Source | GCLID | Page Language | Landing Page | Channel | Name | Phone`. Fully automatic — never edited by hand.
+- [ ] **Step 3:** Add a new tab named **"Booked codes"** with header row `Code | Timestamp`. This is the ONLY manual step: when a lead actually books, reception types its code into column A. Column B fills itself automatically via the `onEdit(e)` trigger in Task 4's Apps Script file.
+- [ ] **Step 4:** Add a new tab named **"Ads upload"**. In cell `A1`, enter this formula (requires `LAMBDA`/array-formula support, available in current Google Sheets):
 
 ```
-=QUERY('Leads log'!A:K, "SELECT D, 'Booking', TEXT(A, 'yyyy-MM-dd HH:mm:ss') & '+0200' WHERE J = 'Y' AND D IS NOT NULL AND D != '' LABEL D 'Google Click ID', TEXT(A, 'yyyy-MM-dd HH:mm:ss') & '+0200' 'Conversion Time'", 1)
+={"Google Click ID","Conversion Name","Conversion Time";
+  FILTER(
+    HSTACK(
+      IFNA(VLOOKUP('Booked codes'!A2:A1000,'Leads log'!B:D,3,FALSE),""),
+      ARRAYFORMULA(IF('Booked codes'!A2:A1000<>"","Booking","")),
+      ARRAYFORMULA(IF('Booked codes'!B2:B1000<>"",TEXT('Booked codes'!B2:B1000,"yyyy-MM-dd HH:mm:ss")&"+0200",""))
+    ),
+    ('Booked codes'!A2:A1000<>"") * (IFNA(VLOOKUP('Booked codes'!A2:A1000,'Leads log'!B:D,3,FALSE),"")<>"")
+  )}
 ```
 
-This filters "Leads log" to only rows where `Booked` (column J) is `Y` and a GCLID (column D) is present, and outputs exactly the three columns Google Ads expects: `Google Click ID | Conversion Name | Conversion Time`. (Conversion Value is intentionally left out — add a 4th literal column to the `SELECT` if you want to assign a fixed value per booking, e.g. `, 500` for a flat EGP value.)
-- [ ] **Step 4:** Reception's day-to-day workflow: for every row in "Leads log", fill in `Booked = Y` and `Booking Date` once a lead actually books. The "Ads upload" tab updates itself automatically via the formula — no manual copying.
+For every code in "Booked codes", this looks up its GCLID from "Leads log" (column B→D: Code→GCLID) and outputs a row only if both a code and a matching non-empty GCLID exist — producing exactly the three columns Google Ads expects. Conversion Time uses the booking's own timestamp (when reception entered the code), not the original lead's first-touch time. (Conversion Value is intentionally left out — add a 4th `HSTACK` argument, e.g. a literal `500`, if you want a fixed value per booking.)
+- [ ] **Step 5:** Reception's day-to-day workflow: type a code into "Booked codes" column A whenever that lead books. Nothing else to do — the timestamp, the "Leads log" lookup, and the "Ads upload" tab are all automatic.
 
 ---
 

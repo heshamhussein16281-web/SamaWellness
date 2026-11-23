@@ -15,13 +15,23 @@ export async function POST(req: Request) {
   const body = await req.json();
   const { name, phone, preferred_time, session_format, note, source, code, gclid, landing_page, page_language } = body;
 
-  // Action 25: the booking form no longer sends a separate lead_source —
-  // the code's own prefix letter (set by lib/leadCode.ts's first-touch
-  // detection, which checks the same gclid/gbraid/wbraid params the old
-  // lib/sourceTag.ts did) is the single source of truth now. Derived here
-  // rather than trusting a second client-computed value that could only
-  // ever agree or disagree with this one.
-  const leadSource = code && code[0] === "G" ? "google_ads" : "direct";
+  // Action 25: the "Assessment form" tab's existing "Source" column used
+  // to hold which form variant was used (booking_modal / booking_modal_ar)
+  // and "lead source" held a binary google_ads/direct string. Per the
+  // user's explicit call: fold channel + form language into "Source"
+  // ("Google Ads · AR"), and put the new readable code into "lead source"
+  // instead — both derived from `code`'s own prefix letter (the single
+  // source of truth from lib/leadCode.ts's first-touch detection) plus
+  // the page language the client reports, not from a second
+  // independently-computed value.
+  const CHANNEL_LABELS: Record<string, string> = {
+    G: "Google Ads",
+    S: "Google search",
+    I: "Instagram",
+    D: "Direct",
+  };
+  const sourcePrefix = code && ["G", "S", "I", "D"].includes(code[0]) ? code[0] : "D";
+  const sourceColumnValue = `${CHANNEL_LABELS[sourcePrefix]} · ${(page_language || "en").toUpperCase()}`;
 
   if (!name || !phone) {
     return NextResponse.json({ error: "Name and phone are required." }, { status: 400 });
@@ -105,8 +115,8 @@ export async function POST(req: Request) {
         preferred_time: preferred_time ? (TIME_LABELS[preferred_time] || preferred_time) : "",
         session_format: session_format || "either",
         note: note || "",
-        source: source || "booking_modal",
-        lead_source: leadSource,
+        source: sourceColumnValue,
+        lead_source: code || "",
       }),
     });
   } catch (sheetError) {
