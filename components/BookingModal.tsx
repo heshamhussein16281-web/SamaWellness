@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { appendLeadCode, appendLeadCodeSync, getOrCreateLeadCode, getResolvedLeadCode, logLeadClick, pageLanguage } from "@/lib/leadCode";
+import { appendLeadCode, appendLeadCodeSync, getOrCreateLeadCode, getResolvedLeadCode, lockLeadCode, logLeadClick, pageLanguage } from "@/lib/leadCode";
 import { validatePhone, PHONE_ERROR_EN } from "@/lib/phone";
 
 const WA_TEXT_DEFAULT = "I%27d%20like%20to%20book%20an%20assessment";
@@ -119,6 +119,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
 
     try {
       const { code, gclid, landingPage } = await getOrCreateLeadCode();
+      lockLeadCode();
       const res = await fetch("/api/booking", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

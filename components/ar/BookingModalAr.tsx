@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { appendLeadCode, appendLeadCodeSync, getOrCreateLeadCode, getResolvedLeadCode, logLeadClick, pageLanguage } from "@/lib/leadCode";
+import { appendLeadCode, appendLeadCodeSync, getOrCreateLeadCode, getResolvedLeadCode, lockLeadCode, logLeadClick, pageLanguage } from "@/lib/leadCode";
 import { validatePhone, PHONE_ERROR_AR } from "@/lib/phone";
 
 const WA_TEXT_DEFAULT = "%D8%A3%D9%86%D8%A7%20%D8%B9%D8%A7%D9%8A%D8%B2%2F%D8%A9%20%D8%A3%D8%AD%D8%AC%D8%B2%20%D8%AA%D9%82%D9%8A%D9%8A%D9%85";
@@ -119,6 +119,7 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
 
     try {
       const { code, gclid, landingPage } = await getOrCreateLeadCode();
+      lockLeadCode();
       const res = await fetch("/api/booking", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

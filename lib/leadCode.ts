@@ -29,7 +29,7 @@
 const STORAGE_KEY = "sama_lead_code";
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
 const CLICK_ID_PARAMS = ["gclid", "gbraid", "wbraid"];
-const FETCH_TIMEOUT_MS = 2500;
+const FETCH_TIMEOUT_MS = 8000;
 const FALLBACK_CHARS = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"; // no 0/O/1/I/l
 
 export type LeadSource = "G" | "S" | "I" | "D";
@@ -49,7 +49,12 @@ interface StoredLeadCode extends LeadCodeInfo {
 // localStorage on every call and is the single source of truth for
 // "has a code already been committed this session" (write-once).
 let committed: LeadCodeInfo | null = null;
+let committedIsFallback = false;
 let fetchStarted = false;
+// Set true the moment a code is actually used in a lead action (WhatsApp
+// click, call click, or form submit). Before that, a fallback is still
+// eligible to be replaced by the real sequential code if it arrives late.
+let locked = false;
 
 function readStored(): StoredLeadCode | null {
   if (typeof window === "undefined") return null;
@@ -122,13 +127,31 @@ function randomFallbackCode(source: LeadSource): string {
   return source + suffix;
 }
 
-function commit(info: LeadCodeInfo): LeadCodeInfo {
-  // Write-once: if something was already committed (e.g. a click-time
-  // fallback fired before this background fetch resolved), keep it.
-  if (committed) return committed;
+function commit(info: LeadCodeInfo, isFallback = false): LeadCodeInfo {
+  if (committed) {
+    // Already used in a lead action, already a real code, or this new
+    // value is itself just another fallback — never replace.
+    if (locked || !committedIsFallback || isFallback) return committed;
+    // A fallback was committed but nothing has used it yet: the real
+    // sequential code arrived late — upgrade to it.
+    committed = info;
+    committedIsFallback = false;
+    writeStored(info);
+    return committed;
+  }
   committed = info;
+  committedIsFallback = isFallback;
   writeStored(info);
   return committed;
+}
+
+/** Call at the exact moment a code is used in a real lead action (a
+ *  WhatsApp click, call click, or form submit). After this, a fallback
+ *  code can no longer be upgraded to the real sequential one, even if it
+ *  arrives moments later — the same code must stay attached to the lead
+ *  that was already sent/logged with it. */
+export function lockLeadCode(): void {
+  locked = true;
 }
 
 async function fetchRealCode(source: LeadSource, gclid: string | null): Promise<string | null> {
@@ -160,14 +183,22 @@ export function ensureLeadCodeStarted(): void {
   const existing = readStored();
   if (existing) {
     committed = { code: existing.code, source: existing.source, gclid: existing.gclid, landingPage: existing.landingPage };
+    committedIsFallback = false;
+    locked = true; // a code from a previous page view is already final
     return;
   }
   fetchStarted = true;
   const { source, gclid } = detectSource();
   const landingPage = window.location.pathname;
   fetchRealCode(source, gclid).then((code) => {
-    if (committed) return; // a click-time fallback already won
-    commit({ code: code || randomFallbackCode(source), source, gclid, landingPage });
+    if (code) {
+      // A real code — may upgrade an unlocked fallback, or become the
+      // first committed value. commit() enforces the lock/fallback rules.
+      commit({ code, source, gclid, landingPage }, false);
+    } else if (!committed) {
+      // The fetch itself failed/aborted and nothing is committed yet.
+      commit({ code: randomFallbackCode(source), source, gclid, landingPage }, true);
+    }
   });
 }
 
@@ -194,6 +225,8 @@ export function getResolvedLeadCode(): LeadCodeInfo | null {
   const existing = readStored();
   if (existing) {
     committed = { code: existing.code, source: existing.source, gclid: existing.gclid, landingPage: existing.landingPage };
+    committedIsFallback = false;
+    locked = true; // a code from a previous page view is already final
     return committed;
   }
   return null;
@@ -208,7 +241,7 @@ export function commitFallbackNow(): LeadCodeInfo {
   if (resolved) return resolved;
   const { source, gclid } = detectSource();
   const landingPage = typeof window !== "undefined" ? window.location.pathname : "/";
-  return commit({ code: randomFallbackCode(source), source, gclid, landingPage });
+  return commit({ code: randomFallbackCode(source), source, gclid, landingPage }, true);
 }
 
 /** Async — waits for the real code if the background fetch is already
@@ -259,6 +292,7 @@ export function pageLanguage(): "ar" | "en" {
  *  Uses whatever code is already resolved; commits a fallback
  *  synchronously first if nothing has resolved yet. */
 export function logLeadClick(channel: "whatsapp" | "call", info?: LeadCodeInfo): void {
+  lockLeadCode();
   const resolved = info || getResolvedLeadCode() || commitFallbackNow();
   try {
     navigator.sendBeacon(
