@@ -39,7 +39,6 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
   const [dupSrc, setDupSrc] = useState<string | null>(null);
   const [phoneError, setPhoneError] = useState<string | null>(null);
   const [waHref, setWaHref] = useState(WA_BASE + WA_TEXT_DEFAULT);
-  const [leadCode, setLeadCode] = useState<string | null>(null);
   const nameRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -92,7 +91,6 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
     setStatus("idle");
     setDupSrc(null);
     setPhoneError(null);
-    setLeadCode(null);
     window.history.pushState({}, "", window.location.pathname);
     onClose();
   }, [onClose]);
@@ -121,7 +119,6 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
 
     try {
       const { code, gclid, landingPage } = await getOrCreateLeadCode();
-      setLeadCode(code);
       const res = await fetch("/api/booking", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -186,7 +183,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
             <h2 className="booking-modal__heading">You&apos;ve Already Reached Out</h2>
             <p className="booking-modal__desc">
               {dupSrc === "form"
-                ? "We've received your request and will contact you on WhatsApp from 01130946556 shortly — no need to send it again."
+                ? "We've already received your request — our team will contact you shortly."
                 : "You've already contacted us on WhatsApp — we'll reply to you there."}
             </p>
             {dupSrc === "wa" && (
@@ -215,11 +212,8 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
             </div>
             <h2 className="booking-modal__heading">We&apos;ll Be in Touch</h2>
             <p className="booking-modal__desc">
-              We&apos;ll contact you on WhatsApp from 01130946556 within a few hours to schedule your assessment — no need to message us.
+              Thank you — we&apos;ve received your request. Our team will contact you shortly.
             </p>
-            {leadCode && (
-              <p className="booking-modal__reference">Your reference: {leadCode}</p>
-            )}
             <button onClick={resetAndClose} className="booking-modal__btn booking-modal__btn--outline">
               Close
             </button>

@@ -3256,10 +3256,14 @@ textarea.form-input {
 .mid-cta__link {
   font-family: var(--font-ui);
   font-weight: 400;
+  font-size: inherit;
   color: var(--color-burgundy);
   text-decoration: none;
+  border: none;
   border-bottom: 1px solid rgba(123, 45, 62, 0.3);
-  padding-bottom: 1px;
+  background: none;
+  padding: 0 0 1px 0;
+  cursor: pointer;
   transition: var(--transition-base);
   white-space: nowrap;
 }
@@ -3434,13 +3438,6 @@ textarea.form-input {
   color: #777;
   margin: 0 0 24px;
   line-height: 1.6;
-}
-
-.booking-modal__reference {
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: #777;
-  margin: -12px 0 20px;
 }
 
 .booking-modal__form {

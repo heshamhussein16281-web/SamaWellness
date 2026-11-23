@@ -39,7 +39,6 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
   const [dupSrc, setDupSrc] = useState<string | null>(null);
   const [phoneError, setPhoneError] = useState<string | null>(null);
   const [waHref, setWaHref] = useState(WA_BASE + WA_TEXT_DEFAULT);
-  const [leadCode, setLeadCode] = useState<string | null>(null);
   const nameRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -92,7 +91,6 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
     setStatus("idle");
     setDupSrc(null);
     setPhoneError(null);
-    setLeadCode(null);
     window.history.pushState({}, "", window.location.pathname);
     onClose();
   }, [onClose]);
@@ -121,7 +119,6 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
 
     try {
       const { code, gclid, landingPage } = await getOrCreateLeadCode();
-      setLeadCode(code);
       const res = await fetch("/api/booking", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -186,7 +183,7 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
             <h2 className="booking-modal__heading">إنت تواصلت معانا بالفعل</h2>
             <p className="booking-modal__desc">
               {dupSrc === "form"
-                ? "استلمنا طلبك وهنتواصل معاك على واتساب من رقم 01130946556 قريب — مش محتاج تبعت تاني."
+                ? "استلمنا طلبك قبل كده — وهيتواصل معاك فريقنا قريب."
                 : "إنت تواصلت معانا على واتساب بالفعل، هنرد عليك هناك."}
             </p>
             {dupSrc === "wa" && (
@@ -215,11 +212,8 @@ export default function BookingModalAr({ isOpen, onClose }: BookingModalArProps)
             </div>
             <h2 className="booking-modal__heading">هنتواصل معاك قريب</h2>
             <p className="booking-modal__desc">
-              هنتواصل معاك على واتساب من رقم 01130946556 خلال ساعات قليلة عشان نحدد معاد التقييم، مش محتاج تبعتلنا رسالة.
+              شكرًا ليك — استلمنا طلبك، وهيتواصل معاك فريقنا قريب.
             </p>
-            {leadCode && (
-              <p className="booking-modal__reference">رقم طلبك: {leadCode}</p>
-            )}
             <button onClick={resetAndClose} className="booking-modal__btn booking-modal__btn--outline">
               إغلاق
             </button>
