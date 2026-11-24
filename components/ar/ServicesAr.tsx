@@ -55,7 +55,7 @@ export default function ServicesAr() {
       {/* Online availability strip */}
       <div className="services-online-strip">
         <span className="services-online-strip__pill">
-          ✦ جميع خدماتنا متاحة حضورياً وأونلاين ✦
+          ✦ حضوريًا في عيادتنا بنيو جيزة، وأونلاين لعملائنا خارج الجيزة وفي السعودية ✦
         </span>
       </div>
       </div>

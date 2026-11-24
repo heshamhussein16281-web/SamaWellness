@@ -52,7 +52,7 @@ export const teasers: Teaser[] = [
 
 export default function TeaserGridAr({ items = teasers }: { items?: Teaser[] }) {
   return (
-    <section className="teaser-section" aria-label="اكتشف ساما ويلنس ثيرابي">
+    <section className="teaser-section" aria-label="اكتشف سما ويلنس ثيرابي">
       <div className={`teaser-section__grid teaser-section__grid--cols-${items.length}`}>
         {items.map((t) => (
           <Link key={t.href} href={t.href} className="teaser-card">

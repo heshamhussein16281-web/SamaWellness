@@ -57,7 +57,7 @@ export default function Hero() {
         margin: 0,
         lineHeight: 1.3,
       }}>
-        Professional Care Tailored to Your Journey
+        Therapist in New Giza: Professional Care Tailored to Your Journey
       </h1>
 
       {/* Hero CTA button + subtext — constrained to left column */}

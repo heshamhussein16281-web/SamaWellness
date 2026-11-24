@@ -5,15 +5,15 @@ import Script from "next/script";
 import PageHero from "@/components/PageHero";
 
 export const metadata: Metadata = {
-  title: "FAQ & Ask Counselor Sama | Sama Wellness Therapy",
-  description: "Answers to common therapy questions — from assessments to confidentiality. Ask Counselor Sama directly at Sama Wellness Therapy, New Giza.",
+  title: "FAQs About Therapy in New Giza & Ask Counselor Sama",
+  description: "Answers to common questions about therapy, sessions and getting matched with a therapist at our New Giza clinic, plus ask Counselor Sama your own question.",
   alternates: {
     canonical: "/ask",
     languages: { en: "/ask", ar: "/ar/ask", "x-default": "/ask" },
   },
   openGraph: {
-    title: "FAQ & Ask Counselor Sama | Sama Wellness Therapy",
-    description: "Find answers to common therapy questions and ask Counselor Sama directly at Sama Wellness Therapy in New Giza, Cairo.",
+    title: "FAQs About Therapy in New Giza & Ask Counselor Sama",
+    description: "Answers to common questions about therapy, sessions and getting matched with a therapist at our New Giza clinic, plus ask Counselor Sama your own question.",
     url: "https://www.samawellnesstherapy.com/ask",
   },
 };
@@ -48,7 +48,7 @@ const faqJsonLd = {
       name: "I've never been to therapy before — what should I expect?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Your journey begins with a free 15-minute assessment call with Counselor Sama, who will listen to what you're going through and personally match you with the therapist best suited to your needs. Your first session is a chance to share your story at your own pace — there's no pressure to dive deep right away. Your therapist will guide the conversation, help you feel comfortable, and together you'll start shaping a path forward.",
+        text: "Your journey begins with a free 15-minute assessment call with Counselor Sama, where we understand what you need and match you with the right therapist. After that, your first session with your therapist is a chance to share your story at your own pace — there's no pressure to dive deep right away. Your therapist will guide the conversation, help you feel comfortable, and together you'll start shaping a path forward.",
       },
     },
     {

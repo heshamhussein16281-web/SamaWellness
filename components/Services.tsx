@@ -138,7 +138,7 @@ export default function Services() {
       {/* Online availability strip */}
       <div className="services-online-strip">
         <span className="services-online-strip__pill">
-          ✦ All our services are available in-person &amp; online ✦
+          ✦ In person at our New Giza clinic. Online for clients outside Giza and in Saudi Arabia. ✦
         </span>
       </div>
       </div>

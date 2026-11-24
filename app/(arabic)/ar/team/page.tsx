@@ -36,7 +36,7 @@ const teamJsonLdAr = {
     image: `https://www.samawellnesstherapy.com${t.image}`,
     worksFor: {
       "@type": "MedicalBusiness",
-      name: "Sama Wellness Therapy - ساما ويلنس ثيرابي",
+      name: "Sama Wellness Therapy - سما ويلنس ثيرابي",
       url: "https://www.samawellnesstherapy.com/ar",
     },
   })),

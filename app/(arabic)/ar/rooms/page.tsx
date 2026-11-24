@@ -5,15 +5,15 @@ import PageHeroAr from "@/components/ar/PageHeroAr";
 import ScrollReveal from "@/components/ScrollReveal";
 
 export const metadata: Metadata = {
-  title: "غرف العلاج — سيرينيتي وهورايزون | ساما ويلنس ثيرابي",
-  description: "اكتشف غرف العلاج في ساما ويلنس ثيرابي — سيرينيتي وهورايزون — مساحات مصممة للهدوء والتعافي في نيو جيزة، القاهرة.",
+  title: "غرف العلاج — سيرينيتي وهورايزون | سما ويلنس ثيرابي",
+  description: "اكتشف غرف العلاج في سما ويلنس ثيرابي — سيرينيتي وهورايزون — مساحات مصممة للهدوء والتعافي في نيو جيزة، القاهرة.",
   alternates: {
     canonical: "/ar/rooms",
     languages: { ar: "/ar/rooms", en: "/rooms", "x-default": "/rooms" },
   },
   openGraph: {
-    title: "غرف العلاج — سيرينيتي وهورايزون | ساما ويلنس ثيرابي",
-    description: "اكتشف غرف العلاج في ساما ويلنس ثيرابي — مساحات مصممة للهدوء والتعافي في نيو جيزة، القاهرة.",
+    title: "غرف العلاج — سيرينيتي وهورايزون | سما ويلنس ثيرابي",
+    description: "اكتشف غرف العلاج في سما ويلنس ثيرابي — مساحات مصممة للهدوء والتعافي في نيو جيزة، القاهرة.",
     url: "https://www.samawellnesstherapy.com/ar/rooms",
   },
 };

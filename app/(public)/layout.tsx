@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     icon: "/logo.png",
     apple: "/logo.png",
   },
-  title: "Therapist in New Giza, near Sheikh Zayed, Cairo | Sama Wellness Therapy",
-  description: "Individual, couples & group therapy in New Giza, near Sheikh Zayed, Cairo — in-person or online across Egypt & Saudi Arabia. Licensed therapists matched to your needs.",
+  title: "Therapist in New Giza, near Sheikh Zayed | Sama Wellness",
+  description: "Individual, couples, child & teen therapy at our New Giza clinic, near Sheikh Zayed & 6th of October. Start with a free 15-minute assessment with Counselor Sama.",
   alternates: {
     canonical: "/",
     languages: {
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Therapist in New Giza, near Sheikh Zayed, Cairo | Sama Wellness Therapy",
-    description: "Individual, couples & group therapy in New Giza, near Sheikh Zayed, Cairo — in-person or online across Egypt & Saudi Arabia. Licensed therapists matched to your needs.",
+    title: "Therapist in New Giza, near Sheikh Zayed | Sama Wellness",
+    description: "Individual, couples, child & teen therapy at our New Giza clinic, near Sheikh Zayed & 6th of October. Start with a free 15-minute assessment with Counselor Sama.",
     url: "https://www.samawellnesstherapy.com",
     siteName: "Sama Wellness Therapy",
     locale: "en_EG",
@@ -40,8 +40,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Therapist in New Giza, near Sheikh Zayed, Cairo | Sama Wellness Therapy",
-    description: "Individual, couples & group therapy in New Giza, near Sheikh Zayed, Cairo — in-person or online across Egypt & Saudi Arabia. Licensed therapists matched to your needs.",
+    title: "Therapist in New Giza, near Sheikh Zayed | Sama Wellness",
+    description: "Individual, couples, child & teen therapy at our New Giza clinic, near Sheikh Zayed & 6th of October. Start with a free 15-minute assessment with Counselor Sama.",
     images: ["https://www.samawellnesstherapy.com/room.jpg"],
   },
   other: {

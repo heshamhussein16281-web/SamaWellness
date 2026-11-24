@@ -27,7 +27,7 @@ const faqData: FAQCategory[] = [
       },
       {
         q: "I've never been to therapy before — what should I expect?",
-        a: "Your journey begins with a free 15-minute assessment call with Counselor Sama, who will listen to what you're going through and personally match you with the therapist best suited to your needs. Your first session is a chance to share your story at your own pace — there's no pressure to dive deep right away. Your therapist will guide the conversation, help you feel comfortable, and together you'll start shaping a path forward.",
+        a: "Your journey begins with a free 15-minute assessment call with Counselor Sama, where we understand what you need and match you with the right therapist. After that, your first session with your therapist is a chance to share your story at your own pace — there's no pressure to dive deep right away. Your therapist will guide the conversation, help you feel comfortable, and together you'll start shaping a path forward.",
       },
       {
         q: "What's the difference between talking to a therapist and talking to a trusted friend?",

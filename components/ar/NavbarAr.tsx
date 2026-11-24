@@ -54,7 +54,7 @@ export default function NavbarAr() {
       >
         <Image
           src="/logo-v3.webp"
-          alt="ساما ويلنس ثيرابي"
+          alt="سما ويلنس ثيرابي"
           width={182}
           height={182}
           priority
