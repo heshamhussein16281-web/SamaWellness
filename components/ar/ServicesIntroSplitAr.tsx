@@ -7,6 +7,9 @@ export default function ServicesIntroSplitAr() {
         <div className="services-intro-split__text">
           <h2 className="services-intro-split__heading">علاج بيقابلك في مكانك</h2>
           <p className="services-intro-split__desc">
+            بنقدّم علاج نفسي فردي للكبار والأطفال والمراهقين، واستشارات زوجية وما قبل الزواج، وعلاج جماعي وطب نفسي.
+          </p>
+          <p className="services-intro-split__desc">
             في سما ويلنس، بنؤمن إن التعافي بيبدأ لما تحس إنك مفهوم فعلاً. معالجينا المرخصين بيقدموا علاج فردي، زوجي، وجماعي — كل منهج بيتم اختياره شخصياً حسب احتياجاتك من خلال تقييم مجاني ١٥ دقيقة مع الكاونسلر سما.
           </p>
           <p className="services-intro-split__desc">

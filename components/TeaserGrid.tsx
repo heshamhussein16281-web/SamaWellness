@@ -35,7 +35,7 @@ export const teasers: Teaser[] = [
     imageWidth: 678,
     imageHeight: 510,
     title: "Our Services",
-    desc: "Individual, couple, and group therapy — in-person or online.",
+    desc: "Individual, couples, child & teen therapy — at our New Giza clinic.",
     cta: "Explore our services",
   },
   {

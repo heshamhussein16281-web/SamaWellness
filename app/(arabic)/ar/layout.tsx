@@ -89,9 +89,9 @@ const jsonLdAr = {
   inLanguage: "ar",
   availableService: [
     { "@type": "MedicalTherapy", name: "العلاج الفردي" },
-    { "@type": "MedicalTherapy", name: "العلاج الفردي (أونلاين)" },
+    { "@type": "MedicalTherapy", name: "العلاج الفردي" },
     { "@type": "MedicalTherapy", name: "علاج الأزواج" },
-    { "@type": "MedicalTherapy", name: "علاج الأزواج (أونلاين)" },
+    { "@type": "MedicalTherapy", name: "علاج الأزواج" },
     { "@type": "MedicalTherapy", name: "العلاج الجماعي" },
     { "@type": "MedicalTherapy", name: "العلاج الجماعي (أونلاين)" },
   ],
