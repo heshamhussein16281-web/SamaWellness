@@ -26,7 +26,7 @@ export default function HeroAr() {
       {/* Hero logo — centered in right space next to photo for RTL */}
       <Image
         src="/logo-hero-v3.webp"
-        alt="ساما ويلنس ثيرابي"
+        alt="سما ويلنس ثيرابي"
         width={543}
         height={543}
         loading="eager"
@@ -59,7 +59,7 @@ export default function HeroAr() {
         margin: 0,
         lineHeight: 1.3,
       }}>
-        رعاية متخصصة مصممة لرحلتك
+        رعاية نفسية متخصصة في نيو جيزة، مصممة لرحلتك
       </h1>
 
       {/* Hero CTA button + subtext — constrained to right column for RTL */}
@@ -101,7 +101,7 @@ export default function HeroAr() {
       }}>
         <Image
           src="/room-v3.webp"
-          alt="غرفة ساما ويلنس ثيرابي"
+          alt="غرفة سما ويلنس ثيرابي"
           width={673}
           height={671}
           priority

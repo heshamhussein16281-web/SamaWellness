@@ -17,6 +17,12 @@ export default function ServicesIntroSplit() {
             Whether you are navigating anxiety, relationship challenges, or simply seeking
             a space to be heard — we are here to walk alongside you.
           </p>
+          <p className="services-intro-split__desc">
+            Sessions are held in person at our New Giza clinic, near Sheikh Zayed and 6th of
+            October. Online sessions are available for clients outside Giza and in Saudi
+            Arabia. Our services include individual therapy, couples and premarital
+            counseling, therapy for children and teens, group therapy and psychiatry.
+          </p>
         </div>
         <div className="services-intro-split__image-wrap">
           <Image

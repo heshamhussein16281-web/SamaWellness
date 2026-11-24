@@ -4,21 +4,21 @@ import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 
 export const metadata: Metadata = {
-  title: "Therapy Services in New Giza & Online | Sama Wellness",
-  description: "Individual, couples & group therapy with licensed therapists at our New Giza clinic, near Sheikh Zayed & 6th of October, or online. Free 15-min assessment.",
+  title: "Therapy & Counseling Services in New Giza | Sama Wellness",
+  description: "Individual, couples, child & teen therapy and psychiatry at our New Giza clinic, near Sheikh Zayed & 6th of October. Start with a free 15-minute assessment.",
   alternates: {
     canonical: "/services",
     languages: { en: "/services", ar: "/ar/services", "x-default": "/services" },
   },
   openGraph: {
-    title: "Therapy Services in New Giza & Online | Sama Wellness",
-    description: "Individual, couples & group therapy with licensed therapists at our New Giza clinic, near Sheikh Zayed & 6th of October, or online. Free 15-min assessment.",
+    title: "Therapy & Counseling Services in New Giza | Sama Wellness",
+    description: "Individual, couples, child & teen therapy and psychiatry at our New Giza clinic, near Sheikh Zayed & 6th of October. Start with a free 15-minute assessment.",
     url: "https://www.samawellnesstherapy.com/services",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Therapy Services in New Giza & Online | Sama Wellness",
-    description: "Individual, couples & group therapy with licensed therapists at our New Giza clinic, near Sheikh Zayed & 6th of October, or online. Free 15-min assessment.",
+    title: "Therapy & Counseling Services in New Giza | Sama Wellness",
+    description: "Individual, couples, child & teen therapy and psychiatry at our New Giza clinic, near Sheikh Zayed & 6th of October. Start with a free 15-minute assessment.",
   },
 };
 import ScrollReveal from "@/components/ScrollReveal";

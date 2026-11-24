@@ -38,9 +38,9 @@ export const metadata: Metadata = {
     icon: "/logo.png",
     apple: "/logo.png",
   },
-  title: "معالج نفسي في نيو جيزة لأهالي الشيخ زايد و٦ أكتوبر | Sama",
+  title: "دكتور نفسي ومعالج نفسي في نيو جيزة قرب الشيخ زايد | سما ويلنس",
   description:
-    "علاج نفسي فردي وزوجي وجماعي مع معالجين مرخصين في نيو جيزة، قريب من الشيخ زايد و٦ أكتوبر، وأونلاين لخارج الجيزة والسعودية. تقييم مجاني ١٥ دقيقة.",
+    "علاج نفسي فردي واستشارات زوجية وعلاج الأطفال والمراهقين في عيادتنا بنيو جيزة، قريبة من الشيخ زايد و٦ أكتوبر. ابدأ بتقييم مجاني ١٥ دقيقة مع الكاونسلر سما.",
   alternates: {
     canonical: "/ar",
     languages: {
@@ -50,9 +50,9 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "معالج نفسي في نيو جيزة لأهالي الشيخ زايد و٦ أكتوبر | Sama",
+    title: "دكتور نفسي ومعالج نفسي في نيو جيزة قرب الشيخ زايد | سما ويلنس",
     description:
-      "علاج نفسي فردي وزوجي وجماعي مع معالجين مرخصين في نيو جيزة، قريب من الشيخ زايد و٦ أكتوبر، وأونلاين لخارج الجيزة والسعودية. تقييم مجاني ١٥ دقيقة.",
+      "علاج نفسي فردي واستشارات زوجية وعلاج الأطفال والمراهقين في عيادتنا بنيو جيزة، قريبة من الشيخ زايد و٦ أكتوبر. ابدأ بتقييم مجاني ١٥ دقيقة مع الكاونسلر سما.",
     url: "https://www.samawellnesstherapy.com/ar",
     siteName: "سما ويلنس ثيرابي",
     locale: "ar_EG",
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
         url: "https://www.samawellnesstherapy.com/room.jpg",
         width: 1200,
         height: 630,
-        alt: "ساما ويلنس ثيرابي — غرفة العلاج في نيو جيزة، القاهرة",
+        alt: "سما ويلنس ثيرابي — غرفة العلاج في نيو جيزة، القاهرة",
       },
     ],
   },
@@ -71,7 +71,7 @@ export const metadata: Metadata = {
 const jsonLdAr = {
   "@context": "https://schema.org",
   "@type": "MedicalBusiness",
-  name: "Sama Wellness Therapy - ساما ويلنس ثيرابي",
+  name: "Sama Wellness Therapy - سما ويلنس ثيرابي",
   description:
     "علاج فردي وزوجي وجماعي في نيو جيزة، القاهرة. معالجين متخصصين يتم اختيارهم شخصياً بواسطة المديرة الإكلينيكية سما عيسى.",
   url: "https://www.samawellnesstherapy.com/ar",
@@ -89,9 +89,9 @@ const jsonLdAr = {
   inLanguage: "ar",
   availableService: [
     { "@type": "MedicalTherapy", name: "العلاج الفردي" },
-    { "@type": "MedicalTherapy", name: "العلاج الفردي (أونلاين)" },
+    { "@type": "MedicalTherapy", name: "العلاج الفردي" },
     { "@type": "MedicalTherapy", name: "علاج الأزواج" },
-    { "@type": "MedicalTherapy", name: "علاج الأزواج (أونلاين)" },
+    { "@type": "MedicalTherapy", name: "علاج الأزواج" },
     { "@type": "MedicalTherapy", name: "العلاج الجماعي" },
     { "@type": "MedicalTherapy", name: "العلاج الجماعي (أونلاين)" },
   ],
