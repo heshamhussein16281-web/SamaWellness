@@ -23,19 +23,23 @@ export default function TestimonialsTeamAr() {
     return () => clearInterval(interval);
   }, []);
 
-  const q = quotes[index];
-
   return (
     <section className="testimonials testimonials--rotating" aria-label="آراء عملائنا">
       <div className="testimonials__single">
         <h2 className="testimonials__heading">آراء عملائنا</h2>
         <div className="testimonials__stars" aria-label="٥ من ٥ نجوم">★★★★★</div>
-        <blockquote
-          className={`testimonials__card ${fade ? "testimonials__card--visible" : "testimonials__card--hidden"}`}
-        >
-          <p className="testimonials__text">«{q.text}»</p>
-          <cite className="testimonials__author">— {q.author}</cite>
-        </blockquote>
+        <div className="testimonials__card-stack">
+          {quotes.map((q, i) => (
+            <blockquote
+              key={i}
+              className={`testimonials__card ${i === index && fade ? "testimonials__card--visible" : "testimonials__card--hidden"}`}
+              aria-hidden={i === index ? undefined : true}
+            >
+              <p className="testimonials__text">«{q.text}»</p>
+              <cite className="testimonials__author">— {q.author}</cite>
+            </blockquote>
+          ))}
+        </div>
         <div className="testimonials__dots">
           {quotes.map((_, i) => (
             <button

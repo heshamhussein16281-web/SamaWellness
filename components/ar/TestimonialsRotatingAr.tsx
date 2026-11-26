@@ -26,19 +26,23 @@ export default function TestimonialsRotatingAr({ customQuotes }: { customQuotes?
     return () => clearInterval(interval);
   }, [activeQuotes.length]);
 
-  const q = activeQuotes[index];
-
   return (
     <section className="testimonials testimonials--rotating" aria-label="آراء عملائنا">
       <div className="testimonials__single">
         <h2 className="testimonials__heading">آراء عملائنا</h2>
         <div className="testimonials__stars" aria-label="٥ من ٥ نجوم">★★★★★</div>
-        <blockquote
-          className={`testimonials__card ${fade ? "testimonials__card--visible" : "testimonials__card--hidden"}`}
-        >
-          <p className="testimonials__text">«{q.text}»</p>
-          <cite className="testimonials__author">— {q.author}</cite>
-        </blockquote>
+        <div className="testimonials__card-stack">
+          {activeQuotes.map((q, i) => (
+            <blockquote
+              key={i}
+              className={`testimonials__card ${i === index && fade ? "testimonials__card--visible" : "testimonials__card--hidden"}`}
+              aria-hidden={i === index ? undefined : true}
+            >
+              <p className="testimonials__text">«{q.text}»</p>
+              <cite className="testimonials__author">— {q.author}</cite>
+            </blockquote>
+          ))}
+        </div>
         <div className="testimonials__dots">
           {activeQuotes.map((_, i) => (
             <button
